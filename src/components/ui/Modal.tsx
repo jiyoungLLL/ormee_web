@@ -22,8 +22,8 @@ export default function Modal({
     <div className='fixed inset-0 bg-gray-90/50 flex justify-center items-center z-50'>
       <div className={`bg-white rounded-[15px] px-[30px] py-[20px] ${containerStyle}`}>
         <div className='flex flex-col w-full gap-[13px]'>
-          {title && <h2 className='text-heading1 font-semibold text-gray-90'>{title}</h2>}
-          {description && <p className='text-headline2 text-gray-90'>{description}</p>}
+          {title && <h2 className='text-heading1 font-semibold text-gray-90 text-center'>{title}</h2>}
+          {description && <p className='text-headline2 font-normal text-gray-90 text-center'>{description}</p>}
         </div>
         {children}
         <div className='grid grid-cols-2 items-center w-[350px] h-[55px] gap-[14px]'>
