@@ -1,13 +1,20 @@
 type ModalProps = {
   /** 모달 내부에 표시될 컨텐츠 */
   children: React.ReactNode;
+  /** 모달의 표시 여부를 제어하는 boolean 값 */
   isOpen: boolean;
+  /** 모달 취소 버튼 클릭 시 실행될 콜백 함수 */
   onCancel: () => void;
+  /** 모달 확인 버튼 클릭 시 실행될 콜백 함수 */
   onConfirm: () => void;
+  /** 모달 컨테이너에 적용할 추가 스타일 클래스 */
   containerStyle?: string;
+  /** 모달의 제목 */
   title?: string;
+  /** 모달의 설명 텍스트 */
   description?: string;
 };
+
 export default function Modal({
   children,
   isOpen,
