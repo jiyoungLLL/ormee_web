@@ -35,10 +35,17 @@ export default function Modal({
         </div>
         {children}
         <div className='grid grid-cols-2 items-center w-[350px] h-[55px] gap-[14px]'>
-          <button className='w-full h-[50px] px-[20px] py-[12px] rounded-[10px] bg-gray-20 text-headline1 font-bold text-gray-60'>
+          {/* TODO: 지영님 버튼 컴포넌트 추가 후 버튼 변경  */}
+          <button
+            onClick={onCancel}
+            className='w-full h-[50px] px-[20px] py-[12px] rounded-[10px] bg-gray-20 text-headline1 font-bold text-gray-60'
+          >
             취소
           </button>
-          <button className='w-full h-[50px] px-[20px] py-[12px] rounded-[10px] bg-purple-50 text-headline1 font-bold text-white'>
+          <button
+            onClick={onConfirm}
+            className='w-full h-[50px] px-[20px] py-[12px] rounded-[10px] bg-purple-50 text-headline1 font-bold text-white'
+          >
             확인
           </button>
         </div>
