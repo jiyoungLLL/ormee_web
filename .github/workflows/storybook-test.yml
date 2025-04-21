@@ -23,5 +23,11 @@ jobs:
       - name: Build Storybook
         run: pnpm build-storybook
 
+      - name: Start Storybook server
+        run: |
+          pnpm add -D http-server
+          npx http-server storybook-static -p 6006 &
+          sleep 5
+
       - name: Run Storybook Tests
         run: pnpm test-storybook
