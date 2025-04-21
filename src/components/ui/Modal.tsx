@@ -1,4 +1,5 @@
 type ModalProps = {
+  /** 모달 내부에 표시될 컨텐츠 */
   children: React.ReactNode;
   isOpen: boolean;
   onCancel: () => void;
