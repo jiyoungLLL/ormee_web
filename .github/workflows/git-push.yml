@@ -1,21 +1,26 @@
-name: git push into another repo to deploy to vercel
+name: Push Storybook Branches to Forked Repo
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - 'feat/**'
+      - 'fix/**'
+      - 'refactor/**'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: pandoc/latex
     steps:
       - uses: actions/checkout@v2
-      - name: Install mustache (to update the date)
-        run: apk add ruby && gem install mustache
-      - name: creates output
-        run: sh ./build.sh
-      - name: Pushes to another repository
-        id: push_directory
+
+      - name: Prepare output
+        run: |
+          mkdir -p output
+          sh ./build.sh
+          cp -r .storybook output/.storybook
+
+      - name: Push to forked repo (same branch)
         uses: cpina/github-action-push-to-another-repository@main
         env:
           API_TOKEN_GITHUB: ${{ secrets.FORKED_REPO_KEY }}
@@ -24,7 +29,5 @@ jobs:
           destination-github-username: 'nninyeong'
           destination-repository-name: 'ormee_web'
           user-email: ${{ secrets.DEPLOY_EMAIL }}
-          commit-message: ${{ github.event.commits[0].message }}
-          target-branch: main
-      - name: Test get variable exported by push-to-another-repository
-        run: echo $DESTINATION_CLONED_DIRECTORY
+          commit-message: '[storybook] sync ${{ github.ref_name }} to fork'
+          target-branch: ${{ github.ref_name }}
