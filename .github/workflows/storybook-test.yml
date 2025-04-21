@@ -1,0 +1,27 @@
+name: Run Storybook Tests
+
+on: [push, pull_request]
+
+jobs:
+  storybook-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build Storybook
+        run: pnpm build-storybook
+
+      - name: Run Storybook Tests
+        run: pnpm test-storybook
