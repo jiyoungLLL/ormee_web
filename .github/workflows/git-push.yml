@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - main
-      - 'feat/**'
-      - 'fix/**'
-      - 'refactor/**'
+      - 'feat/*'
+      - 'fix/*'
+      - 'refactor/*'
 
 jobs:
   build:
@@ -31,3 +31,4 @@ jobs:
           user-email: ${{ secrets.DEPLOY_EMAIL }}
           commit-message: '[storybook] sync ${{ github.ref_name }} to fork'
           target-branch: ${{ github.ref_name }}
+          create-target-branch-if-needed: true
