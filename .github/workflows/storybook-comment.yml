@@ -1,0 +1,47 @@
+name: PR Storybook Preview Link via Vercel API
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get branch name
+        id: get_branch
+        run: echo "branch=${GITHUB_HEAD_REF}" >> $GITHUB_OUTPUT
+
+      - name: Query Vercel for deployment URL
+        id: vercel
+        run: |
+          BRANCH=${{ steps.get_branch.outputs.branch }}
+          echo "Looking for deployment of branch: $BRANCH"
+
+          RESPONSE=$(curl -s -G "https://api.vercel.com/v6/deployments" \
+            --data-urlencode "projectId=${{ secrets.VERCEL_PROJECT_ID }}" \
+            --data-urlencode "meta.githubCommitRef=$BRANCH" \
+            -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}")
+
+          echo "$RESPONSE" > response.json
+
+          URL=$(jq -r '.deployments[0].url' < response.json)
+
+          if [ "$URL" = "null" ]; then
+            echo "No deployment found for branch $BRANCH"
+            echo "preview_url=" >> $GITHUB_OUTPUT
+          else
+            echo "Found deployment: $URL"
+            echo "preview_url=https://$URL" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Add comment to PR
+        if: ${{ steps.vercel.outputs.preview_url != '' }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          header: storybook-preview
+          message: |
+            🚀 **Storybook Preview**
+            🔗 ${{ steps.vercel.outputs.preview_url }}
