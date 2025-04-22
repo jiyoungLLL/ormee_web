@@ -9,38 +9,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ 브랜치 이름 가져오기
       - name: Get branch name
         id: get_branch
         run: echo "branch=${GITHUB_HEAD_REF}" >> $GITHUB_OUTPUT
 
-      - name: Query Vercel for deployment URL
+      # 2️⃣ Vercel API 호출 + 디버그 JSON 저장 + Preview URL 추출
+      - name: Query Vercel for deployment URL (preview only)
         id: vercel
         run: |
           BRANCH=${{ steps.get_branch.outputs.branch }}
-          echo "Looking for deployment of branch: $BRANCH"
+          echo "🔍 Looking for preview deployment of branch: $BRANCH"
 
+          # Vercel API 호출 (preview만 조회)
           RESPONSE=$(curl -s -G "https://api.vercel.com/v6/deployments" \
             --data-urlencode "projectId=${{ secrets.VERCEL_PROJECT_ID }}" \
             --data-urlencode "meta.githubCommitRef=$BRANCH" \
+            --data-urlencode "target=preview" \
             -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}")
 
-          echo "$RESPONSE" > response.json
+          echo "$RESPONSE" > vercel_response.json
 
-          URL=$(jq -r '.deployments[0].url' < response.json)
+          # 디버깅용 출력 (요약)
+          echo "📦 Vercel API Response (truncated):"
+          echo "$RESPONSE" | jq '.deployments[] | {url, state, created, target}' | head -n 30
 
-          if [ "$URL" = "null" ]; then
-            echo "No deployment found for branch $BRANCH"
+          # 가장 최신 preview 배포의 주소 추출
+          URL=$(jq -r '.deployments[0].url' < vercel_response.json)
+
+          if [ "$URL" = "null" ] || [ -z "$URL" ]; then
+            echo "⚠️ No preview deployment found for branch $BRANCH"
             echo "preview_url=" >> $GITHUB_OUTPUT
           else
-            echo "Found deployment: $URL"
+            echo "✅ Found preview deployment: $URL"
             echo "preview_url=https://$URL" >> $GITHUB_OUTPUT
           fi
 
-      - name: Add comment to PR
+      # 3️⃣ PR에 댓글 남기기
+      - name: Post Storybook Preview comment
         if: ${{ steps.vercel.outputs.preview_url != '' }}
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: storybook-preview
           message: |
             🚀 **Storybook Preview**
