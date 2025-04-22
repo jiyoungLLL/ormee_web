@@ -1,57 +1,42 @@
-name: PR Storybook Preview Link via Vercel API
+name: Comment Storybook Preview on PR
 
 on:
-  pull_request:
-    types: [opened, synchronize]
+  repository_dispatch:
+    types: [storybook_preview_ready]
 
 jobs:
   comment:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Get branch name
-        id: get_branch
-        run: echo "branch=${GITHUB_HEAD_REF}" >> $GITHUB_OUTPUT
+      - name: Extract branch name
+        id: vars
+        run: echo "branch=${{ github.event.client_payload.branch }}" >> $GITHUB_OUTPUT
 
-      - name: Query Vercel for latest READY preview deployment
+      - name: Query Vercel for preview deployment
         id: vercel
         run: |
-          BRANCH=${{ steps.get_branch.outputs.branch }}
-          echo "🔍 Looking for preview deployment of branch: $BRANCH"
-
-          ATTEMPTS=5
-          INTERVAL=5
-          FOUND=""
-
-          for ((i = 1; i <= $ATTEMPTS; i++)); do
-            echo "⏱️ Attempt $i/$ATTEMPTS..."
-
+          BRANCH=${{ steps.vars.outputs.branch }}
+          for i in {1..5}; do
             RESPONSE=$(curl -s -G "https://api.vercel.com/v6/deployments" \
               --data-urlencode "projectId=${{ secrets.VERCEL_PROJECT_ID }}" \
               --data-urlencode "meta.githubCommitRef=$BRANCH" \
               --data-urlencode "target=preview" \
               -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}")
 
-            echo "$RESPONSE" > vercel_response.json
+            echo "$RESPONSE" > response.json
 
-            URL=$(jq -r '.deployments[] | select(.state == "READY") | .url' < vercel_response.json | head -n 1)
+            URL=$(jq -r '.deployments[] | select(.state == "READY") | .url' response.json | head -n 1)
 
             if [ "$URL" != "" ]; then
-              FOUND=$URL
-              echo "✅ Found READY deployment: $URL"
+              echo "Found preview: $URL"
+              echo "preview_url=https://$URL" >> $GITHUB_OUTPUT
               break
             else
-              echo "🕓 Deployment not ready yet. Waiting..."
-              sleep $INTERVAL
+              echo "No preview ready yet... retrying"
+              sleep 5
             fi
           done
-
-          if [ "$FOUND" = "" ]; then
-            echo "❌ No READY preview deployment found for branch $BRANCH"
-            echo "preview_url=" >> $GITHUB_OUTPUT
-          else
-            echo "preview_url=https://$FOUND" >> $GITHUB_OUTPUT
-          fi
 
       - name: Post Storybook Preview comment
         if: ${{ steps.vercel.outputs.preview_url != '' }}
