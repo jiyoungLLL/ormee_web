@@ -7,43 +7,20 @@ on:
 jobs:
   comment:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Extract branch name
-        id: vars
-        run: echo "branch=${{ github.event.client_payload.branch }}" >> $GITHUB_OUTPUT
-
-      - name: Query Vercel for preview deployment
-        id: vercel
+      - name: Extract values from dispatch
+        id: input
         run: |
-          BRANCH=${{ steps.vars.outputs.branch }}
-          for i in {1..5}; do
-            RESPONSE=$(curl -s -G "https://api.vercel.com/v6/deployments" \
-              --data-urlencode "projectId=${{ secrets.VERCEL_PROJECT_ID }}" \
-              --data-urlencode "meta.githubCommitRef=$BRANCH" \
-              --data-urlencode "target=preview" \
-              -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}")
+          echo "branch=${{ github.event.client_payload.branch }}" >> $GITHUB_OUTPUT
+          echo "url=${{ github.event.client_payload.url }}" >> $GITHUB_OUTPUT
+          echo "state=${{ github.event.client_payload.state }}" >> $GITHUB_OUTPUT
 
-            echo "$RESPONSE" > response.json
-
-            URL=$(jq -r '.deployments[] | select(.state == "READY") | .url' response.json | head -n 1)
-
-            if [ "$URL" != "" ]; then
-              echo "Found preview: $URL"
-              echo "preview_url=https://$URL" >> $GITHUB_OUTPUT
-              break
-            else
-              echo "No preview ready yet... retrying"
-              sleep 5
-            fi
-          done
-
-      - name: Post Storybook Preview comment
-        if: ${{ steps.vercel.outputs.preview_url != '' }}
+      - name: Comment on PR with preview URL
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: storybook-preview
           message: |
             🚀 **Storybook Preview**
-            🔗 ${{ steps.vercel.outputs.preview_url }}
+            🔗 [${{ steps.input.outputs.url }}](${{ steps.input.outputs.url }})
+            🟡 상태: `${{ steps.input.outputs.state }}`
