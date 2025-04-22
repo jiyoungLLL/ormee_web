@@ -2,7 +2,7 @@ name: Comment Storybook Preview on PR
 
 on:
   repository_dispatch:
-    types: [storybook_preview_ready]
+    types: [storybook_deploy_detected]
 
 jobs:
   comment:
