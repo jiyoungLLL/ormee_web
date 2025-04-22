@@ -7,13 +7,21 @@ on:
 jobs:
   comment:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Extract values from dispatch
+      - name: Extract dispatch payload
         id: input
         run: |
           echo "branch=${{ github.event.client_payload.branch }}" >> $GITHUB_OUTPUT
           echo "url=${{ github.event.client_payload.url }}" >> $GITHUB_OUTPUT
           echo "state=${{ github.event.client_payload.state }}" >> $GITHUB_OUTPUT
+
+      - name: Debug - Show extracted values
+        run: |
+          echo "🔎 Dispatch values:"
+          echo "  Branch = ${{ steps.input.outputs.branch }}"
+          echo "  URL    = ${{ steps.input.outputs.url }}"
+          echo "  State  = ${{ steps.input.outputs.state }}"
 
       - name: Comment on PR with preview URL
         uses: marocchino/sticky-pull-request-comment@v2
@@ -22,5 +30,7 @@ jobs:
           header: storybook-preview
           message: |
             🚀 **Storybook Preview**
-            🔗 [${{ steps.input.outputs.url }}](${{ steps.input.outputs.url }})
+            🔗 [미리보기 열기](${{ steps.input.outputs.url }})
             🟡 상태: `${{ steps.input.outputs.state }}`
+
+            _미리보기 링크는 브랜치가 업데이트되면 자동으로 최신 상태로 교체됩니다._
