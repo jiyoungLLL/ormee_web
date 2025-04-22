@@ -1,36 +1,50 @@
-name: Run Storybook Tests
+name: PR Storybook Preview Link via Vercel API
 
-on: [push, pull_request]
+on:
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
-  storybook-tests:
+  comment:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      # 1️⃣ 브랜치 이름 가져오기
+      - name: Get branch name
+        id: get_branch
+        run: echo "branch=${GITHUB_HEAD_REF}" >> $GITHUB_OUTPUT
 
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build Storybook
-        run: pnpm build-storybook
-
-      - name: Start Storybook server
+      # 2️⃣ Vercel API로 해당 브랜치의 Preview URL 조회
+      - name: Query Vercel for deployment URL
+        id: vercel
         run: |
-          pnpm add -D http-server
-          npx http-server storybook-static -p 6006 &
-          sleep 5
+          BRANCH=${{ steps.get_branch.outputs.branch }}
+          echo "Looking for deployment of branch: $BRANCH"
 
-      - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps
+          RESPONSE=$(curl -s -G "https://api.vercel.com/v6/deployments" \
+            --data-urlencode "projectId=${{ secrets.VERCEL_PROJECT_ID }}" \
+            --data-urlencode "meta.githubCommitRef=$BRANCH" \
+            -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}")
 
-      - name: Run Storybook Tests
-        run: pnpm test-storybook
+          echo "$RESPONSE" > response.json
+
+          URL=$(jq -r '.deployments[0].url' < response.json)
+
+          if [ "$URL" = "null" ]; then
+            echo "No deployment found for branch $BRANCH"
+            echo "preview_url=" >> $GITHUB_OUTPUT
+          else
+            echo "Found deployment: $URL"
+            echo "preview_url=https://$URL" >> $GITHUB_OUTPUT
+          fi
+
+      # 3️⃣ PR에 Preview 주소 댓글로 작성
+      - name: Post Storybook Preview comment
+        if: ${{ steps.vercel.outputs.preview_url != '' }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: storybook-preview
+          message: |
+            🚀 **Storybook Preview**
+            🔗 ${{ steps.vercel.outputs.preview_url }}
