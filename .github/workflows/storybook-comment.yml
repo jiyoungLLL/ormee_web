@@ -16,18 +16,34 @@ jobs:
           echo "url=${{ github.event.client_payload.url }}" >> $GITHUB_OUTPUT
           echo "state=${{ github.event.client_payload.state }}" >> $GITHUB_OUTPUT
 
-      - name: Debug - Show extracted values
+      - name: Find PR number from branch
+        id: pr
         run: |
-          echo "🔎 Dispatch values:"
-          echo "  Branch = ${{ steps.input.outputs.branch }}"
-          echo "  URL    = ${{ steps.input.outputs.url }}"
-          echo "  State  = ${{ steps.input.outputs.state }}"
+          BRANCH=${{ steps.input.outputs.branch }}
+
+          echo "🔍 Searching for open PR from branch: $BRANCH"
+
+          PR_API="https://api.github.com/repos/${{ github.repository }}/pulls?state=open&head=${{ github.repository_owner }}:$BRANCH"
+          echo "🔗 $PR_API"
+
+          PR_RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "$PR_API")
+          PR_NUMBER=$(echo "$PR_RESPONSE" | jq '.[0].number')
+
+          if [ "$PR_NUMBER" = "null" ] || [ -z "$PR_NUMBER" ]; then
+            echo "❌ No open PR found for branch: $BRANCH"
+            echo "pr_number=" >> $GITHUB_OUTPUT
+          else
+            echo "✅ Found PR number: $PR_NUMBER"
+            echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          fi
 
       - name: Comment on PR with preview URL
+        if: ${{ steps.pr.outputs.pr_number != '' }}
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: storybook-preview
+          number: ${{ steps.pr.outputs.pr_number }}
           message: |
             🚀 **Storybook Preview**
             🔗 [미리보기 열기](${{ steps.input.outputs.url }})
