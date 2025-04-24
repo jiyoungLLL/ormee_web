@@ -17,18 +17,31 @@ jobs:
         with:
           version: 8
 
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
       - name: Install dependencies
         run: pnpm install
 
       - name: Install Playwright browsers
-        run: pnpm exec playwright install
+        run: pnpm exec playwright install --with-deps
 
       - name: Build Storybook
         run: pnpm build-storybook
 
+      - name: Install HTTP Server
+        run: pnpm add -D http-server
+
+      - name: Start Storybook server
+        run: |
+          npx http-server storybook-static -p 6006 &
+          sleep 5
+
       - name: Run Storybook Tests
         id: test
-        run: pnpm test-storybook
+        run: pnpm test-storybook --url http://127.0.0.1:6006
 
   comment-on-success:
     name: ✅ Comment on Success
@@ -46,7 +59,7 @@ jobs:
             ✅ **Storybook 테스트 통과!**
             이 PR에서 Storybook 테스트가 성공적으로 완료되었습니다.
 
-            _커밋이 추가되면 테스트는 자동으로 다시 실행됩니다._
+            _커밋이 추가되면 테스트가 자동으로 다시 실행됩니다._
 
   comment-on-failure:
     name: ❌ Comment on Failure
@@ -67,7 +80,7 @@ jobs:
 
             ```bash
             pnpm build-storybook
-            pnpm test-storybook
+            pnpm test-storybook --url http://localhost:6006
             ```
 
             문제가 해결되면 커밋을 추가하면 자동으로 재실행됩니다.
