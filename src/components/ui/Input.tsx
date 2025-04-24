@@ -27,7 +27,7 @@ export default function Input<T extends FieldValues>({
           type={type}
           maxLength={maxLength}
           placeholder={placeholder}
-          className='w-full h-[50px] px-[20px] py-[15px] rounded-[10px] bg-white border-[1px] border-gray-20 text-body-reading text-gray-90 placeholder:text-gray-50'
+          className='w-full h-[50px] px-[20px] py-[15px] rounded-[10px] bg-white disabled:bg-gray-10 border-[1px] border-gray-20 focus:border-[1px] focus:border-purple-50 focus:outline-none text-body-reading text-gray-90 placeholder:text-gray-50'
         />
       )}
     />
