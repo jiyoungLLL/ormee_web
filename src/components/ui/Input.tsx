@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import Image from 'next/image';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 
 type InputProps<T extends FieldValues> = {
@@ -19,6 +21,12 @@ export default function Input<T extends FieldValues>({
   showCharacterCount = false,
   showPasswordToggle = false,
 }: InputProps<T>) {
+  const [inputType, setInputType] = useState(type);
+
+  const handleTogglePassword = () => {
+    setInputType((prev) => (prev === 'password' ? 'text' : 'password'));
+  };
+
   return (
     <Controller
       name={name}
@@ -27,17 +35,31 @@ export default function Input<T extends FieldValues>({
         <div className='relative w-full'>
           <input
             {...field}
-            type={type}
+            type={inputType}
             maxLength={maxLength}
             placeholder={placeholder}
-            className='absolute w-full h-[50px] px-[20px] py-[15px] rounded-[10px] bg-white disabled:bg-gray-10 border-[1px] border-gray-20 focus:border-[1px] focus:border-purple-50 focus:outline-none text-body-reading text-gray-90 placeholder:text-gray-50'
+            className={`absolute w-full h-[50px] ${showCharacterCount && showPasswordToggle && 'pr-[115px]'} ${showCharacterCount && !showPasswordToggle && 'pr-[82px]'} ${!showCharacterCount && showPasswordToggle && 'pr-[56px]'} ${!showCharacterCount && !showPasswordToggle && 'pr-[20px]'} pl-[20px] py-[15px] rounded-[10px] bg-white disabled:bg-gray-10 border-[1px] border-gray-20 focus:border-[1px] focus:border-purple-50 focus:outline-none text-body-reading text-gray-90 placeholder:text-gray-50`}
           />
-          <div className='absolute right-[20px] top-1/2 translate-y-1/2 z-[1]'>
+          <div className='absolute flex flex-row gap-[12px] right-[20px] top-1/2 translate-y-1/2 z-[1]'>
             {showCharacterCount && (
               <div className='flex flex-row gap-[1px] justify-between items-center text-headline1 text-gray-50'>
                 <span className='text-gray-70 font-semibold'>{field.value?.length ?? 0}</span>
                 <span className='text-gray-50 font-regular'>/{maxLength}</span>
               </div>
+            )}
+            {showPasswordToggle && (
+              <button
+                type='button'
+                onClick={handleTogglePassword}
+                className='w-[24px] h-[24px]'
+              >
+                <Image
+                  src={inputType === 'password' ? '/assets/icons/password-hide.png' : '/assets/icons/password-show.png'}
+                  alt='password-toggle'
+                  width={24}
+                  height={24}
+                />
+              </button>
             )}
           </div>
         </div>
