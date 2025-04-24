@@ -10,14 +10,25 @@ jobs:
   storybook-test:
     name: ✅ Run Storybook Tests
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
       - name: Install dependencies
         run: pnpm install
 
       - name: Install Playwright browsers
-        run: pnpm exec playwright install
+        run: pnpm exec playwright install --with-deps
 
       - name: Build Storybook
         run: pnpm build-storybook
@@ -28,10 +39,23 @@ jobs:
   sync-to-fork:
     name: 🚀 Sync to Forked Repo
     runs-on: ubuntu-latest
-    needs: storybook-test # 테스트 통과해야만 실행됨
+    needs: storybook-test # ✅ 테스트 통과 시에만 실행됨
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: pnpm install
 
       - name: Prepare output directory
         shell: bash
