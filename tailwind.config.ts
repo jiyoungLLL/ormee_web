@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import plugin from 'tailwindcss/plugin';
 
 const config: Config = {
   content: [
@@ -20,7 +21,7 @@ const config: Config = {
           30: '#cec3ff',
           35: '#b7a7ff',
           40: '#a28dff',
-          50: '#8d74ff',
+          50: '#7455FF',
           60: '#7863d9',
           70: '#6452b5',
           80: '#504291',
@@ -211,6 +212,34 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addComponents, theme }) {
+      addComponents({
+        '.btn-basic': {
+          height: '50px',
+          width: '102px',
+          padding: '12px 20px',
+          borderRadius: '10px',
+          gap: '4px',
+        },
+        '.btn-modal': {
+          height: '50px',
+          width: '162px',
+          padding: '12px 20px',
+          borderRadius: '10px',
+          gap: '4px',
+        },
+
+        '.btn-create': {
+          height: '49px',
+          width: '133px',
+          padding: '12px 20px',
+          borderRadius: '10px',
+          gap: '4px',
+          boxShadow: '2px 4px 12.5px rgba(114, 96, 248, 0.4)',
+        },
+      });
+    }),
+  ],
 };
 export default config;
