@@ -2,14 +2,22 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 
-type InputProps<T extends FieldValues> = {
+export type InputProps<T extends FieldValues> = {
+  /** useForm에서 사용할 필드의 이름 */
   name: Path<T>;
+  /** useForm에서 사용할 컨트롤러 */
   control: Control<T>;
+  /** input 타입 */
   type?: 'text' | 'password' | 'email';
+  /** tailwind 스타일 크기 지정, w-full, h-full 가능 */
   size: string;
+  /** 플레이스홀더 */
   placeholder?: string;
+  /** 최대 글자 수, 제한 없는 경우 생략 */
   maxLength?: number;
+  /** 글자 수 카운트 표시 여부 */
   showCharacterCount?: boolean;
+  /** 비밀번호 숨기기/보이기 토글 표시 여부 */
   showPasswordToggle?: boolean;
 };
 
