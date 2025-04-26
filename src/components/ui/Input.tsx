@@ -6,6 +6,7 @@ type InputProps<T extends FieldValues> = {
   name: Path<T>;
   control: Control<T>;
   type?: 'text' | 'password' | 'email';
+  size: string;
   placeholder?: string;
   maxLength?: number;
   showCharacterCount?: boolean;
@@ -16,6 +17,7 @@ export default function Input<T extends FieldValues>({
   name,
   control,
   type = 'text',
+  size,
   maxLength,
   placeholder,
   showCharacterCount = false,
@@ -32,15 +34,26 @@ export default function Input<T extends FieldValues>({
       name={name}
       control={control}
       render={({ field }) => (
-        <div className='relative w-full'>
+        <div className={`relative ${size}`}>
           <input
             {...field}
             type={inputType}
             maxLength={maxLength}
             placeholder={placeholder}
-            className={`absolute w-full h-[50px] ${showCharacterCount && showPasswordToggle && 'pr-[115px]'} ${showCharacterCount && !showPasswordToggle && 'pr-[82px]'} ${!showCharacterCount && showPasswordToggle && 'pr-[56px]'} ${!showCharacterCount && !showPasswordToggle && 'pr-[20px]'} pl-[20px] py-[15px] rounded-[10px] bg-white disabled:bg-gray-10 border-[1px] border-gray-20 focus:border-[1px] focus:border-purple-50 focus:outline-none text-body-reading text-gray-90 placeholder:text-gray-50`}
+            className={`absolute w-full h-full ${showCharacterCount && showPasswordToggle && 'pr-[115px]'} ${showCharacterCount && !showPasswordToggle && 'pr-[82px]'} ${!showCharacterCount && showPasswordToggle && 'pr-[56px]'} ${!showCharacterCount && !showPasswordToggle && 'pr-[20px]'} pl-[20px] py-[15px] rounded-[10px] bg-white disabled:bg-gray-10 border-[1px] border-gray-20 focus:border-[1px] focus:border-purple-50 focus:outline-none text-body-reading text-gray-90 placeholder:text-gray-50`}
           />
-          <div className='absolute flex flex-row gap-[12px] right-[20px] top-1/2 translate-y-1/2 z-[1]'>
+          <div
+            style={{
+              position: 'absolute',
+              right: '20px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              display: 'flex',
+              gap: '12px',
+              alignItems: 'center',
+              zIndex: 1,
+            }}
+          >
             {showCharacterCount && (
               <div className='flex flex-row gap-[1px] justify-between items-center text-headline1 text-gray-50'>
                 <span className='text-gray-70 font-semibold'>{field.value?.length ?? 0}</span>
