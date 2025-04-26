@@ -37,6 +37,16 @@ export default function Input<T extends FieldValues>({
     setInputType((prev) => (prev === 'password' ? 'text' : 'password'));
   };
 
+  const handleInputChange = (field: any, maxLength?: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+
+    if (maxLength && value.length > maxLength) {
+      value = value.slice(0, maxLength);
+    }
+
+    field.onChange(value);
+  };
+
   return (
     <Controller
       name={name}
@@ -49,6 +59,7 @@ export default function Input<T extends FieldValues>({
             maxLength={maxLength}
             placeholder={placeholder}
             className={`absolute w-full h-full ${showCharacterCount && showPasswordToggle && 'pr-[115px]'} ${showCharacterCount && !showPasswordToggle && 'pr-[82px]'} ${!showCharacterCount && showPasswordToggle && 'pr-[56px]'} ${!showCharacterCount && !showPasswordToggle && 'pr-[20px]'} pl-[20px] py-[15px] rounded-[10px] bg-white disabled:bg-gray-10 border-[1px] border-gray-20 focus:border-[1px] focus:border-purple-50 focus:outline-none text-body-reading text-gray-90 placeholder:text-gray-50`}
+            onChange={handleInputChange(field, maxLength)}
           />
           <div
             style={{
