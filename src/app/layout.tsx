@@ -27,7 +27,7 @@ export default function RootLayout({
       lang='ko'
       className='h-full'
     >
-      <body className={`${pretendard.variable} antialiased flex flex-colh-full min-h-full text-gray-90`}>
+      <body className={`${pretendard.variable} antialiased flex flex-col min-h-screen text-gray-90`}>
         <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
