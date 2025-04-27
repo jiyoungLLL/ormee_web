@@ -1,5 +1,4 @@
 import type { Config } from 'tailwindcss';
-import plugin from 'tailwindcss/plugin';
 
 const config: Config = {
   content: [
@@ -210,36 +209,11 @@ const config: Config = {
           },
         ],
       },
+      borderWidth: {
+        '0.5': '0.5px',
+      },
     },
   },
-  plugins: [
-    plugin(function ({ addComponents, theme }) {
-      addComponents({
-        '.btn-basic': {
-          height: '50px',
-          width: '102px',
-          padding: '12px 20px',
-          borderRadius: '10px',
-          gap: '4px',
-        },
-        '.btn-modal': {
-          height: '50px',
-          width: '162px',
-          padding: '12px 20px',
-          borderRadius: '10px',
-          gap: '4px',
-        },
-
-        '.btn-create': {
-          height: '49px',
-          width: '133px',
-          padding: '12px 20px',
-          borderRadius: '10px',
-          gap: '4px',
-          boxShadow: '2px 4px 12.5px rgba(114, 96, 248, 0.4)',
-        },
-      });
-    }),
-  ],
+  plugins: [],
 };
 export default config;
