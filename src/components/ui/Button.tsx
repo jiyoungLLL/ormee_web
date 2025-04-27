@@ -12,9 +12,9 @@ type ButtonProps = {
 
 export default function Button({ type, title, isPurple, onClicked, isfilled, image, description }: ButtonProps) {
   const whatBaseType = {
-    basic: 'btn-basic',
-    modal: 'btn-modal',
-    create: 'btn-create',
+    basic: 'h-[50px] w-[102px] py-[12px] px-[20px] rounded-[10px] gap-1',
+    modal: 'h-[50px] w-[162px] py-[12px] px-[20px] rounded-[10px] gap-1',
+    create: 'h-[49px] w-[133px] py-[12px] px-[20px] rounded-[10px] gap-1 shadow-[2px_4px_12.5px_rgba(114,96,248,0.4)]',
   } as const;
   const baseStyle = whatBaseType[type] ?? '';
 
