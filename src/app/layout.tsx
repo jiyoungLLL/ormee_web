@@ -11,6 +11,10 @@ const pretendard = localFont({
 
 export const metadata: Metadata = {
   title: 'Ormee',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+  },
 };
 
 export default function RootLayout({
@@ -19,8 +23,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
-      <body className={`${pretendard.variable} antialiased`}>
+    <html
+      lang='ko'
+      className='h-full'
+    >
+      <body className={`${pretendard.variable} antialiased flex flex-colh-full min-h-full text-gray-90`}>
         <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
