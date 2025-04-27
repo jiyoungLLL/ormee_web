@@ -1,5 +1,9 @@
-import Image from 'next/image';
+import NavigationLayout from '@/components/layouts/NavigationLayout';
 
 export default function Home() {
-  return <div className='font-pretendard'>메인 페이지</div>;
+  return (
+    <div className='font-pretendard'>
+      <NavigationLayout>메인페이지</NavigationLayout>
+    </div>
+  );
 }
