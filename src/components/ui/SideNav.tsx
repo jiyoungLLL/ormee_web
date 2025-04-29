@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import { useMemo } from 'react';
 import SideNavIcon from './SideNavIcon';
 
 type DateType = {
@@ -47,13 +48,39 @@ export default function SideNav({ type, title, student, date }: SideNavProps) {
 
   const inlineComponent = () => {
     if (type === 'main') {
-      const categoryList: { [key: string]: string } = {
+      const categoryListGroup1: { [key: string]: string } = { 강의홈: 'home' };
+      const categoryListGroup2: { [key: string]: string } = {
         퀴즈: 'quiz',
         쪽지: 'note',
         숙제: 'homework',
         질문: 'question',
         공지: 'notice',
       };
+      const categoryListGroup3: { [key: string]: string } = { 설정: 'setting' };
+
+      const renderCategoryGroup = (group: { [key: string]: string }) =>
+        Object.entries(group).map(([iconName, pathName]) => {
+          const isFocus = mainCategory === pathName;
+          const commonStyle = 'pt-3 pr-4 pb-3 pl-4 flex gap-[12px]';
+          const focusStyle = isFocus ? 'bg-purple-10 text-purple-50 rounded-[10px] font-bold' : '';
+
+          return (
+            <div
+              key={iconName}
+              className={`${commonStyle} ${focusStyle}`}
+            >
+              <SideNavIcon
+                name={iconName}
+                isFocus={isFocus}
+              />
+              {iconName === '강의홈' ? '강의 홈' : iconName}
+            </div>
+          );
+        });
+
+      const categoryGroup1Memo = useMemo(() => renderCategoryGroup(categoryListGroup1), [mainCategory]);
+      const categoryGroup2Memo = useMemo(() => renderCategoryGroup(categoryListGroup2), [mainCategory]);
+      const categoryGroup3Memo = useMemo(() => renderCategoryGroup(categoryListGroup3), [mainCategory]);
 
       return (
         <div className='flex flex-col gap-[11px]'>
@@ -88,33 +115,11 @@ export default function SideNav({ type, title, student, date }: SideNavProps) {
             </div>
           </div>
           <div className='w-[252px] rounded-[20px] h-[512px] bg-white p-[10px] flex justify-between'>
-            <div className='flex flex-col justify-between text-headline2 text-gray-60 font-semibold'>
+            <div className='w-full flex flex-col justify-between text-headline2 text-gray-60 font-semibold'>
               <div className='flex flex-col gap-[20px]'>
-                <div className='pt-3 pr-4 pb-3 pl-4 flex gap-[12px]'>
-                  <SideNavIcon
-                    name={'강의홈'}
-                    isFocus={mainCategory === 'home'}
-                  />
-                  강의 홈
-                </div>
-                <div className='flex flex-col gap-[5px]'>
-                  {Object.entries(categoryList).map(([iconName, pathName]) => (
-                    <div
-                      key={iconName}
-                      className='pt-3 pr-4 pb-3 pl-4 flex gap-[12px]'
-                    >
-                      <SideNavIcon
-                        name={iconName}
-                        isFocus={mainCategory === pathName}
-                      />
-                      {iconName}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className='pt-3 pr-4 pb-3 pl-4 flex gap-[12px]'>
-                <SideNavIcon name={'설정'} />
-                설정
+                <div>{categoryGroup1Memo}</div>
+                <div className='flex flex-col gap-[5px]'>{categoryGroup2Memo}</div>
+                <div>{categoryGroup3Memo}</div>
               </div>
             </div>
           </div>
@@ -134,7 +139,7 @@ export default function SideNav({ type, title, student, date }: SideNavProps) {
         },
       };
 
-      const selectedStyle = (category: string) => {
+      const selectedMyPageStyle = (category: string) => {
         const mypageCategoryList = mypageList[category];
 
         return (
@@ -166,14 +171,14 @@ export default function SideNav({ type, title, student, date }: SideNavProps) {
                 <SideNavIcon name={'마이페이지설정'} />
                 설정
               </div>
-              <div className='flex flex-col items-end gap-[6px]'>{selectedStyle('setting')}</div>
+              <div className='flex flex-col items-end gap-[6px]'>{selectedMyPageStyle('setting')}</div>
             </div>
             <div className='flex flex-col justify-between h-[184px] text-headline2'>
               <div className='flex gap-[10px] font-semibold text-white'>
                 <SideNavIcon name={'마이페이지이용안내'} />
                 이용안내
               </div>
-              <div className='flex flex-col items-end gap-[6px]'>{selectedStyle('guide')}</div>
+              <div className='flex flex-col items-end gap-[6px]'>{selectedMyPageStyle('guide')}</div>
             </div>
           </div>
         </div>
