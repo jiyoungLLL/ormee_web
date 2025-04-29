@@ -15,7 +15,7 @@ type Story = StoryObj<typeof Button>;
 
 export const TemporarySave: Story = {
   args: {
-    type: 'basic',
+    type: 'BUTTON_BASE_TYPE',
     title: '임시저장',
     isPurple: false,
     onClicked: () => console.log('임지저장 완료'),
@@ -26,7 +26,7 @@ export const TemporarySave: Story = {
 
 export const Save: Story = {
   args: {
-    type: 'basic',
+    type: 'BUTTON_BASE_TYPE',
     title: '등록하기',
     isPurple: true,
     onClicked: () => console.log('등록 완료'),
@@ -37,7 +37,7 @@ export const Save: Story = {
 
 export const Edit: Story = {
   args: {
-    type: 'basic',
+    type: 'BUTTON_BASE_TYPE',
     title: '수정하기',
     isPurple: true,
     onClicked: () => console.log('수정 완료'),
@@ -48,7 +48,7 @@ export const Edit: Story = {
 
 export const ModalCancel: Story = {
   args: {
-    type: 'modal',
+    type: 'BUTTON_MODAL_TYPE',
     title: '취소',
     isPurple: false,
     onClicked: () => console.log('모달 취소'),
@@ -58,7 +58,7 @@ export const ModalCancel: Story = {
 
 export const ModalConfirm: Story = {
   args: {
-    type: 'modal',
+    type: 'BUTTON_MODAL_TYPE',
     title: '확인',
     isPurple: true,
     onClicked: () => console.log('모달 확인'),
@@ -68,7 +68,7 @@ export const ModalConfirm: Story = {
 
 export const QuizCreate: Story = {
   args: {
-    type: 'create',
+    type: 'BUTTON_CREATE_TYPE',
     title: '퀴즈 생성',
     isPurple: true,
     onClicked: () => console.log('퀴즈 생성 완료'),
