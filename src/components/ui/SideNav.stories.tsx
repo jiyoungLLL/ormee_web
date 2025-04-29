@@ -13,9 +13,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof SideNav>;
 
-export const UpperSideNav: Story = {
+export const MainSideNav: Story = {
   args: {
-    type: 'upper',
+    type: 'main',
     title: ['오르미 토익 RC', '오르미 토익 LC'],
     student: 24,
     date: {
@@ -25,8 +25,8 @@ export const UpperSideNav: Story = {
   },
 };
 
-export const LowerSideNav: Story = {
+export const MyPageSideNav: Story = {
   args: {
-    type: 'lower',
+    type: 'mypage',
   },
 };
