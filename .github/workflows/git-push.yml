@@ -12,34 +12,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout repo
+      # 1️⃣ 체크아웃
       - uses: actions/checkout@v2
 
-      # 2️⃣ Install pnpm
+      # 2️⃣ pnpm 설치
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
 
-      # 3️⃣ Setup Node
+      # 3️⃣ Node 설정
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      # 4️⃣ Install dependencies
+      # 4️⃣ 의존성 설치
       - name: Install dependencies
         run: pnpm install
 
-      # 5️⃣ Install Playwright for Storybook interaction tests
+      # 5️⃣ Storybook 인터랙션 테스트를 위한 Playwright 설치
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps
 
-      # 6️⃣ Build Storybook
+      # 6️⃣ Storybook 빌드
       - name: Build Storybook
         run: pnpm build-storybook
 
-      # 7️⃣ Serve Storybook statically on port 6006
+      # 7️⃣ 포트 6006에서 Storybook 정적 서빙
       - name: Install HTTP Server
         run: pnpm add -D http-server
 
@@ -48,10 +48,11 @@ jobs:
           npx http-server storybook-static -p 6006 &
           sleep 5
 
-      # 8️⃣ Run interaction/play tests
+      # 8️⃣ 인터랙션/플레이 테스트 실행
       - name: Run Storybook tests
         run: pnpm test-storybook --url http://127.0.0.1:6006
 
+  # 9️⃣ 테스트 통과한 경우 포크된 레포지토리에 푸시 (배포)
   sync-to-fork:
     name: 🚀 Sync to Forked Repo (Only if test passes)
     runs-on: ubuntu-latest
