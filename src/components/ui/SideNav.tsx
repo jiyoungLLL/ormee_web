@@ -34,7 +34,7 @@ export default function SideNav({ type, title, student, date }: SideNavProps) {
         <div className='flex gap-[10px]'>
           {date.days.map((day, index) => (
             <div
-              key={index}
+              key={`${day}-${index}`}
               className='h-[23px] w-[23px] rounded-[5px] bg-purple-10 text-center' // 배경색??
             >
               {day}
