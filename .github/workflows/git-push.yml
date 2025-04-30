@@ -1,4 +1,4 @@
-name: Push Storybook Branches to Forked Repo
+name: Push Vercel Deploy Files to Forked Repo
 
 on:
   push:
@@ -12,27 +12,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout repo
       - uses: actions/checkout@v2
 
+      # 2️⃣ Install pnpm
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
 
+      # 3️⃣ Setup Node
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
+      # 4️⃣ Install dependencies
       - name: Install dependencies
         run: pnpm install
 
+      # 5️⃣ Install Playwright for Storybook interaction tests
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps
 
+      # 6️⃣ Build Storybook
       - name: Build Storybook
         run: pnpm build-storybook
 
+      # 7️⃣ Serve Storybook statically on port 6006
       - name: Install HTTP Server
         run: pnpm add -D http-server
 
@@ -41,11 +48,12 @@ jobs:
           npx http-server storybook-static -p 6006 &
           sleep 5
 
+      # 8️⃣ Run interaction/play tests
       - name: Run Storybook tests
         run: pnpm test-storybook --url http://127.0.0.1:6006
 
   sync-to-fork:
-    name: 🚀 Sync to Forked Repo
+    name: 🚀 Sync to Forked Repo (Only if test passes)
     runs-on: ubuntu-latest
     needs: storybook-test
 
@@ -68,22 +76,19 @@ jobs:
       - name: Prepare output directory
         shell: bash
         run: |
-          echo "📦 Copying full project to output/"
+          echo "📦 Copying only necessary deploy files to output/"
           mkdir -p output
-          shopt -s dotglob extglob
-          cp -r !(output|.git) output/
-          rm -rf output/.git
 
-      - name: Copy .github from fork repo (preserve workflows)
-        env:
-          TOKEN: ${{ secrets.FORKED_REPO_KEY }}
-        run: |
-          echo "🔁 Cloning forked branch: ${{ github.ref_name }}"
-          git clone --depth=1 --branch ${{ github.ref_name }} https://x-access-token:$TOKEN@github.com/nninyeong/ormee_web.git fork
-
-          echo "🔧 Replacing .github with fork's version"
-          rm -rf output/.github
-          cp -r fork/.github output/.github || echo "⚠️ No .github found in fork (first push?)"
+          cp -r public output/
+          cp -r src output/
+          cp -r storybook-static output/
+          cp package.json output/
+          cp pnpm-lock.yaml output/
+          cp next.config.* output/ || true
+          cp tsconfig.json output/ || true
+          cp tailwind.config.js output/ || true
+          cp postcss.config.js output/ || true
+          cp -r .storybook output/ || echo "ℹ️ .storybook skipped"
 
       - name: Push to forked repo
         uses: cpina/github-action-push-to-another-repository@main
@@ -94,6 +99,6 @@ jobs:
           destination-github-username: 'nninyeong'
           destination-repository-name: 'ormee_web'
           user-email: ${{ secrets.DEPLOY_EMAIL }}
-          commit-message: '[storybook] sync ${{ github.ref_name }} to fork'
+          commit-message: 'deploy: 배포용 파일 sync (${{ github.ref_name }})'
           target-branch: ${{ github.ref_name }}
           create-target-branch-if-needed: true
