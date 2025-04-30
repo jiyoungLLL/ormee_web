@@ -20,7 +20,7 @@ const config: Config = {
           30: '#cec3ff',
           35: '#b7a7ff',
           40: '#a28dff',
-          50: '#8d74ff',
+          50: '#7455FF',
           60: '#7863d9',
           70: '#6452b5',
           80: '#504291',
@@ -208,6 +208,9 @@ const config: Config = {
             letterSpacing: '-0.02em',
           },
         ],
+      },
+      borderWidth: {
+        '0.5': '0.5px',
       },
     },
   },
