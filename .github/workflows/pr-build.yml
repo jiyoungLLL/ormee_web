@@ -1,0 +1,94 @@
+name: PR Build Status Check
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  build:
+    name: 🛠️ Build Project
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ PR 브랜치 코드 체크아웃
+      - uses: actions/checkout@v3
+
+      # 2️⃣ pnpm 설치
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      # 3️⃣ Node.js 환경 설정
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # 4️⃣ 의존성 설치
+      - name: Install dependencies
+        run: pnpm install
+
+      # 5️⃣ 빌드 실행 및 로그 저장
+      - name: Build Project
+        id: build
+        run: |
+          set -o pipefail
+          pnpm build 2>&1 | tee build.log
+
+      # 6️⃣ 실패 시 로그에서 요약 추출
+      - name: Extract error summary
+        id: error
+        if: failure()
+        run: |
+          echo "📋 Extracting build error summary..."
+          tail -n 50 build.log > error-tail.log
+          SUMMARY=$(grep -i -E "error|failed|unexpected|cannot|not found" error-tail.log | tail -n 10 | sed 's/^/> /')
+          echo "summary<<EOF" >> $GITHUB_OUTPUT
+          echo "$SUMMARY" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+  comment-on-success:
+    name: ✅ PR Build Success Comment
+    runs-on: ubuntu-latest
+    needs: build
+    if: success()
+
+    steps:
+      - name: Comment on PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: build-status
+          message: |
+            ✅ **Next.js 빌드 성공**
+            이 PR에서 `pnpm build`가 정상적으로 완료되었습니다.
+
+  comment-on-failure:
+    name: ❌ PR Build Failure Comment
+    runs-on: ubuntu-latest
+    needs: build
+    if: failure()
+
+    steps:
+      - name: Comment on PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: build-status
+          message: |
+            ❌ **Next.js 빌드 실패**
+            이 PR에서 `pnpm build`에 실패했습니다.
+
+            로그 요약:
+
+            ```
+            ${{ steps.error.outputs.summary }}
+            ```
+
+            아래 명령어로 로컬에서 확인해보세요:
+
+            ```bash
+            pnpm install
+            pnpm build
+            ```
