@@ -77,19 +77,22 @@ jobs:
       - name: Prepare output directory
         shell: bash
         run: |
-          echo "📦 Copying only necessary deploy files to output/"
+          echo "📦 Preparing deployable files..."
           mkdir -p output
 
           cp -r public output/
           cp -r src output/
           cp -r storybook-static output/
+          cp -r .storybook output/
+
           cp package.json output/
           cp pnpm-lock.yaml output/
-          cp next.config.* output/ || true
           cp tsconfig.json output/ || true
-          cp tailwind.config.js output/ || true
-          cp postcss.config.js output/ || true
-          cp -r .storybook output/ || echo "ℹ️ .storybook skipped"
+          cp tailwind.config.* output/ || true
+          cp postcss.config.* output/ || true
+          cp next.config.* output/ || true
+          cp next-env.d.ts output/ || true
+          cp README.md output/ || true
 
       - name: Push to forked repo
         uses: cpina/github-action-push-to-another-repository@main
