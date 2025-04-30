@@ -35,8 +35,7 @@ interface SideNavIconProps {
 export default function SideNavIcon({ name, isFocus }: SideNavIconProps) {
   const icon = iconList[name];
   const iconSrc = isFocus && icon?.selected ? icon.selected : icon?.normal;
-  const iconStyle =
-    name == '드롭다운' ? 'w-[24px] h-[24px]' : name == '수강생' ? 'w-[18px] h-[18px]' : 'w-[22px] h-[22px]';
+  const iconSize = name === '드롭다운' ? '24' : name === '수강생' ? '18' : '22';
 
   if (!iconSrc) {
     return null;
@@ -46,7 +45,8 @@ export default function SideNavIcon({ name, isFocus }: SideNavIconProps) {
     <Image
       src={iconSrc}
       alt={name}
-      className={`${iconStyle}`}
+      width={iconSize}
+      height={iconSize}
     />
   );
 }
