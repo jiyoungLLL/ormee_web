@@ -78,21 +78,34 @@ jobs:
         shell: bash
         run: |
           echo "📦 Preparing deployable files..."
-          mkdir -p output
+          mkdir -p output/src/app
 
+          # 필수 폴더 복사
           cp -r public output/
           cp -r src output/
-          cp -r storybook-static output/
           cp -r .storybook output/
+          cp -r storybook-static output/
 
+          # 필수 설정 파일 복사
           cp package.json output/
           cp pnpm-lock.yaml output/
-          cp tsconfig.json output/ || true
-          cp tailwind.config.* output/ || true
-          cp postcss.config.* output/ || true
-          cp next.config.* output/ || true
-          cp next-env.d.ts output/ || true
           cp README.md output/ || true
+          cp next.config.mjs output/ || echo "⚠️ next.config not found"
+          cp tsconfig.json output/ || echo "⚠️ tsconfig.json not found"
+          cp tailwind.config.ts output/ || echo "⚠️ tailwind config not found"
+          cp postcss.config.js output/ || echo "⚠️ postcss config not found"
+          cp next-env.d.ts output/ || echo "⚠️ next-env.d.ts not found"
+
+          # Tailwind 전역 스타일 포함 확인 (App Router 기준)
+          if [ -f src/app/globals.css ]; then
+            cp src/app/globals.css output/src/app/
+          else
+            echo "⚠️ globals.css not found in src/app/"
+          fi
+
+          echo "✅ Files prepared:"
+          ls -la output/
+          ls -la output/src/app/
 
       - name: Push to forked repo
         uses: cpina/github-action-push-to-another-repository@main
