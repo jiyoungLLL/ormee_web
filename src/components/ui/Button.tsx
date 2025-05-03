@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 type ButtonType = 'BUTTON_BASE_TYPE' | 'BUTTON_MODAL_TYPE' | 'BUTTON_CREATE_TYPE';
 
 type ButtonProps = {
@@ -11,8 +13,6 @@ type ButtonProps = {
   onClicked: () => void;
   /** bg 있/없 */
   isfilled?: boolean;
-  /** 퀴즈 생성처럼 버튼 내부 + 이미지 필요한 경우 경로 입력 */
-  image?: string;
   /** 버튼 설명 텍스트  */
   description?: string;
 };
@@ -21,10 +21,10 @@ const whatBaseType = {
   BUTTON_BASE_TYPE: 'h-[50px] w-[102px] py-[12px] px-[20px] rounded-[10px] gap-1',
   BUTTON_MODAL_TYPE: 'h-[50px] w-[162px] py-[12px] px-[20px] rounded-[10px] gap-1',
   BUTTON_CREATE_TYPE:
-    'h-[49px] w-[133px] py-[12px] px-[20px] rounded-[10px] gap-1 shadow-[2px_4px_12.5px_rgba(114,96,248,0.4)]',
+    'h-[49px] w-[133px] py-[12px] px-[20px] rounded-[10px] gap-1 shadow-[2px_4px_12.5px_rgba(114,96,248,0.4)] flex gap-[4px]',
 } as const;
 
-export default function Button({ type, title, isPurple, onClicked, isfilled, image, description }: ButtonProps) {
+export default function Button({ type, title, isPurple, onClicked, isfilled, description }: ButtonProps) {
   const baseStyle = whatBaseType[type] ?? '';
   const fontStyle = type == 'BUTTON_BASE_TYPE' ? 'text-headline1 font-semibold' : 'text-headline1 font-bold';
 
@@ -54,6 +54,17 @@ export default function Button({ type, title, isPurple, onClicked, isfilled, ima
       className={`${baseStyle} ${fontStyle} ${backgroundStyle} ${borderStyle}`}
       title={description}
     >
+      {type === 'BUTTON_CREATE_TYPE' ? (
+        <Image
+          src='/assets/icons/plus.png'
+          alt='버튼 플러스 아이콘'
+          width={24}
+          height={24}
+        />
+      ) : (
+        ''
+      )}
+
       {title}
     </button>
   );
