@@ -12,7 +12,7 @@ const MOCK_USER_PROFILE = {
 
 export default function HeaderProfile() {
   return (
-    <div className='flex flex-row justify-between items-center gap-[10px] py-[5px] select-none'>
+    <div className='flex flex-row justify-between items-center gap-[10px] py-[5px] select-none cursor-pointer'>
       <Image
         src={MOCK_USER_PROFILE.image}
         width={24}
