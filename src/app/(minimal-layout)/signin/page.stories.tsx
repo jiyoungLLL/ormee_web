@@ -13,6 +13,7 @@ export default {
   parameters: {
     layout: 'centered',
   },
+  tags: ['autodocs'],
 };
 
 /** 유효성 검사 실패 시나리오 - 빈 폼 제출 */
