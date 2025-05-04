@@ -92,6 +92,7 @@ export default function Input<T extends FieldValues>({
                   alt='password-toggle'
                   width={24}
                   height={24}
+                  draggable={false}
                 />
               </button>
             )}
