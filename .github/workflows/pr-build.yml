@@ -76,6 +76,12 @@ jobs:
           echo "$SUMMARY" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
+      # 테스트 결과를 outputs에 저장
+      - name: 테스트 결과 저장
+        if: always()
+        run: echo "storybook_test_result=${{ steps.storybooktest.outcome }}" >> $GITHUB_OUTPUT
+        id: test_results
+
   comment:
     name: 💬 PR에 결과 댓글 작성
     runs-on: ubuntu-latest
@@ -94,7 +100,7 @@ jobs:
             ### 📊 빌드 및 테스트 요약
 
             - **Next.js Build**: ${{ needs.build.result == 'success' && '✅ 성공' || '❌ 실패' }}
-            - **Storybook 테스트 실행**: ${{ steps.storybooktest.outcome == 'success' && '✅ 성공' || '❌ 실패' }}
+            - **Storybook 테스트 실행**: ${{ needs.build.outputs.storybook_test_result == 'success' && '✅ 성공' || '❌ 실패' }}
 
             ${{ steps.error.outputs.summary && format('**오류 요약:**\n```\n{0}\n```', steps.error.outputs.summary) }}
 
@@ -106,3 +112,7 @@ jobs:
             npx serve storybook-static -l 6006
             pnpm test-storybook --url http://localhost:6006
             ```
+
+# outputs 섹션 추가
+outputs:
+  storybook_test_result: ${{ steps.test_results.outputs.storybook_test_result }}
