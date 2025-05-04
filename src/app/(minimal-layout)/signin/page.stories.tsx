@@ -3,6 +3,7 @@ import { expect } from '@storybook/jest';
 import { userEvent, within } from '@storybook/testing-library';
 import SignInPage from './page';
 import { fn } from '@storybook/test';
+import { AUTH_ERROR_MESSAGES } from '@/schemas/auth.schema';
 
 type Story = StoryObj<typeof SignInPage>;
 
@@ -26,7 +27,7 @@ export const ValidationFailureEmptyForm: Story = {
 
     await userEvent.click(loginButton);
 
-    expect(alertMock).toHaveBeenCalledWith('아이디를 입력해주세요.');
+    expect(alertMock).toHaveBeenCalledWith(AUTH_ERROR_MESSAGES.EMPTY_ID);
   },
 };
 
@@ -44,7 +45,7 @@ export const ValidationFailurePasswordMissing: Story = {
     const loginButton = canvas.getByRole('button', { name: /로그인/i });
     await userEvent.click(loginButton);
 
-    expect(alertMock).toHaveBeenCalledWith('비밀번호를 입력해주세요.');
+    expect(alertMock).toHaveBeenCalledWith(AUTH_ERROR_MESSAGES.EMPTY_PASSWORD);
   },
 };
 
@@ -62,6 +63,6 @@ export const ValidationFailureIdMissing: Story = {
     const loginButton = canvas.getByRole('button', { name: /로그인/i });
     await userEvent.click(loginButton);
 
-    expect(alertMock).toHaveBeenCalledWith('아이디를 입력해주세요.');
+    expect(alertMock).toHaveBeenCalledWith(AUTH_ERROR_MESSAGES.EMPTY_ID);
   },
 };
