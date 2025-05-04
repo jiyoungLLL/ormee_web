@@ -1,0 +1,29 @@
+'use client';
+
+import Image from 'next/image';
+
+// TODO: api 연동 후 실제 유저 데이터로 변경
+const MOCK_USER_PROFILE = {
+  name: '강수이',
+  image:
+    'https://img.freepik.com/premium-vector/girl-is-writing-chalkboard-with-pencil-her-hand_990404-19401.jpg?semt=ais_hybrid&w=740',
+  bio: '가는 말이 고와야 오는 말이 곱다.',
+};
+
+export default function HeaderProfile() {
+  return (
+    <div className='flex flex-row justify-between items-center gap-[10px] py-[5px]'>
+      <Image
+        src={MOCK_USER_PROFILE.image}
+        width={24}
+        height={24}
+        className='rounded-full object-cover'
+        alt='프로필 이미지'
+      />
+      <p className='text-headline2 text-gray-70'>
+        <span className='font-semibold'>{MOCK_USER_PROFILE.name}</span>
+        <span className='font-normal ml-[3px]'>선생님</span>
+      </p>
+    </div>
+  );
+}
