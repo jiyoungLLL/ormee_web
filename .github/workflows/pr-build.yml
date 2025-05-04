@@ -1,4 +1,4 @@
-name: PR Build Status Check
+name: PR Build & Storybook Test Check
 
 on:
   pull_request:
@@ -6,11 +6,12 @@ on:
 
 jobs:
   build:
-    name: 🛠️ Build & Test Project
+    name: 🛠️ Build & Test
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
-      # 1️⃣ PR 브랜치 코드 체크아웃
+      # 1️⃣ 코드 체크아웃
       - uses: actions/checkout@v3
 
       # 2️⃣ pnpm 설치
@@ -29,50 +30,46 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      # 5️⃣ Next.js 빌드
+      # 5️⃣ Next.js 빌드 실행
       - name: Build Next.js
         id: nextbuild
         run: |
           set -o pipefail
           pnpm build 2>&1 | tee next-build.log
 
-      # 6️⃣ Storybook 빌드
+      # 6️⃣ Storybook 정적 빌드
       - name: Build Storybook
-        id: storybookbuild
+        id: sbbuild
         run: |
           set -o pipefail
           pnpm build-storybook 2>&1 | tee sb-build.log
 
-      # 7️⃣ Storybook Play 테스트
-      - name: Run Storybook Tests
-        id: storybooktest
+      # 7️⃣ Storybook 서버 실행 (백그라운드) 및 대기
+      - name: Start Storybook server
         run: |
-          set -o pipefail
+          pnpm dlx wait-on http://127.0.0.1:6006 &
+          pnpm start-storybook --ci --quiet -p 6006 &
+
+      # 8️⃣ Storybook 테스트 실행
+      - name: Test Storybook
+        id: sbtest
+        run: |
+          pnpm dlx wait-on http://127.0.0.1:6006
           pnpm test-storybook 2>&1 | tee sb-test.log
 
-      # 8️⃣ 모든 로그에서 실패 요약 추출
+      # 9️⃣ 실패 요약 추출
       - name: Extract error summary
         id: error
         if: failure()
         run: |
-          extract_errors () {
-            FILE=$1
-            echo "📄 $FILE 오류 요약:"
-            tail -n 50 "$FILE" | grep -i -E "error|failed|unexpected|cannot|not found" | tail -n 10 | sed 's/^/> /'
-            echo ""
-          }
+          echo "📋 Extracting error summary from logs..."
+          tail -n 50 next-build.log > error-next.log || true
+          tail -n 50 sb-build.log > error-sb.log || true
+          tail -n 50 sb-test.log > error-sbtest.log || true
 
-          SUMMARY=""
-          if [ -f next-build.log ]; then
-            SUMMARY="${SUMMARY}$(extract_errors next-build.log)"
-          fi
-          if [ -f sb-build.log ]; then
-            SUMMARY="${SUMMARY}$(extract_errors sb-build.log)"
-          fi
-          if [ -f sb-test.log ]; then
-            SUMMARY="${SUMMARY}$(extract_errors sb-test.log)"
-          fi
-
+          SUMMARY=$( (grep -i -E "error|failed|unexpected|cannot|not found" error-next.log || true; \
+                      grep -i -E "error|failed|unexpected|cannot|not found" error-sb.log || true; \
+                      grep -i -E "error|failed|unexpected|cannot|not found" error-sbtest.log || true) | tail -n 15 | sed 's/^/> /')
           echo "summary<<EOF" >> $GITHUB_OUTPUT
           echo "$SUMMARY" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -89,15 +86,23 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: build-status
           message: |
-            ${{ needs.build.result == 'success' && '✅ **모든 빌드 및 테스트 성공!**' || '❌ **빌드 또는 테스트 실패**' }}
+            ### 🧪 **PR 빌드 및 Storybook 테스트 결과**
 
-            | 항목 | 결과 |
-            |------|------|
-            | 🔧 `pnpm build` | ${{ steps.nextbuild.outcome == 'success' && '✅ 성공' || '❌ 실패' }} |
-            | 📦 `pnpm build-storybook` | ${{ steps.storybookbuild.outcome == 'success' && '✅ 성공' || '❌ 실패' }} |
-            | 🧪 `pnpm test-storybook` | ${{ steps.storybooktest.outcome == 'success' && '✅ 성공' || '❌ 실패' }} |
+            - 🏗️ **Next.js Build**: ${{ needs.build.result == 'success' && '✅ 성공' || '❌ 실패' }}
+            - 📦 **Storybook Build**: ${{ needs.build.result == 'success' && '✅ 성공' || '❌ 실패' }}
+            - 🔬 **Storybook Test**: ${{ needs.build.result == 'success' && '✅ 성공' || '❌ 실패' }}
 
             ${{ needs.build.result == 'failure' && format(
-            '오류 요약:\n\n```\n{0}\n```\n\n🔁 로컬에서 재현해보세요:\n\n```bash\npnpm install\npnpm build\npnpm build-storybook\npnpm test-storybook\n```',
-            steps.error.outputs.summary
-            ) || '' }}
+              '🧾 **에러 요약**:\n\n```\n{0}\n```',
+              steps.error.outputs.summary
+            ) }}
+
+            로컬에서 재현하려면 다음 명령어를 실행하세요:
+
+            ```bash
+            pnpm install
+            pnpm build
+            pnpm build-storybook
+            pnpm storybook
+            pnpm test-storybook
+            ```
