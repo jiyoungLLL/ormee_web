@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import Image from 'next/image';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
@@ -90,6 +92,7 @@ export default function Input<T extends FieldValues>({
                   alt='password-toggle'
                   width={24}
                   height={24}
+                  draggable={false}
                 />
               </button>
             )}
