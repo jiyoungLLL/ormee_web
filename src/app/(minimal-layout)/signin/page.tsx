@@ -36,11 +36,12 @@ export default function SignInPage() {
   };
 
   return (
-    <div className='flex flex-col justify-center items-center gap-[50px] w-[400px] h-fit'>
+    <div className='flex flex-col justify-center items-center gap-[50px] w-[400px] h-fit select-none'>
       <div className='flex flex-col justify-center items-center gap-[20px]'>
         <Image
           src='/assets/images/brand/logo.png'
           alt='오르미 로고'
+          draggable={false}
           width={160}
           height={29.79}
         />
