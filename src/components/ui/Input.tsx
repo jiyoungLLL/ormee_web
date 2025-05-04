@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import Image from 'next/image';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
