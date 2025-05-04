@@ -8,6 +8,8 @@ jobs:
   build:
     name: 🛠️ 프로젝트 빌드
     runs-on: ubuntu-latest
+    outputs:
+      storybook_test_result: ${{ steps.test_results.outputs.storybook_test_result }}
 
     steps:
       # ✅ PR 브랜치 코드 체크아웃
@@ -79,8 +81,8 @@ jobs:
       # 테스트 결과를 outputs에 저장
       - name: 테스트 결과 저장
         if: always()
-        run: echo "storybook_test_result=${{ steps.storybooktest.outcome }}" >> $GITHUB_OUTPUT
         id: test_results
+        run: echo "storybook_test_result=${{ steps.storybooktest.outcome }}" >> $GITHUB_OUTPUT
 
   comment:
     name: 💬 PR에 결과 댓글 작성
@@ -112,7 +114,3 @@ jobs:
             npx serve storybook-static -l 6006
             pnpm test-storybook --url http://localhost:6006
             ```
-
-# outputs 섹션 추가
-outputs:
-  storybook_test_result: ${{ steps.test_results.outputs.storybook_test_result }}
