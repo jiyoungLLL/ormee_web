@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import SideNavIcon from './SideNavIcon';
 
 type DateType = {
@@ -27,6 +27,8 @@ export default function SideNav({ type, title, student, date }: SideNavProps) {
   const pathname = usePathname();
   const pathSegments = pathname ? pathname.split('/').filter(Boolean) : [];
   const [mainCategory, subCategory] = pathSegments.slice(0, 2);
+  /** 드롭다운 클릭 */
+  const [isOpen, setIsOpen] = useState(false);
 
   const renderDate = () => {
     if (date) {
@@ -82,14 +84,34 @@ export default function SideNav({ type, title, student, date }: SideNavProps) {
       const categoryGroup2Memo = useMemo(() => renderCategoryGroup(categoryListGroup2), [mainCategory]);
       const categoryGroup3Memo = useMemo(() => renderCategoryGroup(categoryListGroup3), [mainCategory]);
 
+      const handleTitleClick = () => {
+        setIsOpen((prev) => !prev);
+      };
+
       return (
         <div className='flex flex-col gap-[11px]'>
           <div className='w-[252px] rounded-[20px] h-[249px] bg-[rgb(247_245_255)] bg-opacity-100 border border-purple-20 pt-[20px]'>
             <div className='flex flex-col gap-[20px]'>
               <div className='pr-[30px] pl-[30px] flex flex-col gap-[15px]'>
-                <div className='text-heading2 font-bold flex items-center gap-[11px]'>
+                <div
+                  className='relative text-heading2 font-bold flex items-center gap-[11px]'
+                  onClick={handleTitleClick}
+                >
                   {title?.[0]}
                   <SideNavIcon name={'드롭다운'} />
+
+                  {isOpen && (
+                    <div className='absolute z-10 w-[250px] h-auto top-[38px] left-[30px] py-[6px] px-[4px] gap-[5px] rounded-[5px] bg-white shadow-[0px_0px_7px_0px_rgba(70, 72, 84, 0.1)]'>
+                      {title?.map((title, index) => (
+                        <div
+                          key={`${title}-${index}`}
+                          className='text-headline2 w-[242px] h-[40px] py-[5px] px-[10px] font-gray-90 font-normal flex items-center'
+                        >
+                          {title}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <div className='flex flex-col gap-[15px]'>
                   <div className='flex flex-col gap-[5px]'>
