@@ -1,30 +1,47 @@
 import Image from 'next/image';
 
 type ButtonType = 'BUTTON_BASE_TYPE' | 'BUTTON_MODAL_TYPE' | 'BUTTON_CREATE_TYPE';
+type HTMLButtonType = 'button' | 'submit';
 
 type ButtonProps = {
   /** 버튼 사용처 */
   type: ButtonType;
+  /** 가로 길이 */
+  width: number;
+  /** 세로 길이 */
+  height: number;
   /** 내부 텍스트 */
   title: string;
   /** 색상 - 보라색 ? true : false */
   isPurple: boolean;
-  /** 버튼 클릭 이벤트 */
-  onClicked: () => void;
   /** bg 있/없 */
   isfilled?: boolean;
   /** 버튼 설명 텍스트  */
   description?: string;
+  /** 버튼 클릭 이벤트 */
+  onClick?: () => void;
+  /** html 버튼 타입 (button, submit) */
+  htmlType?: HTMLButtonType;
 };
 
 const whatBaseType = {
-  BUTTON_BASE_TYPE: 'h-[50px] w-[102px] py-[12px] px-[20px] rounded-[10px] gap-1',
-  BUTTON_MODAL_TYPE: 'h-[50px] w-[162px] py-[12px] px-[20px] rounded-[10px] gap-1',
+  BUTTON_BASE_TYPE: 'py-[12px] px-[20px] rounded-[10px] gap-1',
+  BUTTON_MODAL_TYPE: 'py-[12px] px-[20px] rounded-[10px] gap-1',
   BUTTON_CREATE_TYPE:
-    'h-[49px] w-[133px] py-[12px] px-[20px] rounded-[10px] gap-1 shadow-[2px_4px_12.5px_rgba(114,96,248,0.4)] flex gap-[4px]',
+    'py-[12px] px-[20px] rounded-[10px] gap-1 shadow-[2px_4px_12.5px_rgba(114,96,248,0.4)] flex gap-[4px]',
 } as const;
 
-export default function Button({ type, title, isPurple, onClicked, isfilled, description }: ButtonProps) {
+export default function Button({
+  type,
+  width,
+  height,
+  title,
+  isPurple,
+  isfilled,
+  description,
+  onClick,
+  htmlType = 'submit',
+}: ButtonProps) {
   const baseStyle = whatBaseType[type] ?? '';
   const fontStyle = type == 'BUTTON_BASE_TYPE' ? 'text-headline1 font-semibold' : 'text-headline1 font-bold';
 
@@ -50,7 +67,9 @@ export default function Button({ type, title, isPurple, onClicked, isfilled, des
 
   return (
     <button
-      onClick={onClicked}
+      type={htmlType}
+      onClick={onClick}
+      style={{ width: `${width}px`, height: `${height}px` }}
       className={`${baseStyle} ${fontStyle} ${backgroundStyle} ${borderStyle}`}
       title={description}
     >
