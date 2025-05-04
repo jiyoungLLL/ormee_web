@@ -54,6 +54,10 @@ jobs:
             fi
           done
 
+      # ✅ Playwright 브라우저 설치
+      - name: 🎭 Playwright 브라우저 설치
+        run: pnpm exec playwright install --with-deps chromium
+
       # ✅ Storybook 테스트 실행 (정적 서버에 대해)
       - name: 🧪 Storybook 테스트 실행
         id: storybooktest
