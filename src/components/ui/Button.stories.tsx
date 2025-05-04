@@ -13,12 +13,25 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof Button>;
 
+export const Login: Story = {
+  args: {
+    type: 'BUTTON_BASE_TYPE',
+    width: 400,
+    height: 60,
+    title: '로그인',
+    isPurple: true,
+    description: '로그인 버튼',
+    isfilled: true,
+  },
+};
+
 export const TemporarySave: Story = {
   args: {
     type: 'BUTTON_BASE_TYPE',
+    width: 102,
+    height: 50,
     title: '임시저장',
     isPurple: false,
-    onClicked: () => console.log('임지저장 완료'),
     description: '임시저장 버튼',
     isfilled: false,
   },
@@ -27,9 +40,10 @@ export const TemporarySave: Story = {
 export const Save: Story = {
   args: {
     type: 'BUTTON_BASE_TYPE',
+    width: 102,
+    height: 50,
     title: '등록하기',
     isPurple: true,
-    onClicked: () => console.log('등록 완료'),
     description: '등록하기 버튼',
     isfilled: true,
   },
@@ -38,9 +52,10 @@ export const Save: Story = {
 export const Edit: Story = {
   args: {
     type: 'BUTTON_BASE_TYPE',
+    width: 102,
+    height: 50,
     title: '수정하기',
     isPurple: true,
-    onClicked: () => console.log('수정 완료'),
     description: '수정하기 버튼',
     isfilled: false,
   },
@@ -49,9 +64,10 @@ export const Edit: Story = {
 export const ModalCancel: Story = {
   args: {
     type: 'BUTTON_MODAL_TYPE',
+    width: 162,
+    height: 50,
     title: '취소',
     isPurple: false,
-    onClicked: () => console.log('모달 취소'),
     description: '취소 버튼',
   },
 };
@@ -59,9 +75,10 @@ export const ModalCancel: Story = {
 export const ModalConfirm: Story = {
   args: {
     type: 'BUTTON_MODAL_TYPE',
+    width: 162,
+    height: 50,
     title: '확인',
     isPurple: true,
-    onClicked: () => console.log('모달 확인'),
     description: '취소 버튼',
   },
 };
@@ -69,9 +86,10 @@ export const ModalConfirm: Story = {
 export const QuizCreate: Story = {
   args: {
     type: 'BUTTON_CREATE_TYPE',
+    width: 133,
+    height: 49,
     title: '퀴즈 생성',
     isPurple: true,
-    onClicked: () => console.log('퀴즈 생성 완료'),
     description: '수정하기 버튼',
   },
 };
