@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import SideNavIcon from './SideNavIcon';
@@ -67,7 +68,8 @@ export default function SideNav({ type, title, student, date }: SideNavProps) {
           const focusStyle = isFocus ? 'bg-purple-10 text-purple-50 rounded-[10px] font-bold' : '';
 
           return (
-            <div
+            <Link
+              href={`/${pathName}`}
               key={iconName}
               className={`${commonStyle} ${focusStyle}`}
             >
@@ -76,7 +78,7 @@ export default function SideNav({ type, title, student, date }: SideNavProps) {
                 isFocus={isFocus}
               />
               {iconName === '강의홈' ? '강의 홈' : iconName}
-            </div>
+            </Link>
           );
         });
 
