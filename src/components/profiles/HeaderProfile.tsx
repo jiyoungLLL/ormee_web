@@ -12,13 +12,14 @@ const MOCK_USER_PROFILE = {
 
 export default function HeaderProfile() {
   return (
-    <div className='flex flex-row justify-between items-center gap-[10px] py-[5px]'>
+    <div className='flex flex-row justify-between items-center gap-[10px] py-[5px] select-none'>
       <Image
         src={MOCK_USER_PROFILE.image}
         width={24}
         height={24}
         className='rounded-full object-cover'
         alt='프로필 이미지'
+        draggable={false}
       />
       <p className='text-headline2 text-gray-70'>
         <span className='font-semibold'>{MOCK_USER_PROFILE.name}</span>
