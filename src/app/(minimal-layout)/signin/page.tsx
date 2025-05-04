@@ -2,19 +2,22 @@
 
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import { SigninFormValues, signinSchema } from '@/schemas/auth.schema';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 
 export default function SignInPage() {
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit } = useForm<SigninFormValues>({
     defaultValues: {
       id: '',
       password: '',
     },
+    resolver: zodResolver(signinSchema),
   });
 
-  const handleSignIn = (data: any) => {
+  const handleSignIn = (data: SigninFormValues) => {
     // TODO: 로그인 요청 API 연동
     alert(`로그인 요청: ${data.id}, ${data.password}`);
   };
