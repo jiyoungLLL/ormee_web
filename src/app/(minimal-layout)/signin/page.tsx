@@ -19,6 +19,10 @@ export default function SignInPage() {
     alert(`로그인 요청: ${data.id}, ${data.password}`);
   };
 
+  const alertPreparingFeature = () => {
+    alert('준비중인 기능입니다.');
+  };
+
   return (
     <div className='flex flex-col justify-center items-center gap-[50px] w-[400px] h-fit'>
       <div className='flex flex-col justify-center items-center gap-[20px]'>
@@ -59,7 +63,12 @@ export default function SignInPage() {
             htmlType='submit'
           />
           <div className='flex flex-row justify-center items-center gap-[16px] text-gray-70 text-body1-normal'>
-            <Link href='#'>아이디/비번 찾기</Link>
+            <Link
+              href='#'
+              onClick={alertPreparingFeature}
+            >
+              아이디/비번 찾기
+            </Link>
             <span className='text-gray-30'>|</span>
             <Link href='/signup'>회원가입</Link>
           </div>
