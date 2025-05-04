@@ -6,7 +6,7 @@ import { SigninFormValues, signinSchema } from '@/schemas/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
+import { FieldErrors, useForm } from 'react-hook-form';
 
 export default function SignInPage() {
   const { control, handleSubmit } = useForm<SigninFormValues>({
@@ -15,11 +15,20 @@ export default function SignInPage() {
       password: '',
     },
     resolver: zodResolver(signinSchema),
+    mode: 'onSubmit',
   });
 
   const handleSignIn = (data: SigninFormValues) => {
     // TODO: 로그인 요청 API 연동
     alert(`로그인 요청: ${data.id}, ${data.password}`);
+  };
+
+  const handleSignInError = (errors: FieldErrors<SigninFormValues>) => {
+    if (errors.id) {
+      alert(errors.id.message);
+    } else if (errors.password) {
+      alert(errors.password.message);
+    }
   };
 
   const alertPreparingFeature = () => {
@@ -37,7 +46,7 @@ export default function SignInPage() {
         />
         <h1 className='text-gray-70 text-heading2 font-semibold'>체계적인 수업 관리 서비스 오르미</h1>
       </div>
-      <form onSubmit={handleSubmit(handleSignIn)}>
+      <form onSubmit={handleSubmit(handleSignIn, handleSignInError)}>
         <div className='flex flex-col justify-center items-center w-[400px] gap-[12px] mb-[50px]'>
           <Input
             name='id'
