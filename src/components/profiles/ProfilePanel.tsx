@@ -2,6 +2,7 @@
 
 import { UserProfileData } from '@/types/user.types';
 import Image from 'next/image';
+import Link from 'next/link';
 
 type ProfilePanelProps = {
   profileData: UserProfileData;
@@ -11,7 +12,10 @@ export default function ProfilePanel({ profileData }: ProfilePanelProps) {
 
   return (
     <div className='absolute right-0 top-[44px] w-[299px] h-[207px] px-[30px] py-[20px] rounded-[15px] bg-white shadow-[0px_0px_7px_0px_rgba(70,72,84,0.10)]'>
-      <section className='mb-[20px]'>
+      <section
+        className='mb-[20px]'
+        aria-label='사용자 프로필 정보'
+      >
         <div className='flex flex-row justify-between items-start self-stretch mb-[10px]'>
           <Image
             src={image}
@@ -38,6 +42,19 @@ export default function ProfilePanel({ profileData }: ProfilePanelProps) {
           />
           <p className='text-gray-90 text-label2-normal'>{bio}</p>
         </div>
+      </section>
+      <section
+        className='flex flex-row gap-[10px] justify-between items-center'
+        aria-label='프로필 설정 및 마이페이지 이동 버튼'
+      >
+        <button className='flex justify-center items-center h-[40px] px-[20px] py-[12px] rounded-[10px] bg-white border-[1px] border-purple-50 text-purple-50 text-headline2 font-semibold'>
+          프로필 설정
+        </button>
+        <Link href='/mypage/personal'>
+          <button className='flex justify-center items-center h-[40px] px-[20px] py-[12px] rounded-[10px] bg-purple-50 text-white text-headline2 font-semibold'>
+            마이페이지
+          </button>
+        </Link>
       </section>
     </div>
   );
