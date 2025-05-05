@@ -27,6 +27,7 @@ export default function HeaderProfile() {
         className='flex flex-row justify-between items-center gap-[10px] py-[5px] select-none cursor-pointer'
         onClick={handlePanelToggle}
       >
+        {MOCK_USER_PROFILE.image ? (
         <Image
           src={MOCK_USER_PROFILE.image}
           width={24}
@@ -35,6 +36,9 @@ export default function HeaderProfile() {
           alt='프로필 이미지'
           draggable={false}
         />
+        ) : (
+          <div className='w-[24px] h-[24px] rounded-full bg-gray-50' />
+        )}
         <p className='text-headline2 text-gray-70'>
           <span className='font-semibold'>{MOCK_USER_PROFILE.name}</span>
           <span className='font-normal ml-[3px]'>선생님</span>
