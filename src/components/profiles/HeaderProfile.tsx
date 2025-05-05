@@ -15,6 +15,9 @@ const MOCK_USER_PROFILE: UserProfileData = {
 
 export default function HeaderProfile() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [userData, setUserData] = useState<UserProfileData>(MOCK_USER_PROFILE);
+
+  const { name, image } = userData;
 
   const handlePanelToggle = () => {
     setIsPanelOpen((prev) => !prev);
@@ -27,9 +30,9 @@ export default function HeaderProfile() {
         className='flex flex-row justify-between items-center gap-[10px] py-[5px] select-none cursor-pointer'
         onClick={handlePanelToggle}
       >
-        {MOCK_USER_PROFILE.image ? (
+        {image ? (
         <Image
-          src={MOCK_USER_PROFILE.image}
+            src={image}
           width={24}
           height={24}
           className='rounded-full object-cover'
@@ -40,11 +43,11 @@ export default function HeaderProfile() {
           <div className='w-[24px] h-[24px] rounded-full bg-gray-50' />
         )}
         <p className='text-headline2 text-gray-70'>
-          <span className='font-semibold'>{MOCK_USER_PROFILE.name}</span>
+          <span className='font-semibold'>{name}</span>
           <span className='font-normal ml-[3px]'>선생님</span>
         </p>
       </div>
-      {isPanelOpen && <ProfilePanel profileData={MOCK_USER_PROFILE} />}
+      {isPanelOpen && <ProfilePanel profileData={userData} />}
     </div>
   );
 }
