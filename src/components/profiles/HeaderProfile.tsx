@@ -23,6 +23,7 @@ export default function HeaderProfile() {
   return (
     <div className='relative'>
       <div
+        data-testid='header-profile'
         className='flex flex-row justify-between items-center gap-[10px] py-[5px] select-none cursor-pointer'
         onClick={handlePanelToggle}
       >
