@@ -3,9 +3,10 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import ProfilePanel from './ProfilePanel';
+import { UserProfileData } from '@/types/user.types';
 
 // TODO: api 연동 후 실제 유저 데이터로 변경
-const MOCK_USER_PROFILE = {
+const MOCK_USER_PROFILE: UserProfileData = {
   name: '강수이',
   image:
     'https://img.freepik.com/premium-vector/girl-is-writing-chalkboard-with-pencil-her-hand_990404-19401.jpg?semt=ais_hybrid&w=740',
@@ -38,7 +39,7 @@ export default function HeaderProfile() {
           <span className='font-normal ml-[3px]'>선생님</span>
         </p>
       </div>
-      {isPanelOpen && <ProfilePanel />}
+      {isPanelOpen && <ProfilePanel profileData={MOCK_USER_PROFILE} />}
     </div>
   );
 }
