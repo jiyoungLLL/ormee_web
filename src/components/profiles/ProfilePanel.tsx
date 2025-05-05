@@ -7,6 +7,7 @@ import Link from 'next/link';
 type ProfilePanelProps = {
   profileData: UserProfileData;
 };
+
 export default function ProfilePanel({ profileData }: ProfilePanelProps) {
   const { name, image, bio } = profileData;
 
