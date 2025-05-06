@@ -1,3 +1,11 @@
+import NoticeWriteHeader from './NoticeWriteHeader';
+import NoticeWriteTitle from './NoticeWriteTitle';
+
 export default function NoticeWrite() {
-  return <div>공지 작성</div>;
+  return (
+    <div>
+      <NoticeWriteHeader />
+      <NoticeWriteTitle />
+    </div>
+  );
 }

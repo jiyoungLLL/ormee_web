@@ -1,10 +1,10 @@
+import NoticeHeader from './NoticeHeader';
 import NoticeList from './NoticeList';
-import NoticeTitle from './NoticeTitle';
 
 export default function Notice() {
   return (
     <div>
-      <NoticeTitle />
+      <NoticeHeader />
       <NoticeList />
     </div>
   );
