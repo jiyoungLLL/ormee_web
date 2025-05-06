@@ -12,7 +12,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <Header>
           <div className='flex flex-row justify-between items-center gap-[30px]'>
             <Notification />
-            <HeaderProfile userData={MOCK_USER_PROFILE} />
+            <HeaderProfile userProfileData={MOCK_USER_PROFILE} />
           </div>
         </Header>
         <main className='flex-1 flex flex-col justify-center items-center w-full h-full'>{children}</main>
