@@ -3,6 +3,7 @@
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 
 export default function NoticeTitle() {
@@ -29,16 +30,19 @@ export default function NoticeTitle() {
             placeholder='검색'
           />
         </div>
-        <div className='relative top-[14px]'>
+        <Link
+          href='/notice/write'
+          className='relative top-[14px]'
+        >
           <Button
             type='BUTTON_CREATE_TYPE'
-            width={133}
-            height={49}
+            size='w-[133px] h-[49px]'
+            font='text-headline1 font-bold'
             title='공지 작성'
             isPurple={true}
             description='공지작성 버튼'
           />
-        </div>
+        </Link>
       </div>
     </>
   );
