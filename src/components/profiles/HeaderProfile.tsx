@@ -5,17 +5,12 @@ import { useState } from 'react';
 import ProfilePanel from './ProfilePanel';
 import { UserProfileData } from '@/types/user.types';
 
-// TODO: api 연동 후 실제 유저 데이터로 변경
-const MOCK_USER_PROFILE: UserProfileData = {
-  name: '강수이',
-  image:
-    'https://img.freepik.com/premium-vector/girl-is-writing-chalkboard-with-pencil-her-hand_990404-19401.jpg?semt=ais_hybrid&w=740',
-  bio: '가는 말이 고와야 오는 말이 곱다.',
+type HeaderProfileProps = {
+  userData: UserProfileData;
 };
 
-export default function HeaderProfile() {
+export default function HeaderProfile({ userData }: HeaderProfileProps) {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [userData, setUserData] = useState<UserProfileData>(MOCK_USER_PROFILE);
 
   const { name, image } = userData;
 
@@ -31,14 +26,14 @@ export default function HeaderProfile() {
         onClick={handlePanelToggle}
       >
         {image ? (
-        <Image
+          <Image
             src={image}
-          width={24}
-          height={24}
-          className='rounded-full object-cover'
-          alt='프로필 이미지'
-          draggable={false}
-        />
+            width={24}
+            height={24}
+            className='rounded-full object-cover'
+            alt='프로필 이미지'
+            draggable={false}
+          />
         ) : (
           <div className='w-[24px] h-[24px] rounded-full bg-gray-50' />
         )}
