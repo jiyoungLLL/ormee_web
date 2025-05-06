@@ -25,8 +25,8 @@ type ButtonProps = {
 };
 
 const whatBaseType = {
-  BUTTON_BASE_TYPE: 'py-[12px] px-[20px] rounded-[10px] gap-1',
-  BUTTON_MODAL_TYPE: 'py-[12px] px-[20px] rounded-[10px] gap-1',
+  BUTTON_BASE_TYPE: 'py-[12px] px-[20px] rounded-[10px] gap-[4px]',
+  BUTTON_MODAL_TYPE: 'py-[12px] px-[20px] rounded-[10px] gap-[4px]',
   BUTTON_CREATE_TYPE:
     'py-[12px] px-[20px] rounded-[10px] gap-1 shadow-[2px_4px_12.5px_rgba(114,96,248,0.4)] flex gap-[4px]',
 } as const;
@@ -68,7 +68,7 @@ export default function Button({
     <button
       type={htmlType}
       onClick={onClick}
-      className={`${size} ${baseStyle} ${font} ${backgroundStyle} ${borderStyle}`}
+      className={`whitespace-nowrap ${size} ${baseStyle} ${font} ${backgroundStyle} ${borderStyle}`}
       title={description}
     >
       {type === 'BUTTON_CREATE_TYPE' ? (
