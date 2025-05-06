@@ -6,13 +6,14 @@ import ProfilePanel from './ProfilePanel';
 import { UserProfileData } from '@/types/user.types';
 
 type HeaderProfileProps = {
-  userData: UserProfileData;
+  /** 프로필 패널에 보여질 데이터 */
+  userProfileData: UserProfileData;
 };
 
-export default function HeaderProfile({ userData }: HeaderProfileProps) {
+export default function HeaderProfile({ userProfileData }: HeaderProfileProps) {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
-  const { name, image } = userData;
+  const { name, image } = userProfileData;
 
   const handlePanelToggle = () => {
     setIsPanelOpen((prev) => !prev);
@@ -42,7 +43,7 @@ export default function HeaderProfile({ userData }: HeaderProfileProps) {
           <span className='font-normal ml-[3px]'>선생님</span>
         </p>
       </div>
-      {isPanelOpen && <ProfilePanel profileData={userData} />}
+      {isPanelOpen && <ProfilePanel profileData={userProfileData} />}
     </div>
   );
 }
