@@ -6,10 +6,10 @@ type HTMLButtonType = 'button' | 'submit';
 type ButtonProps = {
   /** 버튼 사용처 */
   type: ButtonType;
-  /** 가로 길이 */
-  width: number;
-  /** 세로 길이 */
-  height: number;
+  /** 버튼 가로세로 길이 */
+  size: string;
+  /** 버튼 폰트 스타일 */
+  font: string;
   /** 내부 텍스트 */
   title: string;
   /** 색상 - 보라색 ? true : false */
@@ -33,8 +33,8 @@ const whatBaseType = {
 
 export default function Button({
   type,
-  width,
-  height,
+  size,
+  font,
   title,
   isPurple,
   isfilled,
@@ -43,7 +43,6 @@ export default function Button({
   htmlType = 'submit',
 }: ButtonProps) {
   const baseStyle = whatBaseType[type] ?? '';
-  const fontStyle = type == 'BUTTON_BASE_TYPE' ? 'text-headline1 font-semibold' : 'text-headline1 font-bold';
 
   const whatBackgroundStyle: Record<ButtonType, string> = {
     BUTTON_BASE_TYPE: isfilled
@@ -69,8 +68,7 @@ export default function Button({
     <button
       type={htmlType}
       onClick={onClick}
-      style={{ width: `${width}px`, height: `${height}px` }}
-      className={`${baseStyle} ${fontStyle} ${backgroundStyle} ${borderStyle}`}
+      className={`${size} ${baseStyle} ${font} ${backgroundStyle} ${borderStyle}`}
       title={description}
     >
       {type === 'BUTTON_CREATE_TYPE' ? (
