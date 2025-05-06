@@ -132,9 +132,19 @@ export default function SideNav({ type, title, student, date }: SideNavProps) {
                 </div>
               </div>
               <div className='h-[62px] w-full border-t-0.5 border-purple-20 flex justify-center items-center text-center text-gray-80 text-headline2 font-normal'>
-                <button className='flex-1'>강의 설정</button>
+                <Link
+                  href={'/'}
+                  className='flex-1'
+                >
+                  강의 설정
+                </Link>
                 <div className='w-[0.5px] h-[30px] bg-gray-40'></div>
-                <button className='flex-1'>수강생 목록</button>
+                <Link
+                  href={'/'}
+                  className='flex-1'
+                >
+                  수강생 목록
+                </Link>
               </div>
             </div>
           </div>
