@@ -16,6 +16,8 @@ type ButtonProps = {
   isPurple: boolean;
   /** bg 있/없 */
   isfilled?: boolean;
+  /** 임시저장 3 처럼 추가 텍스트 필요할 때*/
+  added?: string;
   /** 버튼 설명 텍스트  */
   description?: string;
   /** 버튼 클릭 이벤트 */
@@ -38,6 +40,7 @@ export default function Button({
   title,
   isPurple,
   isfilled,
+  added,
   description,
   onClick,
   htmlType = 'submit',
@@ -81,8 +84,7 @@ export default function Button({
       ) : (
         ''
       )}
-
-      {title}
+      {title} {added ? <span className='text-purple-50'>{added}</span> : ''}
     </button>
   );
 }
