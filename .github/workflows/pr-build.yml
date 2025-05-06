@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       storybook_test_result: ${{ steps.test_results.outputs.storybook_test_result }}
+      error_summary: ${{ steps.error.outputs.summary }}
 
     steps:
       # ✅ PR 브랜치 코드 체크아웃
@@ -40,10 +41,12 @@ jobs:
 
       # ✅ Storybook을 정적으로 빌드 (storybook-static 폴더에 출력)
       - name: 📦 Storybook 정적 빌드
+        if: success()
         run: pnpm build-storybook -o storybook-static
 
       # ✅ Storybook 서버 실행 및 응답 대기 (최대 5분, 5초마다 상태 출력)
       - name: 🚀 Storybook 서버 실행 및 대기
+        if: success()
         run: |
           npx serve storybook-static --no-clipboard -l 6006 > storybook-server.log 2>&1 &
           for i in {1..60}; do
@@ -58,25 +61,40 @@ jobs:
 
       # ✅ Playwright 브라우저 설치
       - name: 🎭 Playwright 브라우저 설치
+        if: success()
         run: pnpm exec playwright install --with-deps chromium
 
       # ✅ Storybook 테스트 실행 (정적 서버에 대해)
       - name: 🧪 Storybook 테스트 실행
         id: storybooktest
+        if: success()
         run: |
           pnpm test-storybook --url http://localhost:6006 2>&1 | tee storybook-test.log
 
       # ❌ 실패한 경우 로그에서 오류 요약 추출
       - name: 📋 오류 요약 추출
         id: error
-        if: failure()
+        if: always()
         run: |
           echo "📦 오류 로그 요약을 추출합니다..."
-          tail -n 50 build.log storybook-test.log > error-tail.log
-          SUMMARY=$(grep -i -E "error|failed|unexpected|cannot|not found" error-tail.log | tail -n 10 | sed 's/^/> /')
-          echo "summary<<EOF" >> $GITHUB_OUTPUT
-          echo "$SUMMARY" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          ERROR_LOGS=""
+          if [ -f "build.log" ]; then
+            ERROR_LOGS="$ERROR_LOGS build.log"
+          fi
+          if [ -f "storybook-test.log" ]; then
+            ERROR_LOGS="$ERROR_LOGS storybook-test.log"
+          fi
+
+          if [ -z "$ERROR_LOGS" ]; then
+            echo "로그 파일이 존재하지 않습니다."
+            echo "summary=로그 파일이 존재하지 않습니다." >> $GITHUB_OUTPUT
+          else
+            tail -n 50 $ERROR_LOGS > error-tail.log
+            SUMMARY=$(grep -i -E "error|failed|unexpected|cannot|not found" error-tail.log | tail -n 10 | sed 's/^/> /')
+            echo "summary<<EOF" >> $GITHUB_OUTPUT
+            echo "$SUMMARY" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi
 
       # 테스트 결과를 outputs에 저장
       - name: 테스트 결과 저장
@@ -88,6 +106,7 @@ jobs:
     name: 💬 PR에 결과 댓글 작성
     runs-on: ubuntu-latest
     needs: build
+    if: always()
 
     steps:
       # ✅ PR에 결과 댓글 작성 (성공/실패 모두 처리)
@@ -102,9 +121,9 @@ jobs:
             ### 📊 빌드 및 테스트 요약
 
             - **Next.js Build**: ${{ needs.build.result == 'success' && '✅ 성공' || '❌ 실패' }}
-            - **Storybook 테스트 실행**: ${{ needs.build.outputs.storybook_test_result == 'success' && '✅ 성공' || '❌ 실패' }}
+            - **Storybook 테스트 실행**: ${{ needs.build.outputs.storybook_test_result == 'success' && '✅ 성공' || (needs.build.outputs.storybook_test_result == '' && '⚠️ 실행되지 않음' || '❌ 실패') }}
 
-            ${{ steps.error.outputs.summary && format('**오류 요약:**\n```\n{0}\n```', steps.error.outputs.summary) }}
+            ${{ needs.build.outputs.error_summary && format('**오류 요약:**\n```\n{0}\n```', needs.build.outputs.error_summary) }}
 
             > 🔁 로컬에서 재현하려면 아래 명령어를 실행해보세요:
             ```bash
