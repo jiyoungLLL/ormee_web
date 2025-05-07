@@ -1,33 +1,38 @@
 'use client';
 
-import { useState } from 'react';
+import { Control, FieldValues, Path } from 'react-hook-form';
+import Input from './Input';
 
-type SearchInputProps = {
-  onChange: (value: string) => void;
+type SearchInputProps<T extends FieldValues> = {
+  name: Path<T>;
+  control: Control<T>;
   placeholder?: string;
   size?: string;
 };
 
-export default function SearchInput({ onChange, placeholder, size = 'w-[350px] h-[46px]' }: SearchInputProps) {
-  const [searchValue, setSearchValue] = useState('');
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-
-    setSearchValue(value);
-    onChange(value);
-  };
-
+export default function SearchInput<T extends FieldValues>({
+  name,
+  control,
+  placeholder,
+  size = 'w-[350px] h-[46px]',
+}: SearchInputProps<T>) {
   return (
-    <div className={`relative ${size}`}>
-      {/* <image /> */}
-      <input
-        type='text'
-        value={searchValue}
-        placeholder={placeholder}
-        className='w-full h-full border border-gray-30 rounded-[10px]'
-        onChange={handleChange}
+    <Input
+      name={name}
+      control={control}
+      size={size}
+      placeholder={placeholder}
+      type='text'
+    >
+      <img
+        src='/assets/icons/search.png'
+        className='absolute w-[24px] h-[24px]'
+        style={{
+          top: '50%',
+          right: '15px',
+          transform: 'translateY(-50%)',
+        }}
       />
-    </div>
+    </Input>
   );
 }
