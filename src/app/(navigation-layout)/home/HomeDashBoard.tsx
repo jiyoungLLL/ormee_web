@@ -47,7 +47,7 @@ export default function HomeDashBoard() {
     <>
       <div className='w-[115px] h-[34px] px-[5px] flex items-center gap-[10px] text-title3 font-bold'>
         <Image
-          src={'/assets/icons/sidenav/home_selected.png'}
+          src={'/assets/icons/home-ui.png'}
           width={28}
           height={28}
           className='w-[28px] h-[28px]'
