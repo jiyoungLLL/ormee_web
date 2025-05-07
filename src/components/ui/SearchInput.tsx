@@ -22,6 +22,7 @@ export default function SearchInput<T extends FieldValues>({
       control={control}
       size={size}
       placeholder={placeholder}
+      inputStyle='bg-transparent border border-gray-30 px-[15px] py-[9px]'
       type='text'
     >
       <img
