@@ -4,10 +4,15 @@ import { Control, FieldValues, Path } from 'react-hook-form';
 import Input from './Input';
 
 type SearchInputProps<T extends FieldValues> = {
+  /** useForm에서 사용할 필드의 이름 */
   name: Path<T>;
+  /** useForm에서 사용할 컨트롤러 */
   control: Control<T>;
+  /** 플레이스홀더 */
   placeholder?: string;
+  /** tailwind 스타일 크기 지정, w-full, h-full 가능 */
   size?: string;
+  /** 검색 아이콘 위치 */
   iconPosition?: 'left' | 'right';
 };
 
