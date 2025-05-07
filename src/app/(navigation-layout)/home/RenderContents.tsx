@@ -1,14 +1,10 @@
+import { MOCK_HOME_CONTENTS } from '@/mock/home';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const mokData: string[][] = [
-  //   ['이거 어떻게 풀어요?', '2025.01.23'],
-  //   ['설연휴 휴강으로 인한 보강은 언제인가요?', '2025.01.25'],
-];
-
 export default function RenderContents({ category }: { category: string }) {
   const added = category === '질문' ? 'qna' : 'notice';
-  const isEmpty = mokData.length == 0;
+  const isEmpty = MOCK_HOME_CONTENTS.length == 0;
   const emptyStyle = isEmpty ? 'justify-center items-center' : '';
   const emptyComment = category === '질문' ? '아직 올라온 질문이 없어요.' : '작성한 공지가 없어요.';
 
@@ -35,7 +31,7 @@ export default function RenderContents({ category }: { category: string }) {
         {isEmpty ? (
           <div className='text-heading2 font-semibold text-[rgb(181_182_188)]'>{emptyComment}</div>
         ) : (
-          mokData.map(([title, date], index) => (
+          MOCK_HOME_CONTENTS.map(([title, date], index) => (
             <div
               key={`${title}-${date}-${index}`}
               className='flex justify-between text-headline1'

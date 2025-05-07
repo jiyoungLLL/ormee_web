@@ -9,3 +9,8 @@ const rawData: Record<number, HomeSlideProps> = {
 };
 
 export const MOCK_HOME_SLIDE: HomeSlideProps[] = Object.values(rawData);
+
+export const MOCK_HOME_CONTENTS: string[][] = [
+  ['이거 어떻게 풀어요?', '2025.01.23'],
+  ['설연휴 휴강으로 인한 보강은 언제인가요?', '2025.01.25'],
+];
