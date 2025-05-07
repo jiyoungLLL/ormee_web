@@ -21,6 +21,8 @@ export type InputProps<T extends FieldValues> = {
   showCharacterCount?: boolean;
   /** 비밀번호 숨기기/보이기 토글 표시 여부 */
   showPasswordToggle?: boolean;
+  /** Input 내부 추가 컴포넌트 */
+  children?: React.ReactNode;
 };
 
 export default function Input<T extends FieldValues>({
@@ -32,6 +34,7 @@ export default function Input<T extends FieldValues>({
   placeholder,
   showCharacterCount = false,
   showPasswordToggle = false,
+  children,
 }: InputProps<T>) {
   const [inputType, setInputType] = useState(type);
 
@@ -97,6 +100,7 @@ export default function Input<T extends FieldValues>({
               </button>
             )}
           </div>
+          {children}
         </div>
       )}
     />
