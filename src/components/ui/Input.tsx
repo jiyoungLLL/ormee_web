@@ -13,6 +13,8 @@ export type InputProps<T extends FieldValues> = {
   type?: 'text' | 'password' | 'email';
   /** tailwind 스타일 크기 지정, w-full, h-full 가능 */
   size: string;
+  /** input 스타일 지정, 미지정시 기본 bg-white pl-[20px] py-[15px] border-[1px] border-gray-20 focus:border-[1px] focus:border-purple-50 focus:outline-none disabled:bg-gray-10 적용 */
+  inputStyle?: string;
   /** 플레이스홀더 */
   placeholder?: string;
   /** 최대 글자 수, 제한 없는 경우 생략 */
@@ -21,6 +23,8 @@ export type InputProps<T extends FieldValues> = {
   showCharacterCount?: boolean;
   /** 비밀번호 숨기기/보이기 토글 표시 여부 */
   showPasswordToggle?: boolean;
+  /** Input 내부 추가 컴포넌트 */
+  children?: React.ReactNode;
 };
 
 export default function Input<T extends FieldValues>({
@@ -30,8 +34,10 @@ export default function Input<T extends FieldValues>({
   size,
   maxLength,
   placeholder,
+  inputStyle = 'bg-white pl-[20px] py-[15px] border-[1px] border-gray-20 focus:border-[1px] focus:border-purple-50 focus:outline-none disabled:bg-gray-10',
   showCharacterCount = false,
   showPasswordToggle = false,
+  children,
 }: InputProps<T>) {
   const [inputType, setInputType] = useState(type);
 
@@ -60,7 +66,7 @@ export default function Input<T extends FieldValues>({
             type={inputType}
             maxLength={maxLength}
             placeholder={placeholder}
-            className={`absolute w-full h-full ${showCharacterCount && showPasswordToggle && 'pr-[115px]'} ${showCharacterCount && !showPasswordToggle && 'pr-[82px]'} ${!showCharacterCount && showPasswordToggle && 'pr-[56px]'} ${!showCharacterCount && !showPasswordToggle && 'pr-[20px]'} pl-[20px] py-[15px] rounded-[10px] bg-white disabled:bg-gray-10 border-[1px] border-gray-20 focus:border-[1px] focus:border-purple-50 focus:outline-none text-body-reading text-gray-90 placeholder:text-gray-50`}
+            className={`absolute w-full h-full ${showCharacterCount && showPasswordToggle && 'pr-[115px]'} ${showCharacterCount && !showPasswordToggle && 'pr-[82px]'} ${!showCharacterCount && showPasswordToggle && 'pr-[56px]'} ${!showCharacterCount && !showPasswordToggle && 'pr-[20px]'} ${inputStyle} rounded-[10px] text-body-reading text-gray-90 placeholder:text-gray-50`}
             onChange={handleInputChange(field, maxLength)}
           />
           <div
@@ -97,6 +103,7 @@ export default function Input<T extends FieldValues>({
               </button>
             )}
           </div>
+          {children}
         </div>
       )}
     />
