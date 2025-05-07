@@ -1,4 +1,4 @@
-import { homeSlide } from '@/types/homeSlide.types';
+import { homeSlide } from '@/types/home.types';
 
 const rawData: Record<number, homeSlide> = {
   0: { cate: '퀴즈', title: '2주차 단어', student: '24/50', date: '2025.02.23 - 2025.04.02' },
