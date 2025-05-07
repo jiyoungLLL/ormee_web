@@ -1,6 +1,6 @@
 'use client';
 
-import { homeSlide } from '@/types/homeSlide.types';
+import { homeSlide } from '@/types/home.types';
 import Image from 'next/image';
 
 type HomSlideData = {
@@ -10,7 +10,7 @@ type HomSlideData = {
 
 export default function HomeSlide({ data }: HomSlideData) {
   return (
-    <div className='h-[131px] flex gap-[8px] overflow-x-auto overflow-y-hidden whitespace-nowrap no-scrollbar'>
+    <div className='h-[131px] flex gap-[8px] overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-hide'>
       {data?.map((item, index) => {
         const boxStyle =
           item.cate === '퀴즈'

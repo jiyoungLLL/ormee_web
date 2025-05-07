@@ -1,4 +1,4 @@
-import { MOCK_HOME_SLIDE } from '@/mock/homeSlide';
+import { MOCK_HOME_SLIDE } from '@/mock/home';
 import type { Meta, StoryObj } from '@storybook/react';
 import HomeSlide from './HomeSlide';
 

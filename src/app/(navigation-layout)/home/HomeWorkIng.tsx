@@ -1,5 +1,5 @@
 import HomeSlide from '@/components/ui/HomeSlide';
-import { MOCK_HOME_SLIDE } from '@/mock/homeSlide';
+import { MOCK_HOME_SLIDE } from '@/mock/home';
 
 export default function HomeWorkIng() {
   return (
