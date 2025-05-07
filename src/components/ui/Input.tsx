@@ -13,10 +13,8 @@ export type InputProps<T extends FieldValues> = {
   type?: 'text' | 'password' | 'email';
   /** tailwind 스타일 크기 지정, w-full, h-full 가능 */
   size: string;
-  /** input 테두리 스타일 지정, 미지정시 기본 border-[1px] border-gray-20 적용 */
-  inputBorderStyle?: string;
-  /** input 배경색 지정, 미지정시 기본 bg-white 적용 */
-  inputBgStyle?: string;
+  /** input 스타일 지정, 미지정시 기본 bg-white pl-[20px] py-[15px] border-[1px] border-gray-20 focus:border-[1px] focus:border-purple-50 focus:outline-none disabled:bg-gray-10 적용 */
+  inputStyle?: string;
   /** 플레이스홀더 */
   placeholder?: string;
   /** 최대 글자 수, 제한 없는 경우 생략 */
@@ -25,8 +23,6 @@ export type InputProps<T extends FieldValues> = {
   showCharacterCount?: boolean;
   /** 비밀번호 숨기기/보이기 토글 표시 여부 */
   showPasswordToggle?: boolean;
-  /** 포커스 스타일 적용 여부 */
-  activateFocusStyle?: boolean;
   /** Input 내부 추가 컴포넌트 */
   children?: React.ReactNode;
 };
@@ -38,11 +34,9 @@ export default function Input<T extends FieldValues>({
   size,
   maxLength,
   placeholder,
-  inputBorderStyle = 'border-[1px] border-gray-20',
-  inputBgStyle = 'bg-white',
+  inputStyle = 'bg-white pl-[20px] py-[15px] border-[1px] border-gray-20 focus:border-[1px] focus:border-purple-50 focus:outline-none disabled:bg-gray-10',
   showCharacterCount = false,
   showPasswordToggle = false,
-  activateFocusStyle = true,
   children,
 }: InputProps<T>) {
   const [inputType, setInputType] = useState(type);
@@ -72,7 +66,7 @@ export default function Input<T extends FieldValues>({
             type={inputType}
             maxLength={maxLength}
             placeholder={placeholder}
-            className={`absolute w-full h-full ${showCharacterCount && showPasswordToggle && 'pr-[115px]'} ${showCharacterCount && !showPasswordToggle && 'pr-[82px]'} ${!showCharacterCount && showPasswordToggle && 'pr-[56px]'} ${!showCharacterCount && !showPasswordToggle && 'pr-[20px]'} pl-[20px] py-[15px] rounded-[10px] ${inputBgStyle} disabled:bg-gray-10 ${inputBorderStyle} ${activateFocusStyle && 'focus:border-[1px] focus:border-purple-50 focus:outline-none'} text-body-reading text-gray-90 placeholder:text-gray-50`}
+            className={`absolute w-full h-full ${showCharacterCount && showPasswordToggle && 'pr-[115px]'} ${showCharacterCount && !showPasswordToggle && 'pr-[82px]'} ${!showCharacterCount && showPasswordToggle && 'pr-[56px]'} ${!showCharacterCount && !showPasswordToggle && 'pr-[20px]'} ${inputStyle} rounded-[10px] text-body-reading text-gray-90 placeholder:text-gray-50`}
             onChange={handleInputChange(field, maxLength)}
           />
           <div
