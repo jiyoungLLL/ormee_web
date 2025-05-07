@@ -71,8 +71,8 @@ export default function SignInPage() {
             title='로그인'
             isPurple
             isfilled
-            width={400}
-            height={60}
+            size='w-[400px] h-[60px]'
+            font='text-headline1 font-bold'
             htmlType='submit'
           />
           <div className='flex flex-row justify-center items-center gap-[16px] text-gray-70 text-body1-normal'>
