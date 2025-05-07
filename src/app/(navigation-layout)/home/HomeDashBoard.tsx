@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import HomeWorkIng from './HomeWorkIng';
@@ -30,6 +32,17 @@ const renderMiniDash = () => {
 };
 
 export default function HomeDashBoard() {
+  const handleCopy = () => {
+    // 강의코드 데이터 변경 필요
+    const text = '강의코드';
+
+    if (text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('복사 성공!');
+      });
+    }
+  };
+
   return (
     <>
       <div className='w-[115px] h-[34px] px-[5px] flex items-center gap-[10px] text-title3 font-bold'>
@@ -49,7 +62,11 @@ export default function HomeDashBoard() {
               <div className='text-title3 font-bold text-white'>오르미 토익</div>
               <div className='text-label2-normal text-[rgb(236_233_255)]'>2025. 01. 03 - 2025. 03. 02</div>
             </div>
-            <button className='h-[24px]'>
+            <button
+              onClick={handleCopy}
+              className='h-[24px]'
+              type='button'
+            >
               <Image
                 src={'/assets/icons/copy.png'}
                 width={24}
