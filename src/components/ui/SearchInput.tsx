@@ -8,6 +8,7 @@ type SearchInputProps<T extends FieldValues> = {
   control: Control<T>;
   placeholder?: string;
   size?: string;
+  iconPosition?: 'left' | 'right';
 };
 
 export default function SearchInput<T extends FieldValues>({
@@ -15,6 +16,7 @@ export default function SearchInput<T extends FieldValues>({
   control,
   placeholder,
   size = 'w-[350px] h-[46px]',
+  iconPosition = 'left',
 }: SearchInputProps<T>) {
   return (
     <Input
@@ -22,15 +24,18 @@ export default function SearchInput<T extends FieldValues>({
       control={control}
       size={size}
       placeholder={placeholder}
-      inputStyle='bg-transparent border border-gray-30 px-[15px] py-[9px]'
+      inputStyle={`bg-transparent border border-gray-30 ${iconPosition === 'left' ? 'pl-[49px] pr-[15px]' : 'pr-[49px] pl-[15px]'} py-[9px]`}
       type='text'
     >
       <img
         src='/assets/icons/search.png'
-        className='absolute w-[24px] h-[24px]'
         style={{
+          position: 'absolute',
+          width: '24px',
+          height: '24px',
           top: '50%',
-          right: '15px',
+          left: iconPosition === 'left' ? '15px' : 'auto',
+          right: iconPosition === 'right' ? '15px' : 'auto',
           transform: 'translateY(-50%)',
         }}
       />
