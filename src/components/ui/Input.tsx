@@ -21,6 +21,8 @@ export type InputProps<T extends FieldValues> = {
   showCharacterCount?: boolean;
   /** 비밀번호 숨기기/보이기 토글 표시 여부 */
   showPasswordToggle?: boolean;
+  /** 포커스 스타일 적용 여부 */
+  activateFocusStyle?: boolean;
   /** Input 내부 추가 컴포넌트 */
   children?: React.ReactNode;
 };
@@ -34,6 +36,7 @@ export default function Input<T extends FieldValues>({
   placeholder,
   showCharacterCount = false,
   showPasswordToggle = false,
+  activateFocusStyle = true,
   children,
 }: InputProps<T>) {
   const [inputType, setInputType] = useState(type);
@@ -63,7 +66,7 @@ export default function Input<T extends FieldValues>({
             type={inputType}
             maxLength={maxLength}
             placeholder={placeholder}
-            className={`absolute w-full h-full ${showCharacterCount && showPasswordToggle && 'pr-[115px]'} ${showCharacterCount && !showPasswordToggle && 'pr-[82px]'} ${!showCharacterCount && showPasswordToggle && 'pr-[56px]'} ${!showCharacterCount && !showPasswordToggle && 'pr-[20px]'} pl-[20px] py-[15px] rounded-[10px] bg-white disabled:bg-gray-10 border-[1px] border-gray-20 focus:border-[1px] focus:border-purple-50 focus:outline-none text-body-reading text-gray-90 placeholder:text-gray-50`}
+            className={`absolute w-full h-full ${showCharacterCount && showPasswordToggle && 'pr-[115px]'} ${showCharacterCount && !showPasswordToggle && 'pr-[82px]'} ${!showCharacterCount && showPasswordToggle && 'pr-[56px]'} ${!showCharacterCount && !showPasswordToggle && 'pr-[20px]'} pl-[20px] py-[15px] rounded-[10px] bg-white disabled:bg-gray-10 border-[1px] border-gray-20 ${activateFocusStyle && 'focus:border-[1px] focus:border-purple-50 focus:outline-none'} text-body-reading text-gray-90 placeholder:text-gray-50`}
             onChange={handleInputChange(field, maxLength)}
           />
           <div
