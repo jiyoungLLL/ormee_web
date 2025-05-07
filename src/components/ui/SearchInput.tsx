@@ -3,7 +3,7 @@
 import { Control, FieldValues, Path } from 'react-hook-form';
 import Input from './Input';
 
-type SearchInputProps<T extends FieldValues> = {
+export type SearchInputProps<T extends FieldValues> = {
   /** useForm에서 사용할 필드의 이름 */
   name: Path<T>;
   /** useForm에서 사용할 컨트롤러 */
