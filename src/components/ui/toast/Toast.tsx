@@ -1,20 +1,20 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
+import { ToastType } from '@/types/toast.types';
 type ToastProps = {
   id: string;
   message: string;
-  type: 'success' | 'error';
+  type: ToastType;
   duration?: number;
 };
 
-const TOAST_ICON: Record<ToastProps['type'], string> = {
+const TOAST_ICON: Record<ToastType, string> = {
   success: 'assets/icons/toast/toast-success.png',
   error: 'assets/icons/toast/toast-error.png',
 } as const;
 
-const TOAST_STYLE: Record<ToastProps['type'], string> = {
+const TOAST_STYLE: Record<ToastType, string> = {
   success: 'bg-state-success',
   error: 'bg-state-error',
 };
