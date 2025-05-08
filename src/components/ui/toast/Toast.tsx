@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { ToastType } from '@/types/toast.types';
+import { useToastStore } from '@/stores/toastStore';
+
 type ToastProps = {
   id: string;
   message: string;
@@ -23,12 +25,17 @@ const TOAST_ANIMATION_DURATION = 300;
 
 export default function Toast({ id, message, type, duration = 2500 }: ToastProps) {
   const [isVisible, setIsVisible] = useState(false);
+  const { removeToast } = useToastStore();
 
   useEffect(() => {
     setIsVisible(true);
 
     const toastTimer = setTimeout(() => {
       setIsVisible(false);
+
+      setTimeout(() => {
+        removeToast(id);
+      }, TOAST_ANIMATION_DURATION);
     }, duration);
 
     return () => {
