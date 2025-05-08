@@ -1,3 +1,6 @@
+import { createPortal } from 'react-dom';
+import Button from './Button';
+
 type ModalProps = {
   /** 모달 내부에 표시될 컨텐츠 */
   children: React.ReactNode;
@@ -26,30 +29,42 @@ export default function Modal({
 }: ModalProps) {
   if (!isOpen) return null;
 
-  return (
-    <div className='fixed inset-0 bg-gray-90/50 flex justify-center items-center z-50'>
-      <div className={`bg-white rounded-[15px] px-[30px] py-[20px] ${containerStyle}`}>
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) onCancel();
+  };
+
+  return createPortal(
+    <div
+      className='fixed inset-0 bg-gray-90/50 flex justify-center items-center z-50'
+      data-testid='modal-backdrop'
+      onClick={handleBackdropClick}
+    >
+      <div className={`bg-white rounded-[15px] px-[30px] py-[20px] select-none ${containerStyle}`}>
         <div className='flex flex-col w-full gap-[13px]'>
           {title && <h2 className='text-heading1 font-semibold text-gray-90 text-center'>{title}</h2>}
           {description && <p className='text-headline2 font-normal text-gray-90 text-center'>{description}</p>}
         </div>
         {children}
-        <div className='grid grid-cols-2 items-center w-[350px] h-[55px] gap-[14px]'>
-          {/* TODO: 지영님 버튼 컴포넌트 추가 후 버튼 변경  */}
-          <button
+        <div className='grid grid-cols-2 items-center w-[350px] h-[55px] gap-[14px] mx-auto'>
+          <Button
+            type='BUTTON_MODAL_TYPE'
+            size='w-full h-[50px]'
+            font='text-headline1 font-bold'
+            isPurple={false}
+            title='취소'
             onClick={onCancel}
-            className='w-full h-[50px] px-[20px] py-[12px] rounded-[10px] bg-gray-20 text-headline1 font-bold text-gray-60'
-          >
-            취소
-          </button>
-          <button
+          />
+          <Button
+            type='BUTTON_MODAL_TYPE'
+            size='w-full h-[50px]'
+            font='text-headline1 font-bold'
+            isPurple
+            title='확인'
             onClick={onConfirm}
-            className='w-full h-[50px] px-[20px] py-[12px] rounded-[10px] bg-purple-50 text-headline1 font-bold text-white'
-          >
-            확인
-          </button>
+          />
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
