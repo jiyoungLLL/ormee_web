@@ -5,24 +5,30 @@ import GuideIcon from '/public/assets/icons/sidenav/guide.png';
 import HomeIcon from '/public/assets/icons/sidenav/home.png';
 import HomeSelected from '/public/assets/icons/sidenav/home_selected.png';
 import HomeworkIcon from '/public/assets/icons/sidenav/homework.png';
+import HomeworkSelected from '/public/assets/icons/sidenav/homework_selected.png';
 import NoteIcon from '/public/assets/icons/sidenav/note.png';
+import NoteSelected from '/public/assets/icons/sidenav/note_selected.png';
 import NoticeIcon from '/public/assets/icons/sidenav/notice.png';
+import NoticeSelected from '/public/assets/icons/sidenav/notice_selected.png';
 import PersonIcon from '/public/assets/icons/sidenav/person.png';
 import QuestionIcon from '/public/assets/icons/sidenav/question.png';
+import QuestionSelected from '/public/assets/icons/sidenav/question_selected.png';
 import QuizIcon from '/public/assets/icons/sidenav/quiz.png';
+import QuizSelected from '/public/assets/icons/sidenav/quiz_selected.png';
 import SettingIcon from '/public/assets/icons/sidenav/setting.png';
+import SettingSelected from '/public/assets/icons/sidenav/setting_selected.png';
 import StudentIcon from '/public/assets/icons/sidenav/student.png';
 
 const iconList: { [key: string]: { normal: StaticImageData; selected?: StaticImageData } } = {
   드롭다운: { normal: DropDownIcon },
   수강생: { normal: StudentIcon },
   강의홈: { normal: HomeIcon, selected: HomeSelected },
-  퀴즈: { normal: QuizIcon },
-  쪽지: { normal: NoteIcon },
-  숙제: { normal: HomeworkIcon },
-  질문: { normal: QuestionIcon },
-  공지: { normal: NoticeIcon },
-  설정: { normal: SettingIcon },
+  퀴즈: { normal: QuizIcon, selected: QuizSelected },
+  쪽지: { normal: NoteIcon, selected: NoteSelected },
+  숙제: { normal: HomeworkIcon, selected: HomeworkSelected },
+  질문: { normal: QuestionIcon, selected: QuestionSelected },
+  공지: { normal: NoticeIcon, selected: NoticeSelected },
+  설정: { normal: SettingIcon, selected: SettingSelected },
   마이페이지설정: { normal: PersonIcon },
   마이페이지이용안내: { normal: GuideIcon },
 };

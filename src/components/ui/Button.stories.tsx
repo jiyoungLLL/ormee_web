@@ -16,8 +16,8 @@ type Story = StoryObj<typeof Button>;
 export const Login: Story = {
   args: {
     type: 'BUTTON_BASE_TYPE',
-    width: 400,
-    height: 60,
+    size: 'w-[400px] h-[60px]',
+    font: 'text-body',
     title: '로그인',
     isPurple: true,
     description: '로그인 버튼',
@@ -28,8 +28,8 @@ export const Login: Story = {
 export const TemporarySave: Story = {
   args: {
     type: 'BUTTON_BASE_TYPE',
-    width: 102,
-    height: 50,
+    size: 'w-[102px] h-[50px]',
+    font: 'text-headline1 font-semibold',
     title: '임시저장',
     isPurple: false,
     description: '임시저장 버튼',
@@ -40,8 +40,8 @@ export const TemporarySave: Story = {
 export const Save: Story = {
   args: {
     type: 'BUTTON_BASE_TYPE',
-    width: 102,
-    height: 50,
+    size: 'w-[102px] h-[50px]',
+    font: 'text-headline1 font-semibold',
     title: '등록하기',
     isPurple: true,
     description: '등록하기 버튼',
@@ -52,8 +52,8 @@ export const Save: Story = {
 export const Edit: Story = {
   args: {
     type: 'BUTTON_BASE_TYPE',
-    width: 102,
-    height: 50,
+    size: 'w-[102px] h-[50px]',
+    font: 'text-headline2 font-semibold',
     title: '수정하기',
     isPurple: true,
     description: '수정하기 버튼',
@@ -64,8 +64,8 @@ export const Edit: Story = {
 export const ModalCancel: Story = {
   args: {
     type: 'BUTTON_MODAL_TYPE',
-    width: 162,
-    height: 50,
+    size: 'w-[162px] h-[50px]',
+    font: 'text-headline1 font-bold',
     title: '취소',
     isPurple: false,
     description: '취소 버튼',
@@ -75,8 +75,8 @@ export const ModalCancel: Story = {
 export const ModalConfirm: Story = {
   args: {
     type: 'BUTTON_MODAL_TYPE',
-    width: 162,
-    height: 50,
+    size: 'w-[162px] h-[50px]',
+    font: 'text-headline1 font-bold',
     title: '확인',
     isPurple: true,
     description: '취소 버튼',
@@ -86,8 +86,8 @@ export const ModalConfirm: Story = {
 export const QuizCreate: Story = {
   args: {
     type: 'BUTTON_CREATE_TYPE',
-    width: 133,
-    height: 49,
+    size: 'w-[133px] h-[49px]',
+    font: 'text-headline1 font-bold',
     title: '퀴즈 생성',
     isPurple: true,
     description: '수정하기 버튼',
