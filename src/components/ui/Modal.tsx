@@ -35,6 +35,7 @@ export default function Modal({
   return createPortal(
     <div
       className='fixed inset-0 bg-gray-90/50 flex justify-center items-center z-50'
+      data-testid='modal-backdrop'
       onClick={handleBackdropClick}
     >
       <div className={`bg-white rounded-[15px] px-[30px] py-[20px] select-none ${containerStyle}`}>

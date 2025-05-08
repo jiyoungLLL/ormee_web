@@ -3,6 +3,7 @@ import Modal from './Modal';
 import { expect, fn } from '@storybook/test';
 import { userEvent } from '@storybook/test';
 import { within } from '@storybook/test';
+import { useModal } from '@/hooks/useModal';
 
 const meta = {
   title: 'Components/Modal',
@@ -15,6 +16,23 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof Modal>;
+
+const ModalTemplate: Story = {
+  render: (args) => {
+    const { isOpen, modalClose } = useModal({ defaultOpen: true });
+
+    return (
+      <Modal
+        {...args}
+        isOpen={isOpen}
+        onCancel={modalClose}
+        onConfirm={modalClose}
+      >
+        <div>모달 내용</div>
+      </Modal>
+    );
+  },
+};
 
 export const Default: Story = {
   args: {
@@ -81,5 +99,17 @@ export const CancelInteraction: Story = {
     await userEvent.click(cancelButton);
 
     expect(args.onCancel).toHaveBeenCalled();
+  },
+};
+
+/** 백드롭 클릭 시 모달이 닫히는지 테스트 */
+export const BackdroptInteraction: Story = {
+  ...ModalTemplate,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const backdrop = canvas.getByTestId('modal-backdrop');
+    await userEvent.click(backdrop);
+
+    expect(backdrop).not.toBeInTheDocument();
   },
 };
