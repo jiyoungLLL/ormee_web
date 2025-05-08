@@ -5,9 +5,13 @@ import { ToastType } from '@/types/toast.types';
 import { useToastStore } from '@/stores/toastStore';
 
 type ToastProps = {
+  /** 토스트 고유 id, addToast에서 자동 할당 */
   id: string;
+  /** 토스트 메세지 */
   message: string;
+  /** 토스트 타입 */
   type: ToastType;
+  /** 토스트 지속 시간, 미지정시 2500ms */
   duration?: number;
 };
 
@@ -21,7 +25,7 @@ const TOAST_STYLE: Record<ToastType, string> = {
   error: 'bg-state-error',
 };
 
-const TOAST_ANIMATION_DURATION = 350;
+export const TOAST_ANIMATION_DURATION = 350;
 
 export default function Toast({ id, message, type, duration = 2500 }: ToastProps) {
   const [isVisible, setIsVisible] = useState(false);
