@@ -60,6 +60,10 @@ const config: Config = {
             20: '#00b3ff',
           },
         },
+        state: {
+          success: '#DEF5E2',
+          error: '#FBE8E8',
+        },
       },
       fontFamily: {
         pretendard: ['var(--font-pretendard)'],
