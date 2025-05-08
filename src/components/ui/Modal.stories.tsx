@@ -10,6 +10,11 @@ const meta = {
   component: Modal,
   parameters: {
     layout: 'centered',
+    docs: {
+      story: {
+        inline: false,
+      },
+    },
   },
   tags: ['autodocs'],
 } satisfies Meta<typeof Modal>;
@@ -26,7 +31,6 @@ const ModalTemplate: Story = {
         {...args}
         isOpen={isOpen}
         onCancel={modalClose}
-        onConfirm={modalClose}
       >
         <div>모달 내용</div>
       </Modal>
@@ -65,18 +69,14 @@ export const WithoutTitle: Story = {
 };
 
 export const ConfirmInteraction: Story = {
+  ...ModalTemplate,
   args: {
-    isOpen: true,
     title: '확인 모달',
     description: '클릭 테스트용',
-    onCancel: fn(),
     onConfirm: fn(),
-    children: <div>모달 내부</div>,
   },
-  play: async ({ canvasElement, args }) => {
-    const canvas = within(canvasElement);
-
-    const confirmButton = canvas.getByText('확인');
+  play: async ({ args }) => {
+    const confirmButton = await within(document.body).findByText('확인');
     await userEvent.click(confirmButton);
 
     expect(args.onConfirm).toHaveBeenCalled();
@@ -84,30 +84,20 @@ export const ConfirmInteraction: Story = {
 };
 
 export const CancelInteraction: Story = {
-  args: {
-    isOpen: true,
-    title: '취소 모달',
-    description: '클릭 테스트용',
-    onCancel: fn(),
-    onConfirm: fn(),
-    children: <div>모달 내부</div>,
-  },
-  play: async ({ canvasElement, args }) => {
-    const canvas = within(canvasElement);
-
-    const cancelButton = canvas.getByText('취소');
+  ...ModalTemplate,
+  play: async () => {
+    const cancelButton = await within(document.body).findByText('취소');
     await userEvent.click(cancelButton);
 
-    expect(args.onCancel).toHaveBeenCalled();
+    expect(cancelButton).not.toBeInTheDocument();
   },
 };
 
 /** 백드롭 클릭 시 모달이 닫히는지 테스트 */
 export const BackdroptInteraction: Story = {
   ...ModalTemplate,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const backdrop = canvas.getByTestId('modal-backdrop');
+  play: async () => {
+    const backdrop = await within(document.body).findByTestId('modal-backdrop');
     await userEvent.click(backdrop);
 
     expect(backdrop).not.toBeInTheDocument();
