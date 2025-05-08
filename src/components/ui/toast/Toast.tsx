@@ -19,6 +19,8 @@ const TOAST_STYLE: Record<ToastType, string> = {
   error: 'bg-state-error',
 };
 
+const TOAST_ANIMATION_DURATION = 300;
+
 export default function Toast({ id, message, type, duration = 2500 }: ToastProps) {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -37,7 +39,7 @@ export default function Toast({ id, message, type, duration = 2500 }: ToastProps
   return (
     <div
       id={id}
-      className={`flex flex-row justify-center items-center gap-[10px] w-fit px-[20px] py-[10px] rounded-[10px] text-gray-90 text-headline1 font-semibold ${TOAST_STYLE[type]} transform transition-all duration-${duration} ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-[20px]'}`}
+      className={`flex flex-row justify-center items-center gap-[10px] w-fit px-[20px] py-[10px] rounded-[10px] text-gray-90 text-headline1 font-semibold ${TOAST_STYLE[type]} transform transition-all duration-${TOAST_ANIMATION_DURATION} ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-[20px]'}`}
     >
       <img
         src={TOAST_ICON[type]}
