@@ -21,7 +21,7 @@ const TOAST_STYLE: Record<ToastType, string> = {
   error: 'bg-state-error',
 };
 
-const TOAST_ANIMATION_DURATION = 300;
+const TOAST_ANIMATION_DURATION = 350;
 
 export default function Toast({ id, message, type, duration = 2500 }: ToastProps) {
   const [isVisible, setIsVisible] = useState(false);
