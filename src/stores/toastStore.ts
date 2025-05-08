@@ -16,9 +16,13 @@ export const useToastStore = create<ToastStore>((set) => {
     addToast: (toastData: Omit<ToastData, 'id'>) => {
       const id = generateToastId();
 
-      set((state: ToastStore) => ({
-        toasts: [...state.toasts, { ...toastData, id }],
-      }));
+      set((state: ToastStore) => {
+        if (state.toasts.length < 3) {
+          return { toasts: [...state.toasts, { ...toastData, id }] };
+        }
+
+        return { toasts: [...state.toasts, { ...toastData, id }].slice(1) };
+      });
     },
 
     removeToast: (id: string) =>
