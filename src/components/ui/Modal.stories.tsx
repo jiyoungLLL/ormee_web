@@ -10,6 +10,23 @@ const meta = {
   component: Modal,
   parameters: {
     layout: 'centered',
+    docs: {
+      description: {
+        component: `
+Modal 컴포넌트는 useModal 훅을 사용하여 상태를 관리합니다.
+
+\`\`\`tsx
+const { isOpen, openModal, closeModal } = useModal({ defaultOpen: false });
+\`\`\`
+
+- isOpen: 모달의 열림/닫힘 상태
+- openModal: 모달을 여는 함수
+- closeModal: 모달을 닫는 함수
+
+모달이 기본으로 열려있어야하는 경우 defaultOpen을 true로 설정해주세요.
+        `,
+      },
+    },
   },
   tags: ['autodocs'],
 } satisfies Meta<typeof Modal>;
@@ -19,12 +36,12 @@ type Story = StoryObj<typeof Modal>;
 
 const ModalTemplateWithButton: Story = {
   render: (args) => {
-    const { isOpen, modalOpen, modalClose } = useModal({ defaultOpen: false });
+    const { isOpen, openModal, closeModal } = useModal({ defaultOpen: false });
 
     return (
       <>
         <button
-          onClick={modalOpen}
+          onClick={openModal}
           className='w-full h-[50px] px-[20px] py-[12px] rounded-[10px] bg-purple-50 text-headline1 font-semibold text-white'
         >
           모달 열기
@@ -32,7 +49,7 @@ const ModalTemplateWithButton: Story = {
         <Modal
           {...args}
           isOpen={isOpen}
-          onCancel={modalClose}
+          onCancel={closeModal}
         >
           <div className='flex justify-center items-center text-center w-full h-[200px]'>모달 내용</div>
         </Modal>
