@@ -37,7 +37,7 @@ export default function Modal({
       className='fixed inset-0 bg-gray-90/50 flex justify-center items-center z-50'
       onClick={handleBackdropClick}
     >
-      <div className={`bg-white rounded-[15px] px-[30px] py-[20px] ${containerStyle}`}>
+      <div className={`bg-white rounded-[15px] px-[30px] py-[20px] select-none ${containerStyle}`}>
         <div className='flex flex-col w-full gap-[13px]'>
           {title && <h2 className='text-heading1 font-semibold text-gray-90 text-center'>{title}</h2>}
           {description && <p className='text-headline2 font-normal text-gray-90 text-center'>{description}</p>}
