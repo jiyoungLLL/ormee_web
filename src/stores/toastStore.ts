@@ -1,6 +1,8 @@
 import { ToastData } from '@/types/toast.types';
 import { create } from 'zustand';
 
+const MAX_TOASTS = 3;
+
 type ToastStore = {
   toasts: ToastData[];
   addToast: (toastData: Omit<ToastData, 'id'>) => void;
@@ -17,7 +19,7 @@ export const useToastStore = create<ToastStore>((set) => {
       const id = generateToastId();
 
       set((state: ToastStore) => {
-        if (state.toasts.length < 3) {
+        if (state.toasts.length < MAX_TOASTS) {
           return { toasts: [...state.toasts, { ...toastData, id }] };
         }
 
