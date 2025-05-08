@@ -67,15 +67,17 @@ export const DurationTest: Story = {
     id: 'toast-3',
     message: '토스트 메세지입니다.',
     type: 'success',
-    duration: 10,
+    duration: 100,
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
     const toast = await canvas.findByText('토스트 메세지입니다.');
     expect(toast).toBeVisible();
 
-    await new Promise((resolve) => setTimeout(resolve, 10 + TOAST_ANIMATION_DURATION));
+    await new Promise((resolve) => setTimeout(resolve, 100 + TOAST_ANIMATION_DURATION));
     expect(toast).not.toBeVisible();
   },
 };
