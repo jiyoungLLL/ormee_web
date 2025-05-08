@@ -43,7 +43,7 @@ export default function Modal({
           {description && <p className='text-headline2 font-normal text-gray-90 text-center'>{description}</p>}
         </div>
         {children}
-        <div className='grid grid-cols-2 items-center w-[350px] h-[55px] gap-[14px]'>
+        <div className='grid grid-cols-2 items-center w-[350px] h-[55px] gap-[14px] mx-auto'>
           {/* TODO: 지영님 버튼 컴포넌트 추가 후 버튼 변경  */}
           <button
             onClick={onCancel}
