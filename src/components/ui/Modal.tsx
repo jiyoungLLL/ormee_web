@@ -1,3 +1,5 @@
+import { createPortal } from 'react-dom';
+
 type ModalProps = {
   /** 모달 내부에 표시될 컨텐츠 */
   children: React.ReactNode;
@@ -26,8 +28,15 @@ export default function Modal({
 }: ModalProps) {
   if (!isOpen) return null;
 
-  return (
-    <div className='fixed inset-0 bg-gray-90/50 flex justify-center items-center z-50'>
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) onCancel();
+  };
+
+  return createPortal(
+    <div
+      className='fixed inset-0 bg-gray-90/50 flex justify-center items-center z-50'
+      onClick={handleBackdropClick}
+    >
       <div className={`bg-white rounded-[15px] px-[30px] py-[20px] ${containerStyle}`}>
         <div className='flex flex-col w-full gap-[13px]'>
           {title && <h2 className='text-heading1 font-semibold text-gray-90 text-center'>{title}</h2>}
@@ -50,6 +59,7 @@ export default function Modal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
