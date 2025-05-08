@@ -6,16 +6,18 @@ type HTMLButtonType = 'button' | 'submit';
 type ButtonProps = {
   /** 버튼 사용처 */
   type: ButtonType;
-  /** 가로 길이 */
-  width: number;
-  /** 세로 길이 */
-  height: number;
+  /** 버튼 가로세로 길이 */
+  size: string;
+  /** 버튼 폰트 스타일 */
+  font: string;
   /** 내부 텍스트 */
   title: string;
   /** 색상 - 보라색 ? true : false */
   isPurple: boolean;
   /** bg 있/없 */
   isfilled?: boolean;
+  /** 임시저장 3 처럼 추가 텍스트 필요할 때*/
+  added?: string;
   /** 버튼 설명 텍스트  */
   description?: string;
   /** 버튼 클릭 이벤트 */
@@ -25,25 +27,25 @@ type ButtonProps = {
 };
 
 const whatBaseType = {
-  BUTTON_BASE_TYPE: 'py-[12px] px-[20px] rounded-[10px] gap-1',
-  BUTTON_MODAL_TYPE: 'py-[12px] px-[20px] rounded-[10px] gap-1',
+  BUTTON_BASE_TYPE: 'py-[12px] px-[20px] rounded-[10px] gap-[4px]',
+  BUTTON_MODAL_TYPE: 'py-[12px] px-[20px] rounded-[10px] gap-[4px]',
   BUTTON_CREATE_TYPE:
     'py-[12px] px-[20px] rounded-[10px] gap-1 shadow-[2px_4px_12.5px_rgba(114,96,248,0.4)] flex gap-[4px]',
 } as const;
 
 export default function Button({
   type,
-  width,
-  height,
+  size,
+  font,
   title,
   isPurple,
   isfilled,
+  added,
   description,
   onClick,
   htmlType = 'submit',
 }: ButtonProps) {
   const baseStyle = whatBaseType[type] ?? '';
-  const fontStyle = type == 'BUTTON_BASE_TYPE' ? 'text-headline1 font-semibold' : 'text-headline1 font-bold';
 
   const whatBackgroundStyle: Record<ButtonType, string> = {
     BUTTON_BASE_TYPE: isfilled
@@ -69,8 +71,7 @@ export default function Button({
     <button
       type={htmlType}
       onClick={onClick}
-      style={{ width: `${width}px`, height: `${height}px` }}
-      className={`${baseStyle} ${fontStyle} ${backgroundStyle} ${borderStyle}`}
+      className={`whitespace-nowrap ${size} ${baseStyle} ${font} ${backgroundStyle} ${borderStyle}`}
       title={description}
     >
       {type === 'BUTTON_CREATE_TYPE' ? (
@@ -83,8 +84,7 @@ export default function Button({
       ) : (
         ''
       )}
-
-      {title}
+      {title} {added ? <span className='text-purple-50'>{added}</span> : ''}
     </button>
   );
 }
