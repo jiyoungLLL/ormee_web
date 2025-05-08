@@ -15,10 +15,10 @@ export default function HomeSlide({ data }: HomSlideData) {
   const [showRight, setShowRight] = useState(true);
 
   const handleScroll = () => {
-    const scrollLo = scrollRef.current;
-    if (!scrollLo) return;
+    const scrollElement = scrollRef.current;
+    if (!scrollElement) return;
 
-    const { scrollLeft, scrollWidth, clientWidth } = scrollLo;
+    const { scrollLeft, scrollWidth, clientWidth } = scrollElement;
     setShowLeft(scrollLeft > 0);
     setShowRight(scrollLeft + clientWidth < scrollWidth - 5);
   };
@@ -32,14 +32,14 @@ export default function HomeSlide({ data }: HomSlideData) {
   };
 
   useEffect(() => {
-    const scrollLo = scrollRef.current;
-    if (!scrollLo) return;
+    const scrollElement = scrollRef.current;
+    if (!scrollElement) return;
 
-    scrollLo.addEventListener('scroll', handleScroll);
+    scrollElement.addEventListener('scroll', handleScroll);
     handleScroll();
 
     return () => {
-      scrollLo.removeEventListener('scroll', handleScroll);
+      scrollElement.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
