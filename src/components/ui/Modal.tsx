@@ -1,4 +1,5 @@
 import { createPortal } from 'react-dom';
+import Button from './Button';
 
 type ModalProps = {
   /** 모달 내부에 표시될 컨텐츠 */
@@ -45,19 +46,22 @@ export default function Modal({
         </div>
         {children}
         <div className='grid grid-cols-2 items-center w-[350px] h-[55px] gap-[14px] mx-auto'>
-          {/* TODO: 지영님 버튼 컴포넌트 추가 후 버튼 변경  */}
-          <button
+          <Button
+            type='BUTTON_MODAL_TYPE'
+            size='w-full h-[50px]'
+            font='text-headline1 font-bold'
+            isPurple={false}
+            title='취소'
             onClick={onCancel}
-            className='w-full h-[50px] px-[20px] py-[12px] rounded-[10px] bg-gray-20 text-headline1 font-bold text-gray-60'
-          >
-            취소
-          </button>
-          <button
+          />
+          <Button
+            type='BUTTON_MODAL_TYPE'
+            size='w-full h-[50px]'
+            font='text-headline1 font-bold'
+            isPurple
+            title='확인'
             onClick={onConfirm}
-            className='w-full h-[50px] px-[20px] py-[12px] rounded-[10px] bg-purple-50 text-headline1 font-bold text-white'
-          >
-            확인
-          </button>
+          />
         </div>
       </div>
     </div>,
