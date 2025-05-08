@@ -7,14 +7,14 @@ type UseModalProps = {
 export const useModal = ({ defaultOpen = false }: UseModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const modalOpen = () => setIsOpen(true);
-  const modalClose = () => setIsOpen(false);
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => setIsOpen(false);
 
   useEffect(() => {
     if (defaultOpen) {
-      modalOpen();
+      openModal();
     }
   }, [defaultOpen]);
 
-  return { isOpen, modalOpen, modalClose };
+  return { isOpen, openModal, closeModal };
 };
