@@ -29,7 +29,7 @@ export default function SearchInput<T extends FieldValues>({
       control={control}
       size={size}
       placeholder={placeholder}
-      inputStyle={`bg-transparent border border-gray-30 ${iconPosition === 'left' ? 'pl-[49px] pr-[15px]' : 'pr-[49px] pl-[15px]'} py-[9px]`}
+      inputStyle={`bg-transparent rounded-[10px] border border-gray-30 ${iconPosition === 'left' ? 'pl-[49px] pr-[15px]' : 'pr-[49px] pl-[15px]'} py-[9px]`}
       type='text'
     >
       <img
