@@ -1,4 +1,4 @@
-type BadgeProps = {
+export type BadgeProps = {
   size: 'small' | 'medium';
   color: 'purple' | 'green' | 'blue' | 'orange' | 'gray';
   text: string;
