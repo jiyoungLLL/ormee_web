@@ -11,9 +11,9 @@ const BADGE_STYLE: Record<BadgeProps['size'], string> = {
 
 const BADGE_COLOR: Record<BadgeProps['color'], string> = {
   purple: 'text-purple-50 bg-[#ece9ff]',
-  green: 'text-yellowGreen-20 bg-yellowGreen-5',
-  blue: 'text-blue-20 bg-blue-5',
-  orange: 'text-redOrange-20 bg-redOrange-5',
+  green: 'text-accent-yellowGreen-20 bg-accent-yellowGreen-5',
+  blue: 'text-accent-blue-20 bg-accent-blue-5',
+  orange: 'text-accent-redOrange-20 bg-accent-redOrange-5',
   gray: 'text-gray-50 bg-gray-30',
 } as const;
 
