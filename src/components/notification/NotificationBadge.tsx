@@ -3,6 +3,7 @@ import Badge, { BadgeProps } from '../ui/Badge';
 
 type NotificationBadgeProps = {
   type: NotificationType;
+  read: boolean;
 };
 
 const NOTIFICATION_BADGE_COLOR: Record<NotificationType, BadgeProps['color']> = {
@@ -21,11 +22,11 @@ const NOTIFICATION_BADGE_TEXT: Record<NotificationType, string> = {
   ormee: '오르미',
 } as const;
 
-export default function NotificationBadge({ type }: NotificationBadgeProps) {
+export default function NotificationBadge({ type, read }: NotificationBadgeProps) {
   return (
     <Badge
       size='small'
-      color={NOTIFICATION_BADGE_COLOR[type]}
+      color={read ? 'gray' : NOTIFICATION_BADGE_COLOR[type]}
       text={NOTIFICATION_BADGE_TEXT[type]}
     />
   );

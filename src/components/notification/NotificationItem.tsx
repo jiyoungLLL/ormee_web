@@ -12,7 +12,10 @@ export default function NotificationItem({ notification }: NotificationItemProps
       <div className='flex items-start'>
         <div className={`flex flex-col items-start gap-[5px] w-[385px] ${read ? 'text-gray-50' : 'text-gray-90'}`}>
           <div className='flex items-start gap-[5px]'>
-            <NotificationBadge type={type} />
+            <NotificationBadge
+              type={type}
+              read={read}
+            />
             <p className='text-headline1 font-semibold'>{title}</p>
           </div>
           <p className='text-body1 font-normal'>{description}</p>
