@@ -15,6 +15,8 @@ export type InputProps<T extends FieldValues> = {
   size: string;
   /** input 스타일 지정, 미지정시 기본 bg-white pl-[20px] py-[15px] border-[1px] border-gray-20 focus:border-[1px] focus:border-purple-50 focus:outline-none disabled:bg-gray-10 적용 */
   inputStyle?: string;
+  /** 텍스트 스타일 지정, 미지정시 기본 text-body-reading text-gray-90 placeholder:text-gray-50 적용 */
+  textStyle?: string;
   /** 플레이스홀더 */
   placeholder?: string;
   /** 최대 글자 수, 제한 없는 경우 생략 */
@@ -34,7 +36,8 @@ export default function Input<T extends FieldValues>({
   size,
   maxLength,
   placeholder,
-  inputStyle = 'bg-white pl-[20px] py-[15px] border-[1px] border-gray-20 focus:border-[1px] focus:border-purple-50 focus:outline-none disabled:bg-gray-10',
+  inputStyle = 'bg-white pl-[20px] py-[15px] rounded-[10px] border-[1px] border-gray-20 focus:border-[1px] focus:border-purple-50 focus:outline-none disabled:bg-gray-10',
+  textStyle = 'text-body-reading text-gray-90 placeholder:text-gray-50',
   showCharacterCount = false,
   showPasswordToggle = false,
   children,
@@ -66,7 +69,7 @@ export default function Input<T extends FieldValues>({
             type={inputType}
             maxLength={maxLength}
             placeholder={placeholder}
-            className={`absolute w-full h-full ${showCharacterCount && showPasswordToggle && 'pr-[115px]'} ${showCharacterCount && !showPasswordToggle && 'pr-[82px]'} ${!showCharacterCount && showPasswordToggle && 'pr-[56px]'} ${!showCharacterCount && !showPasswordToggle && 'pr-[20px]'} ${inputStyle} rounded-[10px] text-body-reading text-gray-90 placeholder:text-gray-50`}
+            className={`absolute w-full h-full ${showCharacterCount && showPasswordToggle && 'pr-[115px]'} ${showCharacterCount && !showPasswordToggle && 'pr-[82px]'} ${!showCharacterCount && showPasswordToggle && 'pr-[56px]'} ${!showCharacterCount && !showPasswordToggle && 'pr-[20px]'} ${inputStyle} ${textStyle}`}
             onChange={handleInputChange(field, maxLength)}
           />
           <div
