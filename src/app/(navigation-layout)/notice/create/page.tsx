@@ -1,11 +1,9 @@
-import NoticeCreateHeader from './NoticeCreateHeader';
-import NoticeCreateTitle from './NoticeCreateTitle';
+import NoticeCreate from '@/components/notice/NoticeCreate';
 
 export default function NoticeWrite() {
   return (
     <div>
-      <NoticeCreateHeader />
-      <NoticeCreateTitle />
+      <NoticeCreate />
     </div>
   );
 }
