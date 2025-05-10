@@ -15,6 +15,7 @@ export default function NoticeWriteContents() {
           name='title'
           control={control}
           size='w-[958px] h-[48px]'
+          inputStyle='border-none focus:outline-none'
           placeholder='공지 제목을 입력하세요'
         />
         <DateTimePicker
@@ -24,7 +25,7 @@ export default function NoticeWriteContents() {
         />
       </div>
 
-      <WriteBox />
+      <WriteBox type='공지' />
     </div>
   );
 }
