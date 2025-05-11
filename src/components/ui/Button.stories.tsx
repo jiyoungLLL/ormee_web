@@ -93,3 +93,15 @@ export const QuizCreate: Story = {
     description: '수정하기 버튼',
   },
 };
+
+export const FileUpload: Story = {
+  args: {
+    type: 'BUTTON_BASE_TYPE',
+    size: 'w-[98px] h-[40px]',
+    font: 'text-headline2 font-semibold',
+    title: '파일 찾기',
+    isPurple: false,
+    description: '파일 찾기 버튼',
+    htmlType: 'button',
+  },
+};
