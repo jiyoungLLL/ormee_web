@@ -1,6 +1,6 @@
 import { Notification } from '@/types/notification.types';
 
-export const MOCK_NOTIFICATION_LIST: Notification[] = [
+export const MOCK_NOTIFICATION_LIST_ONE_UNREAD: Notification[] = [
   {
     id: '1',
     type: 'assignment',
@@ -9,29 +9,16 @@ export const MOCK_NOTIFICATION_LIST: Notification[] = [
     title: '미친토익 기본반 rc',
     description: '과제 마감까지 하루 남았습니다.',
   },
+];
+
+export const MOCK_NOTIFICATION_LIST_ONE_READ: Notification[] = [
   {
-    id: '2',
-    type: 'question',
+    id: '1',
+    type: 'assignment',
     createdAt: '오전 8시 40분',
-    read: false,
-    title: '미친토익 기본반 rc',
-    description: '새로운 질문이 등록됐습니다.',
-  },
-  {
-    id: '3',
-    type: 'question',
-    createdAt: '오후 3시 40분',
     read: true,
     title: '미친토익 기본반 rc',
-    description: '새로운 질문이 등록됐습니다.',
-  },
-  {
-    id: '4',
-    type: 'question',
-    createdAt: '오후 3시 40분',
-    read: true,
-    title: '미친토익 기본반 rc',
-    description: '새로운 질문이 등록됐습니다.',
+    description: '과제 마감까지 하루 남았습니다.',
   },
 ];
 
