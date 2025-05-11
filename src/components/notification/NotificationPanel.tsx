@@ -1,6 +1,5 @@
 'use client';
 
-import { MOCK_NOTIFICATION_LIST } from '@/mock/notification';
 import { NotificationFilterType } from '@/types/notification.types';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -62,7 +61,7 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
       <div className='absolute top-0 right-0 flex flex-col items-start gap-[20px] w-[600px] h-full px-[40px] py-[30px] rounded-l-[20px] shadow-[0px_0px_7px_0px_rgba(70,72,84,0.10)] bg-white'>
         <h2 className='flex items-start gap-[10px] text-heading2 font-semibold'>
           <span className='text-black'>알림</span>
-          <span className='text-purple-50'>{MOCK_NOTIFICATION_LIST.length}</span>
+          <span className='text-purple-50'>{notifications.length}</span>
         </h2>
         <div className='flex-1 flex flex-col items-center gap-[10px] self-stretch'>
           <div className='flex justify-between items-center self-stretch'>
