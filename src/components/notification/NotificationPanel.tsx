@@ -4,7 +4,7 @@ import { MOCK_NOTIFICATION_LIST } from '@/mock/notification';
 import { NotificationType } from '@/types/notification.types';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-
+import NotificationItem from './NotificationItem';
 type NotificationPanelProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -28,6 +28,11 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
     onClose();
   };
 
+  const filteredNotificationList = MOCK_NOTIFICATION_LIST.filter((notification) => {
+    if (currentType === 'total') return true;
+    return notification.type === currentType;
+  });
+
   return createPortal(
     <div
       className='fixed top-0 left-0 w-full h-dvh bg-gray-90/50'
@@ -43,7 +48,14 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
             {/* 알림 타입 버튼 영역 */}
           </div>
           <div className='flex justify-end gap-[10px]'>{/* 모두 읽음, 모두 지움 */}</div>
-          <div className='flex flex-col px-[4px] items-start gap-[12px] self-stretch'>{/* 알림 리스트 영역 */}</div>
+          <div className='flex flex-col px-[4px] items-start gap-[12px] self-stretch'>
+            {filteredNotificationList.map((notification) => (
+              <NotificationItem
+                key={`notification-${notification.id}`}
+                notification={notification}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>,
