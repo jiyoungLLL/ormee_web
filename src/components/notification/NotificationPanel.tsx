@@ -1,7 +1,7 @@
 'use client';
 
 import { MOCK_NOTIFICATION_LIST } from '@/mock/notification';
-import { NotificationType } from '@/types/notification.types';
+import { NotificationFilterType } from '@/types/notification.types';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import NotificationItem from './NotificationItem';
@@ -13,7 +13,7 @@ type NotificationPanelProps = {
 };
 
 export default function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
-  const [currentType, setCurrentType] = useState<NotificationType | 'total'>('total');
+  const [currentType, setCurrentType] = useState<NotificationFilterType>('total');
   const isMounted = useMounted();
 
   if (!isOpen || !isMounted) return;

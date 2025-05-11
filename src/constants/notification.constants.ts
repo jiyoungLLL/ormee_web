@@ -1,6 +1,7 @@
-import { NotificationType } from '@/types/notification.types';
+import { NotificationFilterType } from '@/types/notification.types';
 
-export const NOTIFICATION_TYPE_TEXT: Record<NotificationType, string> = {
+export const NOTIFICATION_TYPE_TEXT: Record<NotificationFilterType, string> = {
+  total: '전체',
   assignment: '숙제',
   quiz: '퀴즈',
   question: '질문',
