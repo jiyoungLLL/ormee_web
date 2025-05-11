@@ -9,7 +9,7 @@ export default function NoticeWriteContents() {
   const { control } = useFormContext();
 
   return (
-    <div className='absolute top-[144px] h-[906px] flex flex-col gap-[20px]'>
+    <div className='absolute top-[144px] w-[1018px] h-[906px] flex flex-col gap-[20px]'>
       <div className=' bg-white py-[20px] px-[30px] rounded-[10px] flex flex-col gap-[10px]'>
         <Input
           name='title'

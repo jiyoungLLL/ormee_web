@@ -12,23 +12,23 @@ export default function Toolbar({ editor }: ToolbarProps) {
   const handleClick = (tool: string) => {
     if (!editor) return;
 
-    editor.chain().focus();
+    const chain = editor.chain().focus();
 
     switch (tool) {
       case 'bold':
-        editor.chain().toggleBold().run();
+        chain.toggleBold().run();
         break;
       case 'italic':
-        editor.chain().toggleItalic().run();
+        chain.toggleItalic().run();
         break;
       case 'underlined':
-        editor.chain().toggleUnderline().run();
+        chain.toggleUnderline().run();
         break;
       case 'list':
-        editor.chain().toggleBulletList().run();
+        chain.toggleBulletList().run();
         break;
       case 'list_numbered':
-        editor.chain().toggleOrderedList().run();
+        chain.toggleOrderedList().run();
         break;
       default:
         break;

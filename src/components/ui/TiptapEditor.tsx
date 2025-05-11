@@ -1,11 +1,14 @@
 'use client';
 
+import BulletList from '@tiptap/extension-bullet-list';
 import Heading from '@tiptap/extension-heading';
 import Image from '@tiptap/extension-image';
-import Placeholder from '@tiptap/extension-placeholder';
+import ListItem from '@tiptap/extension-list-item';
+import OrderedList from '@tiptap/extension-ordered-list';
 import Underline from '@tiptap/extension-underline';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import { useEffect } from 'react';
 import Toolbar from './Toolbar';
 
 type TipTapProps = {
@@ -15,9 +18,22 @@ type TipTapProps = {
 };
 
 export default function TiptapEditor({ type, contents, onChange }: TipTapProps) {
+  const isVisuallyEmpty = (html: string) => {
+    const cleaned = html
+      .replace(/<p><\/p>/g, '')
+      .replace(/<ul><li><p><\/p><\/li><\/ul>/g, '')
+      .replace(/<ol><li><p><\/p><\/li><\/ol>/g, '')
+      .trim();
+
+    return cleaned === '';
+  };
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({}),
+      BulletList,
+      OrderedList,
+      ListItem,
       Underline,
       Image,
       Heading.configure({
@@ -26,33 +42,52 @@ export default function TiptapEditor({ type, contents, onChange }: TipTapProps) 
           levels: [2],
         },
       }),
-      Placeholder.configure({
-        placeholder: `${type}를 입력하세요`,
-        emptyEditorClass:
-          'cursor-text before:content-[attr(data-placeholder)] before:absolute before:top-[20px] before:left-[20px] before:text-mauve-11 before:opacity-50 before-pointer-events-none',
-      }),
     ],
     content: contents,
     editorProps: {
       attributes: {
         class:
-          'focus:border-purple-50 focus:outline-none min-h-[422px] p-[20px] border border-gray-300 rounded-md bg-white overflow-y-auto placeholder:text-gray-40',
+          'relative focus:border-purple-50 focus:outline-none min-h-[422px] p-[20px] border border-gray-40 rounded-md bg-white overflow-y-auto placeholder:text-gray-40',
       },
     },
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
+      const html = editor.getHTML();
+      onChange(html);
+
+      const editorDOM = editor.view.dom as HTMLElement;
+
+      if (isVisuallyEmpty(html)) {
+        editorDOM.setAttribute('data-placeholder-visible', 'true');
+        editorDOM.setAttribute('data-placeholder', `${type} 내용을 입력하세요`);
+      } else {
+        editorDOM.removeAttribute('data-placeholder-visible');
+        editorDOM.removeAttribute('data-placeholder');
+      }
     },
   });
 
-  const addImage = () => {};
+  useEffect(() => {
+    if (!editor) return;
+
+    const html = editor.getHTML();
+    const editorDOM = editor.view.dom as HTMLElement;
+
+    if (isVisuallyEmpty(html)) {
+      editorDOM.setAttribute('data-placeholder-visible', 'true');
+      editorDOM.setAttribute('data-placeholder', `${type} 내용을 입력하세요`);
+    } else {
+      editorDOM.removeAttribute('data-placeholder-visible');
+      editorDOM.removeAttribute('data-placeholder');
+    }
+  }, [editor]);
 
   return (
     <div className='flex flex-col gap-[12px]'>
       <Toolbar editor={editor} />
       <EditorContent
         editor={editor}
-        className='text-body-reading'
-        style={{ height: '422px', borderRadius: '10px' }}
+        className='text-body-reading prose list-outside list-disc'
+        style={{ width: '100%', height: '422px', borderRadius: '10px' }}
       />
     </div>
   );
