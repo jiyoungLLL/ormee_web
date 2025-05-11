@@ -91,7 +91,12 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
               onClick={handleAllDelete}
             />
           </div>
-          <div className='flex flex-col px-[4px] items-start gap-[12px] self-stretch'>
+          <div className='flex-1 flex flex-col px-[4px] items-start gap-[12px] self-stretch'>
+            {filteredNotificationList.length === 0 && (
+              <div className='flex justify-center items-center gap-[10px] w-full h-full'>
+                <p className='text-heading2 font-semibold text-[#B5B6BC] text-center'>알림이 없어요.</p>
+              </div>
+            )}
             {filteredNotificationList.map((notification) => (
               <NotificationItem
                 key={`notification-${notification.id}`}
