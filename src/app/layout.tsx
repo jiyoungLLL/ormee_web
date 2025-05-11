@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import QueryProvider from '@/components/providers/QueryProvider';
 import ToastContainer from '@/components/ui/toast/ToastContainer';
+import MswInitializer from '@/mock/MswInitializer';
 
 const pretendard = localFont({
   src: './fonts/PretendardVariable.woff2',
@@ -30,6 +31,7 @@ export default function RootLayout({
     >
       <body className={`${pretendard.variable} antialiased flex flex-col h-full text-gray-90`}>
         <QueryProvider>
+          {process.env.NODE_ENV === 'development' && <MswInitializer />}
           <ToastContainer />
           {children}
         </QueryProvider>

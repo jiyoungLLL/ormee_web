@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-export default function MswProvider({ children }: { children: React.ReactNode }) {
+export default function MswInitializer() {
   const [mswReady, setMswReady] = useState(false);
 
   useEffect(() => {
@@ -15,7 +15,5 @@ export default function MswProvider({ children }: { children: React.ReactNode })
     if (!mswReady && process.env.NODE_ENV === 'development') init();
   }, [mswReady]);
 
-  if (process.env.NODE_ENV === 'production') return <>{children}</>;
-  if (!mswReady) return null;
-  return <>{children}</>;
+  return null;
 }
