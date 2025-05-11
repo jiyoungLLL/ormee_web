@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import NotificationItem from './NotificationItem';
 import useMounted from '@/hooks/useMounted';
+import Button from '../ui/Button';
 type NotificationPanelProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -23,6 +24,14 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
   const handleClose = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target !== e.currentTarget) return;
     onClose();
+  };
+
+  const handleAllRead = () => {
+    alert('모두 읽음');
+  };
+
+  const handleAllDelete = () => {
+    alert('모두 삭제');
   };
 
   const filteredNotificationList = MOCK_NOTIFICATION_LIST.filter((notification) => {
@@ -44,7 +53,26 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
           <div className='flex justify-between items-center self-stretch border-b border-gray-30'>
             {/* 알림 타입 버튼 영역 */}
           </div>
-          <div className='flex justify-end gap-[10px]'>{/* 모두 읽음, 모두 지움 */}</div>
+          <div className='flex justify-end items-center gap-[10px] self-stretch'>
+            <Button
+              type='BUTTON_BASE_TYPE'
+              size='flex justify-center items-center w-fit h-[40px]'
+              font='text-headline2 font-semibold text-gray-90'
+              isPurple={false}
+              isfilled={false}
+              title='모두 읽음'
+              onClick={handleAllRead}
+            />
+            <Button
+              type='BUTTON_BASE_TYPE'
+              size='flex justify-center items-center w-fit h-[40px]'
+              font='text-headline2 font-semibold text-gray-90'
+              isPurple={false}
+              isfilled={false}
+              title='모두 삭제'
+              onClick={handleAllDelete}
+            />
+          </div>
           <div className='flex flex-col px-[4px] items-start gap-[12px] self-stretch'>
             {filteredNotificationList.map((notification) => (
               <NotificationItem
