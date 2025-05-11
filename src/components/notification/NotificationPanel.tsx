@@ -7,7 +7,7 @@ import { createPortal } from 'react-dom';
 import NotificationItem from './NotificationItem';
 import useMounted from '@/hooks/useMounted';
 import Button from '../ui/Button';
-import { NOTIFICATION_TYPE_TEXT } from '@/constants/notification.constants';
+import { NOTIFICATION_TYPE_LABEL } from '@/constants/notification.constants';
 import NotificationFilterButton from './NotificationFilterButton';
 
 type NotificationPanelProps = {
@@ -16,7 +16,7 @@ type NotificationPanelProps = {
 };
 
 const NOTIFICATION_FILTER_TYPE_LIST: NotificationFilterType[] = [
-  ...Object.keys(NOTIFICATION_TYPE_TEXT),
+  ...Object.keys(NOTIFICATION_TYPE_LABEL),
 ] as NotificationFilterType[];
 
 export default function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {

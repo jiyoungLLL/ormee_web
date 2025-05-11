@@ -1,6 +1,6 @@
 import { NotificationType } from '@/types/notification.types';
 import Badge, { BadgeProps } from '../ui/Badge';
-import { NOTIFICATION_TYPE_TEXT } from '@/constants/notification.constants';
+import { NOTIFICATION_TYPE_LABEL } from '@/constants/notification.constants';
 
 type NotificationBadgeProps = {
   type: NotificationType;
@@ -20,7 +20,7 @@ export default function NotificationBadge({ type, read }: NotificationBadgeProps
     <Badge
       size='small'
       color={read ? 'gray' : NOTIFICATION_BADGE_COLOR[type]}
-      text={NOTIFICATION_TYPE_TEXT[type]}
+      text={NOTIFICATION_TYPE_LABEL[type]}
     />
   );
 }

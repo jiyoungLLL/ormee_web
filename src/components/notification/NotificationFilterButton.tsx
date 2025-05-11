@@ -1,4 +1,4 @@
-import { NOTIFICATION_TYPE_TEXT } from '@/constants/notification.constants';
+import { NOTIFICATION_TYPE_LABEL } from '@/constants/notification.constants';
 import { MOCK_NOTIFICATION_LIST } from '@/mock/notification';
 import { NotificationFilterType } from '@/types/notification.types';
 
@@ -26,7 +26,7 @@ export default function NotificationFilterButton({ type, currentType, onClick }:
       onClick={() => onClick(type)}
     >
       <span className='relative'>
-        {NOTIFICATION_TYPE_TEXT[type]}
+        {NOTIFICATION_TYPE_LABEL[type]}
         {hasNewNotification && (
           <div className='absolute top-[-2px] right-[-4px] w-[4px] h-[4px] rounded-full bg-purple-50' />
         )}
