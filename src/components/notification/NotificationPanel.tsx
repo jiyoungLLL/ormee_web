@@ -7,10 +7,17 @@ import { createPortal } from 'react-dom';
 import NotificationItem from './NotificationItem';
 import useMounted from '@/hooks/useMounted';
 import Button from '../ui/Button';
+import { NOTIFICATION_TYPE_TEXT } from '@/constants/notification.constants';
+import NotificationFilterButton from './NotificationFilterButton';
+
 type NotificationPanelProps = {
   isOpen: boolean;
   onClose: () => void;
 };
+
+const NOTIFICATION_FILTER_TYPE_LIST: NotificationFilterType[] = [
+  ...Object.keys(NOTIFICATION_TYPE_TEXT),
+] as NotificationFilterType[];
 
 export default function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
   const [currentType, setCurrentType] = useState<NotificationFilterType>('total');
@@ -34,6 +41,10 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
     alert('모두 삭제');
   };
 
+  const handleFilterClick = (type: NotificationFilterType) => {
+    setCurrentType(type);
+  };
+
   const filteredNotificationList = MOCK_NOTIFICATION_LIST.filter((notification) => {
     if (currentType === 'total') return true;
     return notification.type === currentType;
@@ -50,8 +61,15 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
           <span className='text-purple-50'>{MOCK_NOTIFICATION_LIST.length}</span>
         </h2>
         <div className='flex-1 flex flex-col items-center gap-[10px] self-stretch'>
-          <div className='flex justify-between items-center self-stretch border-b border-gray-30'>
-            {/* 알림 타입 버튼 영역 */}
+          <div className='flex justify-between items-center self-stretch'>
+            {NOTIFICATION_FILTER_TYPE_LIST.map((type) => (
+              <NotificationFilterButton
+                key={`notification-filter-${type}`}
+                type={type}
+                currentType={currentType}
+                onClick={handleFilterClick}
+              />
+            ))}
           </div>
           <div className='flex justify-end items-center gap-[10px] self-stretch'>
             <Button
