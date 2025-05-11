@@ -22,7 +22,7 @@ export default function NotificationBadge({ type, read }: NotificationBadgeProps
     <Badge
       size='small'
       color={read ? 'gray' : NOTIFICATION_BADGE_COLOR[type]}
-      text={NOTIFICATION_TYPE_LABEL[type]}
+      label={NOTIFICATION_TYPE_LABEL[type]}
     />
   );
 }
