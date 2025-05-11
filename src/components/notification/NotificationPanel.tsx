@@ -11,7 +11,9 @@ import { NOTIFICATION_TYPE_LABEL } from '@/constants/notification.constants';
 import NotificationFilterButton from './NotificationFilterButton';
 
 type NotificationPanelProps = {
+  /** 알림 패널 열림 여부 */
   isOpen: boolean;
+  /** 알림 패널 닫을 때 실행될 함수 */
   onClose: () => void;
 };
 

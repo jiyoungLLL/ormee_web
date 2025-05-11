@@ -3,7 +3,9 @@ import Badge, { BadgeProps } from '../ui/Badge';
 import { NOTIFICATION_TYPE_LABEL } from '@/constants/notification.constants';
 
 type NotificationBadgeProps = {
+  /** 배지가 표시할 알림의 타입 */
   type: NotificationType;
+  /** 배지가 표시할 알림의 읽음 여부 */
   read: boolean;
 };
 

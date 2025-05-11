@@ -4,6 +4,7 @@ import { Notification } from '@/types/notification.types';
 import NotificationBadge from './NotificationBadge';
 
 type NotificationItemProps = {
+  /** 표시할 알림 데이터 */
   notification: Notification;
 };
 

@@ -3,8 +3,11 @@ import { MOCK_NOTIFICATION_LIST } from '@/mock/notification';
 import { NotificationFilterType } from '@/types/notification.types';
 
 type NotificationFilterButtonProps = {
+  /** 현재 버튼의 필터 타입 */
   type: NotificationFilterType;
+  /** 현재 필터링하도록 선택된 알림 타입 */
   currentType: NotificationFilterType;
+  /** 버튼 클릭 시 실행되는 함수 */
   onClick: (type: NotificationFilterType) => void;
 };
 
