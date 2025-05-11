@@ -1,6 +1,8 @@
+'use client';
+
 import { NOTIFICATION_TYPE_LABEL } from '@/constants/notification.constants';
-import { MOCK_NOTIFICATION_LIST } from '@/mock/notification';
-import { NotificationFilterType } from '@/types/notification.types';
+import { NotificationFilterType, Notification } from '@/types/notification.types';
+import { useGetNotifications } from '@/hooks/queries/notification/useGetNotifications';
 
 type NotificationFilterButtonProps = {
   /** 현재 버튼의 필터 타입 */
@@ -12,9 +14,11 @@ type NotificationFilterButtonProps = {
 };
 
 export default function NotificationFilterButton({ type, currentType, onClick }: NotificationFilterButtonProps) {
+  const { data: notifications = [] } = useGetNotifications();
+
   const isSelected = type === currentType;
 
-  const hasNewNotification = MOCK_NOTIFICATION_LIST.some((notification) => {
+  const hasNewNotification = notifications.some((notification) => {
     if (type === 'total') {
       return !notification.read;
     }

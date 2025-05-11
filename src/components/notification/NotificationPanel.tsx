@@ -9,6 +9,7 @@ import useMounted from '@/hooks/useMounted';
 import Button from '../ui/Button';
 import { NOTIFICATION_TYPE_LABEL } from '@/constants/notification.constants';
 import NotificationFilterButton from './NotificationFilterButton';
+import { useGetNotifications } from '@/hooks/queries/notification/useGetNotifications';
 
 type NotificationPanelProps = {
   /** 알림 패널 열림 여부 */
@@ -22,13 +23,14 @@ const NOTIFICATION_FILTER_TYPE_LIST: NotificationFilterType[] = [
 ] as NotificationFilterType[];
 
 export default function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
-  const [currentType, setCurrentType] = useState<NotificationFilterType>('total');
   const isMounted = useMounted();
+  const [currentType, setCurrentType] = useState<NotificationFilterType>('total');
+  const { data: notifications = [] } = useGetNotifications();
 
-  if (!isOpen || !isMounted) return;
+  if (!isOpen || !isMounted) return null;
 
   const notificationRoot = document.getElementById('notification-root');
-  if (!notificationRoot) return;
+  if (!notificationRoot) return null;
 
   const handleClose = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target !== e.currentTarget) return;
@@ -47,7 +49,7 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
     setCurrentType(type);
   };
 
-  const filteredNotificationList = MOCK_NOTIFICATION_LIST.filter((notification) => {
+  const filteredNotificationList = notifications.filter((notification) => {
     if (currentType === 'total') return true;
     return notification.type === currentType;
   });
