@@ -2,9 +2,10 @@
 
 import { MOCK_NOTIFICATION_LIST } from '@/mock/notification';
 import { NotificationType } from '@/types/notification.types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import NotificationItem from './NotificationItem';
+import useMounted from '@/hooks/useMounted';
 type NotificationPanelProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -12,11 +13,7 @@ type NotificationPanelProps = {
 
 export default function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
   const [currentType, setCurrentType] = useState<NotificationType | 'total'>('total');
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const isMounted = useMounted();
 
   if (!isOpen || !isMounted) return;
 
