@@ -1,6 +1,8 @@
+'use client';
+
 import { MOCK_NOTIFICATION_LIST } from '@/mock/notification';
 import { NotificationType } from '@/types/notification.types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 type NotificationPanelProps = {
@@ -9,7 +11,14 @@ type NotificationPanelProps = {
 };
 
 export default function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
-  if (!isOpen) return;
+  const [currentType, setCurrentType] = useState<NotificationType | 'total'>('total');
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isOpen || !isMounted) return;
 
   const notificationRoot = document.getElementById('notification-root');
   if (!notificationRoot) return;
