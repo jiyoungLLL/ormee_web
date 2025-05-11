@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* tiptap 텍스트 에디터 관련 css */
+.ProseMirror ul {
+  @apply list-disc list-outside ml-4;
+}
+
+.ProseMirror ol {
+  @apply list-decimal list-outside ml-4;
+}
+
+.ProseMirror li {
+  @apply mb-1;
+}
+
+.ProseMirror[data-placeholder-visible='true']::before {
+  content: attr(data-placeholder);
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: theme('colors.gray.50');
+  pointer-events: none;
+}
+
+.ProseMirror:not([data-placeholder-visible])::before {
+  content: '';
+}
