@@ -1,5 +1,6 @@
 import { createPortal } from 'react-dom';
 import Button from './Button';
+import useMounted from '@/hooks/useMounted';
 
 type ModalProps = {
   /** 모달 내부에 표시될 컨텐츠 */
@@ -27,7 +28,9 @@ export default function Modal({
   title,
   description,
 }: ModalProps) {
-  if (!isOpen) return null;
+  const isMounted = useMounted();
+
+  if (!isOpen || !isMounted) return null;
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) onCancel();
