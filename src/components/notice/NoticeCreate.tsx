@@ -9,7 +9,7 @@ import NoticeWriteHeader from './NoticeCreateHeader';
 export default function NoticeCreate() {
   const methods = useForm<WriteBoxFormValues>({
     resolver: zodResolver(writeBoxSchema),
-    mode: 'onChange',
+    mode: 'onSubmit',
     defaultValues: {
       title: '',
       contents: '',

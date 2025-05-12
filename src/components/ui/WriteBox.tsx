@@ -76,7 +76,7 @@ export default function WriteBox({ type }: WriteBoxProps) {
             type='BUTTON_BASE_TYPE'
             size='w-[98px] h-[40px]'
             font='text-headline2 font-semibold text-[16px] leading-[4px]'
-            title='첨부파일'
+            title='파일 찾기'
             isPurple={false}
             isfilled={false}
             htmlType='button'
