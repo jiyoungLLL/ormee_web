@@ -164,7 +164,7 @@ export default function SideNav({ type, title, student, date }: SideNavProps) {
         // 카테고리 : 경로명
         setting: {
           개인정보: 'personal',
-          강의: 'lector',
+          강의: 'class',
         },
         guide: {
           공지사항: 'notice',
@@ -184,12 +184,13 @@ export default function SideNav({ type, title, student, date }: SideNavProps) {
               const appliedStyle = isSelected ? 'text-purple-10 font-semibold bg-gray-75' : 'text-gray-30 font-normal';
 
               return (
-                <div
+                <Link
+                  href={`/mypage/${value}`}
                   key={content}
                   className={`w-[180px] h-[46px] rounded-[10px] gap-[12px] pt-[12px] pr-[15px] pb-[12px] pl-[15px] ${appliedStyle}`}
                 >
                   {content} 설정
-                </div>
+                </Link>
               );
             })}
           </>
