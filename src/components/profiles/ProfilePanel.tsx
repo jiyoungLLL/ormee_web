@@ -8,9 +8,10 @@ import { createPortal } from 'react-dom';
 
 type ProfilePanelProps = {
   profileData: UserProfileData;
+  onClose: (e: React.MouseEvent<HTMLDivElement>) => void;
 };
 
-export default function ProfilePanel({ profileData }: ProfilePanelProps) {
+export default function ProfilePanel({ profileData, onClose }: ProfilePanelProps) {
   const isMounted = useMounted();
   const profileRoot = document.getElementById('profile-root');
 
@@ -22,6 +23,7 @@ export default function ProfilePanel({ profileData }: ProfilePanelProps) {
     <div
       className='fixed top-[64px] left-1/2 -translate-x-1/2 flex justify-end w-full max-w-[1320px] h-dvh'
       data-testid='profile-panel-backdrop'
+      onClick={onClose}
     >
       <div className='w-[299px] h-[207px] px-[30px] py-[20px] rounded-[15px] bg-white shadow-[0px_0px_7px_0px_rgba(70,72,84,0.10)] select-none'>
         <section
