@@ -17,6 +17,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </Header>
         <main className='flex-1 flex flex-col justify-center items-center w-full h-full'>{children}</main>
       </div>
+      <div id='notification-root' />
     </div>
   );
 }

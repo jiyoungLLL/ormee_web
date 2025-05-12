@@ -1,3 +1,4 @@
+import useMounted from '@/hooks/useMounted';
 import { createPortal } from 'react-dom';
 import Button from './Button';
 
@@ -27,7 +28,9 @@ export default function Modal({
   title,
   description,
 }: ModalProps) {
-  if (!isOpen) return null;
+  const isMounted = useMounted();
+
+  if (!isOpen || !isMounted) return null;
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) onCancel();
