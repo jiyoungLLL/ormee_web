@@ -19,6 +19,11 @@ export default function HeaderProfile({ userProfileData }: HeaderProfileProps) {
     setIsPanelOpen((prev) => !prev);
   };
 
+  const handlePanelClose = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
+    setIsPanelOpen(false);
+  };
+
   return (
     <div className='relative'>
       <div
@@ -43,7 +48,12 @@ export default function HeaderProfile({ userProfileData }: HeaderProfileProps) {
           <span className='font-normal ml-[3px]'>선생님</span>
         </p>
       </div>
-      {isPanelOpen && <ProfilePanel profileData={userProfileData} />}
+      {isPanelOpen && (
+        <ProfilePanel
+          profileData={userProfileData}
+          onClose={handlePanelClose}
+        />
+      )}
     </div>
   );
 }

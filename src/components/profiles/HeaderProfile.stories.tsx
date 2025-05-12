@@ -36,16 +36,26 @@ export const PanelToggleClose: Story = {
   args: {
     userProfileData: MOCK_MINIMUM_USER_PROFILE,
   },
+  decorators: [
+    (Story) => (
+      <div>
+        <Story />
+        <div id='profile-root' />
+      </div>
+    ),
+  ],
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
     const headerProfile = canvas.getByTestId('header-profile');
     await userEvent.click(headerProfile);
 
-    expect(canvas.getByText('로그아웃')).toBeInTheDocument();
+    const backdropElement = document.querySelector('[data-testid="profile-panel-backdrop"]');
+    expect(backdropElement).toBeInTheDocument();
+    expect(backdropElement?.textContent).toContain('로그아웃');
 
     await userEvent.click(headerProfile);
 
-    expect(canvas.queryByText('로그아웃')).not.toBeInTheDocument();
+    expect(document.querySelector('[data-testid="profile-panel-backdrop"]')).not.toBeInTheDocument();
   },
 };
