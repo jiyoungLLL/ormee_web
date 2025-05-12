@@ -1,6 +1,6 @@
+import useMounted from '@/hooks/useMounted';
 import { createPortal } from 'react-dom';
 import Button from './Button';
-import useMounted from '@/hooks/useMounted';
 
 type ModalProps = {
   /** 모달 내부에 표시될 컨텐츠 */

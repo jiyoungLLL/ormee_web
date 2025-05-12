@@ -1,5 +1,5 @@
-import NoticeHeader from './NoticeHeader';
-import NoticeList from './NoticeList';
+import NoticeHeader from '../../../components/notice/NoticeHeader';
+import NoticeList from '../../../components/notice/NoticeList';
 
 export default function Notice() {
   return (

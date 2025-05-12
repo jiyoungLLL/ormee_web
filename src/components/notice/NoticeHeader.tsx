@@ -1,13 +1,21 @@
 'use client';
 
 import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
+import SearchInput from '../ui/SearchInput';
 
 export default function NoticeTitle() {
-  const { control } = useForm();
+  const { control, handleSubmit } = useForm({
+    defaultValues: {
+      search: '',
+    },
+  });
+
+  const onSubmit = (data: { search: string }) => {
+    // 검색 로직 실행
+  };
 
   return (
     <>
@@ -22,16 +30,19 @@ export default function NoticeTitle() {
         공지
       </div>
       <div className='flex justify-between'>
-        <div className='relative top-[20px]'>
-          <Input
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className='relative top-[20px]'
+        >
+          <SearchInput
             name='search'
             control={control}
             size='w-[350px] h-[43px]'
             placeholder='검색'
           />
-        </div>
+        </form>
         <Link
-          href='/notice/write'
+          href='/notice/create'
           className='relative top-[14px]'
         >
           <Button
