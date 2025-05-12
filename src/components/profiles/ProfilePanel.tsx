@@ -19,7 +19,10 @@ export default function ProfilePanel({ profileData }: ProfilePanelProps) {
   const { name, image, bio } = profileData;
 
   return createPortal(
-    <div className='fixed top-[64px] left-1/2 -translate-x-1/2 flex justify-end w-full max-w-[1320px] h-dvh'>
+    <div
+      className='fixed top-[64px] left-1/2 -translate-x-1/2 flex justify-end w-full max-w-[1320px] h-dvh'
+      data-testid='profile-panel-backdrop'
+    >
       <div className='w-[299px] h-[207px] px-[30px] py-[20px] rounded-[15px] bg-white shadow-[0px_0px_7px_0px_rgba(70,72,84,0.10)] select-none'>
         <section
           className='mb-[20px]'
