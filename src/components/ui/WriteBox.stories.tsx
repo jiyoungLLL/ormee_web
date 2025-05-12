@@ -14,5 +14,5 @@ export default meta;
 type Story = StoryObj<typeof WriteBox>;
 
 export const Default: Story = {
-  args: {},
+  args: { type: '공지' },
 };
