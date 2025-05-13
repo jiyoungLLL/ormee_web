@@ -66,6 +66,8 @@ const config: Config = {
         },
         label: {
           assistive: '#B4B4B2',
+          neutral: '#7E7F8E',
+          normal: '#19191D',
         },
       },
       fontFamily: {
