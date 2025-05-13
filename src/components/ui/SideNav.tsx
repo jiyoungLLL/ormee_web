@@ -24,202 +24,182 @@ type SideNavProps = {
 };
 
 export default function SideNav({ type, title, student, date }: SideNavProps) {
-  /** 경로별 아이콘 색상 변경 */
   const pathname = usePathname();
   const pathSegments = pathname ? pathname.split('/').filter(Boolean) : [];
   const [mainCategory, subCategory] = pathSegments.slice(0, 2);
-  /** 드롭다운 클릭 */
   const [isOpen, setIsOpen] = useState(false);
 
+  /** 고정된 categoryList들 (항상 정의됨) */
+  const categoryListGroup1 = { 강의홈: 'home' };
+  const categoryListGroup2 = {
+    퀴즈: 'quiz',
+    쪽지: 'note',
+    숙제: 'homework',
+    질문: 'question',
+    공지: 'notice',
+  };
+  const categoryListGroup3 = { 설정: 'setting' };
+
+  const renderCategoryGroup = (group: { [key: string]: string }) =>
+    Object.entries(group).map(([iconName, pathName]) => {
+      const isFocus = mainCategory === pathName;
+      const commonStyle = 'pt-3 pr-4 pb-3 pl-4 flex gap-[12px]';
+      const focusStyle = isFocus ? 'bg-purple-10 text-purple-50 rounded-[10px] font-bold' : '';
+
+      return (
+        <Link
+          href={`/${pathName}`}
+          key={iconName}
+          className={`${commonStyle} ${focusStyle}`}
+        >
+          <SideNavIcon
+            name={iconName}
+            isFocus={isFocus}
+          />
+          {iconName === '강의홈' ? '강의 홈' : iconName}
+        </Link>
+      );
+    });
+
+  const categoryGroup1Memo = useMemo(() => renderCategoryGroup(categoryListGroup1), [mainCategory]);
+  const categoryGroup2Memo = useMemo(() => renderCategoryGroup(categoryListGroup2), [mainCategory]);
+  const categoryGroup3Memo = useMemo(() => renderCategoryGroup(categoryListGroup3), [mainCategory]);
+
   const renderDate = () => {
-    if (date) {
-      return (
-        <div className='flex gap-[10px]'>
-          {date.days.map((day, index) => (
-            <div
-              key={`${day}-${index}`}
-              className='h-[23px] w-[23px] rounded-[5px] bg-purple-10 text-center' // 배경색??
-            >
-              {day}
-            </div>
-          ))}
-          {date.times[0]}
-        </div>
-      );
-    }
+    if (!date) return null;
+    return (
+      <div className='flex gap-[10px]'>
+        {date.days.map((day, index) => (
+          <div
+            key={`${day}-${index}`}
+            className='h-[23px] w-[23px] rounded-[5px] bg-purple-10 text-center'
+          >
+            {day}
+          </div>
+        ))}
+        {date.times[0]}
+      </div>
+    );
   };
 
-  const inlineComponent = () => {
-    if (type === 'main') {
-      const categoryListGroup1: { [key: string]: string } = { 강의홈: 'home' };
-      const categoryListGroup2: { [key: string]: string } = {
-        퀴즈: 'quiz',
-        쪽지: 'note',
-        숙제: 'homework',
-        질문: 'question',
-        공지: 'notice',
-      };
-      const categoryListGroup3: { [key: string]: string } = { 설정: 'setting' };
-
-      const renderCategoryGroup = (group: { [key: string]: string }) =>
-        Object.entries(group).map(([iconName, pathName]) => {
-          const isFocus = mainCategory === pathName;
-          const commonStyle = 'pt-3 pr-4 pb-3 pl-4 flex gap-[12px]';
-          const focusStyle = isFocus ? 'bg-purple-10 text-purple-50 rounded-[10px] font-bold' : '';
-
-          return (
-            <Link
-              href={`/${pathName}`}
-              key={iconName}
-              className={`${commonStyle} ${focusStyle}`}
-            >
-              <SideNavIcon
-                name={iconName}
-                isFocus={isFocus}
-              />
-              {iconName === '강의홈' ? '강의 홈' : iconName}
-            </Link>
-          );
-        });
-
-      const categoryGroup1Memo = useMemo(() => renderCategoryGroup(categoryListGroup1), [mainCategory]);
-      const categoryGroup2Memo = useMemo(() => renderCategoryGroup(categoryListGroup2), [mainCategory]);
-      const categoryGroup3Memo = useMemo(() => renderCategoryGroup(categoryListGroup3), [mainCategory]);
-
-      const handleTitleClick = () => {
-        setIsOpen((prev) => !prev);
-      };
-
-      return (
-        <div className='flex flex-col gap-[11px]'>
-          <div className='w-[252px] rounded-[20px] h-[249px] bg-[rgb(247_245_255)] bg-opacity-100 border border-purple-20 pt-[20px]'>
-            <div className='flex flex-col gap-[20px]'>
-              <div className='pr-[30px] pl-[30px] flex flex-col gap-[15px]'>
-                <div
-                  className='relative text-heading2 font-bold flex items-center gap-[11px]'
-                  onClick={handleTitleClick}
-                >
-                  {title?.[0]}
-                  <SideNavIcon name={'드롭다운'} />
-
-                  {isOpen && (
-                    <div className='absolute z-10 w-[250px] h-auto top-[38px] left-[30px] py-[6px] px-[4px] gap-[5px] rounded-[5px] bg-white shadow-[0px_0px_7px_0px_rgba(70, 72, 84, 0.1)]'>
-                      {title?.map((title, index) => (
-                        <div
-                          key={`${title}-${index}`}
-                          className='text-headline2 w-[242px] h-[40px] py-[5px] px-[10px] font-gray-90 font-normal flex items-center'
-                        >
-                          {title}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <div className='flex flex-col gap-[15px]'>
-                  <div className='flex flex-col gap-[5px]'>
-                    <div className='text-label2-normal text-gray-60'>수강생</div>
-                    <div className='flex items-center gap-[10px] text-gray-90 text-headline2 font-normal'>
-                      <SideNavIcon name={'수강생'} />
-                      {student} 명
-                    </div>
-                  </div>
-                  <div>
-                    <div className='flex flex-col gap-[5px]'>
-                      <div className='text-label2-normal text-gray-60'>수업 일시</div>
-                      <div>{renderDate()}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className='h-[62px] w-full border-t-0.5 border-purple-20 flex justify-center items-center text-center text-gray-80 text-headline2 font-normal'>
-                <Link
-                  href={'/'}
-                  className='flex-1'
-                >
-                  강의 설정
-                </Link>
-                <div className='w-[0.5px] h-[30px] bg-gray-40'></div>
-                <Link
-                  href={'/'}
-                  className='flex-1'
-                >
-                  수강생 목록
-                </Link>
-              </div>
-            </div>
-          </div>
-          <div className='w-[252px] rounded-[20px] h-[512px] bg-white p-[10px] flex justify-between'>
-            <div className='w-full flex flex-col justify-between text-headline2 text-gray-60 font-semibold'>
-              <div className='flex flex-col gap-[20px]'>
-                <div>{categoryGroup1Memo}</div>
-                <div className='flex flex-col gap-[5px]'>{categoryGroup2Memo}</div>
-                <div>{categoryGroup3Memo}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    } else {
-      const mypageList: { [key: string]: { [key: string]: string } } = {
-        // 카테고리 : 경로명
-        setting: {
-          개인정보: 'personal',
-          강의: 'class',
-        },
-        guide: {
-          공지사항: 'notice',
-          매뉴얼: 'manual',
-          FAQ: 'faq',
-        },
-      };
-
-      const selectedMyPageStyle = (category: string) => {
-        const mypageCategoryList = mypageList[category];
-
-        return (
-          <>
-            {Object.keys(mypageCategoryList).map((content) => {
-              const value = mypageCategoryList[content];
-              const isSelected = subCategory === value;
-              const appliedStyle = isSelected ? 'text-purple-10 font-semibold bg-gray-75' : 'text-gray-30 font-normal';
-
-              return (
-                <Link
-                  href={`/mypage/${value}`}
-                  key={content}
-                  className={`w-[180px] h-[46px] rounded-[10px] gap-[12px] pt-[12px] pr-[15px] pb-[12px] pl-[15px] ${appliedStyle}`}
-                >
-                  {content} 설정
-                </Link>
-              );
-            })}
-          </>
-        );
-      };
-
-      return (
-        <div className='flex flex-col gap-[30px] w-[252px] h-[521px] rounded-[20px] bg-gray-70 p-[20px] text-white'>
-          <div className='text-headline1 font-semibold'>마이페이지</div>
+  if (type === 'main') {
+    return (
+      <div className='flex flex-col gap-[11px]'>
+        <div className='w-[252px] rounded-[20px] h-[249px] bg-[rgb(247_245_255)] border border-purple-20 pt-[20px]'>
           <div className='flex flex-col gap-[20px]'>
-            <div className='flex flex-col justify-between h-[132px] text-headline2'>
-              <div className='flex gap-[10px] font-semibold text-white'>
-                <SideNavIcon name={'마이페이지설정'} />
-                설정
+            <div className='pr-[30px] pl-[30px] flex flex-col gap-[15px]'>
+              <div
+                className='relative text-heading2 font-bold flex items-center gap-[11px]'
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                {title?.[0]}
+                <SideNavIcon name={'드롭다운'} />
+                {isOpen && (
+                  <div className='absolute z-10 w-[250px] h-auto top-[38px] left-[30px] py-[6px] px-[4px] gap-[5px] rounded-[5px] bg-white shadow-[0px_0px_7px_0px_rgba(70, 72, 84, 0.1)]'>
+                    {title?.map((title, index) => (
+                      <div
+                        key={`${title}-${index}`}
+                        className='text-headline2 w-[242px] h-[40px] py-[5px] px-[10px] font-gray-90 font-normal flex items-center'
+                      >
+                        {title}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-              <div className='flex flex-col items-end gap-[6px]'>{selectedMyPageStyle('setting')}</div>
+              <div className='flex flex-col gap-[15px]'>
+                <div className='flex flex-col gap-[5px]'>
+                  <div className='text-label2-normal text-gray-60'>수강생</div>
+                  <div className='flex items-center gap-[10px] text-gray-90 text-headline2 font-normal'>
+                    <SideNavIcon name={'수강생'} />
+                    {student} 명
+                  </div>
+                </div>
+                <div>
+                  <div className='flex flex-col gap-[5px]'>
+                    <div className='text-label2-normal text-gray-60'>수업 일시</div>
+                    <div>{renderDate()}</div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className='flex flex-col justify-between h-[184px] text-headline2'>
-              <div className='flex gap-[10px] font-semibold text-white'>
-                <SideNavIcon name={'마이페이지이용안내'} />
-                이용안내
-              </div>
-              <div className='flex flex-col items-end gap-[6px]'>{selectedMyPageStyle('guide')}</div>
+            <div className='h-[62px] w-full border-t-0.5 border-purple-20 flex justify-center items-center text-center text-gray-80 text-headline2 font-normal'>
+              <Link
+                href='/'
+                className='flex-1'
+              >
+                강의 설정
+              </Link>
+              <div className='w-[0.5px] h-[30px] bg-gray-40'></div>
+              <Link
+                href='/'
+                className='flex-1'
+              >
+                수강생 목록
+              </Link>
             </div>
           </div>
         </div>
-      );
-    }
+
+        <div className='w-[252px] rounded-[20px] h-[512px] bg-white p-[10px] flex justify-between'>
+          <div className='w-full flex flex-col justify-between text-headline2 text-gray-60 font-semibold'>
+            <div className='flex flex-col gap-[20px]'>
+              <div>{categoryGroup1Memo}</div>
+              <div className='flex flex-col gap-[5px]'>{categoryGroup2Memo}</div>
+              <div>{categoryGroup3Memo}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // mypage
+  const mypageList: {
+    [category: string]: {
+      [label: string]: string;
+    };
+  } = {
+    setting: { 개인정보: 'personal', 강의: 'class' },
+    guide: { 공지사항: 'notice', 매뉴얼: 'manual', FAQ: 'faq' },
   };
 
-  return <div>{inlineComponent()}</div>;
+  const selectedMyPageStyle = (category: string) => {
+    const list = mypageList[category];
+    return Object.entries(list).map(([name, path]) => {
+      const isSelected = subCategory === path;
+      const style = isSelected ? 'text-purple-10 font-semibold bg-gray-75' : 'text-gray-30 font-normal';
+      return (
+        <Link
+          key={name}
+          href={`/mypage/${path}`}
+          className={`w-[180px] h-[46px] rounded-[10px] pt-[12px] px-[15px] ${style}`}
+        >
+          {name} 설정
+        </Link>
+      );
+    });
+  };
+
+  return (
+    <div className='flex flex-col gap-[30px] w-[252px] h-[521px] rounded-[20px] bg-gray-70 p-[20px] text-white'>
+      <div className='text-headline1 font-semibold'>마이페이지</div>
+      <div className='flex flex-col gap-[20px]'>
+        <div className='flex flex-col justify-between h-[132px] text-headline2'>
+          <div className='flex gap-[10px] font-semibold text-white'>
+            <SideNavIcon name={'마이페이지설정'} />
+            설정
+          </div>
+          <div className='flex flex-col items-end gap-[6px]'>{selectedMyPageStyle('setting')}</div>
+        </div>
+        <div className='flex flex-col justify-between h-[184px] text-headline2'>
+          <div className='flex gap-[10px] font-semibold text-white'>
+            <SideNavIcon name={'마이페이지이용안내'} />
+            이용안내
+          </div>
+          <div className='flex flex-col items-end gap-[6px]'>{selectedMyPageStyle('guide')}</div>
+        </div>
+      </div>
+    </div>
+  );
 }
