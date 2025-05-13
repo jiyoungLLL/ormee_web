@@ -61,6 +61,8 @@ const DROPDOWN_TEXT_STYLE = {
 const DROPDOWN_MENU_ITEM_STYLE = 'px-[10px] py-[5px]';
 const DROPDOWN_MENU_ITEM_TEXT_STYLE = 'text-headline2 font-normal';
 
+const DISABLED_TEXT_COLOR = 'text-[#B4B4B2]';
+
 export default function Dropdown({
   type = 'default',
   menuList,
@@ -119,7 +121,7 @@ export default function Dropdown({
           : isOpen
             ? DROPDOWN_CLOSED_AREA_STYLE[type].open
             : DROPDOWN_CLOSED_AREA_STYLE[type].closed
-      } ${selectedTextStyle || DROPDOWN_TEXT_STYLE[type]} text-nowrap ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} select-none`}
+      } ${selectedTextStyle || DROPDOWN_TEXT_STYLE[type]} text-nowrap ${disabled ? `cursor-not-allowed ${DISABLED_TEXT_COLOR}` : 'cursor-pointer'} select-none`}
       ref={dropdownRef}
       onClick={handleToggle}
     >
