@@ -35,7 +35,7 @@ type DropdownProps = {
 
 const DROPDOWN_SIZE = {
   default: 'w-[119px] h-[40px]',
-  withInput: 'w-[120px] h-[55px]',
+  withInput: 'w-[120px] h-[50px]',
 } as const;
 
 const DROPDOWN_CLOSED_AREA_STYLE = {
