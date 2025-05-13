@@ -3,6 +3,7 @@ import Input from '@/components/ui/Input';
 import Dropdown from '@/components/ui/dropdown/Dropdown';
 import { PHONE_NUMBER_PREFIX } from '@/schemas/auth.schema';
 import { useRef } from 'react';
+import Button from './Button';
 
 type PhoneNumberInputProps<T extends FieldValues> = {
   control: Control<T>;
@@ -10,6 +11,7 @@ type PhoneNumberInputProps<T extends FieldValues> = {
   numberName: Path<T>;
   prefixInputSize?: string;
   numberInputSize?: string;
+  requireVerification?: boolean;
 };
 
 const getPrefixList = (field: ControllerRenderProps, instanceId: string) => {
@@ -28,6 +30,7 @@ export default function PhoneNumberInput<T extends FieldValues>({
   numberName,
   prefixInputSize,
   numberInputSize,
+  requireVerification = false,
 }: PhoneNumberInputProps<T>) {
   const instanceIdRef = useRef(crypto.randomUUID());
 
@@ -51,6 +54,16 @@ export default function PhoneNumberInput<T extends FieldValues>({
         control={control}
         size={numberInputSize || 'w-full h-[50px]'}
       />
+      {requireVerification && (
+        <Button
+          type='BUTTON_BASE_TYPE'
+          isPurple
+          isfilled
+          size='w-[150px] h-[50px]'
+          font='text-headline1 font-bold'
+          title='인증번호 받기'
+        />
+      )}
     </div>
   );
 }
