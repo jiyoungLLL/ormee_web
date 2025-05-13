@@ -34,7 +34,6 @@ export default function SignUpPage() {
 
   const handleSingnUp = (data: SignupFormValues) => {
     // TODO: 회원가입 요청 API 연동
-    alert('test');
     alert(
       `회원가입 요청\n아이디: ${data.id}\n비밀번호: ${data.password}\n비밀번호 확인: ${data.passwordConfirm}\n연락처 1: ${data.primaryPhone.prefix}-${data.primaryPhone.number}\n번호인증: ${data.isVerifiedPrimaryPhone}\n연락처 2: ${data.secondaryPhone?.prefix}-${data.secondaryPhone?.number}\n이메일: ${data.emailId}@${data.emailDomain}\n이름: ${data.name}\n영문명: ${data.englishName}`,
     );
