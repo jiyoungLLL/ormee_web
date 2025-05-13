@@ -29,6 +29,8 @@ type DropdownProps = {
   onOpen?: () => void;
   /** 드롭다운이 닫힐 때 실행될 콜백 함수 */
   onClose?: () => void;
+  /** 드롭다운 비활성화 여부 */
+  disabled?: boolean;
 };
 
 const DROPDOWN_SIZE = {
@@ -39,13 +41,15 @@ const DROPDOWN_SIZE = {
 const DROPDOWN_CLOSED_AREA_STYLE = {
   default: {
     base: 'border rounded-[5px] pl-[14px] pr-[42px] py-[12px]',
-    open: 'border-purple-50',
-    closed: 'border-gray-20',
+    open: 'border-purple-50 bg-white',
+    closed: 'border-gray-20 bg-white',
+    disabled: 'border-gray-20 bg-gray-10',
   },
   withInput: {
-    base: 'border rounded-[10px] pl-[20px] pr-[56px]',
-    open: 'border-purple-50',
-    closed: 'border-gray-20',
+    base: 'border rounded-[10px] pl-[20px] pr-[56px] py-[15px]',
+    open: 'border-purple-50 bg-white',
+    closed: 'border-gray-20 bg-white',
+    disabled: 'border-gray-20 bg-gray-10',
   },
 } as const;
 
@@ -66,6 +70,7 @@ export default function Dropdown({
   menuItemStyle,
   selectedTextStyle,
   menuItemTextStyle,
+  disabled,
   onOpen,
   onClose,
 }: DropdownProps) {
@@ -73,6 +78,8 @@ export default function Dropdown({
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleToggle = () => {
+    if (disabled) return;
+
     const newOpenState = !isOpen;
     setIsOpen(newOpenState);
 
@@ -106,7 +113,13 @@ export default function Dropdown({
 
   return (
     <div
-      className={`relative flex justify-start items-center ${size || DROPDOWN_SIZE[type]} ${closedAreaStyle || DROPDOWN_CLOSED_AREA_STYLE[type].base} ${isOpen ? DROPDOWN_CLOSED_AREA_STYLE[type].open : DROPDOWN_CLOSED_AREA_STYLE[type].closed} ${selectedTextStyle || DROPDOWN_TEXT_STYLE[type]}  cursor-pointer select-none`}
+      className={`relative flex justify-start items-center ${size || DROPDOWN_SIZE[type]} ${closedAreaStyle || DROPDOWN_CLOSED_AREA_STYLE[type].base} ${
+        disabled
+          ? DROPDOWN_CLOSED_AREA_STYLE[type].disabled
+          : isOpen
+            ? DROPDOWN_CLOSED_AREA_STYLE[type].open
+            : DROPDOWN_CLOSED_AREA_STYLE[type].closed
+      } ${selectedTextStyle || DROPDOWN_TEXT_STYLE[type]} text-nowrap ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} select-none`}
       ref={dropdownRef}
       onClick={handleToggle}
     >
