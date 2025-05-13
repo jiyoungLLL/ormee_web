@@ -17,6 +17,8 @@ export default function NoticeTitle() {
     // 검색 로직 실행
   };
 
+  const lectureNum: number = 1;
+
   return (
     <>
       <div className='relative w-[90px] h-[34px] flex px-[5px] gap-[10px] text-title3 font-bold font-gray-90 items-center'>
@@ -42,7 +44,7 @@ export default function NoticeTitle() {
           />
         </form>
         <Link
-          href='/notice/create'
+          href={`/lectures/${lectureNum}/notice/create`}
           className='relative top-[14px]'
         >
           <Button
