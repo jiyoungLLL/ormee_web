@@ -54,7 +54,7 @@ export const signupSchema = z
       .string()
       .min(8, { message: AUTH_ERROR_MESSAGES.INVALID_PASSWORD_LENGTH })
       .regex(/[!@#$%^&*(),.?":{}|<>]/, { message: AUTH_ERROR_MESSAGES.INVALID_PASSWORD_SPECIAL_CHARACTER }),
-    passwordConfirm: z.string().min(1),
+    passwordConfirm: z.string().min(1, { message: AUTH_ERROR_MESSAGES.NOT_MATCH_PASSWORD }),
     primaryPhone: phoneNumberSchema,
     isVerifiedPrimaryPhone: z
       .boolean()
