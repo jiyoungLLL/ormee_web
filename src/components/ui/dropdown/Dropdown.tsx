@@ -119,7 +119,7 @@ export default function Dropdown({
           : isOpen
             ? DROPDOWN_CLOSED_AREA_STYLE[type].open
             : DROPDOWN_CLOSED_AREA_STYLE[type].closed
-      } ${selectedTextStyle || DROPDOWN_TEXT_STYLE[type]} text-nowrap ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} select-none`}
+      } ${selectedTextStyle || DROPDOWN_TEXT_STYLE[type]} text-nowrap ${disabled ? 'cursor-not-allowed text-label-assistive' : 'cursor-pointer'} select-none`}
       ref={dropdownRef}
       onClick={handleToggle}
     >

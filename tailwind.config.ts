@@ -64,6 +64,9 @@ const config: Config = {
           success: '#DEF5E2',
           error: '#FBE8E8',
         },
+        label: {
+          assistive: '#B4B4B2',
+        },
       },
       fontFamily: {
         pretendard: ['var(--font-pretendard)'],
