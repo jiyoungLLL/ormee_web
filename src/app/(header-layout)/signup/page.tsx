@@ -1,6 +1,8 @@
 'use client';
 
+import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import PhoneNumberInput from '@/components/ui/PhoneNumberInput';
 import { PHONE_NUMBER_PREFIX, SignupFormValues, signupSchema } from '@/schemas/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -31,7 +33,7 @@ export default function SignUpPage() {
 
   return (
     <div className='w-[744.5px] h-full'>
-      <div className='flex justify-start items-end gap-[17px]'>
+      <div className='flex justify-start items-end gap-[17px] mb-[30px]'>
         <h1 className='text-gray-90 text-[32px] font-bold leading-[44.8px] tracking-[-0.64px]'>회원가입</h1>
         <div className='flex justify-center items-center gap-[4px] py-[4px]'>
           <div className='w-[4px] h-[4px] rounded-full bg-purple-50' />
@@ -42,7 +44,7 @@ export default function SignUpPage() {
         <form className='w-full'>
           <section className='w-full'>
             <h2 className='mb-[30px] px-[5px] text-title3 font-bold text-gray-90'>회원정보</h2>
-            <div className='grid grid-cols-[140px_1fr] grid-rows-[50px_50px_50px_50px_50px_50px] gap-x-[12px] gap-y-[30px] items-start w-full'>
+            <div className='grid grid-cols-[140px_1fr] grid-rows-6 gap-x-[12px] gap-y-[30px] items-start w-full'>
               <div className='flex items-start gap-[8px] py-[4px]'>
                 <div className='top-0 left-[-12px] w-[6px] h-[6px] rounded-full bg-purple-50' />
                 <label
@@ -55,7 +57,7 @@ export default function SignUpPage() {
               <Input
                 name='id'
                 control={control}
-                size='w-full h-full'
+                size='w-full h-[50px]'
               />
               <div className='flex items-start gap-[8px] py-[4px]'>
                 <div className='top-0 left-[-12px] w-[6px] h-[6px] rounded-full bg-purple-50' />
@@ -74,7 +76,7 @@ export default function SignUpPage() {
                 type='password'
                 control={control}
                 showPasswordToggle
-                size='w-full h-full'
+                size='w-full h-[50px]'
               />
               <div className='flex items-start gap-[8px] py-[4px]'>
                 <div className='top-0 left-[-12px] w-[6px] h-[6px] rounded-full bg-purple-50' />
@@ -92,7 +94,35 @@ export default function SignUpPage() {
                 maxLength={20}
                 showCharacterCount
                 showPasswordToggle
-                size='w-full h-full'
+                size='w-full h-[50px]'
+              />
+              <div className='flex items-start gap-[8px] py-[4px]'>
+                <div className='top-0 left-[-12px] w-[6px] h-[6px] rounded-full bg-purple-50' />
+                <label
+                  className='text-gray-70 text-[18px] font-bold leading-[25.2px] tracking-[-0.36px]'
+                  htmlFor='passwordConfirm'
+                >
+                  연락처 1
+                </label>
+              </div>
+              <PhoneNumberInput
+                control={control}
+                prefixName='primaryPhone.prefix'
+                numberName='primaryPhone.number'
+                verificationName='isVerifiedPrimaryPhone'
+              />
+              <div className='flex items-start gap-[8px] py-[4px]'>
+                <label
+                  className='text-gray-70 text-[18px] font-bold leading-[25.2px] tracking-[-0.36px]'
+                  htmlFor='passwordConfirm'
+                >
+                  연락처 2
+                </label>
+              </div>
+              <PhoneNumberInput
+                control={control}
+                prefixName='secondaryPhone.prefix'
+                numberName='secondaryPhone.number'
               />
             </div>
           </section>
