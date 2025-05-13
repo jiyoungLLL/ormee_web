@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 export default function SignUpPage() {
-  const { control, handleSubmit } = useForm<SignupFormValues>({
+  const { control, handleSubmit, setValue } = useForm<SignupFormValues>({
     defaultValues: {
       id: '',
       password: '',
@@ -44,7 +44,7 @@ export default function SignUpPage() {
         <form className='w-full'>
           <section className='w-full'>
             <h2 className='mb-[30px] px-[5px] text-title3 font-bold text-gray-90'>회원정보</h2>
-            <div className='grid grid-cols-[140px_1fr] grid-rows-6 gap-x-[12px] gap-y-[30px] items-start w-full'>
+            <div className='grid grid-cols-[140px_1fr] gap-x-[12px] gap-y-[30px] items-start w-full'>
               <div className='flex items-start gap-[8px] py-[4px]'>
                 <div className='top-0 left-[-12px] w-[6px] h-[6px] rounded-full bg-purple-50' />
                 <label
@@ -110,6 +110,7 @@ export default function SignUpPage() {
                 prefixName='primaryPhone.prefix'
                 numberName='primaryPhone.number'
                 verificationName='isVerifiedPrimaryPhone'
+                setValue={setValue}
               />
               <div className='flex items-start gap-[8px] py-[4px]'>
                 <label
