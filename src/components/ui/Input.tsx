@@ -29,6 +29,8 @@ export type InputProps<T extends FieldValues> = {
   showPasswordToggle?: boolean;
   /** Input 내부 추가 컴포넌트 */
   children?: React.ReactNode;
+  /** 테스트용 아이디 */
+  testId?: string;
 };
 
 export default function Input<T extends FieldValues>({
@@ -44,6 +46,7 @@ export default function Input<T extends FieldValues>({
   showCharacterCount = false,
   showPasswordToggle = false,
   children,
+  testId,
 }: InputProps<T>) {
   const [inputType, setInputType] = useState(type);
 
@@ -75,6 +78,7 @@ export default function Input<T extends FieldValues>({
             className={`absolute w-full h-full ${showCharacterCount && showPasswordToggle && 'pr-[115px]'} ${showCharacterCount && !showPasswordToggle && 'pr-[82px]'} ${!showCharacterCount && showPasswordToggle && 'pr-[56px]'} ${!showCharacterCount && !showPasswordToggle && 'pr-[20px]'} ${inputStyle} ${textStyle}`}
             onChange={handleInputChange(field, maxLength)}
             disabled={disabled}
+            data-testid={testId}
           />
           <div
             style={{
