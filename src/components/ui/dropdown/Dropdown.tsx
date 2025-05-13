@@ -121,7 +121,7 @@ export default function Dropdown({
           {menuList.map((menu) => (
             <div
               key={menu.id}
-              className={`${size} flex items-center ${menuItemStyle || DROPDOWN_MENU_ITEM_STYLE} ${menuItemTextStyle || DROPDOWN_MENU_ITEM_TEXT_STYLE}`}
+              className={`${size || DROPDOWN_SIZE[type]} flex items-center ${menuItemStyle || DROPDOWN_MENU_ITEM_STYLE} ${menuItemTextStyle || DROPDOWN_MENU_ITEM_TEXT_STYLE}`}
               onClick={() => handleItemClick(menu.onClick)}
             >
               {menu.label}
