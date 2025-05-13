@@ -1,12 +1,4 @@
-import {
-  Control,
-  Controller,
-  ControllerRenderProps,
-  FieldValues,
-  Path,
-  useFormContext,
-  useWatch,
-} from 'react-hook-form';
+import { Control, Controller, ControllerRenderProps, FieldValues, Path, useWatch } from 'react-hook-form';
 import Input from '@/components/ui/Input';
 import Dropdown from '@/components/ui/dropdown/Dropdown';
 import { PHONE_NUMBER_PREFIX, phoneNumberSchema } from '@/schemas/auth.schema';
