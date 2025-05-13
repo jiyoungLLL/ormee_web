@@ -22,14 +22,14 @@ export const signinSchema = z.object({
 
 export type SigninFormValues = z.infer<typeof signinSchema>;
 
-export const PhonePrefix = {
+export const PHONE_NUMBER_PREFIX = {
   MOBILE_010: '010',
   MOBILE_011: '011',
   SEOUL: '02',
 } as const;
 
 export const phoneNumberSchema = z.object({
-  prefix: z.enum([PhonePrefix.MOBILE_010, PhonePrefix.MOBILE_011, PhonePrefix.SEOUL], {
+  prefix: z.enum([PHONE_NUMBER_PREFIX.MOBILE_010, PHONE_NUMBER_PREFIX.MOBILE_011, PHONE_NUMBER_PREFIX.SEOUL], {
     errorMap: () => ({ message: AUTH_ERROR_MESSAGES.INVALID_PHONE_NUMBER }),
   }),
   number: z

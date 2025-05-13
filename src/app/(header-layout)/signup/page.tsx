@@ -1,7 +1,7 @@
 'use client';
 
 import Input from '@/components/ui/Input';
-import { PhonePrefix, SignupFormValues, signupSchema } from '@/schemas/auth.schema';
+import { PHONE_NUMBER_PREFIX, SignupFormValues, signupSchema } from '@/schemas/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
@@ -12,12 +12,12 @@ export default function SignUpPage() {
       password: '',
       passwordConfirm: '',
       primaryPhone: {
-        prefix: PhonePrefix.MOBILE_010,
+        prefix: PHONE_NUMBER_PREFIX.MOBILE_010,
         number: '',
       },
       isVerifiedPrimaryPhone: false,
       secondaryPhone: {
-        prefix: PhonePrefix.SEOUL,
+        prefix: PHONE_NUMBER_PREFIX.SEOUL,
         number: '',
       },
       emailId: '',
