@@ -3,7 +3,7 @@ import Input from '@/components/ui/Input';
 import Dropdown from '@/components/ui/dropdown/Dropdown';
 import { PHONE_NUMBER_PREFIX, phoneNumberSchema } from '@/schemas/auth.schema';
 import { useRef, useState } from 'react';
-import Button from './Button';
+import Button from '../Button';
 
 type PhoneNumberInputProps<T extends FieldValues> = {
   control: Control<T>;
