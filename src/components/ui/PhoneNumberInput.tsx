@@ -1,7 +1,7 @@
 import { Control, Controller, ControllerRenderProps, FieldValues, Path, useWatch } from 'react-hook-form';
 import Input from '@/components/ui/Input';
 import Dropdown from '@/components/ui/dropdown/Dropdown';
-import { PHONE_NUMBER_PREFIX } from '@/schemas/auth.schema';
+import { PHONE_NUMBER_PREFIX, phoneNumberSchema } from '@/schemas/auth.schema';
 import { useRef, useState } from 'react';
 import Button from './Button';
 
@@ -9,7 +9,7 @@ type PhoneNumberInputProps<T extends FieldValues> = {
   control: Control<T>;
   prefixName: Path<T>;
   numberName: Path<T>;
-  verificationName: Path<T>;
+  verificationName?: Path<T>;
   prefixInputSize?: string;
   numberInputSize?: string;
 };
@@ -39,12 +39,10 @@ export default function PhoneNumberInput<T extends FieldValues>({
   const isVerified = verificationName ? useWatch({ control, name: verificationName }) : false;
 
   const handleVertification = () => {
-    const isValidPrefix = Object.values(PHONE_NUMBER_PREFIX).includes(watchedPrefixValue);
+    const isValid = phoneNumberSchema.safeParse({ prefix: watchedPrefixValue, number: watchedNumberValue });
 
-    const isValidPhoneNumber = watchedNumberValue && watchedNumberValue.length >= 7 && watchedNumberValue.length <= 8;
-
-    if (!isValidPrefix || !isValidPhoneNumber) {
-      alert('유효하지 않은 전화번호 형식입니다.');
+    if (isValid.error) {
+      alert(isValid.error.errors[0].message);
       return;
     }
 
