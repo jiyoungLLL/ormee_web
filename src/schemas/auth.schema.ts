@@ -7,6 +7,7 @@ export const AUTH_ERROR_MESSAGES = {
   INVALID_PASSWORD_SPECIAL_CHARACTER: '비밀번호는 특수문자를 1개 이상 포함해야 합니다.',
   NOT_MATCH_PASSWORD: '비밀번호가 일치하지 않습니다.',
   INVALID_PHONE_NUMBER: '올바른 번호를 선택해주세요.',
+  EMPTY_PHONE_NUMBER: '전화번호를 입력해주세요.',
   INVALID_PHONE_NUMBER_LENGTH: '전화번호는 7~8자리로 입력해주세요.',
   INVALID_PHONE_NUMBER_ONLY: '전화번호는 숫자로 입력해주세요.',
   NOT_VERIFIED_PRIMARY_PHONE: '휴대폰 번호 인증을 완료해주세요.',
@@ -34,9 +35,16 @@ export const phoneNumberSchema = z.object({
   }),
   number: z
     .string()
-    .regex(/^\d+$/, { message: AUTH_ERROR_MESSAGES.INVALID_PHONE_NUMBER_ONLY })
-    .min(7, { message: AUTH_ERROR_MESSAGES.INVALID_PHONE_NUMBER_LENGTH })
-    .max(8, { message: AUTH_ERROR_MESSAGES.INVALID_PHONE_NUMBER_LENGTH }),
+    .transform((val) => val.trim())
+    .refine((val) => val.length > 0 || val === '', {
+      message: AUTH_ERROR_MESSAGES.EMPTY_PHONE_NUMBER,
+    })
+    .refine((val) => val === '' || /^\d+$/.test(val), {
+      message: AUTH_ERROR_MESSAGES.INVALID_PHONE_NUMBER_ONLY,
+    })
+    .refine((val) => val === '' || (val.length >= 7 && val.length <= 8), {
+      message: AUTH_ERROR_MESSAGES.INVALID_PHONE_NUMBER_LENGTH,
+    }),
 });
 
 export const signupSchema = z
