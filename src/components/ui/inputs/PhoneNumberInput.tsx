@@ -13,6 +13,7 @@ type PhoneNumberInputProps<T extends FieldValues> = {
   setValue?: (name: Path<T>, value: any) => void;
   prefixInputSize?: string;
   numberInputSize?: string;
+  numberTestId?: string;
 };
 
 const getPrefixList = (field: ControllerRenderProps, instanceId: string) => {
@@ -26,13 +27,22 @@ const getPrefixList = (field: ControllerRenderProps, instanceId: string) => {
 };
 
 export default function PhoneNumberInput<T extends FieldValues>({
+  /** useForm에서 사용할 컨트롤러 */
   control,
+  /** 전화번호 앞자리 입력 필드의 이름 */
   prefixName,
+  /** 전화번호 뒷자리 입력 필드의 이름 */
   numberName,
+  /** 전화번호 앞자리 입력 필드의 크기 */
   prefixInputSize,
+  /** 전화번호 뒷자리 입력 필드의 크기 */
   numberInputSize,
+  /** 인증번호 확인 필드의 이름 */
   verificationName,
+  /** 값 세팅을 위한 setValue 함수 */
   setValue,
+  /** 전화번호 뒷자리 입력 필드의 테스트용 아이디 */
+  numberTestId,
 }: PhoneNumberInputProps<T>) {
   const instanceIdRef = useRef(crypto.randomUUID());
 
@@ -87,6 +97,7 @@ export default function PhoneNumberInput<T extends FieldValues>({
           control={control}
           size={numberInputSize || 'w-full h-[50px]'}
           disabled={isVerified}
+          testId={numberTestId}
         />
         {verificationName && (
           <Button
