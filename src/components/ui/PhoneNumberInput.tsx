@@ -1,4 +1,12 @@
-import { Control, Controller, ControllerRenderProps, FieldValues, Path, useWatch } from 'react-hook-form';
+import {
+  Control,
+  Controller,
+  ControllerRenderProps,
+  FieldValues,
+  Path,
+  useFormContext,
+  useWatch,
+} from 'react-hook-form';
 import Input from '@/components/ui/Input';
 import Dropdown from '@/components/ui/dropdown/Dropdown';
 import { PHONE_NUMBER_PREFIX, phoneNumberSchema } from '@/schemas/auth.schema';
@@ -10,6 +18,7 @@ type PhoneNumberInputProps<T extends FieldValues> = {
   prefixName: Path<T>;
   numberName: Path<T>;
   verificationName?: Path<T>;
+  setValue?: (name: Path<T>, value: any) => void;
   prefixInputSize?: string;
   numberInputSize?: string;
 };
@@ -31,11 +40,14 @@ export default function PhoneNumberInput<T extends FieldValues>({
   prefixInputSize,
   numberInputSize,
   verificationName,
+  setValue,
 }: PhoneNumberInputProps<T>) {
   const instanceIdRef = useRef(crypto.randomUUID());
+
   const [isSendVertification, setIsSendVertification] = useState(false);
 
   const [watchedPrefixValue, watchedNumberValue] = useWatch({ control, name: [prefixName, numberName] });
+  const [verificationCode, setVerificationCode] = useState('');
   const isVerified = verificationName ? useWatch({ control, name: verificationName }) : false;
 
   const handleVertification = () => {
@@ -46,7 +58,17 @@ export default function PhoneNumberInput<T extends FieldValues>({
       return;
     }
 
+    // TODO: 인증번호 발송 로직 추가
     setIsSendVertification(true);
+  };
+
+  const handleVertificationCheck = () => {
+    // TODO: 인증번호 확인 로직 추가
+    // if(인증 성공하면)
+    if (!verificationName || !setValue) return;
+
+    setValue(verificationName, true);
+    setIsSendVertification(false);
   };
 
   return (
@@ -78,10 +100,31 @@ export default function PhoneNumberInput<T extends FieldValues>({
             size='w-[150px] h-[50px]'
             font='text-headline1 font-bold'
             title='인증번호 받기'
+            htmlType='button'
             onClick={handleVertification}
           />
         )}
       </div>
+      {isSendVertification && (
+        <div className='flex items-center gap-[6px] mt-[6px]'>
+          <input
+            className='flex w-[200px] h-[50px] px-[20px] py-[15px] rounded-[10px] border border-gray-20 bg-white text-body-reading text-label-noral placeholder:text-label-neutral'
+            placeholder='인증번호 입력'
+            value={verificationCode}
+            onChange={(e) => setVerificationCode(e.target.value)}
+          />
+          <Button
+            type='BUTTON_BASE_TYPE'
+            isPurple
+            isfilled
+            size='w-[71px] h-[50px]'
+            font='text-headline1 font-bold'
+            title='확인'
+            htmlType='button'
+            onClick={handleVertificationCheck}
+          />
+        </div>
+      )}
     </div>
   );
 }
