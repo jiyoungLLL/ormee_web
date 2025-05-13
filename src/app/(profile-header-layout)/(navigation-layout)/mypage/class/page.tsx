@@ -4,23 +4,20 @@ import ClassModal from '@/components/class/ClassModal';
 import Button from '@/components/ui/Button';
 import { MOCK_CLASSES } from '@/mock/class';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 export default function Class() {
-  const currentPath = usePathname();
-  const classState = currentPath === '/mypage/class' ? 'ing' : 'done';
+  const [classes, setClasses] = useState(MOCK_CLASSES);
+  const [tab, setTab] = useState<'ing' | 'done'>('ing');
   const [openMenu, setOpenMenu] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
-  const basicStyle = 'w-full rounded-tr-[25px] rounded-b-[25px] bg-white';
-  //모달
   const [modalType, setModalType] = useState<'new' | 'ing' | null>(null);
   const isOpen = modalType !== null;
+  const basicStyle = 'w-full rounded-tr-[25px] rounded-b-[25px] bg-white';
 
   const openModal = (type: 'new' | 'ing') => setModalType(type);
   const closeModal = () => setModalType(null);
 
-  // 강의코드 수정 필요
   const handleCopy = () => {
     const text = '강의코드';
     navigator.clipboard.writeText(text).then(() => alert('복사 성공!'));
@@ -46,21 +43,23 @@ export default function Class() {
     };
   }, [openMenu]);
 
-  const handleDeleteClass = (title: string) => {
-    const toDeleteClass = document.getElementById(title);
-    if (toDeleteClass) {
-      toDeleteClass.remove();
-    }
+  const handleDeleteClass = (classState: 'ing' | 'done', id: string) => {
+    const updatedClassList = classes[classState].filter(([index, title]) => `${index}-${title}` !== id);
+
+    setClasses({
+      ...classes,
+      [classState]: updatedClassList,
+    });
   };
 
-  const renderClass = (classState: string) => {
-    if (MOCK_CLASSES[classState]) {
+  const renderClass = (classState: 'ing' | 'done') => {
+    if (classes[classState] && classes[classState].length !== 0) {
       const commonStyle = 'flex gap-[10px] text-headline2 h-[22px] items-center';
       const IconSrc = classState === 'ing' ? 'home-ui.png' : 'pre-lecture.png';
 
       return (
         <div className={`${basicStyle} px-[30px] py-[20px] flex gap-[15px] flex-wrap`}>
-          {MOCK_CLASSES[classState].map(([index, title, students, date]) => (
+          {classes[classState].map(([index, title, students, date]) => (
             <div
               id={`${index}-${title}`}
               key={`${title}-${students}-${date}-${index}`}
@@ -142,7 +141,7 @@ export default function Class() {
                   <button
                     type='button'
                     className='h-[40px] px-[10px] py-[5px] rounded-[5px]'
-                    onClick={() => handleDeleteClass(`${index}-${title}`)}
+                    onClick={() => handleDeleteClass(classState, `${index}-${title}`)}
                   >
                     강의 삭제
                   </button>
@@ -154,8 +153,10 @@ export default function Class() {
       );
     } else {
       return (
-        <div className={`${basicStyle} px-[479px] py-[78px]`}>
-          {currentPath === '/mypage/class' ? '현재 진행 중인 강의' : '이전에 진행한 강의'}가 없어요
+        <div
+          className={`${basicStyle} h-[184px] flex justify-center items-center text-heading2 font-semibold text-[rgb(181_182_188)]`}
+        >
+          {tab === 'ing' ? '현재 진행 중인 강의가 없어요' : '이전에 진행한 강의가 없어요'}
         </div>
       );
     }
@@ -166,10 +167,65 @@ export default function Class() {
       <div className='relative top-[8px] px-[5px] text-title3 font-bold'>강의 설정</div>
       <div className='relative top-[13px] flex flex-col'>
         <div className='h-[75px] flex justify-between items-center'>
-          <div className='pt-[20px] flex'>
-            <div>진행 중 강의</div>
-            <div>이전 강의</div>
+          {/* 탭 */}
+          <div className='pt-[20px] flex gap-4 items-center'>
+            <div className='relative flex items-end'>
+              <button
+                className={`text-headline1 ${
+                  tab === 'ing'
+                    ? 'h-[55px] rounded-t-[20px] px-[15px] pr-[30px] flex items-center gap-[9px] bg-white font-semibold text-purple-50'
+                    : 'w-[145px] h-[43px] rounded-[20px] bg-gray-20 text-gray-60'
+                }`}
+                onClick={() => setTab('ing')}
+              >
+                진행 중 강의
+                <div>{tab === 'ing' && classes['ing'].length}</div>
+              </button>
+
+              {tab === 'ing' && (
+                <Image
+                  src={'/assets/icons/class/right-vector.png'}
+                  width={25}
+                  height={25}
+                  alt='오른쪽 벡터 아이콘'
+                  className='absolute left-[100%] bottom-0 z-10'
+                />
+              )}
+            </div>
+
+            <div className='relative flex items-end'>
+              {tab === 'done' && (
+                <Image
+                  src={'/assets/icons/class/left-vector.png'}
+                  width={25}
+                  height={25}
+                  alt='왼쪽 벡터 아이콘'
+                  className='absolute right-[100%] bottom-0 z-10'
+                />
+              )}
+              <button
+                className={`text-headline1 ${
+                  tab === 'done'
+                    ? 'h-[55px] rounded-t-[20px] px-[15px] flex items-center gap-[9px] bg-white font-semibold text-purple-50'
+                    : 'w-[145px] h-[43px] rounded-[20px] bg-gray-20 text-gray-60'
+                }`}
+                onClick={() => setTab('done')}
+              >
+                이전 강의
+                <div>{tab === 'done' && classes['done'].length}</div>
+              </button>
+              {tab === 'done' && (
+                <Image
+                  src={'/assets/icons/class/right-vector.png'}
+                  width={25}
+                  height={25}
+                  alt='오른쪽 벡터 아이콘'
+                  className='absolute left-[100%] bottom-0 z-10'
+                />
+              )}
+            </div>
           </div>
+
           <Button
             type='BUTTON_CREATE_TYPE'
             size='w-[133px] h-[50px]'
@@ -179,15 +235,17 @@ export default function Class() {
             htmlType='button'
             onClick={() => openModal('new')}
           />
-          {isOpen && (
-            <ClassModal
-              type={modalType!}
-              isOpen={isOpen}
-              closeModal={closeModal}
-            />
-          )}
         </div>
-        <div>{renderClass(classState)}</div>
+
+        {isOpen && (
+          <ClassModal
+            type={modalType!}
+            isOpen={isOpen}
+            closeModal={closeModal}
+          />
+        )}
+
+        <div>{renderClass(tab)}</div>
       </div>
     </div>
   );
