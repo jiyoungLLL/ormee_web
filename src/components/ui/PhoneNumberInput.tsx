@@ -51,6 +51,8 @@ export default function PhoneNumberInput<T extends FieldValues>({
   const isVerified = verificationName ? useWatch({ control, name: verificationName }) : false;
 
   const handleVertification = () => {
+    if (isVerified) return;
+
     const isValid = phoneNumberSchema.safeParse({ prefix: watchedPrefixValue, number: watchedNumberValue });
 
     if (isValid.error) {
@@ -83,6 +85,7 @@ export default function PhoneNumberInput<T extends FieldValues>({
               menuList={getPrefixList(field as ControllerRenderProps<FieldValues, string>, instanceIdRef.current)}
               selectedItem={field.value || PHONE_NUMBER_PREFIX.MOBILE_010}
               size={prefixInputSize}
+              disabled={isVerified}
             />
           )}
         />
@@ -91,6 +94,7 @@ export default function PhoneNumberInput<T extends FieldValues>({
           name={numberName}
           control={control}
           size={numberInputSize || 'w-full h-[50px]'}
+          disabled={isVerified}
         />
         {verificationName && (
           <Button
@@ -99,9 +103,10 @@ export default function PhoneNumberInput<T extends FieldValues>({
             isfilled
             size='w-[150px] h-[50px]'
             font='text-headline1 font-bold'
-            title='인증번호 받기'
+            title={isVerified ? '인증 완료' : '인증번호 받기'}
             htmlType='button'
             onClick={handleVertification}
+            // TODO: isVerified 여부에 따라 disabled 처리
           />
         )}
       </div>
