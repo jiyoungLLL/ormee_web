@@ -50,6 +50,7 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
     );
   };
 
+  // 수업 요일
   const days: string[] = ['월', '화', '수', '목', '금', '토', '일'];
   const [dayClickedList, setDayClickedList] = useState<string[]>([]);
 
@@ -64,7 +65,8 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
   };
 
   return (
-    <form className='absolute z-100'>
+    <form>
+      {/** 모달 버튼 이벤트 수정 필요 */}
       <Modal
         isOpen={isOpen}
         onCancel={closeModal}

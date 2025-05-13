@@ -1,6 +1,7 @@
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Calendar from './Calendar';
+import Dropdown from './dropdown/Dropdown';
 
 type ComponentType = 'CALENDAR' | 'TIME';
 type CalendarType = 'DATE_TYPE' | 'PERIOD_TYPE';
@@ -40,11 +41,40 @@ const TIME_OPTIONS = [
   '20:30',
 ];
 
+const TIME_MENU_LIST = TIME_OPTIONS.map((time, index) => ({
+  id: `t${index}`,
+  label: time,
+}));
+
 export default function DateTimePicker({ type, calendar, placeholer }: DateTimePickerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [value, setValue] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
+  const [dropdownStyle, setDropdownStyle] = useState({ top: 0, left: 0 });
+
+  // 외부 클릭 감지
+  const pickerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (pickerRef.current && isOpen) {
+      const rect = pickerRef.current.getBoundingClientRect();
+      setDropdownStyle({ top: rect.bottom + 8, left: rect.left });
+    }
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen]);
 
   const fontStyle = value !== '' ? '' : 'text-gray-60';
 
@@ -75,7 +105,7 @@ export default function DateTimePicker({ type, calendar, placeholer }: DateTimeP
   };
 
   return (
-    <>
+    <div ref={pickerRef}>
       <div
         className={`${commonStyle} ${basicTextStyle} ${ComponentSize} ${widthSize} flex items-center cursor-pointer`}
         onClick={handlePick}
@@ -91,7 +121,10 @@ export default function DateTimePicker({ type, calendar, placeholer }: DateTimeP
       </div>
 
       {isOpen && calendar && (
-        <div className={`absolute z-10 ${calendar === 'PERIOD_TYPE' ? 'bottom-[170px]' : 'top-[120px]'}`}>
+        <div
+          className={`absolute z-[100] ${calendar === 'PERIOD_TYPE' ? 'bottom-[170px]' : 'top-[120px]'}`}
+          style={{ top: `${dropdownStyle.top}px`, left: `${dropdownStyle.left}px`, position: 'fixed' }}
+        >
           <Calendar
             type={calendar}
             onSelectDate={handleSelectDate}
@@ -100,50 +133,28 @@ export default function DateTimePicker({ type, calendar, placeholer }: DateTimeP
       )}
 
       {isOpen && type === 'TIME' && (
-        <div className='absolute z-10 top-[570px] bg-white shadow-md rounded-md p-4 flex flex-col gap-2'>
-          <div className='flex gap-2 items-center'>
-            <select
-              value={startTime}
-              onChange={(e) => {
-                setStartTime(e.target.value);
-                setEndTime('');
-              }}
-              className='border rounded p-2'
-            >
-              <option value=''>시작 시간</option>
-              {TIME_OPTIONS.map((time) => (
-                <option
-                  key={time}
-                  value={time}
-                >
-                  {time}
-                </option>
-              ))}
-            </select>
-
-            <span className='text-gray-500'>-</span>
-
-            <select
-              value={endTime}
-              onChange={(e) => setEndTime(e.target.value)}
-              disabled={!startTime}
-              className='border rounded p-2'
-            >
-              <option value=''>종료 시간</option>
-              {startTime &&
-                TIME_OPTIONS.filter((time) => time > startTime).map((time) => (
-                  <option
-                    key={time}
-                    value={time}
-                  >
-                    {time}
-                  </option>
-                ))}
-            </select>
+        <div
+          className='absolute z-[100] top-[10px] bg-white shadow-md rounded-md p-4 flex flex-col gap-2'
+          style={{ top: `${dropdownStyle.top}px`, left: `${dropdownStyle.left}px`, position: 'fixed' }}
+        >
+          <div className='flex items-center gap-[10px]'>
+            <Dropdown
+              menuList={TIME_MENU_LIST.map((item) => ({
+                ...item,
+                onClick: () => setStartTime(item.label as string),
+              }))}
+              selectedItem={startTime || '시작 시간'}
+            />
+            <Dropdown
+              menuList={TIME_MENU_LIST.map((item) => ({
+                ...item,
+                onClick: () => setEndTime(item.label as string),
+              }))}
+              selectedItem={endTime || '종료 시간'}
+            />
           </div>
-
           <button
-            className='self-end px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition'
+            className='self-end px-4 py-1 bg-purple-50 text-white rounded disabled:bg-gray-20 disabled:text-gray-50 disabled:cursor-not-allowed'
             disabled={!startTime || !endTime}
             onClick={() => handleSelectTime(startTime, endTime)}
           >
@@ -151,6 +162,6 @@ export default function DateTimePicker({ type, calendar, placeholer }: DateTimeP
           </button>
         </div>
       )}
-    </>
+    </div>
   );
 }
