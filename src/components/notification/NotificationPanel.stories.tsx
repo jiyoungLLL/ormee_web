@@ -51,7 +51,7 @@ export const OneUnread: Story = {
 OneUnread.parameters = {
   msw: {
     handlers: [
-      http.get('/api/teacher/notification/', () => {
+      http.get(`${process.env.NEXT_PUBLIC_MOCK_BASE_URL}/api/teacher/notification/`, () => {
         return HttpResponse.json(MOCK_NOTIFICATION_LIST_ONE_UNREAD, {
           status: 200,
           headers: {
@@ -74,7 +74,7 @@ export const OneRead: Story = {
 OneRead.parameters = {
   msw: {
     handlers: [
-      http.get('/api/teacher/notification/', () => {
+      http.get(`${process.env.NEXT_PUBLIC_MOCK_BASE_URL}/api/teacher/notification/`, () => {
         return HttpResponse.json(MOCK_NOTIFICATION_LIST_ONE_READ, {
           status: 200,
           headers: {
@@ -97,7 +97,7 @@ export const Empty: Story = {
 Empty.parameters = {
   msw: {
     handlers: [
-      http.get('/api/teacher/notification/', () =>
+      http.get(`${process.env.NEXT_PUBLIC_MOCK_BASE_URL}/api/teacher/notification/`, () =>
         HttpResponse.json(MOCK_NOTIFICATION_LIST_EMPTY, {
           status: 200,
           headers: {
@@ -120,7 +120,7 @@ export const Bulk: Story = {
 Bulk.parameters = {
   msw: {
     handlers: [
-      http.get('/api/teacher/notification/', () =>
+      http.get(`${process.env.NEXT_PUBLIC_MOCK_BASE_URL}/api/teacher/notification/`, () =>
         HttpResponse.json(MOCK_NOTIFICATION_LIST_BULK, {
           status: 200,
           headers: {
