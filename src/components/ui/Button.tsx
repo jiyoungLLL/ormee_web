@@ -24,7 +24,7 @@ type ButtonProps = {
   onClick?: () => void;
   /** html 버튼 타입 (button, submit) */
   htmlType?: HTMLButtonType;
-  /** 버튼 비활성화 (기본 스타일 : 'bg-gray-30 text-[rgb(180_180_194)] text-headline1 font-bold') */
+  /** 버튼 비활성화 (기본 스타일 : 'bg-gray-30 text-label-assistive text-headline1 font-bold') */
   disabled?: boolean;
 };
 
@@ -74,7 +74,7 @@ export default function Button({
     <button
       type={htmlType}
       onClick={onClick}
-      className={`whitespace-nowrap ${size} ${baseStyle} ${disabled ? 'text-[rgb(180_180_194)] text-headline1 font-bold' : font} ${backgroundStyle} ${borderStyle}`}
+      className={`whitespace-nowrap ${size} ${baseStyle} ${disabled ? 'text-label-assistive text-headline1 font-bold' : font} ${backgroundStyle} ${borderStyle}`}
       title={description}
     >
       {type === 'BUTTON_CREATE_TYPE' ? (
