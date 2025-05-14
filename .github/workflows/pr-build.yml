@@ -70,8 +70,10 @@ jobs:
       - name: 🧪 Storybook 테스트 실행
         id: storybooktest
         if: success()
+        continue-on-error: false
         run: |
           pnpm test-storybook --url http://localhost:6006 --failOnError 2>&1 | tee storybook-test.log
+          exit ${PIPESTATUS[0]}
 
       # ❌ 실패한 경우 로그에서 오류 요약 추출
       - name: 📋 오류 요약 추출
