@@ -116,7 +116,7 @@ export default function PhoneNumberInput<T extends FieldValues>({
       {isSendVertification && (
         <div className='flex items-center gap-[6px] mt-[6px]'>
           <input
-            className='flex w-[200px] h-[50px] px-[20px] py-[15px] rounded-[10px] border border-gray-20 bg-white text-body-reading text-label-noral placeholder:text-label-neutral'
+            className='flex w-[200px] h-[50px] px-[20px] py-[15px] rounded-[10px] border border-gray-20 bg-white text-body-reading text-label-noral placeholder:text-label-neutral focus:border-[1px] focus:border-purple-50 focus:outline-none'
             placeholder='인증번호 입력'
             value={verificationCode}
             onChange={(e) => setVerificationCode(e.target.value)}
