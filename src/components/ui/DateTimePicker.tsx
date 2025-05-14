@@ -10,6 +10,7 @@ type DateTimePickerProps = {
   type: ComponentType;
   calendar?: CalendarType;
   placeholer: string;
+  onSelectDate?: (value: string) => void;
 };
 
 const TIME_OPTIONS = [
@@ -46,7 +47,7 @@ const TIME_MENU_LIST = TIME_OPTIONS.map((time, index) => ({
   label: time,
 }));
 
-export default function DateTimePicker({ type, calendar, placeholer }: DateTimePickerProps) {
+export default function DateTimePicker({ type, calendar, placeholer, onSelectDate }: DateTimePickerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [value, setValue] = useState('');
   const [startTime, setStartTime] = useState('');
@@ -96,11 +97,14 @@ export default function DateTimePicker({ type, calendar, placeholer }: DateTimeP
 
   const handleSelectDate = (formattedValue: string) => {
     setValue(formattedValue);
+    onSelectDate?.(formattedValue);
     setIsOpen(false);
   };
 
   const handleSelectTime = (start: string, end: string) => {
-    setValue(`${start} - ${end}`);
+    const formattedValue = `${start} - ${end}`;
+    setValue(formattedValue);
+    onSelectDate?.(formattedValue);
     setIsOpen(false);
   };
 
@@ -152,14 +156,14 @@ export default function DateTimePicker({ type, calendar, placeholer }: DateTimeP
               }))}
               selectedItem={endTime || '종료 시간'}
             />
+            <button
+              className='px-[20px] py-[6px] text-headline1 font-semibold bg-purple-50 text-white rounded disabled:bg-gray-30 disabled:text-[rgb(180_180_194)] disabled:cursor-not-allowed'
+              disabled={!startTime || !endTime}
+              onClick={() => handleSelectTime(startTime, endTime)}
+            >
+              확인
+            </button>
           </div>
-          <button
-            className='self-end px-4 py-1 bg-purple-50 text-white rounded disabled:bg-gray-20 disabled:text-gray-50 disabled:cursor-not-allowed'
-            disabled={!startTime || !endTime}
-            onClick={() => handleSelectTime(startTime, endTime)}
-          >
-            확인
-          </button>
         </div>
       )}
     </div>

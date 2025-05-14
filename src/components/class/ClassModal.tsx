@@ -8,11 +8,11 @@ import DateTimePicker from '../ui/DateTimePicker';
 import Input from '../ui/Input';
 import Modal from '../ui/Modal';
 
-interface ClassModalProps {
+type ClassModalProps = {
   type: 'ing' | 'new';
   isOpen: boolean;
   closeModal: () => void;
-}
+};
 
 type ModalContents = {
   inputTitle: string;
@@ -21,10 +21,42 @@ type ModalContents = {
 
 export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps) {
   const title = type === 'ing' ? '강의 설정' : '신규 강의 개설';
-  const { control, handleSubmit } = useForm<ClassModalValues>({
+
+  // 유효성 검사 및 제출
+  const onSubmit = (data: ClassModalValues) => {
+    alert(JSON.stringify(data));
+    closeModal();
+  };
+
+  const onInvalid = (errors: any) => {
+    const fieldNames: Record<string, string> = {
+      title: '강의명',
+      password: '비밀번호',
+      period: '수강기간',
+      time: '수업시간',
+      days: '수업 요일',
+      message: '한줄소개',
+    };
+
+    const firstErrorKey = Object.keys(errors)[0];
+    const firstFieldName = fieldNames[firstErrorKey] || firstErrorKey;
+
+    alert(`${firstFieldName}을(를) 작성해주세요.`);
+  };
+
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<ClassModalValues>({
     defaultValues: {
       title: '',
       password: '',
+      message: '',
+      period: '',
+      time: '',
+      days: [],
     },
     resolver: zodResolver(classSchema),
     mode: 'onSubmit',
@@ -56,11 +88,14 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
 
   const handleDayClick = (day: string) => {
     setDayClickedList((prev) => {
+      let updated;
       if (prev.includes(day)) {
-        return prev.filter((d) => d !== day);
+        updated = prev.filter((d) => d !== day);
       } else {
-        return [...prev, day];
+        updated = [...prev, day];
       }
+      setValue('days', updated);
+      return updated;
     });
   };
 
@@ -70,7 +105,7 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
       <Modal
         isOpen={isOpen}
         onCancel={closeModal}
-        onConfirm={() => {}}
+        onConfirm={handleSubmit(onSubmit, onInvalid)}
         title={title}
         containerStyle='flex flex-col gap-[30px]'
       >
@@ -85,6 +120,7 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
                 type='CALENDAR'
                 calendar='PERIOD_TYPE'
                 placeholer='선택하기'
+                onSelectDate={(value) => setValue('period', value)}
               />
             </div>
             <div className={commonModalStyle}>
@@ -92,6 +128,7 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
               <DateTimePicker
                 type='TIME'
                 placeholer='선택하기'
+                onSelectDate={(value) => setValue('time', value)}
               />
             </div>
           </div>

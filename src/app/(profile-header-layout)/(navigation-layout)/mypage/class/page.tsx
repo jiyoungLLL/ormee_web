@@ -27,6 +27,11 @@ export default function Class() {
     setOpenMenu((prev) => (prev === index ? null : index));
   };
 
+  const handleNewClass = () => {
+    openModal('new');
+    setTab('ing');
+  };
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const openCard = document.getElementById(`menu-${openMenu}`);
@@ -233,7 +238,7 @@ export default function Class() {
             title='강의 개설'
             isPurple={true}
             htmlType='button'
-            onClick={() => openModal('new')}
+            onClick={handleNewClass}
           />
         </div>
 
