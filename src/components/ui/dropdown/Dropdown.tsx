@@ -25,12 +25,18 @@ type DropdownProps = {
   selectedTextStyle?: string;
   /** 드롭다운 메뉴 아이템 텍스트에 적용될 스타일 */
   menuItemTextStyle?: string;
+  /** 드롭다운 메뉴 컨테이너의 최대 높이 */
+  menuContainerMaxHeight?: number;
   /** 드롭다운이 열릴 때 실행될 콜백 함수 */
   onOpen?: () => void;
   /** 드롭다운이 닫힐 때 실행될 콜백 함수 */
   onClose?: () => void;
   /** 드롭다운 비활성화 여부 */
   disabled?: boolean;
+  /** 드롭다운 트리거(항상 보이는 부분) 테스트 ID */
+  triggerTestId?: string;
+  /** 드롭다운 메뉴 컨테이너 테스트 ID (펼쳐진 영역) */
+  menuContainerTestId?: string;
 };
 
 const DROPDOWN_SIZE = {
@@ -61,6 +67,8 @@ const DROPDOWN_TEXT_STYLE = {
 const DROPDOWN_MENU_ITEM_STYLE = 'px-[10px] py-[5px] hover:bg-gray-10 active:bg-gray-30';
 const DROPDOWN_MENU_ITEM_TEXT_STYLE = 'text-headline2 font-normal';
 
+const DROPDOWN_MENU_MAX_HEIGHT = 200;
+
 export default function Dropdown({
   type = 'default',
   menuList,
@@ -70,9 +78,12 @@ export default function Dropdown({
   menuItemStyle,
   selectedTextStyle,
   menuItemTextStyle,
+  menuContainerMaxHeight,
   disabled,
   onOpen,
   onClose,
+  triggerTestId,
+  menuContainerTestId,
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -122,6 +133,7 @@ export default function Dropdown({
       } ${selectedTextStyle || DROPDOWN_TEXT_STYLE[type]} text-nowrap ${disabled ? 'cursor-not-allowed text-label-assistive' : 'cursor-pointer'} select-none`}
       ref={dropdownRef}
       onClick={handleToggle}
+      data-testid={triggerTestId}
     >
       {selectedItem}
       <img
@@ -130,7 +142,11 @@ export default function Dropdown({
         className='absolute right-[14px] w-[14px] h-[14px]'
       />
       {isOpen && (
-        <div className='absolute top-full left-1/2 -translate-x-1/2 translate-y-[10.5px] flex flex-col justify-start items-start gap-[5px] px-[4px] py-[6px] bg-white rounded-[5px] shadow shadow-[0px_0px_7px_0px_rgba(70, 72, 84, 0.10)]'>
+        <div
+          className={`absolute top-full left-1/2 -translate-x-1/2 translate-y-[10.5px] flex flex-col justify-start items-start gap-[5px] px-[4px] py-[6px] bg-white rounded-[5px] shadow shadow-[0px_0px_7px_0px_rgba(70, 72, 84, 0.10)] overflow-y-auto`}
+          style={{ maxHeight: menuContainerMaxHeight || DROPDOWN_MENU_MAX_HEIGHT }}
+          data-testid={menuContainerTestId}
+        >
           {menuList.map((menu) => (
             <div
               key={menu.id}
