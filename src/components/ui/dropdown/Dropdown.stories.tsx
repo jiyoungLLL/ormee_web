@@ -75,6 +75,26 @@ export const Disabled: Story = {
   },
 };
 
+/** 메뉴 아이템이 최대 높이를 넘어서는 경우 */
+export const Overflow: Story = {
+  render: DropdownTemplate,
+  args: {
+    type: 'default',
+    menuList: [
+      { id: 'd1', label: '메뉴 1' },
+      { id: 'd2', label: '메뉴 2' },
+      { id: 'd3', label: '메뉴 3' },
+      { id: 'd4', label: '메뉴 4' },
+      { id: 'd5', label: '메뉴 5' },
+      { id: 'd6', label: '메뉴 6' },
+      { id: 'd7', label: '메뉴 7' },
+      { id: 'd8', label: '메뉴 8' },
+      { id: 'd9', label: '메뉴 9' },
+    ],
+    selectedItem: '메뉴 1',
+  },
+};
+
 /** 커스텀 스타일 드롭다운 */
 export const CustomStyle: Story = {
   render: DropdownTemplate,
@@ -172,6 +192,60 @@ export const DisabledInteractionTest: Story = {
     await step('반복 클릭 후 상태 확인', async () => {
       const openCount = canvas.getByTestId('dropdown-open-count');
       expect(openCount).toHaveTextContent('드롭다운 열림 시도 횟수: 0');
+    });
+  },
+};
+
+/** menuContainerMaxHeight 속성 테스트 */
+export const CustomMaxHeight: Story = {
+  render: DropdownTemplate,
+  args: {
+    type: 'default',
+    menuList: [
+      { id: 'd1', label: '메뉴 1' },
+      { id: 'd2', label: '메뉴 2' },
+      { id: 'd3', label: '메뉴 3' },
+      { id: 'd4', label: '메뉴 4' },
+      { id: 'd5', label: '메뉴 5' },
+      { id: 'd6', label: '메뉴 6' },
+      { id: 'd7', label: '메뉴 7' },
+      { id: 'd8', label: '메뉴 8' },
+      { id: 'd9', label: '메뉴 9' },
+    ],
+    selectedItem: '메뉴 1',
+    menuContainerMaxHeight: 100,
+    menuContainerTestId: 'custom-max-height-container',
+    triggerTestId: 'dropdown-trigger',
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('드롭다운 열기', async () => {
+      const trigger = canvas.getByTestId('dropdown-trigger');
+      await userEvent.click(trigger);
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    });
+
+    await step('메뉴 컨테이너의 최대 높이 확인', async () => {
+      const menuContainer = canvas.getByTestId('custom-max-height-container');
+
+      const computedStyle = window.getComputedStyle(menuContainer);
+      expect(computedStyle.maxHeight).toBe('100px');
+
+      expect(menuContainer.style.maxHeight).toBe('100px');
+
+      expect(menuContainer).toBeInTheDocument();
+      expect(canvas.getByText('메뉴 9')).toBeInTheDocument();
+    });
+
+    await step('드롭다운 닫기', async () => {
+      const trigger = canvas.getByTestId('dropdown-trigger');
+      await userEvent.click(trigger);
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      expect(canvas.queryByTestId('custom-max-height-container')).not.toBeInTheDocument();
     });
   },
 };
