@@ -3,10 +3,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export default function NoticeWriteHeader() {
+  // 임시 강의 id
+  const lectureNum: number = 1;
+
   return (
     <div className='w-full h-[50px] flex justify-between items-center'>
       <Link
-        href='/notice'
+        href={`/lectures/${lectureNum}/notice`}
         className='w-[136px] px-[5px] text-title3 font-bold flex items-center gap-[15px]'
       >
         <Image
