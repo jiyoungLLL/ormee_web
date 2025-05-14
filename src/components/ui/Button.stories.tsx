@@ -17,11 +17,23 @@ export const Login: Story = {
   args: {
     type: 'BUTTON_BASE_TYPE',
     size: 'w-[400px] h-[60px]',
-    font: 'text-body',
+    font: 'text-headline1',
     title: '로그인',
     isPurple: true,
     description: '로그인 버튼',
     isfilled: true,
+  },
+};
+
+export const DisabledTest: Story = {
+  args: {
+    type: 'BUTTON_BASE_TYPE',
+    size: 'w-[400px] h-[60px]',
+    title: '로그인',
+    isPurple: true,
+    description: '로그인 버튼',
+    isfilled: true,
+    disabled: true,
   },
 };
 
