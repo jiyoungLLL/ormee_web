@@ -2,6 +2,7 @@ export type ProblemType = 'choice' | 'essay';
 
 export type Problem = {
   context: string;
+  description: string;
   type: ProblemType;
   item: string[];
   answer: string;
@@ -9,9 +10,8 @@ export type Problem = {
 
 export type Quiz = {
   title: string;
-  description: string;
-  createdTime: string;
   dueTime: string;
+  limitTime: string;
   problems: Problem[];
 };
 
