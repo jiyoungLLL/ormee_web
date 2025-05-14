@@ -9,6 +9,7 @@ jobs:
     name: 🛠️ 프로젝트 빌드
     runs-on: ubuntu-latest
     outputs:
+      nextjs_build_result: ${{ steps.test_results.outputs.nextjs_build_result }}
       storybook_test_result: ${{ steps.test_results.outputs.storybook_test_result }}
       storybook_build_result: ${{ steps.test_results.outputs.storybook_build_result }}
       error_summary: ${{ steps.error.outputs.summary }}
@@ -36,9 +37,11 @@ jobs:
       # ✅ Next.js 빌드 실행
       - name: 🔨 Next.js 빌드
         id: nextbuild
+        continue-on-error: true
         run: |
           set -o pipefail
           pnpm build 2>&1 | tee build.log
+          exit ${PIPESTATUS[0]}
 
       # ✅ Storybook을 정적으로 빌드 (storybook-static 폴더에 출력)
       - name: 📦 Storybook 정적 빌드
@@ -105,6 +108,7 @@ jobs:
         if: always()
         id: test_results
         run: |
+          echo "nextjs_build_result=${{ steps.nextbuild.outcome }}" >> $GITHUB_OUTPUT
           echo "storybook_test_result=${{ steps.storybooktest.outcome }}" >> $GITHUB_OUTPUT
           echo "storybook_build_result=${{ steps.storybookbuild.outcome }}" >> $GITHUB_OUTPUT
 
@@ -122,11 +126,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: build-status
           message: |
-            ${{ needs.build.result == 'success' && '✅ **Next.js & Storybook 빌드 및 테스트 성공** 🎉' || '❌ **빌드 또는 테스트 실패**' }}
+            ${{ (needs.build.outputs.nextjs_build_result == 'success' && needs.build.outputs.storybook_build_result == 'success' && needs.build.outputs.storybook_test_result == 'success') && '✅ **Next.js & Storybook 빌드 및 테스트 성공** 🎉' || '❌ **빌드 또는 테스트 실패**' }}
 
             ### 📊 빌드 및 테스트 요약
 
-            - **Next.js Build**: ${{ needs.build.result == 'success' && '✅ 성공' || '❌ 실패' }}
+            - **Next.js Build**: ${{ needs.build.outputs.nextjs_build_result == 'success' && '✅ 성공' || '❌ 실패' }}
             - **Storybook 빌드**: ${{ needs.build.outputs.storybook_build_result == 'success' && '✅ 성공' || (needs.build.outputs.storybook_build_result == '' && '⚠️ 실행되지 않음' || '❌ 실패') }}
             - **Storybook 테스트 실행**: ${{ needs.build.outputs.storybook_test_result == 'success' && '✅ 성공' || (needs.build.outputs.storybook_test_result == '' && '⚠️ 실행되지 않음' || '❌ 실패') }}
 
