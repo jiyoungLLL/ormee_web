@@ -13,6 +13,9 @@ export const classSchema = z.object({
   title: z.string().min(1, { message: CLASS_ERROR_MESSAGES.EMPTY_TITLE }),
   password: z.string().min(1, { message: CLASS_ERROR_MESSAGES.EMPTY_PASSWORD }),
   message: z.string().min(1, { message: CLASS_ERROR_MESSAGES.EMPTY_MESSAGE }),
+  period: z.string().min(1, { message: CLASS_ERROR_MESSAGES.EMPTY_PERIOD }),
+  time: z.string().min(1, { message: CLASS_ERROR_MESSAGES.EMPTY_TIME }),
+  days: z.array(z.string()).min(1, { message: CLASS_ERROR_MESSAGES.EMPTY_DAY }),
 });
 
 export type ClassModalValues = z.infer<typeof classSchema>;
