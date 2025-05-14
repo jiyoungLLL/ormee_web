@@ -3,7 +3,7 @@ import { QUERY_KEYS } from '../queryKeys';
 import { Notification } from '@/types/notification.types';
 
 const fetchNotifications = async (): Promise<Notification[]> => {
-  const response = await fetch('/api/teacher/notification/');
+  const response = await fetch(`${process.env.NEXT_PUBLIC_MOCK_BASE_URL}/api/teacher/notification/`);
 
   if (!response.ok) {
     throw new Error('알림을 불러오는데 실패했습니다.');
