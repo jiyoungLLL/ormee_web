@@ -58,7 +58,7 @@ const DROPDOWN_TEXT_STYLE = {
   withInput: 'text-gray-90 text-body-reading',
 } as const;
 
-const DROPDOWN_MENU_ITEM_STYLE = 'px-[10px] py-[5px]';
+const DROPDOWN_MENU_ITEM_STYLE = 'px-[10px] py-[5px] hover:bg-gray-10 active:bg-gray-30';
 const DROPDOWN_MENU_ITEM_TEXT_STYLE = 'text-headline2 font-normal';
 
 export default function Dropdown({
