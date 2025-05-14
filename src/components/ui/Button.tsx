@@ -24,6 +24,8 @@ type ButtonProps = {
   onClick?: () => void;
   /** html 버튼 타입 (button, submit) */
   htmlType?: HTMLButtonType;
+  /** 버튼 비활성화 (기본 스타일 : 'bg-gray-30 text-label-assistive text-headline1 font-bold') */
+  disabled?: boolean;
 };
 
 const whatBaseType = {
@@ -44,6 +46,7 @@ export default function Button({
   description,
   onClick,
   htmlType = 'submit',
+  disabled,
 }: ButtonProps) {
   const baseStyle = whatBaseType[type] ?? '';
 
@@ -58,20 +61,20 @@ export default function Button({
     BUTTON_MODAL_TYPE: isPurple ? 'bg-purple-50 text-white' : 'bg-gray-20 text-gray-60',
     BUTTON_CREATE_TYPE: 'bg-white text-purple-50',
   };
-  const backgroundStyle = whatBackgroundStyle[type];
+  const backgroundStyle = disabled ? 'bg-gray-30' : whatBackgroundStyle[type];
 
   const whatBorderStyle: Record<ButtonType, string> = {
     BUTTON_BASE_TYPE: !isfilled ? (isPurple ? 'border border-purple-50' : 'border border-gray-30') : '',
     BUTTON_MODAL_TYPE: '',
     BUTTON_CREATE_TYPE: '',
   };
-  const borderStyle = whatBorderStyle[type];
+  const borderStyle = disabled ? '' : whatBorderStyle[type];
 
   return (
     <button
       type={htmlType}
       onClick={onClick}
-      className={`whitespace-nowrap ${size} ${baseStyle} ${font} ${backgroundStyle} ${borderStyle}`}
+      className={`whitespace-nowrap ${size} ${baseStyle} ${disabled ? 'text-label-assistive text-headline1 font-bold' : font} ${backgroundStyle} ${borderStyle}`}
       title={description}
     >
       {type === 'BUTTON_CREATE_TYPE' ? (

@@ -157,7 +157,7 @@ export default function DateTimePicker({ type, calendar, placeholer, onSelectDat
               selectedItem={endTime || '종료 시간'}
             />
             <button
-              className='px-[20px] py-[6px] text-headline1 font-semibold bg-purple-50 text-white rounded disabled:bg-gray-30 disabled:text-[rgb(180_180_194)] disabled:cursor-not-allowed'
+              className='px-[20px] py-[6px] text-headline1 font-semibold bg-purple-50 text-white rounded disabled:bg-gray-30 disabled:text-label-assistive disabled:cursor-not-allowed'
               disabled={!startTime || !endTime}
               onClick={() => handleSelectTime(startTime, endTime)}
             >
