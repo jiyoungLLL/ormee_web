@@ -43,17 +43,27 @@ jobs:
           pnpm build 2>&1 | tee build.log
           exit ${PIPESTATUS[0]}
 
+      # ✅ 다음 단계 진행 여부 확인
+      - name: Next.js 빌드 결과 확인
+        id: build_check
+        run: |
+          if [[ "${{ steps.nextbuild.outcome }}" == "success" ]]; then
+            echo "should_continue=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_continue=false" >> $GITHUB_OUTPUT
+          fi
+
       # ✅ Storybook을 정적으로 빌드 (storybook-static 폴더에 출력)
       - name: 📦 Storybook 정적 빌드
         id: storybookbuild
-        if: always() # 항상 실행
-        continue-on-error: true # 실패해도 다음 단계 실행
+        if: steps.build_check.outputs.should_continue == 'true'
+        continue-on-error: true
         run: pnpm build-storybook -o storybook-static
 
       # ✅ Storybook 서버 실행 및 응답 대기 (최대 5분, 5초마다 상태 출력)
       - name: 🚀 Storybook 서버 실행 및 대기
         id: storybookserver
-        if: always() && steps.storybookbuild.outcome == 'success' # 스토리북 빌드 성공했을 때만 실행
+        if: steps.build_check.outputs.should_continue == 'true' && steps.storybookbuild.outcome == 'success'
         continue-on-error: true
         run: |
           npx serve storybook-static --no-clipboard -l 6006 > storybook-server.log 2>&1 &
@@ -75,14 +85,14 @@ jobs:
 
       # ✅ Playwright 브라우저 설치
       - name: 🎭 Playwright 브라우저 설치
-        if: always() && steps.storybookserver.outcome == 'success'
+        if: steps.build_check.outputs.should_continue == 'true' && steps.storybookserver.outcome == 'success'
         continue-on-error: true
         run: pnpm exec playwright install --with-deps chromium
 
       # ✅ Storybook 테스트 실행 (정적 서버에 대해)
       - name: 🧪 Storybook 테스트 실행
         id: storybooktest
-        if: always() && steps.storybookserver.outcome == 'success'
+        if: steps.build_check.outputs.should_continue == 'true' && steps.storybookserver.outcome == 'success'
         continue-on-error: true
         run: |
           pnpm test-storybook --url http://localhost:6006 --failOnError 2>&1 | tee storybook-test.log
@@ -128,7 +138,7 @@ jobs:
           # Storybook 빌드 결과
           if [[ "${{ steps.storybookbuild.outcome }}" == "success" ]]; then
             echo "storybook_build_result=success" >> $GITHUB_OUTPUT
-          elif [[ "${{ steps.storybookbuild.outcome }}" == "skipped" ]]; then
+          elif [[ "${{ steps.storybookbuild.outcome }}" == "skipped" || "${{ steps.build_check.outputs.should_continue }}" == "false" ]]; then
             echo "storybook_build_result=skipped" >> $GITHUB_OUTPUT
           else
             echo "storybook_build_result=failure" >> $GITHUB_OUTPUT
@@ -137,7 +147,7 @@ jobs:
           # Storybook 테스트 결과
           if [[ "${{ steps.storybooktest.outcome }}" == "success" ]]; then
             echo "storybook_test_result=success" >> $GITHUB_OUTPUT
-          elif [[ "${{ steps.storybooktest.outcome }}" == "skipped" || "${{ steps.storybooktest.outcome }}" == "" ]]; then
+          elif [[ "${{ steps.storybooktest.outcome }}" == "skipped" || "${{ steps.build_check.outputs.should_continue }}" == "false" || "${{ steps.storybookserver.outcome }}" != "success" ]]; then
             echo "storybook_test_result=skipped" >> $GITHUB_OUTPUT
           else
             echo "storybook_test_result=failure" >> $GITHUB_OUTPUT
