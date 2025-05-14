@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       storybook_test_result: ${{ steps.test_results.outputs.storybook_test_result }}
+      storybook_build_result: ${{ steps.test_results.outputs.storybook_build_result }}
       error_summary: ${{ steps.error.outputs.summary }}
 
     steps:
@@ -41,6 +42,7 @@ jobs:
 
       # ✅ Storybook을 정적으로 빌드 (storybook-static 폴더에 출력)
       - name: 📦 Storybook 정적 빌드
+        id: storybookbuild
         if: success()
         run: pnpm build-storybook -o storybook-static
 
@@ -69,7 +71,7 @@ jobs:
         id: storybooktest
         if: success()
         run: |
-          pnpm test-storybook --url http://localhost:6006 2>&1 | tee storybook-test.log
+          pnpm test-storybook --url http://localhost:6006 --failOnError 2>&1 | tee storybook-test.log
 
       # ❌ 실패한 경우 로그에서 오류 요약 추출
       - name: 📋 오류 요약 추출
@@ -100,7 +102,9 @@ jobs:
       - name: 테스트 결과 저장
         if: always()
         id: test_results
-        run: echo "storybook_test_result=${{ steps.storybooktest.outcome }}" >> $GITHUB_OUTPUT
+        run: |
+          echo "storybook_test_result=${{ steps.storybooktest.outcome }}" >> $GITHUB_OUTPUT
+          echo "storybook_build_result=${{ steps.storybookbuild.outcome }}" >> $GITHUB_OUTPUT
 
   comment:
     name: 💬 PR에 결과 댓글 작성
@@ -121,6 +125,7 @@ jobs:
             ### 📊 빌드 및 테스트 요약
 
             - **Next.js Build**: ${{ needs.build.result == 'success' && '✅ 성공' || '❌ 실패' }}
+            - **Storybook 빌드**: ${{ needs.build.outputs.storybook_build_result == 'success' && '✅ 성공' || (needs.build.outputs.storybook_build_result == '' && '⚠️ 실행되지 않음' || '❌ 실패') }}
             - **Storybook 테스트 실행**: ${{ needs.build.outputs.storybook_test_result == 'success' && '✅ 성공' || (needs.build.outputs.storybook_test_result == '' && '⚠️ 실행되지 않음' || '❌ 실패') }}
 
             ${{ needs.build.outputs.error_summary && format('**오류 요약:**\n```\n{0}\n```', needs.build.outputs.error_summary) }}
