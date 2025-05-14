@@ -6,13 +6,14 @@ on:
 
 jobs:
   build:
-    name: 🛠️ 빌드, 테스트 실행
+    name: 🛠️ 프로젝트 빌드
     runs-on: ubuntu-latest
     outputs:
       nextjs_build_result: ${{ steps.test_results.outputs.nextjs_build_result }}
       storybook_build_result: ${{ steps.test_results.outputs.storybook_build_result }}
       storybook_test_result: ${{ steps.test_results.outputs.storybook_test_result }}
       error_summary: ${{ steps.error.outputs.summary }}
+      build_success: ${{ steps.final_status.outputs.build_success }}
 
     steps:
       # ✅ PR 브랜치 코드 체크아웃
@@ -152,6 +153,26 @@ jobs:
           else
             echo "storybook_test_result=failure" >> $GITHUB_OUTPUT
           fi
+
+      # 최종 빌드 상태 결정
+      - name: 최종 빌드 및 테스트 상태 결정
+        id: final_status
+        if: always()
+        run: |
+          if [[ "${{ steps.nextbuild.outcome }}" == "success" && \
+                "${{ steps.storybookbuild.outcome }}" == "success" && \
+                "${{ steps.storybooktest.outcome }}" == "success" ]]; then
+            echo "build_success=true" >> $GITHUB_OUTPUT
+          else
+            echo "build_success=false" >> $GITHUB_OUTPUT
+          fi
+
+      # 실패 상태로 워크플로우 종료 (PR에 X 표시 나타나게 함)
+      - name: 빌드 실패 시 워크플로우 실패 처리
+        if: always() && steps.final_status.outputs.build_success != 'true'
+        run: |
+          echo "❌ 빌드 또는 테스트가 실패했습니다. 워크플로우를 실패 상태로 종료합니다."
+          exit 1
 
   comment:
     name: 💬 PR에 결과 댓글 작성
