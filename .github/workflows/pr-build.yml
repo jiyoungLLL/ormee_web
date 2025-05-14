@@ -96,7 +96,7 @@ jobs:
         if: steps.build_check.outputs.should_continue == 'true' && steps.storybookserver.outcome == 'success'
         continue-on-error: true
         run: |
-          pnpm test-storybook --url http://localhost:6006 --failOnError --failOnConsole=false 2>&1 | tee storybook-test.log
+          pnpm test-storybook --url http://localhost:6006 2>&1 | tee storybook-test.log
           exit ${PIPESTATUS[0]}
 
       # ❌ 실패한 경우 로그에서 오류 요약 추출
