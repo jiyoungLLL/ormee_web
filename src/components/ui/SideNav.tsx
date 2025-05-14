@@ -26,7 +26,7 @@ type SideNavProps = {
 export default function SideNav({ type, title, student, date }: SideNavProps) {
   const pathname = usePathname();
   const pathSegments = pathname ? pathname.split('/').filter(Boolean) : [];
-  const [mainCategory, subCategory] = pathSegments.slice(0, 2);
+  const [lectureNum, mainCategory] = pathSegments.slice(1, 3);
   const [isOpen, setIsOpen] = useState(false);
 
   /** 고정된 categoryList들 (항상 정의됨) */
@@ -39,7 +39,6 @@ export default function SideNav({ type, title, student, date }: SideNavProps) {
     공지: 'notice',
   };
   const categoryListGroup3 = { 설정: 'setting' };
-
   const renderCategoryGroup = (group: { [key: string]: string }) =>
     Object.entries(group).map(([iconName, pathName]) => {
       const isFocus = mainCategory === pathName;
@@ -48,7 +47,7 @@ export default function SideNav({ type, title, student, date }: SideNavProps) {
 
       return (
         <Link
-          href={`/${pathName}`}
+          href={`/lectures/${lectureNum}/${pathName}`}
           key={iconName}
           className={`${commonStyle} ${focusStyle}`}
         >
@@ -167,7 +166,7 @@ export default function SideNav({ type, title, student, date }: SideNavProps) {
   const selectedMyPageStyle = (category: string) => {
     const list = mypageList[category];
     return Object.entries(list).map(([name, path]) => {
-      const isSelected = subCategory === path;
+      const isSelected = lectureNum === path;
       const style = isSelected ? 'text-purple-10 font-semibold bg-gray-75' : 'text-gray-30 font-normal';
       return (
         <Link
