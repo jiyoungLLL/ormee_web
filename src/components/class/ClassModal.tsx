@@ -119,7 +119,7 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
               <DateTimePicker
                 type='CALENDAR'
                 calendar='PERIOD_TYPE'
-                placeholer='선택하기'
+                placeholder='선택하기'
                 onSelectDate={(value) => setValue('period', value)}
               />
             </div>
@@ -127,7 +127,7 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
               수업시간
               <DateTimePicker
                 type='TIME'
-                placeholer='선택하기'
+                placeholder='선택하기'
                 onSelectDate={(value) => setValue('time', value)}
               />
             </div>
