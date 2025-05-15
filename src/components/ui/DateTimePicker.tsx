@@ -5,10 +5,12 @@ import Dropdown from './dropdown/Dropdown';
 
 type ComponentType = 'CALENDAR' | 'TIME';
 type CalendarType = 'DATE_TYPE' | 'PERIOD_TYPE';
+type TimeType = 'TIME' | 'LIMIT_TIME';
 
 type DateTimePickerProps = {
   type: ComponentType;
   calendar?: CalendarType;
+  time?: TimeType;
   placeholder: string;
   onSelectDate?: (value: string) => void;
 };
@@ -42,12 +44,19 @@ const TIME_OPTIONS = [
   '20:30',
 ];
 
+const LIMIT_TIME_OPTIONS = ['10분', '15분', '20분', '25분', '30분', '35분', '40분', '45분', '50분', '55분', '60분'];
+
 const TIME_MENU_LIST = TIME_OPTIONS.map((time, index) => ({
   id: `t${index}`,
   label: time,
 }));
 
-export default function DateTimePicker({ type, calendar, placeholder, onSelectDate }: DateTimePickerProps) {
+const LIMIT_TIME_MENU_LIST = LIMIT_TIME_OPTIONS.map((time, index) => ({
+  id: `lt${index}`,
+  label: time,
+}));
+
+export default function DateTimePicker({ type, calendar, time, placeholder, onSelectDate }: DateTimePickerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [value, setValue] = useState('');
   const [startTime, setStartTime] = useState('');
@@ -108,6 +117,12 @@ export default function DateTimePicker({ type, calendar, placeholder, onSelectDa
     setIsOpen(false);
   };
 
+  const handleSelectedLimitTime = (time: string) => {
+    setValue(time);
+    onSelectDate?.(time);
+    setIsOpen(false);
+  };
+
   return (
     <div ref={pickerRef}>
       <div
@@ -136,7 +151,7 @@ export default function DateTimePicker({ type, calendar, placeholder, onSelectDa
         </div>
       )}
 
-      {isOpen && type === 'TIME' && (
+      {isOpen && time === 'TIME' && (
         <div
           className='absolute z-[100] top-[10px] bg-white shadow-md rounded-md p-4 flex flex-col gap-2'
           style={{ top: `${dropdownStyle.top}px`, left: `${dropdownStyle.left}px`, position: 'fixed' }}
@@ -171,6 +186,20 @@ export default function DateTimePicker({ type, calendar, placeholder, onSelectDa
             </button>
           </div>
         </div>
+      )}
+      {time === 'LIMIT_TIME' && (
+        <Dropdown
+          showTrigger={false}
+          menuList={LIMIT_TIME_MENU_LIST.map((item) => ({
+            ...item,
+            onClick: () => {
+              handleSelectedLimitTime(item.label as string);
+            },
+          }))}
+          selectedItem={value || '제한 시간'}
+          isOpen={isOpen}
+          triggerRef={pickerRef}
+        />
       )}
     </div>
   );
