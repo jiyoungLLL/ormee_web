@@ -17,7 +17,7 @@ export const NoticeCalendar: Story = {
   args: {
     type: 'CALENDAR',
     calendar: 'DATE_TYPE',
-    placeholer: '공지 등록일',
+    placeholder: '공지 등록일',
   },
 };
 
@@ -25,7 +25,7 @@ export const HomeworkCalendar: Story = {
   args: {
     type: 'CALENDAR',
     calendar: 'DATE_TYPE',
-    placeholer: '제출기한',
+    placeholder: '제출기한',
   },
 };
 
@@ -33,13 +33,13 @@ export const ClassCalendar: Story = {
   args: {
     type: 'CALENDAR',
     calendar: 'PERIOD_TYPE',
-    placeholer: '선택하기',
+    placeholder: '선택하기',
   },
 };
 
 export const ClassTimer: Story = {
   args: {
     type: 'TIME',
-    placeholer: '선택하기',
+    placeholder: '선택하기',
   },
 };

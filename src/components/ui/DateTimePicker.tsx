@@ -9,7 +9,7 @@ type CalendarType = 'DATE_TYPE' | 'PERIOD_TYPE';
 type DateTimePickerProps = {
   type: ComponentType;
   calendar?: CalendarType;
-  placeholer: string;
+  placeholder: string;
   onSelectDate?: (value: string) => void;
 };
 
@@ -47,7 +47,7 @@ const TIME_MENU_LIST = TIME_OPTIONS.map((time, index) => ({
   label: time,
 }));
 
-export default function DateTimePicker({ type, calendar, placeholer, onSelectDate }: DateTimePickerProps) {
+export default function DateTimePicker({ type, calendar, placeholder, onSelectDate }: DateTimePickerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [value, setValue] = useState('');
   const [startTime, setStartTime] = useState('');
@@ -121,7 +121,7 @@ export default function DateTimePicker({ type, calendar, placeholer, onSelectDat
           alt={`${type} 아이콘`}
           className={`${imageSize}`}
         />
-        <div className={`${fontStyle} whitespace-nowrap`}>{value || placeholer}</div>
+        <div className={`${fontStyle} whitespace-nowrap`}>{value || placeholder}</div>
       </div>
 
       {isOpen && calendar && (
