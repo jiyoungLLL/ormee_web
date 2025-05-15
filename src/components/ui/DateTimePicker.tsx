@@ -143,16 +143,22 @@ export default function DateTimePicker({ type, calendar, placeholder, onSelectDa
         >
           <div className='flex items-center gap-[10px]'>
             <Dropdown
+              showTrigger
               menuList={TIME_MENU_LIST.map((item) => ({
                 ...item,
-                onClick: () => setStartTime(item.label as string),
+                onClick: () => {
+                  setStartTime(item.label as string);
+                },
               }))}
               selectedItem={startTime || '시작 시간'}
             />
             <Dropdown
+              showTrigger
               menuList={TIME_MENU_LIST.map((item) => ({
                 ...item,
-                onClick: () => setEndTime(item.label as string),
+                onClick: () => {
+                  setEndTime(item.label as string);
+                },
               }))}
               selectedItem={endTime || '종료 시간'}
             />
