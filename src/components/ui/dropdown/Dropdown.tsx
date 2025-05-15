@@ -19,6 +19,8 @@ type BaseDropdownProps = {
   size?: string;
   /** 드롭다운 메뉴 컨테이너의 position */
   menuContainerPosition?: string;
+  /** 드롭다운 메뉴 컨테이너의 스타일 */
+  menuContainerStyle?: string;
   /** 드롭다운 메뉴 아이템에 적용될 스타일 */
   menuItemStyle?: string;
   /** 드롭다운 메뉴 아이템 텍스트에 적용될 스타일 */
@@ -101,6 +103,10 @@ const DROPDOWN_MENU_ITEM_TEXT_STYLE = 'text-headline2 font-normal';
 
 const DROPDOWN_MENU_MAX_HEIGHT = 200;
 
+const DROPDOWN_MENU_CONTAINER_POSITION = 'absolute top-full left-1/2 -translate-x-1/2 translate-y-[10.5px]';
+const DROPDOWN_MENU_CONTAINER_STYLE =
+  'flex flex-col justify-start items-start gap-[5px] px-[4px] py-[6px] bg-white rounded-[5px] shadow shadow-[0px_0px_7px_0px_rgba(70, 72, 84, 0.10)] overflow-y-auto z-[10]';
+
 export default function Dropdown(props: DropdownProps) {
   const {
     type = 'default',
@@ -111,6 +117,7 @@ export default function Dropdown(props: DropdownProps) {
     menuItemStyle,
     selectedTextStyle,
     menuItemTextStyle,
+    menuContainerStyle,
     menuContainerMaxHeight,
     disabled,
     onOpen,
@@ -200,7 +207,7 @@ export default function Dropdown(props: DropdownProps) {
       )}
       {isOpenState && (
         <div
-          className={`absolute top-full left-1/2 -translate-x-1/2 translate-y-[10.5px] flex flex-col justify-start items-start gap-[5px] px-[4px] py-[6px] bg-white rounded-[5px] shadow shadow-[0px_0px_7px_0px_rgba(70, 72, 84, 0.10)] overflow-y-auto`}
+          className={`${menuContainerPosition || DROPDOWN_MENU_CONTAINER_POSITION} ${menuContainerStyle || DROPDOWN_MENU_CONTAINER_STYLE}`}
           style={{ maxHeight: menuContainerMaxHeight || DROPDOWN_MENU_MAX_HEIGHT }}
           data-testid={menuContainerTestId}
           ref={dropdownMenuRef}
@@ -218,7 +225,7 @@ export default function Dropdown(props: DropdownProps) {
       )}
       {controlledIsOpen && (
         <div
-          className={`absolute top-full left-1/2 -translate-x-1/2 translate-y-[10.5px] flex flex-col justify-start items-start gap-[5px] px-[4px] py-[6px] bg-white rounded-[5px] shadow shadow-[0px_0px_7px_0px_rgba(70, 72, 84, 0.10)] overflow-y-auto`}
+          className={`${menuContainerPosition || DROPDOWN_MENU_CONTAINER_POSITION} ${menuContainerStyle || DROPDOWN_MENU_CONTAINER_STYLE}`}
           style={{ maxHeight: menuContainerMaxHeight || DROPDOWN_MENU_MAX_HEIGHT }}
           data-testid={menuContainerTestId}
           ref={dropdownMenuRef}

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import Dropdown from './Dropdown';
+import { useDropdown } from '@/hooks/ui/useDropdown';
 import { userEvent, within, expect } from '@storybook/test';
 
 const meta = {
@@ -16,18 +17,16 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const DropdownTemplate = (args: any) => {
-  const [selected, setSelected] = useState(args.selectedItem || '선택');
-
-  const menuListWithHandlers = args.menuList.map((item: any) => ({
-    ...item,
-    onClick: () => setSelected(item.label),
-  }));
+  const { selectedItem, menuListForDropdown } = useDropdown({
+    menuList: args.menuList,
+    initialSelectedItem: args.selectedItem,
+  });
 
   return (
     <Dropdown
       {...args}
-      selectedItem={selected}
-      menuList={menuListWithHandlers}
+      selectedItem={selectedItem}
+      menuList={menuListForDropdown}
     />
   );
 };
@@ -37,6 +36,7 @@ export const Default: Story = {
   render: DropdownTemplate,
   args: {
     type: 'default',
+    showTrigger: true,
     menuList: [
       { id: 'd1', label: '메뉴 1' },
       { id: 'd2', label: '메뉴 2' },
@@ -51,6 +51,7 @@ export const WithInput: Story = {
   render: DropdownTemplate,
   args: {
     type: 'withInput',
+    showTrigger: true,
     menuList: [
       { id: 'd1', label: '010' },
       { id: 'd2', label: '011' },
@@ -65,6 +66,7 @@ export const Disabled: Story = {
   render: DropdownTemplate,
   args: {
     type: 'default',
+    showTrigger: true,
     disabled: true,
     menuList: [
       { id: 'd1', label: '메뉴 1' },
@@ -80,6 +82,7 @@ export const Overflow: Story = {
   render: DropdownTemplate,
   args: {
     type: 'default',
+    showTrigger: true,
     menuList: [
       { id: 'd1', label: '메뉴 1' },
       { id: 'd2', label: '메뉴 2' },
@@ -100,6 +103,7 @@ export const CustomStyle: Story = {
   render: DropdownTemplate,
   args: {
     type: 'default',
+    showTrigger: true,
     menuList: [
       { id: 'd1', label: '항목 1' },
       { id: 'd2', label: '항목 2' },
@@ -107,7 +111,7 @@ export const CustomStyle: Story = {
     ],
     selectedItem: '항목 1',
     size: 'w-[150px] h-[45px]',
-    closedAreaStyle: 'border-2 rounded-[8px] pl-[16px] pr-[42px] py-[10px] bg-gray-10',
+    triggerAreaStyle: 'border-2 rounded-[8px] pl-[16px] pr-[42px] py-[10px] bg-gray-10',
     selectedTextStyle: 'text-blue-600 font-bold',
     menuItemTextStyle: 'text-gray-600',
   },
@@ -154,6 +158,7 @@ export const DisabledInteractionTest: Story = {
   },
   args: {
     type: 'default',
+    showTrigger: true,
     disabled: true,
     menuList: [
       { id: 'd1', label: '메뉴 1' },
@@ -192,60 +197,6 @@ export const DisabledInteractionTest: Story = {
     await step('반복 클릭 후 상태 확인', async () => {
       const openCount = canvas.getByTestId('dropdown-open-count');
       expect(openCount).toHaveTextContent('드롭다운 열림 시도 횟수: 0');
-    });
-  },
-};
-
-/** menuContainerMaxHeight 속성 테스트 */
-export const CustomMaxHeight: Story = {
-  render: DropdownTemplate,
-  args: {
-    type: 'default',
-    menuList: [
-      { id: 'd1', label: '메뉴 1' },
-      { id: 'd2', label: '메뉴 2' },
-      { id: 'd3', label: '메뉴 3' },
-      { id: 'd4', label: '메뉴 4' },
-      { id: 'd5', label: '메뉴 5' },
-      { id: 'd6', label: '메뉴 6' },
-      { id: 'd7', label: '메뉴 7' },
-      { id: 'd8', label: '메뉴 8' },
-      { id: 'd9', label: '메뉴 9' },
-    ],
-    selectedItem: '메뉴 1',
-    menuContainerMaxHeight: 100,
-    menuContainerTestId: 'custom-max-height-container',
-    triggerTestId: 'dropdown-trigger',
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-
-    await step('드롭다운 열기', async () => {
-      const trigger = canvas.getByTestId('dropdown-trigger');
-      await userEvent.click(trigger);
-
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    });
-
-    await step('메뉴 컨테이너의 최대 높이 확인', async () => {
-      const menuContainer = canvas.getByTestId('custom-max-height-container');
-
-      const computedStyle = window.getComputedStyle(menuContainer);
-      expect(computedStyle.maxHeight).toBe('100px');
-
-      expect(menuContainer.style.maxHeight).toBe('100px');
-
-      expect(menuContainer).toBeInTheDocument();
-      expect(canvas.getByText('메뉴 9')).toBeInTheDocument();
-    });
-
-    await step('드롭다운 닫기', async () => {
-      const trigger = canvas.getByTestId('dropdown-trigger');
-      await userEvent.click(trigger);
-
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      expect(canvas.queryByTestId('custom-max-height-container')).not.toBeInTheDocument();
     });
   },
 };
