@@ -93,7 +93,8 @@ export default function Dropdown({
 }: DropdownProps) {
   const [isOpenState, setIsOpenState] = useState(false);
   const isOpen = showTrigger ? isOpenState : controlledIsOpen;
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const dropdownMenuRef = useRef<HTMLDivElement>(null);
 
   const handleToggle = () => {
     if (disabled) return;
@@ -115,14 +116,16 @@ export default function Dropdown({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpenState(false);
+      if (triggerRef.current && triggerRef.current.contains(event.target as Node)) return;
 
+      if (dropdownMenuRef.current && !dropdownMenuRef.current.contains(event.target as Node)) {
         if (isOpen && onClose) onClose();
+        setIsOpenState(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    isOpen && document.addEventListener('mousedown', handleClickOutside);
+    !isOpen && document.removeEventListener('mousedown', handleClickOutside);
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -142,6 +145,7 @@ export default function Dropdown({
           } ${selectedTextStyle || DROPDOWN_TEXT_STYLE[type]} text-nowrap ${disabled ? 'cursor-not-allowed text-label-assistive' : 'cursor-pointer'} select-none`}
           onClick={handleToggle}
           data-testid={triggerTestId}
+          ref={triggerRef}
         >
           {selectedItem}
           <img
@@ -151,11 +155,12 @@ export default function Dropdown({
           />
         </div>
       )}
-      {isOpen && (
+      {isOpenState && (
         <div
           className={`absolute top-full left-1/2 -translate-x-1/2 translate-y-[10.5px] flex flex-col justify-start items-start gap-[5px] px-[4px] py-[6px] bg-white rounded-[5px] shadow shadow-[0px_0px_7px_0px_rgba(70, 72, 84, 0.10)] overflow-y-auto`}
           style={{ maxHeight: menuContainerMaxHeight || DROPDOWN_MENU_MAX_HEIGHT }}
           data-testid={menuContainerTestId}
+          ref={dropdownMenuRef}
         >
           {menuList.map((menu) => (
             <div
