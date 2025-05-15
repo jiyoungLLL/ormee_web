@@ -36,8 +36,22 @@ export default function QuizCreateTitleInput({ control, name }: QuizCreateTitleI
           calendar='PERIOD_TYPE'
           placeholder='응시기한'
           onSelectDate={handleSelectDueTime}
+          customImageSize='w-[20px] h-[20px]'
+          customTextStyle='text-headline2 font-semibold'
+          customWidthSize='w-fit px-[10px] py-[5px]'
+          customComponentSize='gap-[10px]'
         />
-        {/* <DateTimePicker type='TIME' placeholder='응시시간' onSelectDate={handleSelectLimitTime} */}
+        <DateTimePicker
+          type='TIME'
+          time='LIMIT_TIME'
+          placeholder='응시시간'
+          onSelectDate={handleSelectLimitTime}
+          customImageSize='w-[20px] h-[20px]'
+          customTextStyle='text-headline2 font-semibold'
+          customWidthSize='w-fit px-[10px] py-[5px]'
+          customComponentSize='gap-[10px]'
+          customDropdownSize='w-[105px] h-[32px]'
+        />
       </div>
     </div>
   );
