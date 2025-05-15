@@ -1,4 +1,3 @@
-import { ProblemType } from '@/types/quiz.types';
 import { z } from 'zod';
 
 export const QUIZ_FORM_ERROR_MESSAGE = {
@@ -32,3 +31,5 @@ export const QuizFormSchema = z.object({
   limitTime: z.string().datetime().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_LIMIT_TIME }),
   problems: z.array(ProblemSchema).min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_PROBLEMS }),
 });
+
+export type QuizFormValues = z.infer<typeof QuizFormSchema>;
