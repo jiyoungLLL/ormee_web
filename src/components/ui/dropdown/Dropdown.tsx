@@ -76,7 +76,7 @@ const DROPDOWN_SIZE = {
   withInput: 'w-[120px] h-[50px]',
 } as const;
 
-const DROPDOWN_CLOSED_AREA_STYLE = {
+const DROPDOWN_TRIGGER_AREA_STYLE = {
   default: {
     base: 'border rounded-[5px] pl-[14px] pr-[42px] py-[12px]',
     open: 'border-purple-50 bg-white',
@@ -179,12 +179,12 @@ export default function Dropdown(props: DropdownProps) {
     <div className='relative select-none'>
       {showTrigger && (
         <div
-          className={`flex justify-start items-center ${size || DROPDOWN_SIZE[type]} ${triggerAreaStyle || DROPDOWN_CLOSED_AREA_STYLE[type].base} ${
+          className={`flex justify-start items-center ${size || DROPDOWN_SIZE[type]} ${triggerAreaStyle || DROPDOWN_TRIGGER_AREA_STYLE[type].base} ${
             disabled
-              ? DROPDOWN_CLOSED_AREA_STYLE[type].disabled
+              ? DROPDOWN_TRIGGER_AREA_STYLE[type].disabled
               : isOpenState
-                ? DROPDOWN_CLOSED_AREA_STYLE[type].open
-                : DROPDOWN_CLOSED_AREA_STYLE[type].closed
+                ? DROPDOWN_TRIGGER_AREA_STYLE[type].open
+                : DROPDOWN_TRIGGER_AREA_STYLE[type].closed
           } ${selectedTextStyle || DROPDOWN_TEXT_STYLE[type]} text-nowrap ${disabled ? 'cursor-not-allowed text-label-assistive' : 'cursor-pointer'} select-none`}
           onClick={handleToggle}
           data-testid={triggerTestId}
