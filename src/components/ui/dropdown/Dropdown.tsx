@@ -4,45 +4,6 @@ import { ReactNode, RefObject, useEffect, useRef, useState } from 'react';
 
 type DropdownType = 'default' | 'withInput';
 
-// type DropdownProps = {
-//   /** 드롭다운 타입, 기본값: default */
-//   type?: DropdownType;
-//   /** 드롭다운 메뉴에 표시될 아이템 리스트 */
-//   menuList: {
-//     id: string | number;
-//     label: ReactNode;
-//     onClick?: () => void;
-//   }[];
-//   /** 현재 선택된 메뉴를 관리하는 state */
-//   selectedItem: ReactNode;
-//   /** 드롭다운 메뉴 한 칸의 크기 */
-//   size?: string;
-//   /** 기본 트리거를 보여줄지 선택, 다른 요소 아래에 메뉴 리스트를 띄우고싶은 경우 false (기본값: true) */
-//   showTrigger?: boolean;
-//   /** showTrigger이 false일 경우 드롭다운 열림 상태를 관리할 state */
-//   isOpen?: boolean;
-//   /** 닫힌 상태의 드롭다운 메뉴에 적용될 스타일 */
-//   closedAreaStyle?: string;
-//   /** 드롭다운 메뉴 아이템에 적용될 스타일 */
-//   menuItemStyle?: string;
-//   /** 선텍된 아이템 텍스트에 적용될 스타일 */
-//   selectedTextStyle?: string;
-//   /** 드롭다운 메뉴 아이템 텍스트에 적용될 스타일 */
-//   menuItemTextStyle?: string;
-//   /** 드롭다운 메뉴 컨테이너의 최대 높이 */
-//   menuContainerMaxHeight?: number;
-//   /** 드롭다운이 열릴 때 실행될 콜백 함수 */
-//   onOpen?: () => void;
-//   /** 드롭다운이 닫힐 때 실행될 콜백 함수 */
-//   onClose?: () => void;
-//   /** 드롭다운 비활성화 여부 */
-//   disabled?: boolean;
-//   /** 드롭다운 트리거(항상 보이는 부분) 테스트 ID */
-//   triggerTestId?: string;
-//   /** 드롭다운 메뉴 컨테이너 테스트 ID (펼쳐진 영역) */
-//   menuContainerTestId?: string;
-// };
-
 type BaseDropdownProps = {
   /** 드롭다운 타입, 기본값: default */
   type?: DropdownType;
@@ -203,13 +164,16 @@ export default function Dropdown(props: DropdownProps) {
       }
     };
 
-    isOpenState && document.addEventListener('mousedown', handleClickOutside);
-    !isOpenState && document.removeEventListener('mousedown', handleClickOutside);
+    showTrigger && isOpenState && document.addEventListener('mousedown', handleClickOutside);
+    showTrigger && !isOpenState && document.removeEventListener('mousedown', handleClickOutside);
+
+    !showTrigger && controlledIsOpen && document.addEventListener('mousedown', handleClickOutside);
+    !showTrigger && !controlledIsOpen && document.removeEventListener('mousedown', handleClickOutside);
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpenState, onClose]);
+  }, [isOpenState, controlledIsOpen, onClose]);
 
   return (
     <div className='relative select-none'>
