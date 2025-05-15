@@ -17,6 +17,10 @@ type DropdownProps = {
   selectedItem: ReactNode;
   /** 드롭다운 메뉴 한 칸의 크기 */
   size?: string;
+  /** 기본 트리거를 보여줄지 선택, 다른 요소 아래에 메뉴 리스트를 띄우고싶은 경우 false (기본값: true) */
+  showTrigger?: boolean;
+  /** showTrigger이 false일 경우 드롭다운 열림 상태를 관리할 state */
+  isOpen?: boolean;
   /** 닫힌 상태의 드롭다운 메뉴에 적용될 스타일 */
   closedAreaStyle?: string;
   /** 드롭다운 메뉴 아이템에 적용될 스타일 */
@@ -73,6 +77,8 @@ export default function Dropdown({
   type = 'default',
   menuList,
   selectedItem,
+  showTrigger = true,
+  isOpen: controlledIsOpen,
   size,
   closedAreaStyle,
   menuItemStyle,
@@ -85,14 +91,15 @@ export default function Dropdown({
   triggerTestId,
   menuContainerTestId,
 }: DropdownProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenState, setIsOpenState] = useState(false);
+  const isOpen = showTrigger ? isOpenState : controlledIsOpen;
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleToggle = () => {
     if (disabled) return;
 
     const newOpenState = !isOpen;
-    setIsOpen(newOpenState);
+    setIsOpenState(newOpenState);
 
     if (newOpenState && onOpen) onOpen();
     if (!newOpenState && onClose) onClose();
@@ -101,7 +108,7 @@ export default function Dropdown({
   const handleItemClick = (onClick?: () => void) => {
     if (onClick) onClick();
 
-    setIsOpen(false);
+    setIsOpenState(false);
 
     if (onClose) onClose();
   };
@@ -109,7 +116,7 @@ export default function Dropdown({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+        setIsOpenState(false);
 
         if (isOpen && onClose) onClose();
       }
@@ -123,24 +130,27 @@ export default function Dropdown({
   }, [isOpen, onClose]);
 
   return (
-    <div
-      className={`relative flex justify-start items-center ${size || DROPDOWN_SIZE[type]} ${closedAreaStyle || DROPDOWN_CLOSED_AREA_STYLE[type].base} ${
-        disabled
-          ? DROPDOWN_CLOSED_AREA_STYLE[type].disabled
-          : isOpen
-            ? DROPDOWN_CLOSED_AREA_STYLE[type].open
-            : DROPDOWN_CLOSED_AREA_STYLE[type].closed
-      } ${selectedTextStyle || DROPDOWN_TEXT_STYLE[type]} text-nowrap ${disabled ? 'cursor-not-allowed text-label-assistive' : 'cursor-pointer'} select-none`}
-      ref={dropdownRef}
-      onClick={handleToggle}
-      data-testid={triggerTestId}
-    >
-      {selectedItem}
-      <img
-        src={isOpen ? '/assets/icons/top_arrow_gray_50.png' : '/assets/icons/bottom_arrow_gray_50.png'}
-        alt='dropdown 버튼'
-        className='absolute right-[14px] w-[14px] h-[14px]'
-      />
+    <div className='relative'>
+      {showTrigger && (
+        <div
+          className={`flex justify-start items-center ${size || DROPDOWN_SIZE[type]} ${closedAreaStyle || DROPDOWN_CLOSED_AREA_STYLE[type].base} ${
+            disabled
+              ? DROPDOWN_CLOSED_AREA_STYLE[type].disabled
+              : isOpenState
+                ? DROPDOWN_CLOSED_AREA_STYLE[type].open
+                : DROPDOWN_CLOSED_AREA_STYLE[type].closed
+          } ${selectedTextStyle || DROPDOWN_TEXT_STYLE[type]} text-nowrap ${disabled ? 'cursor-not-allowed text-label-assistive' : 'cursor-pointer'} select-none`}
+          onClick={handleToggle}
+          data-testid={triggerTestId}
+        >
+          {selectedItem}
+          <img
+            src={isOpenState ? '/assets/icons/top_arrow_gray_50.png' : '/assets/icons/bottom_arrow_gray_50.png'}
+            alt='dropdown 버튼'
+            className='absolute right-[14px] w-[14px] h-[14px]'
+          />
+        </div>
+      )}
       {isOpen && (
         <div
           className={`absolute top-full left-1/2 -translate-x-1/2 translate-y-[10.5px] flex flex-col justify-start items-start gap-[5px] px-[4px] py-[6px] bg-white rounded-[5px] shadow shadow-[0px_0px_7px_0px_rgba(70, 72, 84, 0.10)] overflow-y-auto`}
