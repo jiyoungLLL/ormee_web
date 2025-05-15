@@ -20,7 +20,7 @@ export default function QuizCreateHeader() {
 
   return (
     <>
-      <div className='w-full h-[50px] flex justify-between items-center'>
+      <div className='flex justify-between items-center w-full h-[50px] mb-[22px]'>
         <Link
           href={`/lectures/${lectureId}/quiz`}
           className='w-[136px] px-[5px] text-title3 font-bold flex items-center gap-[15px]'
