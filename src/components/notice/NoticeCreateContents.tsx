@@ -21,7 +21,7 @@ export default function NoticeWriteContents() {
         <DateTimePicker
           type='CALENDAR'
           calendar='DATE_TYPE'
-          placeholer='공지 등록일'
+          placeholder='공지 등록일'
         />
       </div>
 

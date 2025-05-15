@@ -9,8 +9,11 @@ jobs:
     name: 🛠️ 프로젝트 빌드
     runs-on: ubuntu-latest
     outputs:
+      nextjs_build_result: ${{ steps.test_results.outputs.nextjs_build_result }}
+      storybook_build_result: ${{ steps.test_results.outputs.storybook_build_result }}
       storybook_test_result: ${{ steps.test_results.outputs.storybook_test_result }}
       error_summary: ${{ steps.error.outputs.summary }}
+      build_success: ${{ steps.final_status.outputs.build_success }}
 
     steps:
       # ✅ PR 브랜치 코드 체크아웃
@@ -35,41 +38,66 @@ jobs:
       # ✅ Next.js 빌드 실행
       - name: 🔨 Next.js 빌드
         id: nextbuild
+        continue-on-error: true
         run: |
           set -o pipefail
           pnpm build 2>&1 | tee build.log
+          exit ${PIPESTATUS[0]}
+
+      # ✅ 다음 단계 진행 여부 확인
+      - name: Next.js 빌드 결과 확인
+        id: build_check
+        run: |
+          if [[ "${{ steps.nextbuild.outcome }}" == "success" ]]; then
+            echo "should_continue=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_continue=false" >> $GITHUB_OUTPUT
+          fi
 
       # ✅ Storybook을 정적으로 빌드 (storybook-static 폴더에 출력)
       - name: 📦 Storybook 정적 빌드
-        if: success()
+        id: storybookbuild
+        if: steps.build_check.outputs.should_continue == 'true'
+        continue-on-error: true
         run: pnpm build-storybook -o storybook-static
 
       # ✅ Storybook 서버 실행 및 응답 대기 (최대 5분, 5초마다 상태 출력)
       - name: 🚀 Storybook 서버 실행 및 대기
-        if: success()
+        id: storybookserver
+        if: steps.build_check.outputs.should_continue == 'true' && steps.storybookbuild.outcome == 'success'
+        continue-on-error: true
         run: |
           npx serve storybook-static --no-clipboard -l 6006 > storybook-server.log 2>&1 &
+          server_started=false
           for i in {1..60}; do
             if curl -s http://localhost:6006 > /dev/null; then
               echo "✅ Storybook 서버가 실행되었습니다!"
+              server_started=true
               break
             else
               echo "⏳ Storybook 서버 대기 중... ($i/60)"
               sleep 5
             fi
           done
+          if [ "$server_started" = false ]; then
+            echo "❌ Storybook 서버를 시작할 수 없습니다!"
+            exit 1
+          fi
 
       # ✅ Playwright 브라우저 설치
       - name: 🎭 Playwright 브라우저 설치
-        if: success()
+        if: steps.build_check.outputs.should_continue == 'true' && steps.storybookserver.outcome == 'success'
+        continue-on-error: true
         run: pnpm exec playwright install --with-deps chromium
 
       # ✅ Storybook 테스트 실행 (정적 서버에 대해)
       - name: 🧪 Storybook 테스트 실행
         id: storybooktest
-        if: success()
+        if: steps.build_check.outputs.should_continue == 'true' && steps.storybookserver.outcome == 'success'
+        continue-on-error: true
         run: |
           pnpm test-storybook --url http://localhost:6006 2>&1 | tee storybook-test.log
+          exit ${PIPESTATUS[0]}
 
       # ❌ 실패한 경우 로그에서 오류 요약 추출
       - name: 📋 오류 요약 추출
@@ -100,7 +128,51 @@ jobs:
       - name: 테스트 결과 저장
         if: always()
         id: test_results
-        run: echo "storybook_test_result=${{ steps.storybooktest.outcome }}" >> $GITHUB_OUTPUT
+        run: |
+          # Next.js 빌드 결과
+          if [[ "${{ steps.nextbuild.outcome }}" == "success" ]]; then
+            echo "nextjs_build_result=success" >> $GITHUB_OUTPUT
+          else
+            echo "nextjs_build_result=failure" >> $GITHUB_OUTPUT
+          fi
+
+          # Storybook 빌드 결과
+          if [[ "${{ steps.storybookbuild.outcome }}" == "success" ]]; then
+            echo "storybook_build_result=success" >> $GITHUB_OUTPUT
+          elif [[ "${{ steps.storybookbuild.outcome }}" == "skipped" || "${{ steps.build_check.outputs.should_continue }}" == "false" ]]; then
+            echo "storybook_build_result=skipped" >> $GITHUB_OUTPUT
+          else
+            echo "storybook_build_result=failure" >> $GITHUB_OUTPUT
+          fi
+
+          # Storybook 테스트 결과
+          if [[ "${{ steps.storybooktest.outcome }}" == "success" ]]; then
+            echo "storybook_test_result=success" >> $GITHUB_OUTPUT
+          elif [[ "${{ steps.storybooktest.outcome }}" == "skipped" || "${{ steps.build_check.outputs.should_continue }}" == "false" || "${{ steps.storybookserver.outcome }}" != "success" ]]; then
+            echo "storybook_test_result=skipped" >> $GITHUB_OUTPUT
+          else
+            echo "storybook_test_result=failure" >> $GITHUB_OUTPUT
+          fi
+
+      # 최종 빌드 상태 결정
+      - name: 최종 빌드 및 테스트 상태 결정
+        id: final_status
+        if: always()
+        run: |
+          if [[ "${{ steps.nextbuild.outcome }}" == "success" && \
+                "${{ steps.storybookbuild.outcome }}" == "success" && \
+                "${{ steps.storybooktest.outcome }}" == "success" ]]; then
+            echo "build_success=true" >> $GITHUB_OUTPUT
+          else
+            echo "build_success=false" >> $GITHUB_OUTPUT
+          fi
+
+      # 실패 상태로 워크플로우 종료 (PR에 X 표시 나타나게 함)
+      - name: 빌드 실패 시 워크플로우 실패 처리
+        if: always() && steps.final_status.outputs.build_success != 'true'
+        run: |
+          echo "❌ 빌드 또는 테스트가 실패했습니다. 워크플로우를 실패 상태로 종료합니다."
+          exit 1
 
   comment:
     name: 💬 PR에 결과 댓글 작성
@@ -116,12 +188,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: build-status
           message: |
-            ${{ needs.build.result == 'success' && '✅ **Next.js & Storybook 빌드 및 테스트 성공** 🎉' || '❌ **빌드 또는 테스트 실패**' }}
+            ${{ (needs.build.outputs.nextjs_build_result == 'success' && needs.build.outputs.storybook_build_result == 'success' && needs.build.outputs.storybook_test_result == 'success') && '✅ **Next.js & Storybook 빌드 및 테스트 성공** 🎉' || '❌ **빌드 또는 테스트 실패**' }}
 
             ### 📊 빌드 및 테스트 요약
 
-            - **Next.js Build**: ${{ needs.build.result == 'success' && '✅ 성공' || '❌ 실패' }}
-            - **Storybook 테스트 실행**: ${{ needs.build.outputs.storybook_test_result == 'success' && '✅ 성공' || (needs.build.outputs.storybook_test_result == '' && '⚠️ 실행되지 않음' || '❌ 실패') }}
+            - **Next.js Build**: ${{ needs.build.outputs.nextjs_build_result == 'success' && '✅ 성공' || '❌ 실패' }}
+            - **Storybook 빌드**: ${{ needs.build.outputs.storybook_build_result == 'success' && '✅ 성공' || (needs.build.outputs.storybook_build_result == 'skipped' && '⚠️ 실행되지 않음' || '❌ 실패') }}
+            - **Storybook 테스트 실행**: ${{ needs.build.outputs.storybook_test_result == 'success' && '✅ 성공' || (needs.build.outputs.storybook_test_result == 'skipped' && '⚠️ 실행되지 않음' || '❌ 실패') }}
 
             ${{ needs.build.outputs.error_summary && format('**오류 요약:**\n```\n{0}\n```', needs.build.outputs.error_summary) }}
 
