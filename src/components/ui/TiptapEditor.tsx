@@ -84,11 +84,13 @@ export default function TiptapEditor({ type, contents, onChange }: TipTapProps) 
   return (
     <div className='flex flex-col gap-[12px]'>
       <Toolbar editor={editor} />
-      <EditorContent
-        editor={editor}
-        className='text-body-reading prose list-outside list-disc'
-        style={{ width: '100%', height: '422px', borderRadius: '10px' }}
-      />
+      <div className='rounded-[10px]'>
+        <EditorContent
+          editor={editor}
+          className='text-body-reading prose list-outside list-disc'
+          style={{ width: '100%', height: '422px', maxHeight: '422px', overflowY: 'auto' }}
+        />
+      </div>
     </div>
   );
 }
