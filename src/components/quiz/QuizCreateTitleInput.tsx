@@ -2,6 +2,8 @@ import { QuizFormValues } from '@/schemas/quiz.schema';
 import Input from '../ui/Input';
 import { Control, Path, useController } from 'react-hook-form';
 import DateTimePicker from '../ui/DateTimePicker';
+import { useState } from 'react';
+import { useActiveProblemStore } from '@/stores/activeProblemStore';
 
 type QuizCreateTitleInputProps = {
   control: Control<QuizFormValues>;
@@ -9,6 +11,8 @@ type QuizCreateTitleInputProps = {
 };
 
 export default function QuizCreateTitleInput({ control, name }: QuizCreateTitleInputProps) {
+  const [isActive, setIsActive] = useState(false);
+  const { activeProblemId, resetActiveProblemId } = useActiveProblemStore();
   const { field: dueTimeField } = useController({ control, name: 'dueTime' });
   const { field: limitTimeField } = useController({ control, name: 'limitTime' });
 
@@ -20,8 +24,19 @@ export default function QuizCreateTitleInput({ control, name }: QuizCreateTitleI
     limitTimeField.onChange(value);
   };
 
+  const handleFocus = () => {
+    if (activeProblemId) resetActiveProblemId();
+    setIsActive(true);
+  };
+
+  const handleBlur = () => {
+    setIsActive(false);
+  };
+
   return (
-    <div className='w-full p-[20px] bg-white rounded-[10px]'>
+    <div
+      className={`w-full p-[20px] bg-white rounded-[10px] box-border border ${isActive ? 'border-purple-50' : 'border-white'}`}
+    >
       <Input
         control={control}
         name={name}
@@ -29,6 +44,8 @@ export default function QuizCreateTitleInput({ control, name }: QuizCreateTitleI
         placeholder='퀴즈 제목을 입력하세요'
         inputStyle='border-none bg-white p-[10px] focus:outline-none'
         textStyle='text-heading2 text-gray-90 placeholder:text-gray-50'
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       />
       <div className='flex items-center gap-[17px]'>
         <DateTimePicker
