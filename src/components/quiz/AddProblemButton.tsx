@@ -14,11 +14,16 @@ export default function AddProblemButton({ append }: AddProblemButtonProps) {
   return (
     <button
       type='button'
-      className='w-[68px] h-[68px] rounded-full bg-white bg-contain bg-no-repeat bg-center'
-      style={{
-        backgroundImage: 'url(/assets/icons/plus.png)',
-      }}
+      className='flex justify-center items-center w-[68px] h-[68px] rounded-full bg-white'
       onClick={handleClick}
-    />
+    >
+      <img
+        src='/assets/icons/plus.png'
+        alt='문제 추가하기'
+        width={40}
+        height={40}
+        className='w-[40px] h-[40px]'
+      />
+    </button>
   );
 }
