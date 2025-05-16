@@ -1,7 +1,8 @@
 import { QuizFormValues } from '@/schemas/quiz.schema';
 import { useActiveProblemStore } from '@/stores/activeProblemStore';
-import { FieldArrayWithId } from 'react-hook-form';
+import { FieldArrayWithId, useFormContext } from 'react-hook-form';
 import ProblemTypeDropdown from './problem/ProblemTypeDropdown';
+import Input from '../ui/Input';
 
 type ProblemInputProps = {
   problem: FieldArrayWithId<QuizFormValues, 'problems', 'id'>;
@@ -13,6 +14,7 @@ const INACTIVE_BORDER_STYLE = 'border-white';
 
 export default function ProblemInput({ problem, index }: ProblemInputProps) {
   const { activeProblemId, setActiveProblemId } = useActiveProblemStore();
+  const { control } = useFormContext<QuizFormValues>();
   const isActive = activeProblemId === problem.id;
 
   const handleClick = () => {
@@ -29,6 +31,13 @@ export default function ProblemInput({ problem, index }: ProblemInputProps) {
         <span className='text-title3 font-normal text-center'>{index + 1}</span>
         <ProblemTypeDropdown index={index} />
       </div>
+      <Input
+        control={control}
+        name={`problems.${index}.context`}
+        size='w-full h-[68px]'
+        placeholder='질문을 입력하세요.'
+        inputStyle='flex items-center p-[20px] rounded-[10px] border border-gray-20 focus:outline-none'
+      />
     </div>
   );
 }
