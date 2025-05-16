@@ -18,6 +18,7 @@ export default function RemoteController({ problemFields }: RemoteControllerProp
         {problemFields.map((problem, index) => (
           <RemoteButton
             key={problem.id}
+            problem={problem}
             index={index}
           />
         ))}
