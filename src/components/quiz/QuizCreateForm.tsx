@@ -4,6 +4,7 @@ import { QuizFormSchema, QuizFormValues } from '@/schemas/quiz.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import QuizCreateTitleInput from './QuizCreateTitleInput';
+import RemoteController from './RemoteController';
 
 export default function QuizCreateForm() {
   const { control } = useForm<QuizFormValues>({
@@ -26,7 +27,10 @@ export default function QuizCreateForm() {
 
   return (
     <div className='flex justify-center items-start gap-[30px] w-full'>
-      <div className='w-[390px] bg-blue-300'>툴박스, 리모컨 영역</div>
+      <div className='w-[390px] bg-blue-300'>
+        <div>툴박스</div>
+        <RemoteController />
+      </div>
       <div className='flex flex-col justify-start items-center gap-[26px] w-full bg-purple-35'>
         <QuizCreateTitleInput
           control={control}
