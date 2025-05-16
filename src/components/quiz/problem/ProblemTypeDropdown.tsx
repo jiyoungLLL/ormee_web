@@ -35,6 +35,7 @@ export default function ProblemTypeDropdown({ index }: ProblemTypeDropdownProps)
       showTrigger
       menuList={menuListForDropdown}
       selectedItem={selectedItem}
+      triggerAreaOnOpenStyle='bg-white'
     />
   );
 }
