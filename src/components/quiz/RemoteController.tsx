@@ -10,13 +10,18 @@ type RemoteControllerProps = {
 
 export default function RemoteController({ problemFields }: RemoteControllerProps) {
   return (
-    <div className='flex justify-start items-center flex-wrap gap-[3px] p-[20px] w-full max-h-[142px] rounded-[15px] bg-white select-none overflow-y-auto'>
-      {problemFields.map((problem, index) => (
-        <RemoteButton
-          key={problem.id}
-          index={index}
-        />
-      ))}
+    <div className='w-full p-[20px] rounded-[15px] bg-white select-none'>
+      <div
+        className='flex justify-start items-center flex-wrap gap-[3px] max-h-[calc(142px-40px)] overflow-y-auto
+      '
+      >
+        {problemFields.map((problem, index) => (
+          <RemoteButton
+            key={problem.id}
+            index={index}
+          />
+        ))}
+      </div>
     </div>
   );
 }
