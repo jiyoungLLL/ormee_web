@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, RefObject, useEffect, useRef, useState } from 'react';
+import { ReactNode, RefObject, useEffect, useRef, useState, useMemo } from 'react';
 
 type DropdownType = 'default' | 'withInput';
 
@@ -44,6 +44,12 @@ type WithTriggerProps = BaseDropdownProps & {
   initialOpen?: boolean;
   /** 드롭다운 트리거에 적용될 스타일 */
   triggerAreaStyle?: string;
+  /** 드롭다운 트리거에 적용될 onOpen 스타일 */
+  triggerAreaOnOpenStyle?: string;
+  /** 드롭다운 트리거에 적용될 onClose 스타일 */
+  triggerAreaOnCloseStyle?: string;
+  /** 드롭다운 트리거에 적용될 disabled 스타일 */
+  triggerAreaDisabledStyle?: string;
   /** 드롭다운 트리거(항상 보이는 부분) 테스트 ID */
   triggerTestId?: string;
   /** 선텍된 아이템 텍스트에 적용될 스타일 */
@@ -65,6 +71,12 @@ type WithoutTriggerProps = BaseDropdownProps & {
   selectedTextStyle?: never;
   /** 드롭다운 트리거에 적용될 스타일 */
   triggerAreaStyle?: never;
+  /** 드롭다운 트리거에 적용될 onOpen 스타일 */
+  triggerAreaOnOpenStyle?: never;
+  /** 드롭다운 트리거에 적용될 onClose 스타일 */
+  triggerAreaOnCloseStyle?: never;
+  /** 드롭다운 트리거에 적용될 disabled 스타일 */
+  triggerAreaDisabledStyle?: never;
   /** 드롭다운 트리거(항상 보이는 부분) 테스트 ID */
   triggerTestId?: never;
   /** showTrigger가 true일 경우에만 사용 가능 */
@@ -130,8 +142,21 @@ export default function Dropdown(props: DropdownProps) {
   const controlledIsOpen = showTrigger === false ? props.isOpen : undefined;
   const initialOpen = showTrigger === true ? props.initialOpen : undefined;
   const triggerAreaStyle = showTrigger === true ? props.triggerAreaStyle : undefined;
+  const triggerAreaOnOpenStyle = showTrigger === true ? props.triggerAreaOnOpenStyle : undefined;
+  const triggerAreaOnCloseStyle = showTrigger === true ? props.triggerAreaOnCloseStyle : undefined;
+  const triggerAreaDisabledStyle = showTrigger === true ? props.triggerAreaDisabledStyle : undefined;
   const triggerTestId = showTrigger === true ? props.triggerTestId : undefined;
   const triggerRef = showTrigger === false ? props.triggerRef : undefined;
+
+  const triggerStyles = useMemo(
+    () => ({
+      base: triggerAreaStyle ?? DROPDOWN_TRIGGER_AREA_STYLE[type].base,
+      open: triggerAreaOnOpenStyle ?? DROPDOWN_TRIGGER_AREA_STYLE[type].open,
+      closed: triggerAreaOnCloseStyle ?? DROPDOWN_TRIGGER_AREA_STYLE[type].closed,
+      disabled: triggerAreaDisabledStyle ?? DROPDOWN_TRIGGER_AREA_STYLE[type].disabled,
+    }),
+    [type, triggerAreaStyle, triggerAreaDisabledStyle, triggerAreaOnOpenStyle, triggerAreaOnCloseStyle],
+  );
 
   const [isOpenState, setIsOpenState] = useState(initialOpen ?? false);
 
@@ -186,12 +211,8 @@ export default function Dropdown(props: DropdownProps) {
     <div className='relative select-none'>
       {showTrigger && (
         <div
-          className={`flex justify-start items-center ${size || DROPDOWN_SIZE[type]} ${triggerAreaStyle || DROPDOWN_TRIGGER_AREA_STYLE[type].base} ${
-            disabled
-              ? DROPDOWN_TRIGGER_AREA_STYLE[type].disabled
-              : isOpenState
-                ? DROPDOWN_TRIGGER_AREA_STYLE[type].open
-                : DROPDOWN_TRIGGER_AREA_STYLE[type].closed
+          className={`flex justify-start items-center ${size || DROPDOWN_SIZE[type]} ${triggerStyles.base} ${
+            disabled ? triggerStyles.disabled : isOpenState ? triggerStyles.open : triggerStyles.closed
           } ${selectedTextStyle || DROPDOWN_TEXT_STYLE[type]} text-nowrap ${disabled ? 'cursor-not-allowed text-label-assistive' : 'cursor-pointer'} select-none`}
           onClick={handleToggle}
           data-testid={triggerTestId}
