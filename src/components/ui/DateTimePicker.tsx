@@ -5,12 +5,19 @@ import Dropdown from './dropdown/Dropdown';
 
 type ComponentType = 'CALENDAR' | 'TIME';
 type CalendarType = 'DATE_TYPE' | 'PERIOD_TYPE';
+type TimeType = 'TIME' | 'LIMIT_TIME';
 
 type DateTimePickerProps = {
   type: ComponentType;
   calendar?: CalendarType;
+  time?: TimeType;
   placeholder: string;
   onSelectDate?: (value: string) => void;
+  customImageSize?: string;
+  customComponentSize?: string;
+  customTextStyle?: string;
+  customWidthSize?: string;
+  customDropdownSize?: string;
 };
 
 const TIME_OPTIONS = [
@@ -42,12 +49,30 @@ const TIME_OPTIONS = [
   '20:30',
 ];
 
+const LIMIT_TIME_OPTIONS = ['10분', '15분', '20분', '25분', '30분', '35분', '40분', '45분', '50분', '55분', '60분'];
+
 const TIME_MENU_LIST = TIME_OPTIONS.map((time, index) => ({
   id: `t${index}`,
   label: time,
 }));
 
-export default function DateTimePicker({ type, calendar, placeholder, onSelectDate }: DateTimePickerProps) {
+const LIMIT_TIME_MENU_LIST = LIMIT_TIME_OPTIONS.map((time, index) => ({
+  id: `lt${index}`,
+  label: time,
+}));
+
+export default function DateTimePicker({
+  type,
+  calendar,
+  time,
+  placeholder,
+  onSelectDate,
+  customImageSize,
+  customComponentSize,
+  customTextStyle,
+  customWidthSize,
+  customDropdownSize,
+}: DateTimePickerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [value, setValue] = useState('');
   const [startTime, setStartTime] = useState('');
@@ -80,18 +105,21 @@ export default function DateTimePicker({ type, calendar, placeholder, onSelectDa
   const fontStyle = value !== '' ? '' : 'text-gray-60';
 
   const commonStyle = 'rounded-[5px] bg-gray-10';
-  const basicTextStyle = calendar === 'DATE_TYPE' ? 'text-headline2 font-semibold' : 'text-headline1 font-semibold';
+  const basicTextStyle =
+    customTextStyle ?? (calendar === 'DATE_TYPE' ? 'text-headline2 font-semibold' : 'text-headline1 font-semibold');
 
   const imageSrc = type === 'CALENDAR' ? 'calendar.png' : 'timer.png';
-  const imageSize = calendar === 'DATE_TYPE' ? 'w-[20px] h-[20px]' : 'w-[24px] h-[24px]';
+  const imageSize = customImageSize ?? (calendar === 'DATE_TYPE' ? 'w-[20px] h-[20px]' : 'w-[24px] h-[24px]');
 
-  const ComponentSize = calendar === 'DATE_TYPE' ? 'h-[32px] gap-[10px]' : 'h-[51px] gap-[10px]';
+  const ComponentSize =
+    customComponentSize ?? (calendar === 'DATE_TYPE' ? 'h-[32px] gap-[10px]' : 'h-[51px] gap-[10px]');
   const widthSize =
-    calendar === 'PERIOD_TYPE'
+    customWidthSize ??
+    (calendar === 'PERIOD_TYPE'
       ? 'w-[268px] px-[20px] py-[13px]'
       : type === 'TIME'
         ? 'w-[184px] px-[20px] py-[13px]'
-        : 'w-fit px-[10px] py-[5px]';
+        : 'w-fit px-[10px] py-[5px]');
 
   const handlePick = () => setIsOpen((prev) => !prev);
 
@@ -105,6 +133,12 @@ export default function DateTimePicker({ type, calendar, placeholder, onSelectDa
     const formattedValue = `${start} - ${end}`;
     setValue(formattedValue);
     onSelectDate?.(formattedValue);
+    setIsOpen(false);
+  };
+
+  const handleSelectedLimitTime = (time: string) => {
+    setValue(time);
+    onSelectDate?.(time);
     setIsOpen(false);
   };
 
@@ -136,25 +170,33 @@ export default function DateTimePicker({ type, calendar, placeholder, onSelectDa
         </div>
       )}
 
-      {isOpen && type === 'TIME' && (
+      {isOpen && time === 'TIME' && (
         <div
           className='absolute z-[100] top-[10px] bg-white shadow-md rounded-md p-4 flex flex-col gap-2'
           style={{ top: `${dropdownStyle.top}px`, left: `${dropdownStyle.left}px`, position: 'fixed' }}
         >
           <div className='flex items-center gap-[10px]'>
             <Dropdown
+              showTrigger
               menuList={TIME_MENU_LIST.map((item) => ({
                 ...item,
-                onClick: () => setStartTime(item.label as string),
+                onClick: () => {
+                  setStartTime(item.label as string);
+                },
               }))}
               selectedItem={startTime || '시작 시간'}
+              size={customDropdownSize}
             />
             <Dropdown
+              showTrigger
               menuList={TIME_MENU_LIST.map((item) => ({
                 ...item,
-                onClick: () => setEndTime(item.label as string),
+                onClick: () => {
+                  setEndTime(item.label as string);
+                },
               }))}
               selectedItem={endTime || '종료 시간'}
+              size={customDropdownSize}
             />
             <button
               className='px-[20px] py-[6px] text-headline1 font-semibold bg-purple-50 text-white rounded disabled:bg-gray-30 disabled:text-label-assistive disabled:cursor-not-allowed'
@@ -165,6 +207,21 @@ export default function DateTimePicker({ type, calendar, placeholder, onSelectDa
             </button>
           </div>
         </div>
+      )}
+      {time === 'LIMIT_TIME' && (
+        <Dropdown
+          showTrigger={false}
+          menuList={LIMIT_TIME_MENU_LIST.map((item) => ({
+            ...item,
+            onClick: () => {
+              handleSelectedLimitTime(item.label as string);
+            },
+          }))}
+          selectedItem={value || '제한 시간'}
+          isOpen={isOpen}
+          triggerRef={pickerRef}
+          size={customDropdownSize}
+        />
       )}
     </div>
   );

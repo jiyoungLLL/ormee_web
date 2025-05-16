@@ -83,6 +83,7 @@ export default function PhoneNumberInput<T extends FieldValues>({
           name={prefixName as Path<T>}
           render={({ field }) => (
             <Dropdown
+              showTrigger
               type='withInput'
               menuList={getPrefixList(field as ControllerRenderProps<FieldValues, string>, instanceIdRef.current)}
               selectedItem={field.value || PHONE_NUMBER_PREFIX.MOBILE_010}
