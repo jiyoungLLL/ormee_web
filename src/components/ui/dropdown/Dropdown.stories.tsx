@@ -140,7 +140,8 @@ const YourComponent = () => {
 
 이외에도 다양한 옵션을 전달해 드롭다운 메뉴의 스타일을 커스텀할 수 있습니다.
 - size 옵션을 전달해 드롭다운 메뉴의 크기를 조정할 수 있습니다.
-- triggerAreaStyle 옵션을 전달해 드롭다운 트리거의 스타일을 커스텀할 수 있습니다.
+- triggerAreaStyle 옵션을 전달해 드롭다운 트리거의 스타일을 커스텀할 수 있습니다. (모든 상태에 공통적으로 적용될 스타일)
+- triggerAreaOnOpenStyle, triggerAreaOnCloseStyle, triggerAreaDisabledStyle 옵션을 전달해 드롭다운 트리거의 스타일을 상세히 커스텀할 수 있습니다.
 - selectedTextStyle 옵션을 전달해 선택된 메뉴의 텍스트 스타일을 커스텀할 수 있습니다. (트리거에 표시됨)
 - menuItemStyle 옵션을 전달해 드롭다운 메뉴 아이템의 스타일을 커스텀할 수 있습니다.
 - menuItemTextStyle 옵션을 전달해 드롭다운 메뉴 아이템의 텍스트 스타일을 커스텀할 수 있습니다.
