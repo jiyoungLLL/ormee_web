@@ -37,7 +37,7 @@ export default function QuizCreateForm() {
         <div>툴박스</div>
         <RemoteController problemFields={problems} />
       </div>
-      <div className='flex flex-col justify-start items-center gap-[26px] w-full bg-purple-35'>
+      <div className='flex-1 flex flex-col justify-start items-center gap-[26px] bg-purple-35'>
         <QuizCreateTitleInput
           control={control}
           name='title'
