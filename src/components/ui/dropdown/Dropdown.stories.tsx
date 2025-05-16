@@ -34,6 +34,7 @@ const YourComponent = () => {
 
   return (
     <Dropdown
+      showTrigger={true}
       menuList={menuList}
       selectedItem={selected}
     />
