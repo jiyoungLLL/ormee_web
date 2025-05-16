@@ -8,6 +8,7 @@ import RemoteController from './RemoteController';
 import ProblemInput from './ProblemInput';
 import AddProblemButton from './AddProblemButton';
 import { DEFAULT_PROBLEM } from '@/constants/quiz.constants';
+
 export default function QuizCreateForm() {
   const methods = useForm<QuizFormValues>({
     defaultValues: {
@@ -31,17 +32,19 @@ export default function QuizCreateForm() {
         <RemoteController problemFields={problems} />
       </div>
       <div className='flex-1 flex flex-col justify-start items-center gap-[26px]'>
-        <QuizCreateTitleInput
-          control={control}
-          name='title'
-        />
-        {problems.map((problem, index) => (
-          <ProblemInput
-            key={problem.id}
-            problem={problem}
-            index={index}
+        <FormProvider {...methods}>
+          <QuizCreateTitleInput
+            control={control}
+            name='title'
           />
-        ))}
+          {problems.map((problem, index) => (
+            <ProblemInput
+              key={problem.id}
+              problem={problem}
+              index={index}
+            />
+          ))}
+        </FormProvider>
         <AddProblemButton append={append} />
       </div>
     </div>
