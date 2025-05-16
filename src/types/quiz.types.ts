@@ -1,12 +1,14 @@
 export type ProblemType = 'choice' | 'essay';
 
 export type Problem = {
-  context: string;
+  id: string;
   description: string;
   type: ProblemType;
   item: string[];
   answer: string;
 };
+
+export type ProblemRequest = Omit<Problem, 'id'> | { context: string };
 
 export type Quiz = {
   title: string;
@@ -20,5 +22,5 @@ export type QuizRequest = {
   description: string;
   created_time: string;
   due_time: string;
-  problems: Problem[];
+  problems: ProblemRequest[];
 };
