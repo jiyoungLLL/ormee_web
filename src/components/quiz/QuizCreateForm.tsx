@@ -7,22 +7,15 @@ import QuizCreateTitleInput from './QuizCreateTitleInput';
 import RemoteController from './RemoteController';
 import ProblemInput from './ProblemInput';
 import AddProblemButton from './AddProblemButton';
+import { DEFAULT_PROBLEM } from '@/constants/quiz.constants';
 export default function QuizCreateForm() {
   const methods = useForm<QuizFormValues>({
     defaultValues: {
       title: '',
+      description: '',
       dueTime: '',
       limitTime: '',
-      problems: [
-        // TODO: 문제 초기값 contants 파일에서 가져오기
-        {
-          context: '테스트용 제목',
-          description: '테스트용 설명',
-          type: 'choice',
-          item: ['선지 1'],
-          answer: '',
-        },
-      ],
+      problems: [DEFAULT_PROBLEM],
     },
     resolver: zodResolver(QuizFormSchema),
   });

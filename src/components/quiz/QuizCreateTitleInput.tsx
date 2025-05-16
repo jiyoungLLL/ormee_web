@@ -35,7 +35,7 @@ export default function QuizCreateTitleInput({ control, name }: QuizCreateTitleI
 
   return (
     <div
-      className={`w-full p-[20px] bg-white rounded-[10px] box-border border ${isActive ? 'border-purple-50' : 'border-white'}`}
+      className={`flex flex-col justify-start items-start gap-[10px] w-full p-[20px] bg-white rounded-[10px] box-border border ${isActive ? 'border-purple-50' : 'border-white'}`}
     >
       <Input
         control={control}
@@ -70,6 +70,15 @@ export default function QuizCreateTitleInput({ control, name }: QuizCreateTitleI
           customDropdownSize='w-[105px] h-[32px]'
         />
       </div>
+      <Input
+        control={control}
+        name='description'
+        size='w-full h-[50px]'
+        placeholder='설명'
+        inputStyle='bg-white pl-[20px] py-[15px] rounded-[10px] border border-gray-20 focus:outline-none disabled:bg-gray-10'
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+      />
     </div>
   );
 }

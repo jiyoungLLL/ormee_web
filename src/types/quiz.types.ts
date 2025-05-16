@@ -10,6 +10,7 @@ export type Problem = {
 
 export type Quiz = {
   title: string;
+  description: string;
   dueTime: string;
   limitTime: string;
   problems: Problem[];

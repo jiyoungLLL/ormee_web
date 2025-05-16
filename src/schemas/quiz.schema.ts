@@ -27,6 +27,7 @@ export const ProblemSchema = z.object({
 
 export const QuizFormSchema = z.object({
   title: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_TITLE }),
+  description: z.string().optional(),
   dueTime: z.string().datetime().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_DUE_TIME }),
   limitTime: z.string().datetime().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_LIMIT_TIME }),
   problems: z.array(ProblemSchema).min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_PROBLEMS }),
