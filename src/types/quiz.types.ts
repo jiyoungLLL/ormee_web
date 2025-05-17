@@ -1,10 +1,14 @@
 export type ProblemType = 'choice' | 'essay';
 
+export type ChoiceItem = {
+  text: string;
+};
+
 export type Problem = {
   context: string;
   description: string;
   type: ProblemType;
-  item: { text: string }[];
+  item: ChoiceItem[];
   answer: string;
 };
 

@@ -1,4 +1,4 @@
-import { Problem, ProblemType } from '@/types/quiz.types';
+import { ChoiceItem, Problem, ProblemType } from '@/types/quiz.types';
 
 export const QUIZ_TYPE_MAP: Record<ProblemType, { type: ProblemType; label: string }> = {
   choice: { type: 'choice', label: '객관식' },
@@ -12,3 +12,5 @@ export const DEFAULT_PROBLEM: Problem = {
   item: [{ text: '선지 1' }, { text: '선지 2' }, { text: '선지 3' }, { text: '선지 4' }],
   answer: '',
 };
+
+export const DEFAULT_CHOICE_ITEM: ChoiceItem = { text: '' };
