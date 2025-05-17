@@ -3,6 +3,7 @@ import { useActiveProblemStore } from '@/stores/activeProblemStore';
 import { FieldArrayWithId, useFormContext } from 'react-hook-form';
 import ProblemTypeDropdown from './problem/ProblemTypeDropdown';
 import Input from '../ui/Input';
+import ChoiceItemContainer from './problem/ChoiceItemContainer';
 
 type ProblemInputProps = {
   problem: FieldArrayWithId<QuizFormValues, 'problems', 'id'>;
@@ -38,6 +39,7 @@ export default function ProblemInput({ problem, index }: ProblemInputProps) {
         placeholder='질문을 입력하세요.'
         inputStyle='flex items-center p-[20px] rounded-[10px] border border-gray-20 focus:outline-none'
       />
+      <ChoiceItemContainer problemIndex={index} />
     </div>
   );
 }
