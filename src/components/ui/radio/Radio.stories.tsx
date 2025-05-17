@@ -3,7 +3,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import Radio from './Radio';
 
 const meta: Meta<typeof Radio> = {
-  title: 'UI/Radio',
+  title: 'Components/Radio',
   component: Radio,
   parameters: {
     layout: 'centered',
