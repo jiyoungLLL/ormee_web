@@ -4,6 +4,7 @@ import { FieldArrayWithId, useFormContext } from 'react-hook-form';
 import ProblemTypeDropdown from './problem/ProblemTypeDropdown';
 import Input from '../ui/Input';
 import ChoiceItemContainer from './problem/ChoiceItemContainer';
+import Answer from './problem/Answer';
 
 type ProblemInputProps = {
   problem: FieldArrayWithId<QuizFormValues, 'problems', 'id'>;
@@ -18,14 +19,14 @@ export default function ProblemInput({ problem, index }: ProblemInputProps) {
   const { control } = useFormContext<QuizFormValues>();
   const isActive = activeProblemId === problem.id;
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isActive) return;
     setActiveProblemId(problem.id);
   };
 
   return (
     <div
-      className={`flex flex-col justify-start items-center w-full px-[30px] py-[20px] rounded-[10px] bg-white box-border border ${isActive ? ACTIVE_BORDER_STYLE : INACTIVE_BORDER_STYLE}`}
+      className={`flex flex-col justify-start items-start w-full px-[30px] py-[20px] rounded-[10px] bg-white box-border border ${isActive ? ACTIVE_BORDER_STYLE : INACTIVE_BORDER_STYLE}`}
       onClick={handleClick}
     >
       <div className='flex justify-between items-center self-stretch w-full'>
@@ -40,6 +41,7 @@ export default function ProblemInput({ problem, index }: ProblemInputProps) {
         inputStyle='flex items-center p-[20px] rounded-[10px] border border-gray-20 focus:outline-none'
       />
       <ChoiceItemContainer problemIndex={index} />
+      <Answer problemIndex={index} />
     </div>
   );
 }
