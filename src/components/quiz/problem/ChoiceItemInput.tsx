@@ -1,5 +1,6 @@
 'use client';
 
+import XIcon from '@/components/icon/XIcon';
 import Input from '@/components/ui/Input';
 import Radio from '@/components/ui/radio/Radio';
 import { QuizFormValues } from '@/schemas/quiz.schema';
@@ -11,13 +12,21 @@ type ChoiceItemInputProps = {
 };
 
 export default function ChoiceItemInput({ problemIndex, itemIndex }: ChoiceItemInputProps) {
-  const { control, register } = useFormContext<QuizFormValues>();
-  const { fields: problemFields } = useFieldArray({
+  const { control, register, setValue } = useFormContext<QuizFormValues>();
+
+  const { fields: itemFields } = useFieldArray({
     control,
-    name: `problems`,
+    name: `problems.${problemIndex}.item`,
   });
 
-  const item = problemFields[problemIndex].item[itemIndex].text;
+  const item = itemFields[itemIndex]?.text ?? '';
+
+  const handleRemoveItem = () => {
+    setValue(
+      `problems.${problemIndex}.item`,
+      itemFields.filter((_, idx) => idx !== itemIndex),
+    );
+  };
 
   return (
     <div className='flex items-center gap-[12px] w-full'>
@@ -34,6 +43,15 @@ export default function ChoiceItemInput({ problemIndex, itemIndex }: ChoiceItemI
         placeholder='선지를 입력하세요.'
         inputStyle='flex items-center bg-transparent focus:outline-none disabled:text-label-assistive'
       />
+      <button
+        type='button'
+        onClick={handleRemoveItem}
+      >
+        <XIcon
+          size={14}
+          color='#696A7D'
+        />
+      </button>
     </div>
   );
 }

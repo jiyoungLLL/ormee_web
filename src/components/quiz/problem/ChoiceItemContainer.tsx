@@ -17,9 +17,9 @@ export default function ChoiceItemContainer({ problemIndex }: ChoiceItemContaine
 
   return (
     <div className='flex flex-col justify-start items-start gap-[12px] w-full p-[20px] bg-gray-10 rounded-[10px]'>
-      {itemFields.map((_, index) => (
+      {itemFields.map((item, index) => (
         <ChoiceItemInput
-          key={`choice-item-${index}`}
+          key={`${item.id}`}
           problemIndex={problemIndex}
           itemIndex={index}
         />
