@@ -12,7 +12,7 @@ type ChoiceItemInputProps = {
 };
 
 export default function ChoiceItemInput({ problemIndex, itemIndex }: ChoiceItemInputProps) {
-  const { control, register, setValue } = useFormContext<QuizFormValues>();
+  const { control, register, setValue, getValues } = useFormContext<QuizFormValues>();
 
   const { fields: itemFields } = useFieldArray({
     control,
@@ -22,10 +22,9 @@ export default function ChoiceItemInput({ problemIndex, itemIndex }: ChoiceItemI
   const item = itemFields[itemIndex]?.text ?? '';
 
   const handleRemoveItem = () => {
-    setValue(
-      `problems.${problemIndex}.item`,
-      itemFields.filter((_, idx) => idx !== itemIndex),
-    );
+    const currentItem = getValues(`problems.${problemIndex}.item`) || [];
+    const newItem = currentItem.filter((_, idx) => idx !== itemIndex);
+    setValue(`problems.${problemIndex}.item`, newItem);
   };
 
   return (
@@ -33,7 +32,7 @@ export default function ChoiceItemInput({ problemIndex, itemIndex }: ChoiceItemI
       <Radio
         register={register}
         name={`problems.${problemIndex}.answer`}
-        htmlFor={`radio-${problemIndex}-${itemIndex}`}
+        htmlFor={`itemFields.${itemIndex}.id`}
         value={item}
       />
       <Input
