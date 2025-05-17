@@ -12,7 +12,7 @@ interface XIconProps {
   useTailwind?: boolean;
 }
 
-export default function XIcon({ size = 14, thickness = 2, color = 'black', useTailwind = false }: XIconProps) {
+export default function XIcon({ size = 14, thickness = 1, color = 'black', useTailwind = false }: XIconProps) {
   // 첫 번째 선 스타일
   const line1Style = useTailwind
     ? {
