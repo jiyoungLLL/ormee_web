@@ -28,20 +28,22 @@ export default function ProblemInput({ problem, index, remove }: ProblemInputPro
 
   return (
     <div
-      className={`flex flex-col justify-start items-start w-full px-[30px] py-[20px] rounded-[10px] bg-white box-border border ${isActive ? ACTIVE_BORDER_STYLE : INACTIVE_BORDER_STYLE}`}
+      className={`flex flex-col justify-start items-start w-full px-[30px] py-[20px] gap-[24px] rounded-[10px] bg-white box-border border ${isActive ? ACTIVE_BORDER_STYLE : INACTIVE_BORDER_STYLE}`}
       onClick={handleClick}
     >
-      <div className='flex justify-between items-center self-stretch w-full'>
-        <span className='text-title3 font-normal text-center'>{index + 1}</span>
-        <ProblemTypeDropdown index={index} />
+      <div className='w-full'>
+        <div className='flex justify-between items-center self-stretch w-full mb-[10px]'>
+          <span className='text-title3 font-normal text-center'>{index + 1}</span>
+          <ProblemTypeDropdown index={index} />
+        </div>
+        <Input
+          control={control}
+          name={`problems.${index}.context`}
+          size='w-full h-[68px]'
+          placeholder='질문을 입력하세요.'
+          inputStyle='flex items-center p-[20px] rounded-[10px] border border-gray-20 focus:outline-none'
+        />
       </div>
-      <Input
-        control={control}
-        name={`problems.${index}.context`}
-        size='w-full h-[68px]'
-        placeholder='질문을 입력하세요.'
-        inputStyle='flex items-center p-[20px] rounded-[10px] border border-gray-20 focus:outline-none'
-      />
       <ChoiceItemContainer problemIndex={index} />
       <div className='flex justify-between items-center w-full'>
         <Answer problemIndex={index} />
