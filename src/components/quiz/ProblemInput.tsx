@@ -1,20 +1,22 @@
 import { QuizFormValues } from '@/schemas/quiz.schema';
 import { useActiveProblemStore } from '@/stores/activeProblemStore';
-import { FieldArrayWithId, useFormContext } from 'react-hook-form';
+import { FieldArrayWithId, UseFieldArrayRemove, useFormContext } from 'react-hook-form';
 import ProblemTypeDropdown from './problem/ProblemTypeDropdown';
 import Input from '../ui/Input';
 import ChoiceItemContainer from './problem/ChoiceItemContainer';
 import Answer from './problem/Answer';
+import RemoveProblemButton from './problem/RemoveProblemButton';
 
 type ProblemInputProps = {
   problem: FieldArrayWithId<QuizFormValues, 'problems', 'id'>;
   index: number;
+  remove: UseFieldArrayRemove;
 };
 
 const ACTIVE_BORDER_STYLE = 'border-purple-50';
 const INACTIVE_BORDER_STYLE = 'border-white';
 
-export default function ProblemInput({ problem, index }: ProblemInputProps) {
+export default function ProblemInput({ problem, index, remove }: ProblemInputProps) {
   const { activeProblemId, setActiveProblemId } = useActiveProblemStore();
   const { control } = useFormContext<QuizFormValues>();
   const isActive = activeProblemId === problem.id;
@@ -41,7 +43,13 @@ export default function ProblemInput({ problem, index }: ProblemInputProps) {
         inputStyle='flex items-center p-[20px] rounded-[10px] border border-gray-20 focus:outline-none'
       />
       <ChoiceItemContainer problemIndex={index} />
-      <Answer problemIndex={index} />
+      <div className='flex justify-between items-center w-full'>
+        <Answer problemIndex={index} />
+        <RemoveProblemButton
+          problemIndex={index}
+          remove={remove}
+        />
+      </div>
     </div>
   );
 }

@@ -23,7 +23,7 @@ export default function QuizCreateForm() {
 
   const { control } = methods;
 
-  const { fields: problems, append } = useFieldArray({ control, name: 'problems' });
+  const { fields: problems, append, remove } = useFieldArray({ control, name: 'problems' });
 
   return (
     <div className='flex justify-center items-start gap-[30px] w-full'>
@@ -43,6 +43,7 @@ export default function QuizCreateForm() {
                 key={problem.id}
                 problem={problem}
                 index={index}
+                remove={remove}
               />
             ))}
           </form>
