@@ -7,7 +7,7 @@ import QuizCreateTitleInput from './QuizCreateTitleInput';
 import RemoteController from './RemoteController';
 import ProblemInput from './ProblemInput';
 import AddProblemButton from './AddProblemButton';
-import { DEFAULT_PROBLEM } from '@/constants/quiz.constants';
+import { DEFAULT_CHOICE_ITEM, DEFAULT_PROBLEM } from '@/constants/quiz.constants';
 
 export default function QuizCreateForm() {
   const methods = useForm<QuizFormValues>({
@@ -16,7 +16,7 @@ export default function QuizCreateForm() {
       description: '',
       dueTime: '',
       limitTime: '',
-      problems: [DEFAULT_PROBLEM],
+      problems: [{ ...DEFAULT_PROBLEM, item: [{ text: DEFAULT_CHOICE_ITEM.text, id: 'initial-item-id' }] }],
     },
     resolver: zodResolver(QuizFormSchema),
   });
@@ -33,17 +33,19 @@ export default function QuizCreateForm() {
       </div>
       <div className='flex-1 flex flex-col justify-start items-center gap-[26px]'>
         <FormProvider {...methods}>
-          <QuizCreateTitleInput
-            control={control}
-            name='title'
-          />
-          {problems.map((problem, index) => (
-            <ProblemInput
-              key={problem.id}
-              problem={problem}
-              index={index}
+          <form className='flex flex-col justify-start items-center gap-[26px] w-full h-full'>
+            <QuizCreateTitleInput
+              control={control}
+              name='title'
             />
-          ))}
+            {problems.map((problem, index) => (
+              <ProblemInput
+                key={problem.id}
+                problem={problem}
+                index={index}
+              />
+            ))}
+          </form>
         </FormProvider>
         <AddProblemButton append={append} />
       </div>

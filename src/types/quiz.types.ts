@@ -1,6 +1,7 @@
 export type ProblemType = 'choice' | 'essay';
 
 export type ChoiceItem = {
+  id: string;
   text: string;
 };
 
@@ -9,7 +10,7 @@ export type Problem = {
   description: string;
   type: ProblemType;
   item: ChoiceItem[];
-  answer: string;
+  answerItemId: string;
 };
 
 export type Quiz = {

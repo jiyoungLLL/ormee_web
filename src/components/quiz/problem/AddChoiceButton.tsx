@@ -13,7 +13,8 @@ export default function AddChoiceButton({ problemIndex }: AddChoiceButtonProps) 
 
   const handleAddChoiceItem = () => {
     const currentItem = getValues(`problems.${problemIndex}.item`) || [];
-    setValue(`problems.${problemIndex}.item`, [...currentItem, DEFAULT_CHOICE_ITEM]);
+    const newItem = { ...DEFAULT_CHOICE_ITEM, id: crypto.randomUUID() };
+    setValue(`problems.${problemIndex}.item`, [...currentItem, newItem]);
   };
 
   return (

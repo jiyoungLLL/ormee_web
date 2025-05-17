@@ -4,7 +4,7 @@ import XIcon from '@/components/icon/XIcon';
 import Input from '@/components/ui/Input';
 import Radio from '@/components/ui/radio/Radio';
 import { QuizFormValues } from '@/schemas/quiz.schema';
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 type ChoiceItemInputProps = {
   problemIndex: number;
@@ -14,12 +14,7 @@ type ChoiceItemInputProps = {
 export default function ChoiceItemInput({ problemIndex, itemIndex }: ChoiceItemInputProps) {
   const { control, register, setValue, getValues } = useFormContext<QuizFormValues>();
 
-  const { fields: itemFields } = useFieldArray({
-    control,
-    name: `problems.${problemIndex}.item`,
-  });
-
-  const item = itemFields[itemIndex]?.text ?? '';
+  const { id: itemId } = getValues(`problems.${problemIndex}.item.${itemIndex}`);
 
   const handleRemoveItem = () => {
     const currentItem = getValues(`problems.${problemIndex}.item`) || [];
@@ -27,13 +22,18 @@ export default function ChoiceItemInput({ problemIndex, itemIndex }: ChoiceItemI
     setValue(`problems.${problemIndex}.item`, newItem);
   };
 
+  const handleChangeAnswer = () => {
+    setValue(`problems.${problemIndex}.answerItemId`, itemId);
+  };
+
   return (
     <div className='flex items-center gap-[12px] w-full'>
       <Radio
         register={register}
-        name={`problems.${problemIndex}.answer`}
-        htmlFor={`itemFields.${itemIndex}.id`}
-        value={item}
+        name={`problems.${problemIndex}.answerItemId`}
+        htmlFor={itemId}
+        value={itemId}
+        onChange={handleChangeAnswer}
       />
       <Input
         control={control}

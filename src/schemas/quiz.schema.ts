@@ -18,8 +18,8 @@ export const ProblemSchema = z.object({
   context: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_CONTEXT }),
   description: z.string().optional(),
   type: z.enum(['choice', 'essay'], { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_TYPE }),
-  item: z.array(z.object({ text: z.string() })).min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ITEM }),
-  answer: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ANSWER }),
+  item: z.array(z.object({ id: z.string(), text: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ITEM }) })),
+  answerItemId: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ANSWER }),
 });
 
 export const QuizFormSchema = z.object({

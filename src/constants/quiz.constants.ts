@@ -5,12 +5,11 @@ export const QUIZ_TYPE_MAP: Record<ProblemType, { type: ProblemType; label: stri
   essay: { type: 'essay', label: '주관식' },
 };
 
-export const DEFAULT_PROBLEM: Problem = {
+export const DEFAULT_PROBLEM: Omit<Problem, 'item'> = {
   context: '',
   description: '',
   type: QUIZ_TYPE_MAP.choice.type,
-  item: [{ text: '' }],
-  answer: '',
+  answerItemId: '',
 };
 
-export const DEFAULT_CHOICE_ITEM: ChoiceItem = { text: '' };
+export const DEFAULT_CHOICE_ITEM: Omit<ChoiceItem, 'id'> = { text: '' };

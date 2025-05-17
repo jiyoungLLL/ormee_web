@@ -1,6 +1,6 @@
 'use client';
 
-import { DEFAULT_PROBLEM } from '@/constants/quiz.constants';
+import { DEFAULT_CHOICE_ITEM, DEFAULT_PROBLEM } from '@/constants/quiz.constants';
 import { QuizFormValues } from '@/schemas/quiz.schema';
 import { UseFieldArrayAppend } from 'react-hook-form';
 
@@ -9,7 +9,11 @@ type AddProblemButtonProps = {
 };
 
 export default function AddProblemButton({ append }: AddProblemButtonProps) {
-  const handleClick = () => append(DEFAULT_PROBLEM);
+  const handleClick = () =>
+    append({
+      ...DEFAULT_PROBLEM,
+      item: [{ text: DEFAULT_CHOICE_ITEM.text, id: `${crypto.randomUUID()}` }],
+    });
 
   return (
     <button
