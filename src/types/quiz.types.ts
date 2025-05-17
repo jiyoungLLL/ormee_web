@@ -4,7 +4,7 @@ export type Problem = {
   context: string;
   description: string;
   type: ProblemType;
-  item: string[];
+  item: { text: string }[];
   answer: string;
 };
 
