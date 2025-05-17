@@ -4,16 +4,16 @@ interface XIconProps {
   /** 선 두께 (픽셀 단위) */
   thickness?: number;
   /**
-   * 선 색상 - CSS 색상값(hex, rgb 등) 또는 Tailwind 클래스명
+   * 선 색상 - CSS 색상값(hex, rgb 등) 또는 Tailwind 클래스명, 기본값 'black'
+   * tailwind 클래스명 사용시 useTailwind 속성을 true로 설정
    * 예: "#FF0000" 또는 "bg-gray-30"
    */
   color?: string;
-  /** Tailwind 클래스 사용 여부 */
+  /** Tailwind 클래스 사용 여부, 기본값 false */
   useTailwind?: boolean;
 }
 
 export default function XIcon({ size = 14, thickness = 1, color = 'black', useTailwind = false }: XIconProps) {
-  // 첫 번째 선 스타일
   const line1Style = useTailwind
     ? {
         position: 'absolute' as const,
@@ -37,7 +37,6 @@ export default function XIcon({ size = 14, thickness = 1, color = 'black', useTa
         borderRadius: thickness / 2,
       };
 
-  // 두 번째 선 스타일
   const line2Style = useTailwind
     ? {
         position: 'absolute' as const,
