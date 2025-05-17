@@ -9,18 +9,12 @@ type AddChoiceButtonProps = {
 };
 
 export default function AddChoiceButton({ problemIndex }: AddChoiceButtonProps) {
-  const { control, setValue, watch } = useFormContext<QuizFormValues>();
-  const { fields: itemFields } = useFieldArray({
-    control,
-    name: `problems.${problemIndex}.item`,
-  });
+  const { setValue, getValues } = useFormContext<QuizFormValues>();
 
   const handleAddChoiceItem = () => {
-    setValue(`problems.${problemIndex}.item`, [...itemFields, DEFAULT_CHOICE_ITEM]);
+    const currentItem = getValues(`problems.${problemIndex}.item`) || [];
+    setValue(`problems.${problemIndex}.item`, [...currentItem, DEFAULT_CHOICE_ITEM]);
   };
-
-  const item = watch(`problems.${problemIndex}.item`);
-  console.log(item);
 
   return (
     <button
