@@ -3,6 +3,7 @@
 import { QuizFormValues } from '@/schemas/quiz.schema';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import ChoiceItemInput from './ChoiceItemInput';
+import AddChoiceButton from './AddChoiceButton';
 
 type ChoiceItemContainerProps = {
   problemIndex: number;
@@ -24,6 +25,7 @@ export default function ChoiceItemContainer({ problemIndex }: ChoiceItemContaine
           itemIndex={index}
         />
       ))}
+      <AddChoiceButton problemIndex={problemIndex} />
     </div>
   );
 }
