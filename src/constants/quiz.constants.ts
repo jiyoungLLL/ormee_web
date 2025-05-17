@@ -6,10 +6,10 @@ export const QUIZ_TYPE_MAP: Record<ProblemType, { type: ProblemType; label: stri
 };
 
 export const DEFAULT_PROBLEM: Problem = {
-  context: '제목',
+  context: '',
   description: '',
   type: QUIZ_TYPE_MAP.choice.type,
-  item: [{ text: '선지 1' }, { text: '선지 2' }, { text: '선지 3' }, { text: '선지 4' }],
+  item: [{ text: '' }],
   answer: '',
 };
 
