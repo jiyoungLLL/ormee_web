@@ -7,7 +7,7 @@ type RadioProps<T extends FieldValues> = {
   children?: React.ReactNode;
   /** value를 제어하기 위한 register 함수 (useForm 혹은 useFormContext 반환값) */
   register: UseFormRegister<T>;
-  /** 라디오 버튼의 이름, 라디오 버튼 그룹을 구분하는 식별자 */
+  /** 폼에서 사용할 name, 라디오 버튼 그룹을 구분하는 식별자 */
   name: Path<T>;
   /** 라디오버튼의 고유 id */
   htmlFor: string;
@@ -45,7 +45,7 @@ export default function Radio<T extends FieldValues>({
           onChange?.(e);
         }}
         disabled={disabled}
-        className='appearance-none w-[20px] h-[20px] rounded-full bg-white border-box border-[1.6px] border-gray-30 checked:border-[6px] checked:border-purple-50 cursor-pointer'
+        className='appearance-none w-[20px] h-[20px] rounded-full bg-white border-box border-[1.6px] border-gray-30 checked:border-[6px] checked:border-purple-50 cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-30'
       />
       {children}
     </label>
