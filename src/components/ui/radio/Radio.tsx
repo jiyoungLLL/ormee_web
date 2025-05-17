@@ -13,12 +13,12 @@ type RadioProps<T extends FieldValues> = {
   htmlFor: string;
   /** 라디오 버튼의 값 */
   value: string;
-  /** 라디오 버튼 선택 여부 */
-  checked: boolean;
-  /** 라디오 버튼 변경 시 호출할 콜백함수 */
+  /** 라디오 버튼 변경 시 추가적인 동작을 호출하고 싶은 경우 사용 */
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   /** 라디오 버튼 비활성화 여부 */
   disabled?: boolean;
+  /** 컨테이너에 적용될 스타일 */
+  containerStyle?: string;
 };
 export default function Radio<T extends FieldValues>({
   children,
@@ -26,22 +26,24 @@ export default function Radio<T extends FieldValues>({
   name,
   htmlFor,
   value,
-  checked,
   onChange,
   disabled,
+  containerStyle,
 }: RadioProps<T>) {
   return (
     <label
       htmlFor={htmlFor}
-      className='flex items-center gap-2'
+      className={`${containerStyle || 'flex items-center'}`}
     >
       <input
         type='radio'
         id={htmlFor}
         {...register(name)}
+        name={name}
         value={value}
-        checked={checked}
-        onChange={onChange}
+        onChange={(e) => {
+          onChange?.(e);
+        }}
         disabled={disabled}
       />
       {children}
