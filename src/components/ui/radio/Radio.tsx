@@ -45,6 +45,7 @@ export default function Radio<T extends FieldValues>({
           onChange?.(e);
         }}
         disabled={disabled}
+        className='appearance-none w-[20px] h-[20px] rounded-full bg-white border-box border-[1.6px] border-gray-30 checked:border-[6px] checked:border-purple-50 cursor-pointer'
       />
       {children}
     </label>
