@@ -8,6 +8,9 @@ import RemoteController from './RemoteController';
 import ProblemInput from './ProblemInput';
 import AddProblemButton from './AddProblemButton';
 import { DEFAULT_CHOICE_ITEM, DEFAULT_PROBLEM } from '@/constants/quiz.constants';
+import Toolbar from '../ui/Toolbar';
+import { useState } from 'react';
+import { Editor } from '@tiptap/react';
 
 export default function QuizCreateForm() {
   const methods = useForm<QuizFormValues>({
@@ -24,11 +27,12 @@ export default function QuizCreateForm() {
   const { control } = methods;
 
   const { fields: problems, append, remove } = useFieldArray({ control, name: 'problems' });
+  const [editor, setEditor] = useState<Editor | null>(null);
 
   return (
     <div className='flex justify-center items-start gap-[30px] w-full'>
       <div className='w-[390px]'>
-        <div>툴박스</div>
+        <Toolbar editor={editor} />
         <RemoteController problemFields={problems} />
       </div>
       <div className='flex-1 flex flex-col justify-start items-center gap-[26px]'>
@@ -37,6 +41,7 @@ export default function QuizCreateForm() {
             <QuizCreateTitleInput
               control={control}
               name='title'
+              setEditor={setEditor}
             />
             {problems.map((problem, index) => (
               <ProblemInput
@@ -44,6 +49,7 @@ export default function QuizCreateForm() {
                 problem={problem}
                 index={index}
                 remove={remove}
+                setEditor={setEditor}
               />
             ))}
           </form>
