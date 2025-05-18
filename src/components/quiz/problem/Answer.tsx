@@ -13,9 +13,10 @@ export default function Answer({ problemIndex }: AnswerProps) {
   const { watch } = useFormContext<QuizFormValues>();
   const answerItemId = watch(`problems.${problemIndex}.answerItemId`);
   const item = watch(`problems.${problemIndex}.item`);
-  const answerItem = answerItemId ? item.find((item) => item.id === answerItemId) : undefined;
 
+  const answerItem = answerItemId ? item.find((item) => item.id === answerItemId) : undefined;
   const isAnswerSelected = answerItem && answerItem?.text !== '';
+  const filteredItemText = answerItem?.text.replace(/<p>|<\/p>/g, '') || '';
 
   return (
     <div className='flex items-center gap-[15px]'>
@@ -27,7 +28,7 @@ export default function Answer({ problemIndex }: AnswerProps) {
       <span
         className={`text-headline1 underline decoration-solid decoration-auto underline-offset-[2px] ${isAnswerSelected ? ACTIVE_TEXT_STYLE : INACTIVE_TEXT_STYLE}`}
       >
-        {answerItem?.text || '정답 선택'}
+        {filteredItemText || '정답 선택'}
       </span>
     </div>
   );
