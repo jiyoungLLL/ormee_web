@@ -2,21 +2,23 @@ import { QuizFormValues } from '@/schemas/quiz.schema';
 import { useActiveProblemStore } from '@/stores/activeProblemStore';
 import { FieldArrayWithId, UseFieldArrayRemove, useFormContext } from 'react-hook-form';
 import ProblemTypeDropdown from './problem/ProblemTypeDropdown';
-import Input from '../ui/Input';
 import ChoiceItemContainer from './problem/ChoiceItemContainer';
 import Answer from './problem/Answer';
 import RemoveProblemButton from './problem/RemoveProblemButton';
+import TipTapField from '../ui/TipTapField';
+import { Editor } from '@tiptap/react';
 
 type ProblemInputProps = {
   problem: FieldArrayWithId<QuizFormValues, 'problems', 'id'>;
   index: number;
   remove: UseFieldArrayRemove;
+  setEditor: (editor: Editor | null) => void;
 };
 
 const ACTIVE_BORDER_STYLE = 'border-purple-50';
 const INACTIVE_BORDER_STYLE = 'border-white';
 
-export default function ProblemInput({ problem, index, remove }: ProblemInputProps) {
+export default function ProblemInput({ problem, index, remove, setEditor }: ProblemInputProps) {
   const { activeProblemId, setActiveProblemId } = useActiveProblemStore();
   const { control } = useFormContext<QuizFormValues>();
   const isActive = activeProblemId === problem.id;
@@ -36,15 +38,19 @@ export default function ProblemInput({ problem, index, remove }: ProblemInputPro
           <span className='text-title3 font-normal text-center'>{index + 1}</span>
           <ProblemTypeDropdown index={index} />
         </div>
-        <Input
+        <TipTapField
           control={control}
           name={`problems.${index}.context`}
-          size='w-full h-[68px]'
           placeholder='질문을 입력하세요.'
-          inputStyle='flex items-center p-[20px] rounded-[10px] border border-gray-20 focus:outline-none'
+          fieldStyle='p-[20px] rounded-[10px] border border-gray-20 focus:outline-none w-full min-h-[50px]'
+          placeholderStyle='placeholder-pl-20'
+          setEditor={setEditor}
         />
       </div>
-      <ChoiceItemContainer problemIndex={index} />
+      <ChoiceItemContainer
+        problemIndex={index}
+        setEditor={setEditor}
+      />
       <div className='flex justify-between items-center w-full'>
         <Answer problemIndex={index} />
         <RemoveProblemButton

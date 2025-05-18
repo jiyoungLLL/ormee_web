@@ -1,17 +1,19 @@
 'use client';
 
 import XIcon from '@/components/icon/XIcon';
-import Input from '@/components/ui/Input';
 import Radio from '@/components/ui/radio/Radio';
+import TipTapField from '@/components/ui/TipTapField';
 import { QuizFormValues } from '@/schemas/quiz.schema';
+import { Editor } from '@tiptap/react';
 import { useFormContext } from 'react-hook-form';
 
 type ChoiceItemInputProps = {
   problemIndex: number;
   itemIndex: number;
+  setEditor: (editor: Editor | null) => void;
 };
 
-export default function ChoiceItemInput({ problemIndex, itemIndex }: ChoiceItemInputProps) {
+export default function ChoiceItemInput({ problemIndex, itemIndex, setEditor }: ChoiceItemInputProps) {
   const { control, register, setValue, getValues } = useFormContext<QuizFormValues>();
 
   const { id: itemId } = getValues(`problems.${problemIndex}.item.${itemIndex}`);
@@ -35,12 +37,12 @@ export default function ChoiceItemInput({ problemIndex, itemIndex }: ChoiceItemI
         value={itemId}
         onChange={handleChangeAnswer}
       />
-      <Input
+      <TipTapField
         control={control}
         name={`problems.${problemIndex}.item.${itemIndex}.text`}
-        size='flex-1 w-full h-[28px]'
         placeholder='선지를 입력하세요.'
-        inputStyle='flex items-center bg-transparent focus:outline-none disabled:text-label-assistive'
+        fieldStyle='flex-1 w-full h-[28px] bg-transparent focus:outline-none disabled:text-label-assistive'
+        setEditor={setEditor}
       />
       <button
         type='button'

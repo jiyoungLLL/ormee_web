@@ -1,16 +1,18 @@
 import { QuizFormValues } from '@/schemas/quiz.schema';
-import Input from '../ui/Input';
 import { Control, Path, useController } from 'react-hook-form';
 import DateTimePicker from '../ui/DateTimePicker';
 import { useState } from 'react';
 import { useActiveProblemStore } from '@/stores/activeProblemStore';
+import TipTapField from '../ui/TipTapField';
+import { Editor } from '@tiptap/react';
 
 type QuizCreateTitleInputProps = {
   control: Control<QuizFormValues>;
   name: Path<QuizFormValues>;
+  setEditor: (editor: Editor | null) => void;
 };
 
-export default function QuizCreateTitleInput({ control, name }: QuizCreateTitleInputProps) {
+export default function QuizCreateTitleInput({ control, name, setEditor }: QuizCreateTitleInputProps) {
   const [isActive, setIsActive] = useState(false);
   const { activeProblemId, resetActiveProblemId } = useActiveProblemStore();
   const { field: dueTimeField } = useController({ control, name: 'dueTime' });
@@ -37,12 +39,12 @@ export default function QuizCreateTitleInput({ control, name }: QuizCreateTitleI
     <div
       className={`flex flex-col justify-start items-start gap-[10px] w-full p-[20px] bg-white rounded-[10px] box-border border ${isActive ? 'border-purple-50' : 'border-white'}`}
     >
-      <Input
+      <TipTapField
         control={control}
         name={name}
-        size='w-full h-[50px]'
+        setEditor={setEditor}
         placeholder='퀴즈 제목을 입력하세요'
-        inputStyle='border-none bg-white p-[10px] focus:outline-none'
+        fieldStyle='w-full min-h-[50px] border-none bg-white p-[10px] focus:outline-none'
         textStyle='text-heading2 text-gray-90 placeholder:text-gray-50'
         onFocus={handleFocus}
         onBlur={handleBlur}
@@ -70,14 +72,15 @@ export default function QuizCreateTitleInput({ control, name }: QuizCreateTitleI
           customDropdownSize='w-[105px] h-[32px]'
         />
       </div>
-      <Input
+      <TipTapField
         control={control}
         name='description'
-        size='w-full h-[50px]'
         placeholder='설명'
-        inputStyle='bg-white pl-[20px] py-[15px] rounded-[10px] border border-gray-20 focus:outline-none disabled:bg-gray-10'
+        fieldStyle='w-full min-h-[50px] pl-[20px] py-[15px] bg-white rounded-[10px] border border-gray-20 focus:outline-none disabled:bg-gray-10'
+        setEditor={setEditor}
         onFocus={handleFocus}
         onBlur={handleBlur}
+        placeholderStyle='placeholder-pl-20'
       />
     </div>
   );
