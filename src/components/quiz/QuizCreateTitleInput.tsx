@@ -46,6 +46,7 @@ export default function QuizCreateTitleInput({ control, name, setEditor }: QuizC
         placeholder='퀴즈 제목을 입력하세요'
         fieldStyle='w-full min-h-[50px] border-none bg-white p-[10px] focus:outline-none'
         textStyle='text-heading2 text-gray-90 placeholder:text-gray-50'
+        placeholderStyle='placeholder-pl-10'
         onFocus={handleFocus}
         onBlur={handleBlur}
       />

@@ -36,6 +36,10 @@
   pointer-events: none;
 }
 
+.tiptap-field-editor.placeholder-pl-10 .ProseMirror[data-placeholder-visible='true']::before {
+  left: 10px !important;
+}
+
 .tiptap-field-editor.placeholder-pl-20 .ProseMirror[data-placeholder-visible='true']::before {
   left: 20px !important;
 }
