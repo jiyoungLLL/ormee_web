@@ -17,7 +17,7 @@ type TipTapFieldContentProps = {
   textStyle?: string;
   onFocus?: () => void;
   onBlur?: () => void;
-  enableImage?: boolean;
+  placeholderStyle?: string;
 };
 
 export default function TipTapFieldContent({
@@ -29,7 +29,7 @@ export default function TipTapFieldContent({
   textStyle,
   onFocus,
   onBlur,
-  enableImage = false,
+  placeholderStyle,
 }: TipTapFieldContentProps) {
   const isVisuallyEmpty = (html: string) => {
     const cleaned = html
@@ -124,7 +124,7 @@ export default function TipTapFieldContent({
   return (
     <EditorContent
       editor={editor}
-      className='prose list-outside list-disc w-full tiptap-field-editor'
+      className={`prose list-outside list-disc w-full tiptap-field-editor ${placeholderStyle || ''}`}
       onFocus={handleFocus}
       onBlur={handleBlur}
     />

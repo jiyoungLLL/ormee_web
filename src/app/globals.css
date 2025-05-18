@@ -30,9 +30,14 @@
   content: attr(data-placeholder);
   position: absolute;
   top: 50%;
+  left: 0px;
   transform: translateY(-50%);
   color: theme('colors.gray.50');
   pointer-events: none;
+}
+
+.tiptap-field-editor.placeholder-pl-20 .ProseMirror[data-placeholder-visible='true']::before {
+  left: 20px !important;
 }
 
 .ProseMirror:not([data-placeholder-visible])::before {

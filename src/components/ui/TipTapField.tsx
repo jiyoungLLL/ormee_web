@@ -11,6 +11,7 @@ type TipTapFieldProps<T extends FieldValues> = {
   setEditor: (editor: Editor | null) => void;
   onFocus?: () => void;
   onBlur?: () => void;
+  placeholderStyle?: string;
 };
 
 export default function TipTapField<T extends FieldValues>({
@@ -22,6 +23,7 @@ export default function TipTapField<T extends FieldValues>({
   setEditor,
   onFocus,
   onBlur,
+  placeholderStyle,
 }: TipTapFieldProps<T>) {
   return (
     <Controller
@@ -37,6 +39,7 @@ export default function TipTapField<T extends FieldValues>({
           setEditor={setEditor}
           onFocus={onFocus}
           onBlur={onBlur}
+          placeholderStyle={placeholderStyle}
         />
       )}
     />
