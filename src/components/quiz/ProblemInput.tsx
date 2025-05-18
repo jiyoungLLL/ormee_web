@@ -9,9 +9,13 @@ import TipTapField from '../ui/TipTapField';
 import { Editor } from '@tiptap/react';
 
 type ProblemInputProps = {
+  /** useFieldArray의 fields에서 가져온 problem 데이터 */
   problem: FieldArrayWithId<QuizFormValues, 'problems', 'id'>;
+  /** problem의 index */
   index: number;
+  /** problem fields의 remove 함수 */
   remove: UseFieldArrayRemove;
+  /** Toolbar에 에디터를 세팅할 함수 */
   setEditor: (editor: Editor | null) => void;
 };
 
