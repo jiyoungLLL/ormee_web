@@ -16,6 +16,8 @@ export default function ChoiceItemContainer({ problemIndex }: ChoiceItemContaine
     name: `problems.${problemIndex}.item`,
   });
 
+  console.log('itemFields: ', itemFields);
+
   return (
     <div className='flex flex-col justify-start items-start gap-[12px] w-full p-[20px] bg-gray-10 rounded-[10px]'>
       {itemFields.map((item, index) => (
