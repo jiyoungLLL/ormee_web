@@ -11,11 +11,11 @@ const ACTIVE_TEXT_STYLE = 'font-semibold text-purple-40 decoration-purple-40';
 
 export default function Answer({ problemIndex }: AnswerProps) {
   const { watch } = useFormContext<QuizFormValues>();
-  const item = watch(`problems.${problemIndex}.item`);
   const answerItemId = watch(`problems.${problemIndex}.answerItemId`);
+  const item = watch(`problems.${problemIndex}.item`);
+  const answerItem = answerItemId ? item.find((item) => item.id === answerItemId) : undefined;
 
-  const answerItem = item.find((item) => item.id === answerItemId);
-  const isAnswerSelected = answerItem?.id !== '' && answerItem?.text !== '';
+  const isAnswerSelected = answerItem && answerItem?.text !== '';
 
   return (
     <div className='flex items-center gap-[15px]'>
