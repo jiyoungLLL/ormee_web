@@ -5,18 +5,13 @@ import Image from 'next/image';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import Button from '../ui/Button';
 
-export default function QuizCreateHeader() {
+type QuizCreateHeaderProps = {
+  onTemporarySave: () => void;
+  onRegister: () => void;
+};
+
+export default function QuizCreateHeader({ onTemporarySave, onRegister }: QuizCreateHeaderProps) {
   const lectureId = useLectureId();
-
-  const handleTemporarySave = () => {
-    // TODO: 퀴즈 임시저장 api 연동
-    alert('퀴즈가 임시저장 되었습니다.');
-  };
-
-  const handleRegister = () => {
-    // TODO: 퀴즈 등록 api 연동
-    alert('퀴즈가 등록 되었습니다.');
-  };
 
   return (
     <>
@@ -40,7 +35,7 @@ export default function QuizCreateHeader() {
             isPurple={false}
             font='text-headline1 font-semibold text-label-normal'
             title='임시저장'
-            onClick={handleTemporarySave}
+            onClick={onTemporarySave}
           />
           <Button
             type='BUTTON_BASE_TYPE'
@@ -49,7 +44,7 @@ export default function QuizCreateHeader() {
             isfilled
             font='text-headline1 font-semibold text-white'
             title='등록하기'
-            onClick={handleRegister}
+            onClick={onRegister}
           />
         </div>
       </div>
