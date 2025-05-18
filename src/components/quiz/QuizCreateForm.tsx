@@ -31,8 +31,12 @@ export default function QuizCreateForm() {
 
   return (
     <div className='flex justify-center items-start gap-[30px] w-full'>
-      <div className='w-[390px]'>
-        <Toolbar editor={editor} />
+      <div className='flex flex-col gap-[20px] w-[390px]'>
+        <Toolbar
+          editor={editor}
+          enableImage={true}
+          containerStyle='flex justify-center items-center gap-[20px] w-full px-[30px] py-[10px] rounded-[20px] bg-white'
+        />
         <RemoteController problemFields={problems} />
       </div>
       <div className='flex-1 flex flex-col justify-start items-center gap-[26px]'>

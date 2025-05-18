@@ -17,6 +17,7 @@ type TipTapFieldContentProps = {
   textStyle?: string;
   onFocus?: () => void;
   onBlur?: () => void;
+  enableImage?: boolean;
 };
 
 export default function TipTapFieldContent({
@@ -28,6 +29,7 @@ export default function TipTapFieldContent({
   textStyle,
   onFocus,
   onBlur,
+  enableImage = false,
 }: TipTapFieldContentProps) {
   const isVisuallyEmpty = (html: string) => {
     const cleaned = html
