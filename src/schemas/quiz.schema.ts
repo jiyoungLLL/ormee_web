@@ -18,15 +18,13 @@ export const ProblemSchema = z.object({
   context: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_CONTEXT }),
   description: z.string().optional(),
   type: z.enum(['choice', 'essay'], { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_TYPE }),
-  item: z
-    .array(z.string())
-    .min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ITEM })
-    .min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ITEM }),
-  answer: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ANSWER }),
+  item: z.array(z.object({ id: z.string(), text: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ITEM }) })),
+  answerItemId: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ANSWER }),
 });
 
 export const QuizFormSchema = z.object({
   title: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_TITLE }),
+  description: z.string().optional(),
   dueTime: z.string().datetime().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_DUE_TIME }),
   limitTime: z.string().datetime().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_LIMIT_TIME }),
   problems: z.array(ProblemSchema).min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_PROBLEMS }),

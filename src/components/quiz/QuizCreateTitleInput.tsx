@@ -1,14 +1,20 @@
 import { QuizFormValues } from '@/schemas/quiz.schema';
-import Input from '../ui/Input';
 import { Control, Path, useController } from 'react-hook-form';
 import DateTimePicker from '../ui/DateTimePicker';
+import { useState } from 'react';
+import { useActiveProblemStore } from '@/stores/activeProblemStore';
+import TipTapField from '../ui/TipTapField';
+import { Editor } from '@tiptap/react';
 
 type QuizCreateTitleInputProps = {
   control: Control<QuizFormValues>;
   name: Path<QuizFormValues>;
+  setEditor: (editor: Editor | null) => void;
 };
 
-export default function QuizCreateTitleInput({ control, name }: QuizCreateTitleInputProps) {
+export default function QuizCreateTitleInput({ control, name, setEditor }: QuizCreateTitleInputProps) {
+  const [isActive, setIsActive] = useState(false);
+  const { activeProblemId, resetActiveProblemId } = useActiveProblemStore();
   const { field: dueTimeField } = useController({ control, name: 'dueTime' });
   const { field: limitTimeField } = useController({ control, name: 'limitTime' });
 
@@ -20,15 +26,29 @@ export default function QuizCreateTitleInput({ control, name }: QuizCreateTitleI
     limitTimeField.onChange(value);
   };
 
+  const handleFocus = () => {
+    if (activeProblemId) resetActiveProblemId();
+    setIsActive(true);
+  };
+
+  const handleBlur = () => {
+    setIsActive(false);
+  };
+
   return (
-    <div className='w-full p-[20px] bg-white rounded-[10px]'>
-      <Input
+    <div
+      className={`flex flex-col justify-start items-start gap-[10px] w-full p-[20px] bg-white rounded-[10px] box-border border ${isActive ? 'border-purple-50' : 'border-white'}`}
+    >
+      <TipTapField
         control={control}
         name={name}
-        size='w-full h-[50px]'
+        setEditor={setEditor}
         placeholder='퀴즈 제목을 입력하세요'
-        inputStyle='border-none bg-white p-[10px] focus:outline-none'
+        fieldStyle='w-full min-h-[50px] border-none bg-white p-[10px] focus:outline-none'
         textStyle='text-heading2 text-gray-90 placeholder:text-gray-50'
+        placeholderStyle='placeholder-pl-10'
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       />
       <div className='flex items-center gap-[17px]'>
         <DateTimePicker
@@ -53,6 +73,16 @@ export default function QuizCreateTitleInput({ control, name }: QuizCreateTitleI
           customDropdownSize='w-[105px] h-[32px]'
         />
       </div>
+      <TipTapField
+        control={control}
+        name='description'
+        placeholder='설명'
+        fieldStyle='w-full min-h-[50px] pl-[20px] py-[15px] bg-white rounded-[10px] border border-gray-20 focus:outline-none disabled:bg-gray-10'
+        setEditor={setEditor}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        placeholderStyle='placeholder-pl-20'
+      />
     </div>
   );
 }
