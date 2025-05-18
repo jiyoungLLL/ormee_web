@@ -99,7 +99,6 @@ export default function TipTapFieldContent({
     }
   }, [editor, value]);
 
-  // 에디터가 생성되면 바로 부모 컴포넌트에 알림
   useEffect(() => {
     if (editor) {
       setEditor(editor);
