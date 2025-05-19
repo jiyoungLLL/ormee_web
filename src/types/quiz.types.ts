@@ -28,3 +28,5 @@ export type QuizRequest = {
   due_time: string;
   problems: Problem[];
 };
+
+export type QuizState = 'ready' | 'ongoing' | 'closed';
