@@ -6,7 +6,7 @@ export const QUIZ_FORM_ERROR_MESSAGE = {
   // 퀴즈 관련 에러 메세지
   EMPTY_TITLE: '제목을 입력해주세요.',
   EMPTY_DUE_TIME: '응시기한을 입력해주세요.',
-  EMPTY_LIMIT_TIME: '응시시간을 입력해주세요.',
+  EMPTY_LIMIT_TIME: '응시시간을 선택해주세요.',
   EMPTY_PROBLEMS: '한 문제 이상 입력해주세요.',
 
   // 문제 관련 에러 메세지
@@ -28,7 +28,9 @@ export const QuizFormSchema = z.object({
   title: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_TITLE }),
   description: z.string().optional(),
   dueTime: z.string().datetime().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_DUE_TIME }),
-  limitTime: z.enum(QUIZ_LIMIT_TIME_OPTIONS, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_LIMIT_TIME }),
+  limitTime: z.union([z.enum(QUIZ_LIMIT_TIME_OPTIONS), z.literal('')], {
+    message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_LIMIT_TIME,
+  }),
   problems: z.array(ProblemSchema).min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_PROBLEMS }),
 });
 
