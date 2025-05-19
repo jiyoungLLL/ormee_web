@@ -15,6 +15,7 @@
   @apply mb-1;
 }
 
+/* TextArea 컴포넌트용 placeholder 스타일 */
 .ProseMirror[data-placeholder-visible='true']::before {
   content: attr(data-placeholder);
   position: absolute;
@@ -22,6 +23,25 @@
   left: 20px;
   color: theme('colors.gray.50');
   pointer-events: none;
+}
+
+/* TipTapField 컴포넌트용 placeholder 스타일 */
+.tiptap-field-editor .ProseMirror[data-placeholder-visible='true']::before {
+  content: attr(data-placeholder);
+  position: absolute;
+  top: 50%;
+  left: 0px;
+  transform: translateY(-50%);
+  color: theme('colors.gray.50');
+  pointer-events: none;
+}
+
+.tiptap-field-editor.placeholder-pl-10 .ProseMirror[data-placeholder-visible='true']::before {
+  left: 10px !important;
+}
+
+.tiptap-field-editor.placeholder-pl-20 .ProseMirror[data-placeholder-visible='true']::before {
+  left: 20px !important;
 }
 
 .ProseMirror:not([data-placeholder-visible])::before {

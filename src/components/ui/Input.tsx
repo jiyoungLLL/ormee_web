@@ -31,6 +31,12 @@ export type InputProps<T extends FieldValues> = {
   children?: React.ReactNode;
   /** 테스트용 아이디 */
   testId?: string;
+  /** onChange 이벤트에 호출할 콜백함수 */
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  /** onBlur 이벤트에 호출할 콜백함수 */
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  /** onFocus 이벤트에 호출할 콜백함수 */
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
 };
 
 export default function Input<T extends FieldValues>({
@@ -47,6 +53,9 @@ export default function Input<T extends FieldValues>({
   showPasswordToggle = false,
   children,
   testId,
+  onChange,
+  onBlur,
+  onFocus,
 }: InputProps<T>) {
   const [inputType, setInputType] = useState(type);
 
@@ -62,6 +71,7 @@ export default function Input<T extends FieldValues>({
     }
 
     field.onChange(value);
+    onChange?.(e);
   };
 
   return (
@@ -77,6 +87,8 @@ export default function Input<T extends FieldValues>({
             placeholder={placeholder}
             className={`absolute w-full h-full ${showCharacterCount && showPasswordToggle && 'pr-[115px]'} ${showCharacterCount && !showPasswordToggle && 'pr-[82px]'} ${!showCharacterCount && showPasswordToggle && 'pr-[56px]'} ${!showCharacterCount && !showPasswordToggle && 'pr-[20px]'} ${inputStyle} ${textStyle}`}
             onChange={handleInputChange(field, maxLength)}
+            onBlur={onBlur}
+            onFocus={onFocus}
             disabled={disabled}
             data-testid={testId}
           />

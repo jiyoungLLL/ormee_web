@@ -3,7 +3,7 @@ import Modal from './Modal';
 import { expect, fn } from '@storybook/test';
 import { userEvent } from '@storybook/test';
 import { within } from '@storybook/test';
-import { useModal } from '@/hooks/useModal';
+import { useModal } from '@/hooks/ui/useModal';
 
 const meta = {
   title: 'Components/Modal',
