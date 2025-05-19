@@ -51,5 +51,18 @@ export const QuizResponseSchema = z.object({
 
 export const QuizListResponseSchema = z.array(QuizResponseSchema);
 
+export const QuizSchema = z.object({
+  id: z.string().min(1),
+  state: z.enum(['ready', 'ongoing', 'closed'] as const satisfies readonly QuizState[]),
+  title: z.string().min(1),
+  description: z.string().optional(),
+  dueTime: z.string().datetime().min(1),
+  limitTime: z.enum(QUIZ_LIMIT_TIME_OPTIONS),
+  problems: z.array(ProblemResponseSchema),
+});
+
+export const QuizListSchema = z.array(QuizSchema);
+
 export type QuizFormValues = z.infer<typeof QuizFormSchema>;
 export type QuizListResponse = z.infer<typeof QuizListResponseSchema>;
+export type QuizList = z.infer<typeof QuizListSchema>;
