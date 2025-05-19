@@ -2,8 +2,11 @@
 
 import Button from '@/components/ui/Button';
 import Dropdown from '@/components/ui/dropdown/Dropdown';
+import { useGetQuizList } from '@/hooks/queries/quiz/useGetQuizList';
 import { MenuItem, useDropdown } from '@/hooks/ui/useDropdown';
 import Link from 'next/link';
+import { useMemo } from 'react';
+import OngoingQuizList from './OngoingQuizList';
 
 const QUIZ_DROPDOWN_LIST: MenuItem[] = [
   { id: 'quiz-list-total', label: '전체' },
@@ -15,6 +18,17 @@ export default function QuizListContainer() {
     menuList: QUIZ_DROPDOWN_LIST,
     initialSelectedItem: QUIZ_DROPDOWN_LIST[0].label,
   });
+
+  const mockLectureId = '1';
+  const { data: quizList } = useGetQuizList(mockLectureId);
+
+  const { readyQuizzes, ongoingQuizzes, closedQuizzes } = useMemo(() => {
+    const ready = quizList?.filter((quiz) => quiz.state === 'ready') ?? [];
+    const ongoing = quizList?.filter((quiz) => quiz.state === 'ongoing') ?? [];
+    const closed = quizList?.filter((quiz) => quiz.state === 'closed') ?? [];
+
+    return { readyQuizzes: ready, ongoingQuizzes: ongoing, closedQuizzes: closed };
+  }, [quizList]);
 
   return (
     <div className='flex-1 flex flex-col gap-[20px] w-full h-full px-[30px] py-[20px] rounded-[20px] bg-white'>
@@ -35,7 +49,14 @@ export default function QuizListContainer() {
           />
         </Link>
       </div>
-      <div>{selectedQuizCategory}</div>
+      {selectedQuizCategory === '전체' && (
+        <div className='flex flex-col justify-start items-start gap-[45px]'>
+          <OngoingQuizList
+            readyQuizzes={readyQuizzes}
+            ongoingQuizzes={ongoingQuizzes}
+          />
+        </div>
+      )}
     </div>
   );
 }
