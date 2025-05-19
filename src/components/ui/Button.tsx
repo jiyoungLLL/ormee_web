@@ -16,6 +16,8 @@ type ButtonProps = {
   isPurple: boolean;
   /** bg 있/없 */
   isfilled?: boolean;
+  /** 배경 및 border 커스텀 */
+  customStyle?: string;
   /** 임시저장 3 처럼 추가 텍스트 필요할 때*/
   added?: string;
   /** 버튼 설명 텍스트  */
@@ -42,6 +44,7 @@ export default function Button({
   title,
   isPurple,
   isfilled,
+  customStyle,
   added,
   description,
   onClick,
@@ -61,14 +64,14 @@ export default function Button({
     BUTTON_MODAL_TYPE: isPurple ? 'bg-purple-50 text-white' : 'bg-gray-20 text-gray-60',
     BUTTON_CREATE_TYPE: 'bg-white text-purple-50',
   };
-  const backgroundStyle = disabled ? 'bg-gray-30' : whatBackgroundStyle[type];
+  const backgroundStyle = disabled ? 'bg-gray-30' : customStyle ? customStyle : whatBackgroundStyle[type];
 
   const whatBorderStyle: Record<ButtonType, string> = {
     BUTTON_BASE_TYPE: !isfilled ? (isPurple ? 'border border-purple-50' : 'border border-gray-30') : '',
     BUTTON_MODAL_TYPE: '',
     BUTTON_CREATE_TYPE: '',
   };
-  const borderStyle = disabled ? '' : whatBorderStyle[type];
+  const borderStyle = disabled ? '' : customStyle ? customStyle : whatBorderStyle[type];
 
   return (
     <button
