@@ -207,11 +207,17 @@ export default function Dropdown(props: DropdownProps) {
     };
   }, [isOpenState, controlledIsOpen, onClose]);
 
+  const containerSize = useMemo(() => {
+    if (!showTrigger) return '';
+    if (size) return size;
+    return DROPDOWN_SIZE[type];
+  }, [showTrigger, size, type]);
+
   return (
-    <div className='relative select-none'>
+    <div className={`relative select-none ${containerSize}`}>
       {showTrigger && (
         <div
-          className={`flex justify-start items-center ${size || DROPDOWN_SIZE[type]} ${triggerStyles.base} ${
+          className={`flex justify-start items-center w-full h-full ${triggerStyles.base} ${
             disabled ? triggerStyles.disabled : isOpenState ? triggerStyles.open : triggerStyles.closed
           } ${selectedTextStyle || DROPDOWN_TEXT_STYLE[type]} text-nowrap ${disabled ? 'cursor-not-allowed text-label-assistive' : 'cursor-pointer'} select-none`}
           onClick={handleToggle}
