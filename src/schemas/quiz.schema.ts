@@ -48,7 +48,7 @@ export const QuizResponseSchema = z.object({
   description: z.string().optional(),
   due_time: z.string().datetime().min(1),
   limit_time: z.enum(QUIZ_LIMIT_TIME_OPTIONS),
-  problems: z.array(ProblemResponseSchema),
+  updated_at: z.string().datetime().min(1),
 });
 
 export const QuizListResponseSchema = z.array(QuizResponseSchema);
@@ -60,7 +60,7 @@ export const QuizSchema = z.object({
   description: z.string().optional(),
   dueTime: z.string().datetime().min(1),
   limitTime: z.enum(QUIZ_LIMIT_TIME_OPTIONS),
-  problems: z.array(ProblemResponseSchema),
+  updatedAt: z.string().datetime().min(1),
 });
 
 export const QuizListSchema = z.array(QuizSchema);

@@ -5,5 +5,6 @@ export const transformQuizListToCamelCase = (response: QuizListResponse): QuizLi
     ...quiz,
     dueTime: quiz.due_time,
     limitTime: quiz.limit_time,
+    updatedAt: quiz.updated_at,
   }));
 };
