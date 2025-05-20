@@ -1,9 +1,16 @@
-import { StudentProps } from '@/types/student.types';
 import Image from 'next/image';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import Checkbox from '../ui/checkbox/Checkbox';
 import Input from '../ui/Input';
+
+type StudentProps = {
+  numId: number;
+  image: string;
+  name: string;
+  joinDate: string;
+  memo?: string;
+};
 
 type StudentListType = {
   /** title인지 학생 리스트인지 (검색 결과가 없을 땐 'noSearch')*/
@@ -64,7 +71,7 @@ export default function Student({ type, isChecked = false, studentData, onCheck 
               alt={`${studentData.name} 이미지`}
               width={37.14}
               height={37.14}
-              style={{ objectFit: 'cover', borderRadius: '21.82px' }}
+              className='rounded-[21.82px] object-cover'
             />
           </div>
           <p className='text-headline2 font-semibold'>{studentData.name}</p>
