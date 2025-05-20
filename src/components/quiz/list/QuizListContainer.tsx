@@ -14,6 +14,8 @@ const QUIZ_DROPDOWN_LIST: MenuItem[] = [
 ];
 
 export default function QuizListContainer() {
+  const pathname = usePathname();
+
   const { selectedItem: selectedQuizCategory, menuListForDropdown: quizCategoryList } = useDropdown({
     menuList: QUIZ_DROPDOWN_LIST,
     initialSelectedItem: QUIZ_DROPDOWN_LIST[0].label,
@@ -38,7 +40,7 @@ export default function QuizListContainer() {
           menuList={quizCategoryList}
           selectedItem={selectedQuizCategory}
         />
-        <Link href={`${window.location.pathname}/create`}>
+        <Link href={`${pathname}/create`}>
           <Button
             type='BUTTON_CREATE_TYPE'
             size='w-fit h-[49px]'
