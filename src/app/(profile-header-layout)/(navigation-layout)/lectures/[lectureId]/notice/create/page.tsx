@@ -1,6 +1,6 @@
 'use client';
 
-import NoticeCreate from '@/components/notice/NoticeCreate';
+import Create from '@/components/ui/create/Create';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -11,7 +11,7 @@ export default function NoticeWrite() {
 
   return (
     <div>
-      <NoticeCreate />
+      <Create type='notice' />
     </div>
   );
 }
