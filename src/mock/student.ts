@@ -1,4 +1,10 @@
-import { StudentProps } from '@/types/student.types';
+type StudentProps = {
+  numId: number;
+  image: string;
+  name: string;
+  joinDate: string;
+  memo?: string;
+};
 
 export const MOCK_STUDENT: Record<string, StudentProps> = {
   0: {

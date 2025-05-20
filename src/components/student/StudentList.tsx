@@ -1,5 +1,12 @@
-import { StudentProps } from '@/types/student.types';
 import Student from './Student';
+
+type StudentProps = {
+  numId: number;
+  image: string;
+  name: string;
+  joinDate: string;
+  memo?: string;
+};
 
 type StudentListProps = {
   studentData: StudentProps[];

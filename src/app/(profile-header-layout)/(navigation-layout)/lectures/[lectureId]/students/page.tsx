@@ -4,10 +4,17 @@ import StudentList from '@/components/student/StudentList';
 import Button from '@/components/ui/Button';
 import SearchInput from '@/components/ui/SearchInput';
 import { MOCK_STUDENT } from '@/mock/student';
-import { StudentProps } from '@/types/student.types';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+
+type StudentProps = {
+  numId: number;
+  image: string;
+  name: string;
+  joinDate: string;
+  memo?: string;
+};
 
 export default function Students() {
   const { control, watch } = useForm({
