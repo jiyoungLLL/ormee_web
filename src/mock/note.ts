@@ -1,10 +1,4 @@
-type OpenNoteData = {
-  noteKey: string;
-  title: string;
-  date: string;
-  students?: number;
-  data?: (string | number)[][];
-};
+import { ClosedNoteData, OpenNoteData } from '@/types/note.types';
 
 export const MOCK_OPENNOTE: Record<string, OpenNoteData> = {
   '0': {
@@ -13,15 +7,6 @@ export const MOCK_OPENNOTE: Record<string, OpenNoteData> = {
     date: '2025.05.15 15:00',
   },
 };
-
-type ClosedNoteData = {
-  noteKey: string;
-  title: string;
-  date: string;
-  students: number;
-  data: (string | number)[][];
-};
-
 export const MOCK_CLOSEDNOTE: Record<string, ClosedNoteData> = {
   '0': {
     noteKey: '10/29',
