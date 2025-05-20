@@ -15,6 +15,7 @@ import QuizCreateHeader from './QuizCreateHeader';
 
 export default function QuizCreateForm() {
   const methods = useForm<QuizFormValues>({
+    mode: 'onSubmit',
     defaultValues: {
       title: '',
       description: '',
@@ -49,6 +50,7 @@ export default function QuizCreateForm() {
           <Toolbar
             editor={editor}
             enableImage={true}
+            enableList={false}
             containerStyle='flex justify-center items-center gap-[20px] w-full px-[30px] py-[10px] rounded-[20px] bg-white'
           />
           <RemoteController problemFields={problems} />
