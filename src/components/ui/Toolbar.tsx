@@ -68,6 +68,7 @@ export default function Toolbar({ editor, enableImage = false, enableList = true
               width={28}
               height={28}
               alt={`${tool} 아이콘`}
+              className='w-[28px] h-[28px] object-contain'
             />
           </button>
         ))}
