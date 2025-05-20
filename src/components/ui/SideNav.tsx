@@ -34,7 +34,7 @@ export default function SideNav({ type, title, student, date }: SideNavProps) {
   const categoryListGroup2 = {
     퀴즈: 'quiz',
     쪽지: 'note',
-    숙제: 'homework',
+    과제: 'homework',
     질문: 'question',
     공지: 'notice',
   };
