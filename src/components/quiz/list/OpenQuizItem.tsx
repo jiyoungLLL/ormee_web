@@ -32,11 +32,21 @@ export default function OpenQuizItem({ quiz, type }: OpenQuizItemProps) {
   const formattedUpdatedAt = formatDatetimeToYYYYMMDD(updatedAt);
 
   const handleCloseQuiz = async () => {
+    closeCloseModal();
+
     //TODO: 퀴즈 마감 api 연결
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     addToast({ message: '퀴즈가 마감되었습니다.', type: 'success' });
-    closeCloseModal();
+  };
+
+  const handleUploadQuiz = async () => {
+    closeUploadModal();
+
+    //TODO: 퀴즈 게시 api 연결
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    addToast({ message: '퀴즈가 게시되었습니다.', type: 'success' });
   };
 
   return (
@@ -89,14 +99,25 @@ export default function OpenQuizItem({ quiz, type }: OpenQuizItemProps) {
           </>
         )}
         {type === 'ready' && (
-          <Button
-            type='BUTTON_BASE_TYPE'
-            size='w-fit h-[46px]'
-            font='text-headline2 font-semibold'
-            isPurple
-            isfilled
-            title='게시하기'
-          />
+          <>
+            <Button
+              type='BUTTON_BASE_TYPE'
+              size='w-fit h-[46px]'
+              font='text-headline2 font-semibold'
+              isPurple
+              isfilled
+              title='게시하기'
+              onClick={openUploadModal}
+            />
+            <Modal
+              isOpen={isUploadModalOpen}
+              onCancel={closeUploadModal}
+              onConfirm={handleUploadQuiz}
+              title='퀴즈를 게시하시겠어요?'
+              description='퀴즈를 게시하면 학생들이 바로 응시할 수 있어요.'
+              iconSrc='/assets/icons/sidenav/quiz_selected.png'
+            />
+          </>
         )}
       </div>
     </div>
