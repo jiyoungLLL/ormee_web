@@ -6,7 +6,8 @@ import { useGetQuizList } from '@/hooks/queries/quiz/useGetQuizList';
 import { MenuItem, useDropdown } from '@/hooks/ui/useDropdown';
 import Link from 'next/link';
 import { useMemo } from 'react';
-import OngoingQuizList from './OngoingQuizList';
+import OpenQuizList from './OpenQuizList';
+import { usePathname } from 'next/navigation';
 
 const QUIZ_DROPDOWN_LIST: MenuItem[] = [
   { id: 'quiz-list-total', label: '전체' },
@@ -53,7 +54,7 @@ export default function QuizListContainer() {
       </div>
       {selectedQuizCategory === '전체' && (
         <div className='flex flex-col justify-start items-start gap-[45px]'>
-          <OngoingQuizList
+          <OpenQuizList
             readyQuizzes={readyQuizzes}
             ongoingQuizzes={ongoingQuizzes}
           />
