@@ -7,7 +7,6 @@ type CreateProps = {
 };
 
 export default function CreateHeader({ type }: CreateProps) {
-  const title = type === 'notice' ? '공지' : '과제';
   // 임시 강의 id
   const lectureNum: number = 1;
 
@@ -23,7 +22,7 @@ export default function CreateHeader({ type }: CreateProps) {
           height={24}
           alt='이전으로'
         />
-        {title} 작성
+        {type === 'notice' ? '공지 작성' : '과제 생성'}
       </Link>
       <div className='flex gap-[10px]'>
         <Button
