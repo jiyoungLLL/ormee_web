@@ -25,7 +25,7 @@ const iconList: { [key: string]: { normal: StaticImageData; selected?: StaticIma
   강의홈: { normal: HomeIcon, selected: HomeSelected },
   퀴즈: { normal: QuizIcon, selected: QuizSelected },
   쪽지: { normal: NoteIcon, selected: NoteSelected },
-  과제: { normal: HomeworkIcon, selected: HomeworkSelected },
+  숙제: { normal: HomeworkIcon, selected: HomeworkSelected },
   질문: { normal: QuestionIcon, selected: QuestionSelected },
   공지: { normal: NoticeIcon, selected: NoticeSelected },
   설정: { normal: SettingIcon, selected: SettingSelected },

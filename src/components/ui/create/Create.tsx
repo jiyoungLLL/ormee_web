@@ -7,12 +7,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 
 type CreateProps = {
-  /** 공지, 과제 등 작성 타이틀 */
+  /** 공지, 숙제 등 작성 타이틀 */
   type: 'notice' | 'homework';
 };
 
 export default function Create({ type }: CreateProps) {
-  const title = type === 'notice' ? '공지' : '과제';
+  const title = type === 'notice' ? '공지' : '숙제';
 
   const methods = useForm<WriteBoxFormValues>({
     resolver: zodResolver(writeBoxSchema),

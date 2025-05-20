@@ -13,9 +13,11 @@ const minidashList: string[][] = [
 ];
 
 const renderMiniDash = () => {
+  const lectureNum = 1; // 임시
+
   return minidashList.map(([dash, src, path], index) => (
     <Link
-      href={`/${path}/create`}
+      href={`/lectures/${lectureNum}/${path}/create`}
       key={`${dash}-${index}`}
       className='w-[250px] h-[72.5px] bg-purple-15 rounded-[20px] flex justify-between items-center px-[22px] py-[15px] text-headline1 font-semibold'
     >

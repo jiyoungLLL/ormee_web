@@ -22,7 +22,7 @@ export default function CreateHeader({ type }: CreateProps) {
           height={24}
           alt='이전으로'
         />
-        {type === 'notice' ? '공지 작성' : '과제 생성'}
+        {type === 'notice' ? '공지 작성' : '숙제 생성'}
       </Link>
       <div className='flex gap-[10px]'>
         <Button

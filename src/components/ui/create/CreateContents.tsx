@@ -6,7 +6,7 @@ import DateTimePicker from '../DateTimePicker';
 import WriteBox from '../WriteBox';
 
 type CreateTitleProps = {
-  type: '공지' | '과제';
+  type: '공지' | '숙제';
 };
 
 export default function CreateContents({ type }: CreateTitleProps) {
