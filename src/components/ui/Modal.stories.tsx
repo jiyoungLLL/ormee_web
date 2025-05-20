@@ -79,6 +79,15 @@ export const WithDescription: Story = {
   },
 };
 
+/** 아이콘이 있는 모달 */
+export const WithIcon: Story = {
+  ...ModalTemplateWithButton,
+  args: {
+    title: '아이콘이 있는 모달',
+    iconSrc: '/assets/icons/sidenav/quiz_selected.png',
+  },
+};
+
 /** 확인버튼 상호작용 테스트 (onConfirm 호출) */
 export const ConfirmInteraction: Story = {
   ...ModalTemplateWithButton,

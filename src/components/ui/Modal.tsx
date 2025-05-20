@@ -1,10 +1,11 @@
 import useMounted from '@/hooks/useMounted';
 import { createPortal } from 'react-dom';
 import Button from './Button';
+import Image from 'next/image';
 
 type ModalProps = {
   /** 모달 내부에 표시될 컨텐츠 */
-  children: React.ReactNode;
+  children?: React.ReactNode;
   /** 모달의 표시 여부를 제어하는 boolean 값 */
   isOpen: boolean;
   /** 모달 취소 버튼 클릭 시 실행될 콜백 함수 */
@@ -17,6 +18,8 @@ type ModalProps = {
   title?: string;
   /** 모달의 설명 텍스트 */
   description?: string;
+  /** 모달의 아이콘 이미지 경로 */
+  iconSrc?: string;
 };
 
 export default function Modal({
@@ -27,6 +30,7 @@ export default function Modal({
   containerStyle,
   title,
   description,
+  iconSrc,
 }: ModalProps) {
   const isMounted = useMounted();
 
@@ -43,7 +47,16 @@ export default function Modal({
       onClick={handleBackdropClick}
     >
       <div className={`bg-white rounded-[15px] px-[30px] py-[20px] select-none ${containerStyle}`}>
-        <div className='flex flex-col w-full gap-[13px]'>
+        {iconSrc && (
+          <Image
+            src={iconSrc}
+            alt='modal-icon'
+            width={28}
+            height={28}
+            className='mx-auto mb-[15px]'
+          />
+        )}
+        <div className='flex flex-col w-full gap-[13px] mb-[35px]'>
           {title && <h2 className='text-heading1 font-semibold text-gray-90 text-center'>{title}</h2>}
           {description && <p className='text-headline2 font-normal text-gray-90 text-center'>{description}</p>}
         </div>
