@@ -67,4 +67,5 @@ export const QuizListSchema = z.array(QuizSchema);
 
 export type QuizFormValues = z.infer<typeof QuizFormSchema>;
 export type QuizListResponse = z.infer<typeof QuizListResponseSchema>;
+export type Quiz = z.infer<typeof QuizSchema>;
 export type QuizList = z.infer<typeof QuizListSchema>;
