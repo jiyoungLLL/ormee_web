@@ -45,7 +45,7 @@ export default function QuizCreateForm() {
         onRegister={handleRegister}
       />
       <div className='flex justify-center items-start gap-[30px] w-full'>
-        <div className='sticky top-[30px] flex flex-col gap-[20px] w-[390px]'>
+        <div className='sticky top-[30px] flex flex-col gap-[20px] w-[212px]'>
           <Toolbar
             editor={editor}
             enableImage={true}
