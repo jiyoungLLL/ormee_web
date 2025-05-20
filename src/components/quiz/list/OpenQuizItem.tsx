@@ -7,10 +7,18 @@ import { formatDatetimeToYYYYMMDD } from '@/utils/date/formatDate';
 import { useModal } from '@/hooks/ui/useModal';
 import Modal from '@/components/ui/Modal';
 import { useToastStore } from '@/stores/toastStore';
+import { usePutQuizState } from '@/hooks/queries/quiz/usePutQuizState';
+import { useLectureId } from '@/hooks/queries/useLectureId';
+import { useEffect } from 'react';
 
 type OpenQuizItemProps = {
   quiz: Quiz;
   type: 'ongoing' | 'ready';
+};
+
+const SUCCESS_MESSAGE = {
+  ongoing: '퀴즈가 마감되었습니다.',
+  ready: '퀴즈가 게시되었습니다.',
 };
 
 export default function OpenQuizItem({ quiz, type }: OpenQuizItemProps) {
@@ -28,26 +36,35 @@ export default function OpenQuizItem({ quiz, type }: OpenQuizItemProps) {
 
   const { addToast } = useToastStore();
 
-  const { title, limitTime, updatedAt } = quiz;
+  const { id: quizId, title, limitTime, updatedAt } = quiz;
   const formattedUpdatedAt = formatDatetimeToYYYYMMDD(updatedAt);
 
+  const lectureId = useLectureId();
+  const { mutate: mutateQuizState, isSuccess, error } = usePutQuizState({ quizId, lectureId });
+
+  // TODO: 로딩상태 추가
+
   const handleCloseQuiz = async () => {
+    mutateQuizState('closed');
     closeCloseModal();
-
-    //TODO: 퀴즈 마감 api 연결
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    addToast({ message: '퀴즈가 마감되었습니다.', type: 'success' });
   };
 
   const handleUploadQuiz = async () => {
+    mutateQuizState('ongoing');
     closeUploadModal();
-
-    //TODO: 퀴즈 게시 api 연결
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    addToast({ message: '퀴즈가 게시되었습니다.', type: 'success' });
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      addToast({ message: SUCCESS_MESSAGE[type], type: 'success' });
+    }
+  }, [isSuccess, type]);
+
+  useEffect(() => {
+    if (error) {
+      addToast({ message: error.message, type: 'error' });
+    }
+  }, [error]);
 
   return (
     <div className='flex justify-between items-center px-[10px] py-[20px]'>
