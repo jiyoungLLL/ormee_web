@@ -30,10 +30,10 @@ const TITLE: string[][] = [
 ];
 
 export default function Student({ type, isChecked = false, studentData, onCheck }: StudentListType) {
-  const { control, watch } = useForm({
+  const { control, watch, reset } = useForm({
     mode: 'onChange',
     defaultValues: {
-      studentMemo: studentData?.memo ? studentData?.memo : '',
+      studentMemo: studentData?.memo || '',
     },
   });
 
@@ -43,6 +43,8 @@ export default function Student({ type, isChecked = false, studentData, onCheck 
   useEffect(() => {
     if (!studentData) return;
 
+    reset({ studentMemo: studentData?.memo || '' });
+
     const delaySave = setTimeout(() => {
       if (memoValue) {
         console.log(memoValue);
@@ -50,7 +52,7 @@ export default function Student({ type, isChecked = false, studentData, onCheck 
     }, 500);
 
     return () => clearTimeout(delaySave);
-  }, [memoValue]);
+  }, [memoValue, studentData?.memo, reset]);
 
   const renderStudent = () => {
     if (!studentData) return null;

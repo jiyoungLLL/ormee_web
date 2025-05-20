@@ -17,7 +17,7 @@ type StudentProps = {
 };
 
 export default function Students() {
-  const { control, watch } = useForm({
+  const { control, watch, reset } = useForm({
     mode: 'onChange',
     defaultValues: {
       searchStudent: '',
@@ -44,6 +44,7 @@ export default function Students() {
     });
     setStudents(modifiedStudents);
     setCheckedList([]);
+    reset({ searchStudent: '' });
   };
 
   return (
