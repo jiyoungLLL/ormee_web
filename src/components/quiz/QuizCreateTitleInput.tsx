@@ -1,4 +1,4 @@
-import { QuizFormValues } from '@/schemas/quiz.schema';
+import { QuizFormValues } from '@/types/quiz.types';
 import { Control, Path, useController } from 'react-hook-form';
 import DateTimePicker from '../ui/DateTimePicker';
 import { useState } from 'react';

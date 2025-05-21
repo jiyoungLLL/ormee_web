@@ -1,6 +1,6 @@
 'use client';
 
-import { QuizFormValues } from '@/schemas/quiz.schema';
+import { QuizFormValues } from '@/types/quiz.types';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import ChoiceItemInput from './ChoiceItemInput';
 import AddChoiceButton from './AddChoiceButton';
