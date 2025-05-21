@@ -16,6 +16,7 @@ import { QuizFormValues } from '@/types/quiz.types';
 
 export default function QuizCreateForm() {
   const methods = useForm<QuizFormValues>({
+    mode: 'onSubmit',
     defaultValues: {
       title: '',
       description: '',
@@ -46,11 +47,12 @@ export default function QuizCreateForm() {
         onRegister={handleRegister}
       />
       <div className='flex justify-center items-start gap-[30px] w-full'>
-        <div className='sticky top-[30px] flex flex-col gap-[20px] w-[390px]'>
+        <div className='sticky top-[30px] flex flex-col gap-[20px] w-[212px]'>
           <Toolbar
             editor={editor}
             enableImage={true}
-            containerStyle='flex justify-center items-center gap-[20px] w-full px-[30px] py-[10px] rounded-[20px] bg-white'
+            enableList={false}
+            containerStyle='flex justify-between items-center gap-[10px] w-full px-[30px] py-[10px] rounded-[20px] bg-white'
           />
           <RemoteController problemFields={problems} />
         </div>

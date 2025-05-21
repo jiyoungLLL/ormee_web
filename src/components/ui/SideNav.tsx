@@ -131,7 +131,7 @@ export default function SideNav({ type, title, student, date }: SideNavProps) {
               </Link>
               <div className='w-[0.5px] h-[30px] bg-gray-40'></div>
               <Link
-                href='/'
+                href={`/lectures/${lectureNum}/students`}
                 className='flex-1'
               >
                 수강생 목록
