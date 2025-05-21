@@ -49,6 +49,8 @@ export const QuizResponseSchema = z.object({
   due_time: z.string().datetime().min(1),
   limit_time: z.enum(QUIZ_LIMIT_TIME_OPTIONS),
   updated_at: z.string().datetime().min(1),
+  submit_students: z.number(),
+  total_students: z.number(),
 });
 
 export const QuizListResponseSchema = z.array(QuizResponseSchema);
@@ -61,6 +63,8 @@ export const QuizSchema = z.object({
   dueTime: z.string().datetime().min(1),
   limitTime: z.enum(QUIZ_LIMIT_TIME_OPTIONS),
   updatedAt: z.string().datetime().min(1),
+  submitStudents: z.number(),
+  totalStudents: z.number(),
 });
 
 export const QuizListSchema = z.array(QuizSchema);

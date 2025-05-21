@@ -9,6 +9,8 @@ export const QUIZ_LIST_RESPONSE_MIXED: QuizListResponse = [
     due_time: '2024-03-20T14:00:00.000Z',
     limit_time: '30분',
     updated_at: '2024-03-19T10:00:00.000Z',
+    submit_students: 10,
+    total_students: 20,
   },
   {
     id: 'mock-quiz-2',
@@ -18,6 +20,8 @@ export const QUIZ_LIST_RESPONSE_MIXED: QuizListResponse = [
     due_time: '2024-03-20T15:00:00.000Z',
     limit_time: '45분',
     updated_at: '2024-03-19T11:00:00.000Z',
+    submit_students: 12,
+    total_students: 20,
   },
   {
     id: 'mock-quiz-3',
@@ -27,6 +31,8 @@ export const QUIZ_LIST_RESPONSE_MIXED: QuizListResponse = [
     due_time: '2024-03-18T14:00:00.000Z',
     limit_time: '40분',
     updated_at: '2024-03-18T14:00:00.000Z',
+    submit_students: 13,
+    total_students: 20,
   },
   {
     id: 'mock-quiz-4',
@@ -36,6 +42,8 @@ export const QUIZ_LIST_RESPONSE_MIXED: QuizListResponse = [
     due_time: '2024-03-17T15:00:00.000Z',
     limit_time: '50분',
     updated_at: '2024-03-17T15:00:00.000Z',
+    submit_students: 10,
+    total_students: 20,
   },
 ];
 
@@ -47,6 +55,8 @@ export const QUIZ_ONGOING: Quiz = {
   dueTime: '2024-03-20T15:00:00.000Z',
   limitTime: '45분',
   updatedAt: '2024-03-19T11:00:00.000Z',
+  submitStudents: 12,
+  totalStudents: 20,
 };
 
 export const QUIZ_READY: Quiz = {
@@ -57,4 +67,6 @@ export const QUIZ_READY: Quiz = {
   dueTime: '2024-03-20T14:00:00.000Z',
   limitTime: '30분',
   updatedAt: '2024-03-19T10:00:00.000Z',
+  submitStudents: 10,
+  totalStudents: 20,
 };
