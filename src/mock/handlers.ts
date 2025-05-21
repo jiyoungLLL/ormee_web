@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { MOCK_NOTIFICATION_LIST_BULK } from './notification';
-import { QUIZ_LIST_RESPONSE_MIXED } from './quiz';
+import { CLOSED_QUIZ_STATS_MAP, QUIZ_LIST_RESPONSE_MIXED } from './quiz';
 import { QuizState } from '@/types/quiz.types';
 
 export const handlers = [
@@ -40,5 +40,16 @@ export const handlers = [
         status: 200,
       },
     );
+  }),
+  http.get('/api/teachers/quizzes/:quizId/stats', ({ params }) => {
+    const { quizId } = params;
+    const stats = CLOSED_QUIZ_STATS_MAP[quizId as string] ?? [];
+
+    return HttpResponse.json(stats, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   }),
 ];

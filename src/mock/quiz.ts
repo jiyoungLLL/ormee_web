@@ -83,7 +83,7 @@ export const QUIZ_CLOSED: Quiz = {
   totalStudents: 20,
 };
 
-export const QUIZ_CLOSED_STATS_FULL: ClosedQuizStats = [
+export const CLOSED_QUIZ_STATS_FULL: ClosedQuizStats = [
   {
     rank: 1,
     problemId: 'mock-problem-1',
@@ -110,7 +110,7 @@ export const QUIZ_CLOSED_STATS_FULL: ClosedQuizStats = [
   },
 ];
 
-export const QUIZ_CLOSED_STATS_PARTIAL: ClosedQuizStats = [
+export const CLOSED_QUIZ_STATS_PARTIAL: ClosedQuizStats = [
   {
     rank: 1,
     problemId: 'mock-problem-1',
@@ -124,3 +124,9 @@ export const QUIZ_CLOSED_STATS_PARTIAL: ClosedQuizStats = [
     incorrectStudents: 5,
   },
 ];
+
+export const CLOSED_QUIZ_STATS_MAP: Record<string, ClosedQuizStats> = {
+  'mock-quiz-3': CLOSED_QUIZ_STATS_FULL,
+  'mock-quiz-4': CLOSED_QUIZ_STATS_PARTIAL,
+  'closed-quiz-1': CLOSED_QUIZ_STATS_FULL,
+};
