@@ -50,12 +50,14 @@ export default function CloseQuizItem({ quiz }: CloseQuizItemProps) {
               <span className='text-headline1 font-normal text-gray-50'>{totalStudents}</span>
             </p>
           </div>
-          <Image
-            src={isOpen ? '/assets/icons/sidenav/dropdown_up.png' : '/assets/icons/sidenav/dropdown.png'}
-            alt='마감퀴즈 통계'
-            width={18}
-            height={18}
+          <button
             onClick={handleStatsToggle}
+            className={`w-[18px] h-[18px] bg-contain bg-no-repeat bg-center ${
+              isOpen
+                ? 'bg-[url("/assets/icons/sidenav/dropdown_up.png")]'
+                : 'bg-[url("/assets/icons/sidenav/dropdown.png")]'
+            }`}
+            aria-label='마감퀴즈 통계'
           />
         </div>
       </div>
