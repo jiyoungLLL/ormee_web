@@ -34,6 +34,7 @@ export default function CloseQuizItem({ quiz }: CloseQuizItemProps) {
               alt='응시 시간'
               width={14}
               height={14}
+              draggable={false}
             />
             <span className='text-headline1 font-semibold text-gray-50'>{limitTime}</span>
           </div>
@@ -43,6 +44,7 @@ export default function CloseQuizItem({ quiz }: CloseQuizItemProps) {
               alt='제출 인원'
               width={16}
               height={16}
+              draggable={false}
             />
             <p className='flex items-center gap-[2px]'>
               <span className='text-headline1 font-semibold text-gray-60'>{submitStudents}</span>
