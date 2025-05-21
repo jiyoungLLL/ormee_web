@@ -66,7 +66,11 @@ export default function Modal({
               type='button'
               onClick={onCancel}
             >
-              <XIcon />
+              <XIcon
+                size={18}
+                color='bg-gray-40'
+                useTailwind
+              />
             </button>
           </div>
         )}
