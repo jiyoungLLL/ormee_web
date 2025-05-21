@@ -36,7 +36,7 @@ export default function QuizListContainer() {
   }, [quizList]);
 
   return (
-    <div className='flex-1 flex flex-col gap-[20px] w-full h-full px-[30px] py-[20px] rounded-[20px] bg-white'>
+    <div className='flex flex-col gap-[20px] w-full h-[721px] px-[30px] py-[20px] rounded-[20px] box-border bg-white overflow-y-auto'>
       <div className='flex justify-between items-center'>
         <Dropdown
           showTrigger
