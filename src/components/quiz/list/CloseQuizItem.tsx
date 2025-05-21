@@ -51,7 +51,7 @@ export default function CloseQuizItem({ quiz }: CloseQuizItemProps) {
             </p>
           </div>
           <Image
-            src={isOpen ? '/assets/icons/sidenav/dropdown.png' : '/assets/icons/sidenav/dropdown_up.png'}
+            src={isOpen ? '/assets/icons/sidenav/dropdown_up.png' : '/assets/icons/sidenav/dropdown.png'}
             alt='마감퀴즈 통계'
             width={18}
             height={18}
@@ -60,7 +60,7 @@ export default function CloseQuizItem({ quiz }: CloseQuizItemProps) {
         </div>
       </div>
       {!isOpen && <div className='w-full h-[1px] bg-gray-30' />}
-      {isOpen && <CloseQuizStats />}
+      {isOpen && <CloseQuizStats quizId={id} />}
     </>
   );
 }
