@@ -1,6 +1,6 @@
 'use client';
 
-import { QuizFormSchema, QuizFormValues } from '@/schemas/quiz.schema';
+import { QuizFormSchema } from '@/schemas/quiz.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import QuizCreateTitleInput from './QuizCreateTitleInput';
@@ -12,6 +12,7 @@ import Toolbar from '../ui/Toolbar';
 import { useState } from 'react';
 import { Editor } from '@tiptap/react';
 import QuizCreateHeader from './QuizCreateHeader';
+import { QuizFormValues } from '@/types/quiz.types';
 
 export default function QuizCreateForm() {
   const methods = useForm<QuizFormValues>({

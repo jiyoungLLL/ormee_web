@@ -2,7 +2,7 @@
 
 import Button from '@/components/ui/Button';
 import Image from 'next/image';
-import { Quiz } from '@/schemas/quiz.schema';
+import { Quiz } from '@/types/quiz.types';
 import { formatDatetimeToYYYYMMDD } from '@/utils/date/formatDate';
 import { useModal } from '@/hooks/ui/useModal';
 import Modal from '@/components/ui/Modal';

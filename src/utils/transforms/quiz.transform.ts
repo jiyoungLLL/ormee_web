@@ -1,4 +1,4 @@
-import { QuizList, QuizListResponse } from '@/schemas/quiz.schema';
+import { QuizList, QuizListResponse } from '@/types/quiz.types';
 
 export const transformQuizListToCamelCase = (response: QuizListResponse): QuizList => {
   return response.map((quiz) => ({

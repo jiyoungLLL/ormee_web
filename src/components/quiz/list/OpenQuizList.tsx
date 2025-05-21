@@ -1,4 +1,4 @@
-import { QuizList } from '@/schemas/quiz.schema';
+import { QuizList } from '@/types/quiz.types';
 import OpenQuizItem from './OpenQuizItem';
 
 type OngoingQuizListProps = {

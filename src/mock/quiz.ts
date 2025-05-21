@@ -1,4 +1,4 @@
-import { Quiz, QuizListResponse } from '@/schemas/quiz.schema';
+import { Quiz, QuizListResponse } from '@/types/quiz.types';
 
 export const QUIZ_LIST_RESPONSE_MIXED: QuizListResponse = [
   {
