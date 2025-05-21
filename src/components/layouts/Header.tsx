@@ -8,7 +8,7 @@ interface HeaderProps {
 
 export default function Header({ children }: HeaderProps) {
   return (
-    <header className='flex justify-between items-center w-full h-[74px] bg-transparent px-[10px] py-[12px]'>
+    <header className='flex justify-between items-center w-[1320px] h-[74px] bg-transparent px-[10px] py-[12px]'>
       <Link href='/'>
         <Image
           src='/assets/images/brand/logo.png'
