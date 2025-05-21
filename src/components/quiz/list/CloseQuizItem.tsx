@@ -21,7 +21,7 @@ export default function CloseQuizItem({ quiz }: CloseQuizItemProps) {
   };
 
   return (
-    <>
+    <div className='flex flex-col w-full gap-[5px]'>
       <div className='flex justify-between items-center px-[10px] py-[20px] rounded-[15px]'>
         <div className='flex flex-col gap-[5px]'>
           <span className='text-headline1 font-semibold text-gray-60'>{title}</span>
@@ -61,6 +61,6 @@ export default function CloseQuizItem({ quiz }: CloseQuizItemProps) {
       </div>
       {!isOpen && <div className='w-full h-[1px] bg-gray-30' />}
       {isOpen && <CloseQuizStats quizId={id} />}
-    </>
+    </div>
   );
 }
