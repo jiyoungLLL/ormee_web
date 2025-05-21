@@ -77,6 +77,7 @@ export const ClosedQuizStatsResponseSchema = z
     z.object({
       rank: z.number(),
       problem_id: z.string().min(1),
+      problem_label: z.string().min(1),
       incorrect_rate: z.number(),
       incorrect_students: z.number(),
     }),
@@ -88,6 +89,7 @@ export const ClosedQuizStatsSchema = z
     z.object({
       rank: z.number(),
       problemId: z.string().min(1),
+      problemLabel: z.string().min(1),
       incorrectRate: z.number(),
       incorrectStudents: z.number(),
     }),

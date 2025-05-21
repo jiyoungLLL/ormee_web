@@ -1,4 +1,4 @@
-import { ClosedQuizStats, Quiz, QuizListResponse } from '@/types/quiz.types';
+import { ClosedQuizStatsResponse, Quiz, QuizListResponse } from '@/types/quiz.types';
 
 export const QUIZ_LIST_RESPONSE_MIXED: QuizListResponse = [
   {
@@ -83,49 +83,55 @@ export const QUIZ_CLOSED: Quiz = {
   totalStudents: 20,
 };
 
-export const CLOSED_QUIZ_STATS_FULL: ClosedQuizStats = [
+export const CLOSED_QUIZ_STATS_FULL: ClosedQuizStatsResponse = [
   {
     rank: 1,
-    problemId: 'mock-problem-1',
-    incorrectRate: 0.5,
-    incorrectStudents: 10,
+    problem_id: 'mock-problem-1',
+    problem_label: '문항 1',
+    incorrect_rate: 0.5,
+    incorrect_students: 10,
   },
   {
     rank: 2,
-    problemId: 'mock-problem-2',
-    incorrectRate: 0.3,
-    incorrectStudents: 5,
+    problem_id: 'mock-problem-2',
+    problem_label: '문항 2',
+    incorrect_rate: 0.3,
+    incorrect_students: 5,
   },
   {
     rank: 3,
-    problemId: 'mock-problem-3',
-    incorrectRate: 0.2,
-    incorrectStudents: 3,
+    problem_id: 'mock-problem-3',
+    problem_label: '문항 3',
+    incorrect_rate: 0.2,
+    incorrect_students: 3,
   },
   {
     rank: 4,
-    problemId: 'mock-problem-4',
-    incorrectRate: 0.1,
-    incorrectStudents: 2,
+    problem_id: 'mock-problem-4',
+    problem_label: '문항 4',
+    incorrect_rate: 0.1,
+    incorrect_students: 2,
   },
 ];
 
-export const CLOSED_QUIZ_STATS_PARTIAL: ClosedQuizStats = [
+export const CLOSED_QUIZ_STATS_PARTIAL: ClosedQuizStatsResponse = [
   {
     rank: 1,
-    problemId: 'mock-problem-1',
-    incorrectRate: 0.5,
-    incorrectStudents: 10,
+    problem_id: 'mock-problem-1',
+    problem_label: '문항 1',
+    incorrect_rate: 0.5,
+    incorrect_students: 10,
   },
   {
     rank: 2,
-    problemId: 'mock-problem-2',
-    incorrectRate: 0.3,
-    incorrectStudents: 5,
+    problem_id: 'mock-problem-2',
+    problem_label: '문항 2',
+    incorrect_rate: 0.3,
+    incorrect_students: 5,
   },
 ];
 
-export const CLOSED_QUIZ_STATS_MAP: Record<string, ClosedQuizStats> = {
+export const CLOSED_QUIZ_STATS_MAP: Record<string, ClosedQuizStatsResponse> = {
   'mock-quiz-3': CLOSED_QUIZ_STATS_FULL,
   'mock-quiz-4': CLOSED_QUIZ_STATS_PARTIAL,
   'closed-quiz-1': CLOSED_QUIZ_STATS_FULL,

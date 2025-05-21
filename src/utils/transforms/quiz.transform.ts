@@ -15,6 +15,7 @@ export const transformClosedQuizStatsToCamelCase = (response: ClosedQuizStatsRes
   return response.map((stat) => ({
     ...stat,
     problemId: stat.problem_id,
+    problemLabel: stat.problem_label,
     incorrectRate: stat.incorrect_rate,
     incorrectStudents: stat.incorrect_students,
   }));
