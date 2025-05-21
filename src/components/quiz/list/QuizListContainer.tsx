@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import OpenQuizList from './OpenQuizList';
 import { usePathname } from 'next/navigation';
+import CloseQuizItem from './CloseQuizItem';
 
 const QUIZ_DROPDOWN_LIST: MenuItem[] = [
   { id: 'quiz-list-total', label: '전체' },
@@ -60,6 +61,17 @@ export default function QuizListContainer() {
           />
         </div>
       )}
+      {closedQuizzes.length === 0 && (
+        <div className='flex justify-center items-center w-full h-[90px] text-heading2 font-semibold text-gray-50'>
+          마감된 퀴즈가 없어요.
+        </div>
+      )}
+      {closedQuizzes.map((quiz) => (
+        <CloseQuizItem
+          key={quiz.id}
+          quiz={quiz}
+        />
+      ))}
     </div>
   );
 }
