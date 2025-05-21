@@ -31,7 +31,7 @@ export const handlers = [
     QUIZ_LIST_RESPONSE_MIXED[quizIndex] = {
       ...QUIZ_LIST_RESPONSE_MIXED[quizIndex],
       state: state as QuizState,
-      updated_at: new Date().toISOString(),
+      due_time: new Date().toISOString(),
     };
 
     return HttpResponse.json(
@@ -44,6 +44,10 @@ export const handlers = [
   http.get('/api/teachers/quizzes/:quizId/stats', ({ params }) => {
     const { quizId } = params;
     const stats = CLOSED_QUIZ_STATS_MAP[quizId as string] ?? [];
+
+    if (stats.length === 0) {
+      return new HttpResponse(null, { status: 404 });
+    }
 
     return HttpResponse.json(stats, {
       status: 200,

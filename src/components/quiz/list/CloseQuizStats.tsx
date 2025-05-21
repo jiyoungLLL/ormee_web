@@ -7,7 +7,14 @@ type CloseQuizStatsProps = {
 };
 
 export default function CloseQuizStats({ quizId }: CloseQuizStatsProps) {
-  const { data: closedQuizStats } = useGetClosedQuizStats(quizId);
+  const { data: closedQuizStats, error } = useGetClosedQuizStats(quizId);
+
+  if (error)
+    return (
+      <div className='w-full px-[30px] py-[20px] rounded-[15px] bg-gray-10'>
+        <p className='text-label font-semibold text-gray-70'>이 퀴즈의 통계를 불러올 수 없습니다.</p>
+      </div>
+    );
 
   return (
     <div className='w-full px-[30px] py-[20px] rounded-[15px] bg-gray-10'>
