@@ -83,6 +83,18 @@ export const QUIZ_CLOSED: Quiz = {
   totalStudents: 20,
 };
 
+export const QUIZ_CLOSED_ERROR: Quiz = {
+  id: 'mock-closed-quiz-error',
+  title: '미친토익 기본반 RC 퀴즈 3',
+  description: '독해 실력을 테스트하는 퀴즈입니다.',
+  state: 'closed',
+  dueTime: '2025-03-18T14:00:00.000Z',
+  limitTime: '40분',
+  updatedAt: '2025-03-18T14:00:00.000Z',
+  submitStudents: 0,
+  totalStudents: 20,
+};
+
 export const CLOSED_QUIZ_STATS_FULL: ClosedQuizStatsResponse = [
   {
     rank: 1,
@@ -134,5 +146,5 @@ export const CLOSED_QUIZ_STATS_PARTIAL: ClosedQuizStatsResponse = [
 export const CLOSED_QUIZ_STATS_MAP: Record<string, ClosedQuizStatsResponse> = {
   'mock-quiz-3': CLOSED_QUIZ_STATS_FULL,
   'mock-quiz-4': CLOSED_QUIZ_STATS_PARTIAL,
-  'closed-quiz-1': CLOSED_QUIZ_STATS_FULL,
+  'mock-closed-quiz-1': CLOSED_QUIZ_STATS_FULL,
 };
