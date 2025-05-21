@@ -1,3 +1,13 @@
+import { z } from 'zod';
+import {
+  ClosedQuizStatsResponseSchema,
+  ClosedQuizStatsSchema,
+  QuizListSchema,
+  QuizListResponseSchema,
+  QuizSchema,
+  QuizFormSchema,
+} from '@/schemas/quiz.schema';
+
 export type ProblemType = 'choice' | 'essay';
 
 export type ChoiceItem = {
@@ -13,14 +23,6 @@ export type Problem = {
   answerItemId: string;
 };
 
-export type Quiz = {
-  title: string;
-  description: string;
-  dueTime: string;
-  limitTime: string;
-  problems: Problem[];
-};
-
 export type QuizRequest = {
   title: string;
   description: string;
@@ -30,3 +32,10 @@ export type QuizRequest = {
 };
 
 export type QuizState = 'ready' | 'ongoing' | 'closed';
+
+export type QuizFormValues = z.infer<typeof QuizFormSchema>;
+export type QuizListResponse = z.infer<typeof QuizListResponseSchema>;
+export type Quiz = z.infer<typeof QuizSchema>;
+export type QuizList = z.infer<typeof QuizListSchema>;
+export type ClosedQuizStatsResponse = z.infer<typeof ClosedQuizStatsResponseSchema>;
+export type ClosedQuizStats = z.infer<typeof ClosedQuizStatsSchema>;

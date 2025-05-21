@@ -2,6 +2,7 @@ import { QUIZ_LIMIT_TIME_OPTIONS, QUIZ_TYPE_MAP } from '@/constants/quiz.constan
 import { QuizState } from '@/types/quiz.types';
 import { z } from 'zod';
 
+// 퀴즈 생성 폼 관련 스키마
 export const QUIZ_FORM_ERROR_MESSAGE = {
   // 퀴즈 관련 에러 메세지
   EMPTY_TITLE: '제목을 입력해주세요.',
@@ -34,6 +35,7 @@ export const QuizFormSchema = z.object({
   problems: z.array(ProblemSchema).min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_PROBLEMS }),
 });
 
+// 퀴즈 api 응답 관련 스키마
 export const ProblemResponseSchema = z.object({
   context: z.string().min(1),
   description: z.string().optional(),
@@ -69,7 +71,25 @@ export const QuizSchema = z.object({
 
 export const QuizListSchema = z.array(QuizSchema);
 
-export type QuizFormValues = z.infer<typeof QuizFormSchema>;
-export type QuizListResponse = z.infer<typeof QuizListResponseSchema>;
-export type Quiz = z.infer<typeof QuizSchema>;
-export type QuizList = z.infer<typeof QuizListSchema>;
+// 마감 퀴즈 관련 스키마
+export const ClosedQuizStatsResponseSchema = z
+  .array(
+    z.object({
+      rank: z.number(),
+      problem_id: z.string().min(1),
+      incorrect_rate: z.number(),
+      incorrect_students: z.number(),
+    }),
+  )
+  .max(4);
+
+export const ClosedQuizStatsSchema = z
+  .array(
+    z.object({
+      rank: z.number(),
+      problemId: z.string().min(1),
+      incorrectRate: z.number(),
+      incorrectStudents: z.number(),
+    }),
+  )
+  .max(4);
