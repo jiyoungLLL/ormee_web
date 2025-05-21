@@ -1,5 +1,6 @@
 export const QUERY_KEYS = {
   notification: () => ['notification'],
+  quizDetail: (quizId: string) => ['quizDetail', quizId],
   quizList: (lectureId: string) => ['quizList', lectureId],
-  quiz: (id: string) => ['quiz', id],
+  closedQuizStats: (quizId: string) => ['closedQuizStats', quizId],
 } as const;
