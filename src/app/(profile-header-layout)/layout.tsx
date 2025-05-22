@@ -7,7 +7,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   // TODO: api 연동 후 실제 유저 데이터 받아와 세팅하기
 
   return (
-    <div className='flex-1 w-full min-w-fit min-h-screen bg-gray-10'>
+    <div className='flex-1 w-full min-w-fit min-h-screen bg-gray-10 max-[1310px]:px-[10px]'>
       <div className='flex flex-col justify-start items-start w-full max-w-[1320px] h-full mx-auto'>
         <Header>
           <div className='flex flex-row justify-between items-center gap-[30px]'>
