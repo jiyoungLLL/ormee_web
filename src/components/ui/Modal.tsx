@@ -31,6 +31,8 @@ type ModalProps = {
   enableXButton?: boolean;
 };
 
+const BASIC_CONTAINER_STYLE = 'bg-white rounded-[15px] px-[30px] py-[20px] select-none';
+
 export default function Modal({
   children,
   isOpen,
@@ -53,15 +55,18 @@ export default function Modal({
     if (e.target === e.currentTarget) onCancel();
   };
 
+  const isTitleEnabled = title || description;
+  const isButtonEnabled = enableCancelButton || enableConfirmButton;
+
   return createPortal(
     <div
       className={`fixed inset-0 flex justify-center items-center z-50 ${backgroundColor || 'bg-gray-90/50'}`}
       data-testid='modal-backdrop'
       onClick={handleBackdropClick}
     >
-      <div className={`bg-white rounded-[15px] px-[30px] py-[20px] select-none ${containerStyle}`}>
+      <div className={`${containerStyle || BASIC_CONTAINER_STYLE}`}>
         {enableXButton && (
-          <div className='flex justify-end w-full'>
+          <div className='flex justify-end w-full mb-[10px]'>
             <button
               type='button'
               onClick={onCancel}
@@ -83,33 +88,37 @@ export default function Modal({
             className='mx-auto mb-[15px]'
           />
         )}
-        <div className='flex flex-col w-full gap-[13px] mb-[35px]'>
-          {title && <h2 className='text-heading1 font-semibold text-gray-90 text-center'>{title}</h2>}
-          {description && <p className='text-headline2 font-normal text-gray-90 text-center'>{description}</p>}
-        </div>
+        {isTitleEnabled && (
+          <div className='flex flex-col w-full gap-[13px] mb-[35px]'>
+            {title && <h2 className='text-heading1 font-semibold text-gray-90 text-center'>{title}</h2>}
+            {description && <p className='text-headline2 font-normal text-gray-90 text-center'>{description}</p>}
+          </div>
+        )}
         {children}
-        <div className='grid grid-cols-2 items-center w-[350px] h-[55px] gap-[14px] mx-auto'>
-          {enableCancelButton && (
-            <Button
-              type='BUTTON_MODAL_TYPE'
-              size='w-full h-[50px]'
-              font='text-headline1 font-bold'
-              isPurple={false}
-              title='취소'
-              onClick={onCancel}
-            />
-          )}
-          {enableConfirmButton && (
-            <Button
-              type='BUTTON_MODAL_TYPE'
-              size='w-full h-[50px]'
-              font='text-headline1 font-bold'
-              isPurple
-              title='확인'
-              onClick={onConfirm}
-            />
-          )}
-        </div>
+        {isButtonEnabled && (
+          <div className='grid grid-cols-2 items-center w-[350px] h-[55px] gap-[14px] mx-auto'>
+            {enableCancelButton && (
+              <Button
+                type='BUTTON_MODAL_TYPE'
+                size='w-full h-[50px]'
+                font='text-headline1 font-bold'
+                isPurple={false}
+                title='취소'
+                onClick={onCancel}
+              />
+            )}
+            {enableConfirmButton && (
+              <Button
+                type='BUTTON_MODAL_TYPE'
+                size='w-full h-[50px]'
+                font='text-headline1 font-bold'
+                isPurple
+                title='확인'
+                onClick={onConfirm}
+              />
+            )}
+          </div>
+        )}
       </div>
     </div>,
     document.body,
