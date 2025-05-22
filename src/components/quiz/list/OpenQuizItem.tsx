@@ -28,8 +28,8 @@ export default function OpenQuizItem({ quiz, type, isLastQuiz }: OpenQuizItemPro
     closeModal: closeCloseModal,
   } = useModal({ defaultOpen: false });
 
-  const { id: quizId, title, limitTime, updatedAt } = quiz;
-  const formattedUpdatedAt = formatDatetimeToYYYYMMDD(updatedAt);
+  const { id: quizId, title, limitTime, dueTime } = quiz;
+  const formattedDueTime = formatDatetimeToYYYYMMDD(dueTime);
 
   const lectureId = useLectureId();
   const { mutate: mutateQuizState } = usePutQuizState({ quizId, lectureId, prevState: type });
@@ -62,7 +62,7 @@ export default function OpenQuizItem({ quiz, type, isLastQuiz }: OpenQuizItemPro
           </div>
           <div className='flex flex-col gap-[5px]'>
             <h3 className='text-headline1 font-semibold'>{title}</h3>
-            <p className='text-label font-semibold text-gray-50'>{formattedUpdatedAt}</p>
+            <p className='text-label font-semibold text-gray-50'>{formattedDueTime}</p>
           </div>
         </div>
         <div className='flex items-center gap-[29px]'>
