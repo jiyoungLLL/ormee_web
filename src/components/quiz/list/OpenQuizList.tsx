@@ -1,27 +1,19 @@
 import { QuizList } from '@/types/quiz.types';
 import OpenQuizItem from './OpenQuizItem';
 
-type OngoingQuizListProps = {
-  readyQuizzes: QuizList;
-  ongoingQuizzes: QuizList;
+type OpenQuizListProps = {
+  openQuizzes: QuizList;
 };
 
-export default function OngoingQuizList({ readyQuizzes, ongoingQuizzes }: OngoingQuizListProps) {
+export default function OpenQuizList({ openQuizzes }: OpenQuizListProps) {
   return (
     <div className='flex flex-col gap-[20px] w-full '>
       <h2 className='text-heading2 font-semibold'>진행 퀴즈</h2>
-      {ongoingQuizzes.map((quiz) => (
+      {openQuizzes.map((quiz) => (
         <OpenQuizItem
           key={quiz.id}
           quiz={quiz}
-          type='ongoing'
-        />
-      ))}
-      {readyQuizzes.map((quiz) => (
-        <OpenQuizItem
-          key={quiz.id}
-          quiz={quiz}
-          type='ready'
+          type={quiz.state as 'ongoing' | 'ready'}
         />
       ))}
     </div>
