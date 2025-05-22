@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import ProblemInput from './ProblemInput';
 import { useForm, FormProvider } from 'react-hook-form';
-import { QuizFormValues } from '@/schemas/quiz.schema';
+import { QuizFormValues } from '@/types/quiz.types';
 import { Editor } from '@tiptap/react';
 
 const meta: Meta<typeof ProblemInput> = {
@@ -51,7 +51,7 @@ export const Default: Story = {
         { id: '2', text: '선택지 2' },
       ],
       answerItemId: '',
-    },
+    } as any,
     index: 0,
     remove: () => {},
     setEditor: (editor: Editor | null) => {},

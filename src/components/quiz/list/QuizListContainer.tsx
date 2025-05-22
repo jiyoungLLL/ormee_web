@@ -8,6 +8,8 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import OpenQuizList from './OpenQuizList';
 import { usePathname } from 'next/navigation';
+import CloseQuizList from './CloseQuizList';
+import { useLectureId } from '@/hooks/queries/useLectureId';
 
 const QUIZ_DROPDOWN_LIST: MenuItem[] = [
   { id: 'quiz-list-total', label: '전체' },
@@ -22,8 +24,8 @@ export default function QuizListContainer() {
     initialSelectedItem: QUIZ_DROPDOWN_LIST[0].label,
   });
 
-  const mockLectureId = '1';
-  const { data: quizList } = useGetQuizList(mockLectureId);
+  const lectureId = useLectureId();
+  const { data: quizList } = useGetQuizList(lectureId);
 
   const { readyQuizzes, ongoingQuizzes, closedQuizzes } = useMemo(() => {
     const ready = quizList?.filter((quiz) => quiz.state === 'ready') ?? [];
@@ -34,7 +36,7 @@ export default function QuizListContainer() {
   }, [quizList]);
 
   return (
-    <div className='flex-1 flex flex-col gap-[20px] w-full h-full px-[30px] py-[20px] rounded-[20px] bg-white'>
+    <div className='flex flex-col gap-[20px] w-full h-[721px] px-[30px] py-[20px] rounded-[20px] box-border bg-white overflow-y-auto'>
       <div className='flex justify-between items-center'>
         <Dropdown
           showTrigger
@@ -53,12 +55,15 @@ export default function QuizListContainer() {
         </Link>
       </div>
       {selectedQuizCategory === '전체' && (
-        <div className='flex flex-col justify-start items-start gap-[45px]'>
-          <OpenQuizList
-            readyQuizzes={readyQuizzes}
-            ongoingQuizzes={ongoingQuizzes}
-          />
-        </div>
+        <>
+          <div className='flex flex-col justify-start items-start gap-[45px]'>
+            <OpenQuizList
+              readyQuizzes={readyQuizzes}
+              ongoingQuizzes={ongoingQuizzes}
+            />
+            <CloseQuizList closedQuizzes={closedQuizzes} />
+          </div>
+        </>
       )}
     </div>
   );

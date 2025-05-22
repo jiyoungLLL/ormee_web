@@ -1,6 +1,6 @@
 'use client';
 
-import { QuizFormValues } from '@/schemas/quiz.schema';
+import { QuizFormValues } from '@/types/quiz.types';
 import { useActiveProblemStore } from '@/stores/activeProblemStore';
 import { FieldArrayWithId } from 'react-hook-form';
 
