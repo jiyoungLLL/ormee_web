@@ -14,7 +14,21 @@ type ProblemStatsModalProps = {
 };
 
 export default function ProblemStatsModal({ problemId, isOpen, onCancel, onConfirm }: ProblemStatsModalProps) {
-  const { data: problemStats } = useGetProblemStats(problemId);
+  const { data: problemStats, error } = useGetProblemStats(problemId);
+
+  if (error) {
+    return (
+      <Modal
+        isOpen={isOpen}
+        onCancel={onCancel}
+        onConfirm={onConfirm}
+        enableXButton
+        enableCancelButton={false}
+        enableConfirmButton={false}
+        description={error.message}
+      />
+    );
+  }
 
   return (
     <Modal
