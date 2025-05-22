@@ -2,7 +2,9 @@
 
 import Badge from '@/components/ui/Badge';
 import Modal from '@/components/ui/Modal';
+import RadioIndicator from '@/components/ui/radio/RadioIndicator';
 import { useGetProblemStats } from '@/hooks/queries/quiz/useGetProblemStats';
+import Image from 'next/image';
 
 type ProblemStatsModalProps = {
   problemId: string;
@@ -23,7 +25,7 @@ export default function ProblemStatsModal({ problemId, isOpen, onCancel, onConfi
       enableCancelButton={false}
       enableConfirmButton={false}
       backgroundColor='bg-gray-90/10'
-      containerStyle='w-[680px] min-h-[345px] h-fit p-[20px] rounded-[15px] box-border bg-white shadow-[3px_3px_14px_0px_rgba(0,0,0,0.1)]'
+      containerStyle='w-[680px] h-fit p-[20px] rounded-[15px] box-border bg-white shadow-[3px_3px_14px_0px_rgba(0,0,0,0.1)]'
     >
       <div className='flex flex-col gap-[10px] w-full h-full'>
         <span className='text-headline1 font-bold text-purple-50 h-[25px]'>{problemStats?.problemLabel}</span>
@@ -61,6 +63,41 @@ export default function ProblemStatsModal({ problemId, isOpen, onCancel, onConfi
                 ))}
               </tbody>
             </table>
+          </div>
+        )}
+        {problemStats?.type === 'choice' && (
+          <div className='flex flex-col gap-[9px] w-full px-[15px] py-[10px] bg-gray-10 rounded-[10px]'>
+            {problemStats?.items.map((item) => (
+              <div
+                key={`${problemId}-item-${item.text}`}
+                className='flex items-center gap-[18px]'
+              >
+                <RadioIndicator isSelected={item.isAnswer} />
+                <div className='flex items-center gap-[10px]'>
+                  <span
+                    className={`${item.isAnswer ? 'text-purple-50 font-semibold' : 'font-normal text-gray-70'} text-headline2`}
+                  >
+                    {item.text}
+                  </span>
+                  {item.isAnswer && (
+                    <Badge
+                      color='purple'
+                      size='small'
+                      label='정답'
+                    />
+                  )}
+                </div>
+                <div className='flex items-center gap-[4px]'>
+                  <Image
+                    src='/assets/icons/person_filled.png'
+                    alt='인원 수'
+                    width={12}
+                    height={12}
+                  />
+                  <span>{item.selectedStudents}</span>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
