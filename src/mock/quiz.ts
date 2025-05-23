@@ -148,3 +148,39 @@ export const CLOSED_QUIZ_STATS_MAP: Record<string, ClosedQuizStatsResponse> = {
   'mock-quiz-4': CLOSED_QUIZ_STATS_PARTIAL,
   'mock-closed-quiz-1': CLOSED_QUIZ_STATS_FULL,
 };
+
+export const TEMPORARY_QUIZ_LIST: QuizListResponse = [
+  {
+    id: 'mock-temporary-quiz-1',
+    title: '미친토익 기본반 RC 퀴즈 1 (수정중)',
+    description: '기본 문법과 어휘를 테스트하는 퀴즈입니다.',
+    state: 'temporary',
+    due_time: '2025-06-20T14:00:00.000Z',
+    limit_time: '30분',
+    updated_at: '2025-05-19T10:00:00.000Z',
+    submit_students: 0,
+    total_students: 20,
+  },
+  {
+    id: 'mock-temporary-quiz-2',
+    title: '미친토익 기본반 RC 퀴즈 2 (수정중)',
+    description: '기본 문법과 어휘를 테스트하는 퀴즈입니다.',
+    state: 'temporary',
+    due_time: '2025-06-20T14:00:00.000Z',
+    limit_time: '10분',
+    updated_at: '2025-05-19T10:00:00.000Z',
+    submit_students: 0,
+    total_students: 20,
+  },
+  {
+    id: 'mock-temporary-quiz-3',
+    title: '미친토익 기본반 RC 퀴즈 3 (수정중)',
+    description: '기본 문법과 어휘를 테스트하는 퀴즈입니다.',
+    state: 'temporary',
+    due_time: '2025-06-20T14:00:00.000Z',
+    limit_time: '20분',
+    updated_at: '2025-05-19T10:00:00.000Z',
+    submit_students: 0,
+    total_students: 20,
+  },
+];
