@@ -5,7 +5,7 @@ import Button from './Button';
 import TiptapEditor from './TiptapEditor';
 
 type WriteBoxProps = {
-  type: '공지' | '과제';
+  type: '공지' | '숙제';
 };
 
 export default function WriteBox({ type }: WriteBoxProps) {

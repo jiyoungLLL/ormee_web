@@ -2,10 +2,14 @@
 
 import Input from '@/components/ui/Input';
 import { useFormContext } from 'react-hook-form';
-import DateTimePicker from '../ui/DateTimePicker';
-import WriteBox from '../ui/WriteBox';
+import DateTimePicker from '../DateTimePicker';
+import WriteBox from '../WriteBox';
 
-export default function NoticeWriteContents() {
+type CreateTitleProps = {
+  type: '공지' | '숙제';
+};
+
+export default function CreateContents({ type }: CreateTitleProps) {
   const { control } = useFormContext();
 
   return (
@@ -16,16 +20,16 @@ export default function NoticeWriteContents() {
           control={control}
           size='w-[958px] h-[48px]'
           inputStyle='border-none focus:outline-none'
-          placeholder='공지 제목을 입력하세요'
+          placeholder={`${type} 제목을 입력하세요`}
         />
         <DateTimePicker
           type='CALENDAR'
           calendar='DATE_TYPE'
-          placeholder='공지 등록일'
+          placeholder={type === '공지' ? '공지 등록일' : '제출기한'}
         />
       </div>
 
-      <WriteBox type='공지' />
+      <WriteBox type={type} />
     </div>
   );
 }
