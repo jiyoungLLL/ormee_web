@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { QuizListResponseSchema } from '@/schemas/quiz.schema';
 import { transformQuizListToCamelCase } from '@/utils/transforms/quiz.transform';
 import { QUERY_KEYS } from '../queryKeys';
+import { QuizList } from '@/types/quiz.types';
 
 const getTemporaryQuizList = async (lectureId: string) => {
   const response = await fetch(`/api/teachers/${lectureId}/quizzes/temporary`, { method: 'GET' });
@@ -23,7 +24,7 @@ const getTemporaryQuizList = async (lectureId: string) => {
 };
 
 export const useGetTemporaryQuizList = (lectureId: string) => {
-  return useQuery({
+  return useQuery<QuizList>({
     queryKey: QUERY_KEYS.temporaryQuizList(lectureId),
     queryFn: () => getTemporaryQuizList(lectureId),
     staleTime: 1 * 60 * 60 * 1000,
