@@ -1,7 +1,8 @@
 import { http, HttpResponse } from 'msw';
 import { MOCK_NOTIFICATION_LIST_BULK } from './notification';
-import { CLOSED_QUIZ_STATS_MAP, QUIZ_LIST_RESPONSE_MIXED } from './quiz';
+import { CLOSED_QUIZ_STATS_MAP, QUIZ_LIST_RESPONSE_MIXED, TEMPORARY_QUIZ_LIST } from './quiz';
 import { QuizState } from '@/types/quiz.types';
+import { hydrateRoot } from 'react-dom/client';
 
 export const handlers = [
   http.get('/api/teacher/notification/', () => {
@@ -50,6 +51,14 @@ export const handlers = [
     }
 
     return HttpResponse.json(stats, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }),
+  http.get('/api/teachers/:lectureId/quizzes/temporary', () => {
+    return HttpResponse.json(TEMPORARY_QUIZ_LIST, {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
