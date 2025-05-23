@@ -4,16 +4,13 @@ import Link from 'next/link';
 
 type CreateProps = {
   type: 'notice' | 'homework';
+  params: string;
 };
-
-export default function CreateHeader({ type }: CreateProps) {
-  // 임시 강의 id
-  const lectureNum: number = 1;
-
+export default function CreateHeader({ type, params }: CreateProps) {
   return (
     <div className='w-full h-[50px] flex justify-between items-center'>
       <Link
-        href={`/lectures/${lectureNum}/${type}`}
+        href={`/lectures/${params}/${type}`}
         className='w-[136px] px-[5px] text-title3 font-bold flex items-center gap-[15px]'
       >
         <Image

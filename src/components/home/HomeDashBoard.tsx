@@ -1,5 +1,6 @@
 'use client';
 
+import { useLectureId } from '@/hooks/queries/useLectureId';
 import Image from 'next/image';
 import Link from 'next/link';
 import HomeWorkIng from './HomeWorkIng';
@@ -13,7 +14,7 @@ const minidashList: string[][] = [
 ];
 
 const renderMiniDash = () => {
-  const lectureNum = 1; // 임시
+  const lectureNum = useLectureId();
 
   return minidashList.map(([dash, src, path], index) => (
     <Link

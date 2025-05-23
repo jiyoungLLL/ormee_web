@@ -9,9 +9,11 @@ import { FormProvider, useForm } from 'react-hook-form';
 type CreateProps = {
   /** 공지, 숙제 등 작성 타이틀 */
   type: 'notice' | 'homework';
+  /** 강의 번호 */
+  params: string;
 };
 
-export default function Create({ type }: CreateProps) {
+export default function Create({ type, params }: CreateProps) {
   const title = type === 'notice' ? '공지' : '숙제';
 
   const methods = useForm<WriteBoxFormValues>({
@@ -31,7 +33,10 @@ export default function Create({ type }: CreateProps) {
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <CreateHeader type={type} />
+        <CreateHeader
+          type={type}
+          params={params}
+        />
         <CreateContents type={title} />
       </form>
     </FormProvider>

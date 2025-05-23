@@ -8,14 +8,14 @@ import { useEffect, useRef, useState } from 'react';
 
 export default function Class() {
   const [classes, setClasses] = useState(MOCK_CLASSES);
-  const [tab, setTab] = useState<'ing' | 'done'>('ing');
+  const [tab, setTab] = useState<'ongoing' | 'done'>('ongoing');
   const [openMenu, setOpenMenu] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
-  const [modalType, setModalType] = useState<'new' | 'ing' | null>(null);
+  const [modalType, setModalType] = useState<'new' | 'ongoing' | null>(null);
   const isOpen = modalType !== null;
   const basicStyle = 'w-full rounded-tr-[25px] rounded-b-[25px] bg-white';
 
-  const openModal = (type: 'new' | 'ing') => setModalType(type);
+  const openModal = (type: 'new' | 'ongoing') => setModalType(type);
   const closeModal = () => setModalType(null);
 
   const handleCopy = () => {
@@ -29,7 +29,7 @@ export default function Class() {
 
   const handleNewClass = () => {
     openModal('new');
-    setTab('ing');
+    setTab('ongoing');
   };
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export default function Class() {
     };
   }, [openMenu]);
 
-  const handleDeleteClass = (classState: 'ing' | 'done', id: string) => {
+  const handleDeleteClass = (classState: 'ongoing' | 'done', id: string) => {
     const updatedClassList = classes[classState].filter(([index, title]) => `${index}-${title}` !== id);
 
     setClasses({
@@ -57,10 +57,10 @@ export default function Class() {
     });
   };
 
-  const renderClass = (classState: 'ing' | 'done') => {
+  const renderClass = (classState: 'ongoing' | 'done') => {
     if (classes[classState] && classes[classState].length !== 0) {
       const commonStyle = 'flex gap-[10px] text-headline2 h-[22px] items-center';
-      const IconSrc = classState === 'ing' ? 'home-ui.png' : 'pre-lecture.png';
+      const IconSrc = classState === 'ongoing' ? 'home-ui.png' : 'pre-lecture.png';
 
       return (
         <div className={`${basicStyle} px-[30px] py-[20px] flex gap-[15px] flex-wrap`}>
@@ -103,7 +103,7 @@ export default function Class() {
                   </div>
                 </div>
               </div>
-              {classState === 'ing' && (
+              {classState === 'ongoing' && (
                 <div className='flex flex-col justify-between'>
                   <button
                     type='button'
@@ -139,7 +139,7 @@ export default function Class() {
                   <button
                     type='button'
                     className='h-[40px] px-[10px] py-[5px] rounded-[5px]'
-                    onClick={() => openModal('ing')}
+                    onClick={() => openModal('ongoing')}
                   >
                     설정
                   </button>
@@ -161,7 +161,7 @@ export default function Class() {
         <div
           className={`${basicStyle} h-[184px] flex justify-center items-center text-heading2 font-semibold text-[rgb(181_182_188)]`}
         >
-          {tab === 'ing' ? '현재 진행 중인 강의가 없어요' : '이전에 진행한 강의가 없어요'}
+          {tab === 'ongoing' ? '현재 진행 중인 강의가 없어요' : '이전에 진행한 강의가 없어요'}
         </div>
       );
     }
@@ -177,17 +177,17 @@ export default function Class() {
             <div className='relative flex items-end'>
               <button
                 className={`text-headline1 ${
-                  tab === 'ing'
+                  tab === 'ongoing'
                     ? 'h-[55px] rounded-t-[20px] px-[15px] pr-[30px] flex items-center gap-[9px] bg-white font-semibold text-purple-50'
                     : 'w-[145px] h-[43px] rounded-[20px] bg-gray-20 text-gray-60'
                 }`}
-                onClick={() => setTab('ing')}
+                onClick={() => setTab('ongoing')}
               >
                 진행 중 강의
-                <div>{tab === 'ing' && classes['ing'].length}</div>
+                <div>{tab === 'ongoing' && classes['ongoing'].length}</div>
               </button>
 
-              {tab === 'ing' && (
+              {tab === 'ongoing' && (
                 <Image
                   src={'/assets/icons/class/right-vector.png'}
                   width={25}
