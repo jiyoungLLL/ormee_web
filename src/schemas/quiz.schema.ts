@@ -45,7 +45,7 @@ export const ProblemResponseSchema = z.object({
 
 export const QuizResponseSchema = z.object({
   id: z.string().min(1),
-  state: z.enum(['ready', 'ongoing', 'closed'] as const satisfies readonly QuizState[]),
+  state: z.enum(['ready', 'ongoing', 'closed', 'temporary'] as const satisfies readonly QuizState[]),
   title: z.string().min(1),
   description: z.string().optional(),
   due_time: z.string().datetime().min(1),
@@ -59,7 +59,7 @@ export const QuizListResponseSchema = z.array(QuizResponseSchema);
 
 export const QuizSchema = z.object({
   id: z.string().min(1),
-  state: z.enum(['ready', 'ongoing', 'closed'] as const satisfies readonly QuizState[]),
+  state: z.enum(['ready', 'ongoing', 'closed', 'temporary'] as const satisfies readonly QuizState[]),
   title: z.string().min(1),
   description: z.string().optional(),
   dueTime: z.string().datetime().min(1),
