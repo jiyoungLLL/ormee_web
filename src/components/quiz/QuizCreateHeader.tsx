@@ -15,7 +15,7 @@ export default function QuizCreateHeader({ onTemporarySave, onRegister }: QuizCr
 
   return (
     <>
-      <div className='flex justify-between items-center w-full h-[50px] mb-[22px]'>
+      <div className='flex justify-between items-center w-[1320px] h-[50px] mb-[22px]'>
         <Link
           href={`/lectures/${lectureId}/quiz`}
           className='w-[136px] px-[5px] text-title3 font-bold flex items-center gap-[15px]'

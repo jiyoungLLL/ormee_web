@@ -13,3 +13,17 @@ export const DEFAULT_PROBLEM: Omit<Problem, 'item'> = {
 };
 
 export const DEFAULT_CHOICE_ITEM: Omit<ChoiceItem, 'id'> = { text: '' };
+
+export const QUIZ_LIMIT_TIME_OPTIONS = [
+  '10분',
+  '15분',
+  '20분',
+  '25분',
+  '30분',
+  '35분',
+  '40분',
+  '45분',
+  '50분',
+  '55분',
+  '60분',
+] as const;

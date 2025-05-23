@@ -16,8 +16,8 @@ type ToastProps = {
 };
 
 const TOAST_ICON: Record<ToastType, string> = {
-  success: 'assets/icons/toast/toast-success.png',
-  error: 'assets/icons/toast/toast-error.png',
+  success: '/assets/icons/toast/toast-success.png',
+  error: '/assets/icons/toast/toast-error.png',
 } as const;
 
 const TOAST_STYLE: Record<ToastType, string> = {

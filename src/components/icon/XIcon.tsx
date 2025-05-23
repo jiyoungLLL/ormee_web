@@ -1,4 +1,4 @@
-interface XIconProps {
+type XIconProps = {
   /** 아이콘 크기 (픽셀 단위) */
   size?: number;
   /** 선 두께 (픽셀 단위) */
@@ -11,7 +11,7 @@ interface XIconProps {
   color?: string;
   /** Tailwind 클래스 사용 여부, 기본값 false */
   useTailwind?: boolean;
-}
+};
 
 export default function XIcon({ size = 14, thickness = 1, color = 'black', useTailwind = false }: XIconProps) {
   const line1Style = useTailwind

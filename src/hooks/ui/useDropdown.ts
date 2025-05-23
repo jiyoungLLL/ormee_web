@@ -2,18 +2,24 @@
 
 import { ReactNode, useEffect, useRef, useState } from 'react';
 
-type MenuItem = {
+export type MenuItem = {
   id: string | number;
   label: ReactNode;
   onClick?: () => void;
 };
 
 type UseDropdownProps<T> = {
+  /** 드롭다운이 닫힐 때 호출될 콜백함수 */
   onClose?: () => void;
+  /** 드롭다운이 열릴 때 호출될 콜백함수 */
   onOpen?: () => void;
+  /** 메뉴 아이템이 선택될 때 호출될 콜백함수 */
   onSelect?: (value: T) => void;
+  /** 드롭다운의 초기 상태 */
   initialOpen?: boolean;
+  /** 드롭다운의 초기에 선택된 메뉴 아이템 */
   initialSelectedItem?: T;
+  /** 드롭다운의 메뉴 아이템 목록 */
   menuList: MenuItem[];
 };
 

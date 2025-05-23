@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import Calendar from './Calendar';
 import Dropdown from './dropdown/Dropdown';
+import { QUIZ_LIMIT_TIME_OPTIONS } from '@/constants/quiz.constants';
 
 type ComponentType = 'CALENDAR' | 'TIME';
 type CalendarType = 'DATE_TYPE' | 'PERIOD_TYPE';
@@ -49,14 +50,12 @@ const TIME_OPTIONS = [
   '20:30',
 ];
 
-const LIMIT_TIME_OPTIONS = ['10분', '15분', '20분', '25분', '30분', '35분', '40분', '45분', '50분', '55분', '60분'];
-
 const TIME_MENU_LIST = TIME_OPTIONS.map((time, index) => ({
   id: `t${index}`,
   label: time,
 }));
 
-const LIMIT_TIME_MENU_LIST = LIMIT_TIME_OPTIONS.map((time, index) => ({
+const LIMIT_TIME_MENU_LIST = QUIZ_LIMIT_TIME_OPTIONS.map((time, index) => ({
   id: `lt${index}`,
   label: time,
 }));

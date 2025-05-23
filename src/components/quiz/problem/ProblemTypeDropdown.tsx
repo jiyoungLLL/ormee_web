@@ -3,8 +3,7 @@
 import Dropdown from '@/components/ui/dropdown/Dropdown';
 import { QUIZ_TYPE_MAP } from '@/constants/quiz.constants';
 import { useDropdown } from '@/hooks/ui/useDropdown';
-import { QuizFormValues } from '@/schemas/quiz.schema';
-import { ProblemType } from '@/types/quiz.types';
+import { ProblemType, QuizFormValues } from '@/types/quiz.types';
 import { useFormContext } from 'react-hook-form';
 
 type ProblemTypeDropdownProps = {
