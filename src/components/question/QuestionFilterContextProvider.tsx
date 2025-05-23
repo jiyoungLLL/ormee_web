@@ -2,7 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 export type QuestionListFilterType = 'all' | 'unanswered' | 'answered';
 
@@ -48,3 +48,13 @@ export default function QuestionFilterContextProvider({ children }: { children: 
     </QuestionFilterContext.Provider>
   );
 }
+
+export const useQuestionFilter = () => {
+  const context = useContext(QuestionFilterContext);
+
+  if (!context) {
+    throw new Error('useQuestionFilter는 QuestionFilterContextProvider 내부에서 사용되어야 합니다');
+  }
+
+  return context;
+};
