@@ -1,5 +1,5 @@
 export const MOCK_CLASSES: { [key: string]: [number, string, number, string][] } = {
-  ing: [
+  ongoing: [
     [1, '오르미 토익 rc', 32, '2025. 01. 12'],
     [2, '오르미 토익 lc', 30, '2025. 01. 20'],
     [3, '오르미 토익 rc', 32, '2025. 02. 12'],

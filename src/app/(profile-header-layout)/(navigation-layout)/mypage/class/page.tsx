@@ -244,7 +244,7 @@ export default function Class() {
 
         {isOpen && (
           <ClassModal
-            type={modalType!}
+            type={modalType}
             isOpen={isOpen}
             closeModal={closeModal}
           />
