@@ -1,4 +1,4 @@
-import { ClosedQuizStatsResponse, Quiz, QuizListResponse } from '@/types/quiz.types';
+import { ClosedQuizStatsResponse, ProblemStatsResponse, Quiz, QuizListResponse } from '@/types/quiz.types';
 
 export const QUIZ_LIST_RESPONSE_MIXED: QuizListResponse = [
   {
@@ -98,28 +98,28 @@ export const QUIZ_CLOSED_ERROR: Quiz = {
 export const CLOSED_QUIZ_STATS_FULL: ClosedQuizStatsResponse = [
   {
     rank: 1,
-    problem_id: 'mock-problem-1',
+    problem_id: 'mock-problem-choice',
     problem_label: '문항 1',
     incorrect_rate: 0.5,
     incorrect_students: 10,
   },
   {
     rank: 2,
-    problem_id: 'mock-problem-2',
+    problem_id: 'mock-problem-choice',
     problem_label: '문항 2',
     incorrect_rate: 0.3,
     incorrect_students: 5,
   },
   {
     rank: 3,
-    problem_id: 'mock-problem-3',
+    problem_id: 'mock-problem-essay',
     problem_label: '문항 3',
     incorrect_rate: 0.2,
     incorrect_students: 3,
   },
   {
     rank: 4,
-    problem_id: 'mock-problem-4',
+    problem_id: 'mock-problem-essay',
     problem_label: '문항 4',
     incorrect_rate: 0.1,
     incorrect_students: 2,
@@ -129,14 +129,14 @@ export const CLOSED_QUIZ_STATS_FULL: ClosedQuizStatsResponse = [
 export const CLOSED_QUIZ_STATS_PARTIAL: ClosedQuizStatsResponse = [
   {
     rank: 1,
-    problem_id: 'mock-problem-1',
+    problem_id: 'mock-problem-choice',
     problem_label: '문항 1',
     incorrect_rate: 0.5,
     incorrect_students: 10,
   },
   {
     rank: 2,
-    problem_id: 'mock-problem-2',
+    problem_id: 'mock-problem-essay',
     problem_label: '문항 2',
     incorrect_rate: 0.3,
     incorrect_students: 5,
@@ -147,4 +147,66 @@ export const CLOSED_QUIZ_STATS_MAP: Record<string, ClosedQuizStatsResponse> = {
   'mock-quiz-3': CLOSED_QUIZ_STATS_FULL,
   'mock-quiz-4': CLOSED_QUIZ_STATS_PARTIAL,
   'mock-closed-quiz-1': CLOSED_QUIZ_STATS_FULL,
+};
+
+export const PROBLEM_STATS_CHOICE: ProblemStatsResponse = {
+  problem_label: '문항 1',
+  description: 'Four football matches will be broadcast live on three major stations _______ this weekend.',
+  type: 'choice',
+  items: [
+    {
+      is_answer: false,
+      text: 'a.nation',
+      selected_students: 10,
+    },
+    {
+      is_answer: false,
+      text: 'b.national',
+      selected_students: 5,
+    },
+    {
+      is_answer: false,
+      text: 'c.nationality',
+      selected_students: 3,
+    },
+    {
+      is_answer: true,
+      text: 'd.nationally',
+      selected_students: 2,
+    },
+  ],
+};
+
+export const PROBLEM_STATS_ESSAY: ProblemStatsResponse = {
+  problem_label: '문항 1',
+  description: 'Four football matches will be broadcast live on three major stations _______ this weekend.',
+  type: 'essay',
+  answer: 'nationally',
+  incorrect_submit: [
+    {
+      rank: 1,
+      answer: 'nation',
+      incorrect_students: 10,
+    },
+    {
+      rank: 2,
+      answer: 'national',
+      incorrect_students: 5,
+    },
+    {
+      rank: 3,
+      answer: 'nationality',
+      incorrect_students: 3,
+    },
+    {
+      rank: 4,
+      answer: 'nationaly',
+      incorrect_students: 2,
+    },
+  ],
+};
+
+export const PROBLEM_STATS_MAP: Record<string, ProblemStatsResponse> = {
+  'mock-problem-choice': PROBLEM_STATS_CHOICE,
+  'mock-problem-essay': PROBLEM_STATS_ESSAY,
 };

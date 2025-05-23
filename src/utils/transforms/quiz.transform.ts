@@ -1,4 +1,11 @@
-import { ClosedQuizStats, ClosedQuizStatsResponse, QuizList, QuizListResponse } from '@/types/quiz.types';
+import {
+  ClosedQuizStats,
+  ClosedQuizStatsResponse,
+  ProblemStats,
+  ProblemStatsResponse,
+  QuizList,
+  QuizListResponse,
+} from '@/types/quiz.types';
 
 export const transformQuizListToCamelCase = (response: QuizListResponse): QuizList => {
   return response.map((quiz) => ({
@@ -19,4 +26,35 @@ export const transformClosedQuizStatsToCamelCase = (response: ClosedQuizStatsRes
     incorrectRate: stat.incorrect_rate,
     incorrectStudents: stat.incorrect_students,
   }));
+};
+
+export const transformProblemStatsToCamelCase = (response: ProblemStatsResponse): ProblemStats => {
+  const base = {
+    problemLabel: response.problem_label,
+    description: response.description,
+    type: response.type,
+  };
+
+  if (response.type === 'choice') {
+    return {
+      ...base,
+      type: 'choice',
+      items: response.items.map((item) => ({
+        text: item.text,
+        isAnswer: item.is_answer,
+        selectedStudents: item.selected_students,
+      })),
+    };
+  } else {
+    return {
+      ...base,
+      type: 'essay',
+      answer: response.answer,
+      incorrectSubmit: response.incorrect_submit.map((submit) => ({
+        rank: submit.rank,
+        answer: submit.answer,
+        incorrectStudents: submit.incorrect_students,
+      })),
+    };
+  }
 };

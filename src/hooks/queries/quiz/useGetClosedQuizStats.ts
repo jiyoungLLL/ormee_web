@@ -5,7 +5,7 @@ import { transformClosedQuizStatsToCamelCase } from '@/utils/transforms/quiz.tra
 import { ClosedQuizStats } from '@/types/quiz.types';
 
 const getClosedQuizStats = async (quizId: string) => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_MOCK_BASE_URL}/api/teachers/quizzes/${quizId}/stats`);
+  const response = await fetch(`/api/teachers/quizzes/${quizId}/stats`);
 
   if (!response.ok) {
     if (process.env.NODE_ENV === 'development') console.error(response.statusText);

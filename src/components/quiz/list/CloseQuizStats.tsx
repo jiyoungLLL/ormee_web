@@ -1,13 +1,22 @@
 'use client';
 
 import { useGetClosedQuizStats } from '@/hooks/queries/quiz/useGetClosedQuizStats';
-
+import { useModal } from '@/hooks/ui/useModal';
+import ProblemStatsModal from '@/components/quiz/list/ProblemStatsModal';
+import { useState } from 'react';
 type CloseQuizStatsProps = {
   quizId: string;
 };
 
 export default function CloseQuizStats({ quizId }: CloseQuizStatsProps) {
   const { data: closedQuizStats, error } = useGetClosedQuizStats(quizId);
+  const { isOpen, openModal, closeModal } = useModal({ defaultOpen: false });
+  const [openProblemId, setOpenProblemId] = useState<string>('');
+
+  const handleProblemStatsModal = (problemId: string) => {
+    setOpenProblemId(problemId);
+    openModal();
+  };
 
   if (error)
     return (
@@ -34,7 +43,10 @@ export default function CloseQuizStats({ quizId }: CloseQuizStatsProps) {
               className='grid grid-cols-[40px_89px_89px_89px] justify-items-center gap-x-[40px] mb-[16px] last:mb-0'
             >
               <td className='text-headline2 font-normal text-gray-70 text-center'>{stat.rank}</td>
-              <td className='text-headline2 font-semibold text-purple-40 text-center underline decoration-solid decoration-auto underline-offset-[2px] cursor-pointer'>
+              <td
+                className='text-headline2 font-semibold text-purple-40 text-center underline decoration-solid decoration-auto underline-offset-[2px] cursor-pointer'
+                onClick={() => handleProblemStatsModal(stat.problemId)}
+              >
                 {stat.problemLabel}
               </td>
               <td className='text-headline2 font-normal text-gray-90 text-center'>{stat.incorrectRate * 100}%</td>
@@ -43,6 +55,14 @@ export default function CloseQuizStats({ quizId }: CloseQuizStatsProps) {
           ))}
         </tbody>
       </table>
+      {isOpen && (
+        <ProblemStatsModal
+          isOpen={isOpen}
+          onCancel={closeModal}
+          onConfirm={closeModal}
+          problemId={openProblemId}
+        />
+      )}
     </div>
   );
 }
