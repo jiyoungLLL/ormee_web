@@ -3,4 +3,5 @@ export const QUERY_KEYS = {
   quizDetail: (quizId: string) => ['quizDetail', quizId],
   quizList: (lectureId: string) => ['quizList', lectureId],
   closedQuizStats: (quizId: string) => ['closedQuizStats', quizId],
+  temporaryQuizList: (lectureId: string) => ['temporaryQuizList', lectureId],
 } as const;
