@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 export type QuestionListFilterType = 'all' | 'unanswered' | 'answered';
+export type QuestionSearchByType = 'title' | 'content' | 'author' | 'all';
 
 type QuestionFilterContextType = {
   filter: QuestionListFilterType;
   setFilter: (filter: QuestionListFilterType) => void;
+  setSearchCondition: ({ searchBy, keyword }: { searchBy: QuestionSearchByType; keyword: string }) => void;
 };
 
 const QuestionFilterContext = createContext<QuestionFilterContextType | null>(null);
@@ -18,14 +20,22 @@ export default function QuestionFilterContextProvider({ children }: { children: 
   const router = useRouter();
 
   const [filterState, setFilterState] = useState<QuestionListFilterType>('all');
+  const [searchByState, setSearchByState] = useState<QuestionSearchByType>('title');
+  const [keywordState, setKeywordState] = useState<string>('');
 
   useEffect(() => {
-    const param = searchParams.get('filter');
-    if (param === 'unanswered' || param === 'answered') {
-      setFilterState(param);
+    const filter = searchParams.get('filter');
+    if (filter === 'unanswered' || filter === 'answered') {
+      setFilterState(filter);
     } else {
       setFilterState('all');
     }
+
+    const searchBy = searchParams.get('searchBy');
+    const keyword = searchParams.get('keyword');
+
+    setSearchByState(searchBy === 'all' || searchBy === 'content' || searchBy === 'author' ? searchBy : 'title');
+    setKeywordState(keyword ?? '');
   }, [searchParams]);
 
   const setFilter = (newFilter: QuestionListFilterType) => {
@@ -42,8 +52,24 @@ export default function QuestionFilterContextProvider({ children }: { children: 
     router.push(`?${params.toString()}`);
   };
 
+  const setSearchCondition = ({ searchBy, keyword }: { searchBy: QuestionSearchByType; keyword: string }) => {
+    setSearchByState(searchBy);
+    setKeywordState(keyword);
+
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('searchBy', searchBy);
+    params.set('keyword', keyword);
+    router.push(`?${params.toString()}`);
+  };
+
   return (
-    <QuestionFilterContext.Provider value={{ filter: filterState, setFilter }}>
+    <QuestionFilterContext.Provider
+      value={{
+        filter: filterState,
+        setFilter,
+        setSearchCondition,
+      }}
+    >
       {children}
     </QuestionFilterContext.Provider>
   );
