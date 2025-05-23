@@ -1,5 +1,7 @@
 'use client';
 
+import FeedBack from '@/components/homework/FeedBack';
+import RenderHomework from '@/components/homework/RenderHomework';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -9,6 +11,7 @@ const BASICSTYLE = 'w-[145px] h-[43px] rounded-[20px] bg-gray-20 text-gray-60 te
 
 export default function Homework() {
   const [tab, setTab] = useState<'ongoing' | 'done'>('ongoing');
+
   return (
     <div>
       {/* 탭 */}
@@ -59,6 +62,7 @@ export default function Homework() {
           )}
         </div>
       </div>
+      <div className='w-[1018px] max-h-[666px]'>{tab === 'ongoing' ? <RenderHomework /> : <FeedBack />}</div>
     </div>
   );
 }
