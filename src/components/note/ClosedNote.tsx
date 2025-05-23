@@ -55,6 +55,7 @@ export default function ClosedNote({ noteKey, title, date, students, data }: Clo
               width={18}
               height={18}
               alt='드롭다운 아이콘'
+              className={`cursor-pointer transition-transform ${isOpen ? 'rotate-180' : ''}`}
             />
           </button>
         </div>
