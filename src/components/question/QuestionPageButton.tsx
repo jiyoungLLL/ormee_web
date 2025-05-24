@@ -1,9 +1,9 @@
 'use client';
 
-import { useQuestionFilter } from './QuestionFilterContextProvider';
+import { useQuestionSearchParams } from '@/hooks/question/useQuestionSearchParams';
 
 export default function QuestionPageButton() {
-  const { currentPage, setCurrentPage } = useQuestionFilter();
+  const { currentPage, setCurrentPage } = useQuestionSearchParams();
 
   const totalPage = 3;
   const isFirstPage = currentPage === 1;
@@ -19,7 +19,8 @@ export default function QuestionPageButton() {
           style={{
             backgroundImage: `url(${isFirstPage ? '/assets/icons/arrows/left_arrow_gray_50.png' : '/assets/icons/arrows/left_arrow_purple_40.png'})`,
           }}
-          onClick={() => setCurrentPage('prev')}
+          disabled={isFirstPage}
+          onClick={() => setCurrentPage({ type: 'prev', maxPage: totalPage })}
         />
         <span>{currentPage}</span>
         <span>/</span>
@@ -30,7 +31,8 @@ export default function QuestionPageButton() {
           style={{
             backgroundImage: `url(${isLastPage ? '/assets/icons/arrows/right_arrow_gray_50.png' : '/assets/icons/arrows/right_arrow_purple_40.png'})`,
           }}
-          onClick={() => setCurrentPage('next')}
+          disabled={isLastPage}
+          onClick={() => setCurrentPage({ type: 'next', maxPage: totalPage })}
         />
       </div>
     </div>

@@ -1,11 +1,11 @@
 'use client';
 
 import { useDropdown } from '@/hooks/ui/useDropdown';
-import { QuestionSearchByType, useQuestionFilter } from '@/components/question/QuestionFilterContextProvider';
 import Dropdown from '@/components/ui/dropdown/Dropdown';
 import { useForm } from 'react-hook-form';
 import SearchInput from '@/components/ui/SearchInput';
 import { useToastStore } from '@/stores/toastStore';
+import { QuestionSearchByType, useQuestionSearchParams } from '@/hooks/question/useQuestionSearchParams';
 
 const SEARCH_BY_LIST: { id: QuestionSearchByType; label: string }[] = [
   { id: 'title', label: '제목' },
@@ -20,7 +20,7 @@ export default function QuestionSearch() {
     initialSelectedItem: '제목',
   });
 
-  const { setSearchCondition } = useQuestionFilter();
+  const { setSearchCondition } = useQuestionSearchParams();
 
   const { control, handleSubmit } = useForm({
     defaultValues: {

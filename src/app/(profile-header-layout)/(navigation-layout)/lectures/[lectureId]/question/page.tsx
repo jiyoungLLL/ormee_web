@@ -1,6 +1,5 @@
 import QuestionContainer from '@/components/question/QuestionContainer';
 import QuestionFilterButton from '@/components/question/QuestionFilterButton';
-import QuestionFilterContextProvider from '@/components/question/QuestionFilterContextProvider';
 import QuestionPageButton from '@/components/question/QuestionPageButton';
 
 export default function QuestionPage() {
@@ -14,17 +13,15 @@ export default function QuestionPage() {
         />
         <h1 className='text-title3 font-bold'>질문</h1>
       </div>
-      <QuestionFilterContextProvider>
-        <div className='flex justify-between items-center mb-[12px]'>
-          <div className='flex items-center gap-[10px]'>
-            <QuestionFilterButton type='all' />
-            <QuestionFilterButton type='unanswered' />
-            <QuestionFilterButton type='answered' />
-          </div>
-          <QuestionPageButton />
+      <div className='flex justify-between items-center mb-[12px]'>
+        <div className='flex items-center gap-[10px]'>
+          <QuestionFilterButton type='all' />
+          <QuestionFilterButton type='unanswered' />
+          <QuestionFilterButton type='answered' />
         </div>
-        <QuestionContainer />
-      </QuestionFilterContextProvider>
+        <QuestionPageButton />
+      </div>
+      <QuestionContainer />
     </div>
   );
 }

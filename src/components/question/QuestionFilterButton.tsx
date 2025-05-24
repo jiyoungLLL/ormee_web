@@ -1,6 +1,6 @@
 'use client';
 
-import { QuestionListFilterType, useQuestionFilter } from '@/components/question/QuestionFilterContextProvider';
+import { QuestionListFilterType, useQuestionSearchParams } from '@/hooks/question/useQuestionSearchParams';
 
 type QuestionFilterButtonProps = {
   type: QuestionListFilterType;
@@ -13,7 +13,7 @@ const BUTTON_LABEL_MAP: Record<QuestionFilterButtonProps['type'], string> = {
 };
 
 export default function QuestionFilterButton({ type }: QuestionFilterButtonProps) {
-  const { filter, setFilter } = useQuestionFilter();
+  const { filter, setFilter } = useQuestionSearchParams();
   const isSelected = filter === type;
 
   const handleClick = () => {
