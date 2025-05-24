@@ -19,8 +19,13 @@ export const useQuestionSearchParams = (): useQuestionSearchParamsReturnType => 
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const [filterState, setFilterState] = useState<QuestionListFilterType>('all');
-  const [currentPageState, setCurrentPageState] = useState<number>(1);
+  const initialFilter = searchParams.get('filter') ?? 'all';
+  const initialPage = searchParams.get('page') ?? 1;
+  const initialSearchBy = searchParams.get('searchBy') ?? 'title';
+  const initialKeyword = searchParams.get('keyword') ?? '';
+
+  const [filterState, setFilterState] = useState<QuestionListFilterType>(initialFilter as QuestionListFilterType);
+  const [currentPageState, setCurrentPageState] = useState<number>(initialPage as number);
 
   useEffect(() => {
     const filter = searchParams.get('filter');
