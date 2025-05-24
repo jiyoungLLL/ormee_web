@@ -5,6 +5,7 @@ import { QuestionSearchByType, useQuestionFilter } from '@/components/question/Q
 import Dropdown from '@/components/ui/dropdown/Dropdown';
 import { useForm } from 'react-hook-form';
 import SearchInput from '@/components/ui/SearchInput';
+import { useToastStore } from '@/stores/toastStore';
 
 const SEARCH_BY_LIST: { id: QuestionSearchByType; label: string }[] = [
   { id: 'title', label: '제목' },
@@ -23,11 +24,15 @@ export default function QuestionSearch() {
 
   const { control, handleSubmit } = useForm({
     defaultValues: {
-      keyword: '', // TODO: 비었을 때 검색 안되게 유효성검사 추가
+      keyword: '',
     },
   });
 
+  const { addToast } = useToastStore();
+
   const handleSearch = ({ keyword }: { keyword: string }) => {
+    if (!keyword.trim()) addToast({ message: '검색어를 입력해주세요.', type: 'error' });
+
     const searchBy = SEARCH_BY_LIST.find((item) => item.label === selectedItem)?.id;
     setSearchCondition({ searchBy: searchBy ?? 'title', keyword });
   };
@@ -40,7 +45,12 @@ export default function QuestionSearch() {
         selectedItem={selectedItem}
         size='w-[119px] h-[46px]'
       />
-      <form onSubmit={handleSubmit(handleSearch)}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit(handleSearch)(e);
+        }}
+      >
         <SearchInput
           name='keyword'
           control={control}
