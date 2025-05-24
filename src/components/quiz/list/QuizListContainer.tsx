@@ -27,12 +27,11 @@ export default function QuizListContainer() {
   const lectureId = useLectureId();
   const { data: quizList } = useGetQuizList(lectureId);
 
-  const { readyQuizzes, ongoingQuizzes, closedQuizzes } = useMemo(() => {
-    const ready = quizList?.filter((quiz) => quiz.state === 'ready') ?? [];
-    const ongoing = quizList?.filter((quiz) => quiz.state === 'ongoing') ?? [];
+  const { openQuizzes, closedQuizzes } = useMemo(() => {
+    const open = quizList?.filter((quiz) => quiz.state === 'ready' || quiz.state === 'ongoing') ?? [];
     const closed = quizList?.filter((quiz) => quiz.state === 'closed') ?? [];
 
-    return { readyQuizzes: ready, ongoingQuizzes: ongoing, closedQuizzes: closed };
+    return { openQuizzes: open, closedQuizzes: closed };
   }, [quizList]);
 
   return (
@@ -57,10 +56,7 @@ export default function QuizListContainer() {
       {selectedQuizCategory === '전체' && (
         <>
           <div className='flex flex-col justify-start items-start gap-[45px]'>
-            <OpenQuizList
-              readyQuizzes={readyQuizzes}
-              ongoingQuizzes={ongoingQuizzes}
-            />
+            <OpenQuizList openQuizzes={openQuizzes} />
             <CloseQuizList closedQuizzes={closedQuizzes} />
           </div>
         </>
