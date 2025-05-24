@@ -2,6 +2,7 @@ import { http, HttpResponse } from 'msw';
 import { MOCK_NOTIFICATION_LIST_BULK } from './notification';
 import { CLOSED_QUIZ_STATS_MAP, PROBLEM_STATS_MAP, QUIZ_LIST_RESPONSE_MIXED } from './quiz';
 import { QuizState } from '@/types/quiz.types';
+import { MOCK_PAGINATED_QUESTION_RESPONSE } from './question';
 
 export const handlers = [
   http.get('/api/teacher/notification/', () => {
@@ -69,6 +70,30 @@ export const handlers = [
       headers: {
         'Content-Type': 'application/json',
       },
+    });
+  }),
+  http.get('/api/teachers/:lectureId/questions', ({ request }) => {
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get('page') || '1');
+    const pageSize = Number(url.searchParams.get('page_size') || '10');
+    const filter = url.searchParams.get('filter'); // 'answered' | 'unanswered' | undefined
+
+    let filtered = [...MOCK_PAGINATED_QUESTION_RESPONSE];
+
+    if (filter === 'answered') filtered = filtered.filter((q) => q.is_answered);
+    if (filter === 'unanswered') filtered = filtered.filter((q) => !q.is_answered);
+
+    const total_count = filtered.length;
+    const total_pages = Math.ceil(total_count / pageSize);
+    const offset = (page - 1) * pageSize;
+    const paginated = filtered.slice(offset, offset + pageSize);
+
+    return HttpResponse.json({
+      total_count,
+      total_pages,
+      current_page: page,
+      page_size: pageSize,
+      questions: paginated,
     });
   }),
 ];
