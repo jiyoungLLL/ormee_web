@@ -15,16 +15,16 @@ const SEARCH_BY_LIST: { id: QuestionSearchByType; label: string }[] = [
 ];
 
 export default function QuestionSearch() {
+  const { setSearchCondition, initialSearchBy, initialKeyword } = useQuestionSearchParams();
+
   const { selectedItem, menuListForDropdown } = useDropdown({
     menuList: SEARCH_BY_LIST,
-    initialSelectedItem: '제목',
+    initialSelectedItem: SEARCH_BY_LIST.find((item) => item.id === initialSearchBy)?.label ?? '제목',
   });
-
-  const { setSearchCondition } = useQuestionSearchParams();
 
   const { control, handleSubmit } = useForm({
     defaultValues: {
-      keyword: '',
+      keyword: initialKeyword,
     },
   });
 
