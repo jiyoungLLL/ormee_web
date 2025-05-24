@@ -6,11 +6,14 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 export type QuestionListFilterType = 'all' | 'unanswered' | 'answered';
 export type QuestionSearchByType = 'title' | 'content' | 'author' | 'all';
+export type QuestionPageButtonType = 'prev' | 'next';
 
 type QuestionFilterContextType = {
   filter: QuestionListFilterType;
   setFilter: (filter: QuestionListFilterType) => void;
   setSearchCondition: ({ searchBy, keyword }: { searchBy: QuestionSearchByType; keyword: string }) => void;
+  currentPage: number;
+  setCurrentPage: (type: QuestionPageButtonType) => void;
 };
 
 const QuestionFilterContext = createContext<QuestionFilterContextType | null>(null);
@@ -18,10 +21,12 @@ const QuestionFilterContext = createContext<QuestionFilterContextType | null>(nu
 export default function QuestionFilterContextProvider({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const initialPage = Number(searchParams.get('page')) || 1;
 
   const [filterState, setFilterState] = useState<QuestionListFilterType>('all');
   const [searchByState, setSearchByState] = useState<QuestionSearchByType>('title');
   const [keywordState, setKeywordState] = useState<string>('');
+  const [currentPageState, setCurrentPageState] = useState<number>(initialPage);
 
   useEffect(() => {
     const filter = searchParams.get('filter');
@@ -36,6 +41,9 @@ export default function QuestionFilterContextProvider({ children }: { children: 
 
     setSearchByState(searchBy === 'all' || searchBy === 'content' || searchBy === 'author' ? searchBy : 'title');
     setKeywordState(keyword ?? '');
+
+    const page = searchParams.get('page');
+    setCurrentPageState(page ? parseInt(page) : 1);
   }, [searchParams]);
 
   const setFilter = (newFilter: QuestionListFilterType) => {
@@ -62,12 +70,30 @@ export default function QuestionFilterContextProvider({ children }: { children: 
     router.push(`?${params.toString()}`);
   };
 
+  const setCurrentPage = (type: QuestionPageButtonType) => {
+    let newPage = currentPageState;
+
+    if (type === 'prev') {
+      newPage = Math.max(1, newPage - 1);
+    } else {
+      newPage = newPage + 1;
+    }
+
+    setCurrentPageState(newPage);
+
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', newPage.toString());
+    router.push(`?${params.toString()}`);
+  };
+
   return (
     <QuestionFilterContext.Provider
       value={{
         filter: filterState,
         setFilter,
         setSearchCondition,
+        currentPage: currentPageState,
+        setCurrentPage,
       }}
     >
       {children}
