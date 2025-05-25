@@ -1,7 +1,7 @@
 'use client';
 
 import { Quiz } from '@/types/quiz.types';
-import { formatDatetimeToYYYYMMDD } from '@/utils/date/formatDate';
+import { formatDatetimeWithTime } from '@/utils/date/formatDate';
 import Image from 'next/image';
 import { useState } from 'react';
 import CloseQuizStats from './CloseQuizStats';
@@ -12,7 +12,7 @@ type CloseQuizItemProps = {
 
 export default function CloseQuizItem({ quiz }: CloseQuizItemProps) {
   const { id, title, dueTime, limitTime, submitStudents, totalStudents } = quiz;
-  const formattedDueTime = formatDatetimeToYYYYMMDD(dueTime);
+  const formattedDueTime = formatDatetimeWithTime(dueTime);
 
   const [isOpen, setIsOpen] = useState(false);
 

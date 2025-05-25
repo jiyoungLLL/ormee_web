@@ -3,7 +3,7 @@
 import Button from '@/components/ui/Button';
 import Image from 'next/image';
 import { Quiz } from '@/types/quiz.types';
-import { formatDatetimeToYYYYMMDD } from '@/utils/date/formatDate';
+import { formatDatetimeWithTime } from '@/utils/date/formatDate';
 import { useModal } from '@/hooks/ui/useModal';
 import Modal from '@/components/ui/Modal';
 import { useToastStore } from '@/stores/toastStore';
@@ -37,7 +37,7 @@ export default function OpenQuizItem({ quiz, type }: OpenQuizItemProps) {
   const { addToast } = useToastStore();
 
   const { id: quizId, title, limitTime, updatedAt } = quiz;
-  const formattedUpdatedAt = formatDatetimeToYYYYMMDD(updatedAt);
+  const formattedUpdatedAt = formatDatetimeWithTime(updatedAt);
 
   const lectureId = useLectureId();
   const { mutate: mutateQuizState, isSuccess, error } = usePutQuizState({ quizId, lectureId });
