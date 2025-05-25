@@ -1,27 +1,60 @@
 import QuestionContainer from '@/components/question/QuestionContainer';
 import QuestionFilterButton from '@/components/question/QuestionFilterButton';
 import QuestionPageButton from '@/components/question/QuestionPageButton';
+import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
+import { getQuestionListOnServer } from '@/hooks/queries/question/useGetQuestionList';
+import { QuestionSearchByType } from '@/hooks/question/useQuestionSearchParams';
+import { QuestionListFilterType } from '@/hooks/question/useQuestionSearchParams';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
-export default function QuestionPage() {
+export default async function QuestionPage({
+  params,
+  searchParams,
+}: {
+  params: { lectureId: string };
+  searchParams: { filter: QuestionListFilterType; page: number; searchBy: QuestionSearchByType; keyword: string };
+}) {
+  const { lectureId } = params;
+  const { filter, page, searchBy, keyword } = searchParams;
+
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 1 * 60 * 1000,
+        gcTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+      },
+    },
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: QUERY_KEYS.questionList({ lectureId, filter, page, searchBy, keyword }),
+    queryFn: () => getQuestionListOnServer({ lectureId, filter, page, searchBy, keyword }),
+  });
+
   return (
     <div className='flex flex-col max-w-[1018px] h-full'>
-      <div className='flex items-center px-[5px] gap-[10px] mb-[20px]'>
-        <img
-          src='/assets/icons/sidenav/question_selected.png'
-          alt='퀴즈 페이지'
-          className='w-[28px] h-[28px]'
-        />
-        <h1 className='text-title3 font-bold'>질문</h1>
-      </div>
-      <div className='flex justify-between items-center mb-[12px]'>
-        <div className='flex items-center gap-[10px]'>
-          <QuestionFilterButton type='all' />
-          <QuestionFilterButton type='unanswered' />
-          <QuestionFilterButton type='answered' />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <div className='flex items-center px-[5px] gap-[10px] mb-[20px]'>
+          <img
+            src='/assets/icons/sidenav/question_selected.png'
+            alt='퀴즈 페이지'
+            className='w-[28px] h-[28px]'
+          />
+          <h1 className='text-title3 font-bold'>질문</h1>
         </div>
-        <QuestionPageButton />
-      </div>
-      <QuestionContainer />
+        <div className='flex justify-between items-center mb-[12px]'>
+          <div className='flex items-center gap-[10px]'>
+            <QuestionFilterButton type='all' />
+            <QuestionFilterButton type='unanswered' />
+            <QuestionFilterButton type='answered' />
+          </div>
+          <QuestionPageButton />
+        </div>
+        <QuestionContainer />
+      </HydrationBoundary>
     </div>
   );
 }
