@@ -63,7 +63,6 @@ export const QuizSchema = z.object({
   state: z.enum(['ready', 'ongoing', 'closed', 'temporary'] as const satisfies readonly QuizState[]),
   title: z.string().min(1),
   description: z.string().optional(),
-  startTime: z.string().datetime().min(1),
   dueTime: z.string().datetime().min(1),
   limitTime: z.enum(QUIZ_LIMIT_TIME_OPTIONS),
   updatedAt: z.string().datetime().min(1),
