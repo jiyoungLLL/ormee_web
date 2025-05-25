@@ -13,6 +13,7 @@ type DateTimePickerProps = {
   calendar?: CalendarType;
   time?: TimeType;
   placeholder: string;
+  defaultValue?: string;
   onSelectDate?: (value: string) => void;
   customImageSize?: string;
   customComponentSize?: string;
@@ -65,6 +66,7 @@ export default function DateTimePicker({
   calendar,
   time,
   placeholder,
+  defaultValue,
   onSelectDate,
   customImageSize,
   customComponentSize,
@@ -73,10 +75,16 @@ export default function DateTimePicker({
   customDropdownSize,
 }: DateTimePickerProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(defaultValue ?? '');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [dropdownStyle, setDropdownStyle] = useState({ top: 0, left: 0 });
+
+  useEffect(() => {
+    if (defaultValue) {
+      setValue(defaultValue);
+    }
+  }, [defaultValue]);
 
   // 외부 클릭 감지
   const pickerRef = useRef<HTMLDivElement>(null);
