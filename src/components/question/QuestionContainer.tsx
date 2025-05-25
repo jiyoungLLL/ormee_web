@@ -16,7 +16,7 @@ type QuestionContainerProps = {
 };
 
 export default function QuestionContainer({ lectureId, searchParams }: QuestionContainerProps) {
-  const { data } = useGetQuestionList({
+  const { data, error } = useGetQuestionList({
     lectureId,
     keyword: searchParams.keyword,
     searchBy: searchParams.searchBy,
@@ -29,7 +29,10 @@ export default function QuestionContainer({ lectureId, searchParams }: QuestionC
   return (
     <div className='flex flex-col gap-[20px] w-[1018px] h-[660px] px-[30px] py-[20px] rounded-[10px] bg-white'>
       <QuestionSearch />
-      <QuestionList questionList={questionList} />
+      <QuestionList
+        questionList={questionList}
+        error={error}
+      />
     </div>
   );
 }
