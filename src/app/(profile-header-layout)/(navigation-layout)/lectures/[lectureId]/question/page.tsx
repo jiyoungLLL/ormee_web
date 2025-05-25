@@ -56,7 +56,10 @@ export default async function QuestionPage({
             searchParams={{ filter, page, searchBy, keyword }}
           />
         </div>
-        <QuestionContainer />
+        <QuestionContainer
+          lectureId={lectureId}
+          searchParams={{ filter, page, searchBy, keyword }}
+        />
       </HydrationBoundary>
     </div>
   );
