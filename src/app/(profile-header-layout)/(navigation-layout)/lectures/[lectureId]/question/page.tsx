@@ -1,6 +1,6 @@
 import QuestionContainer from '@/components/question/QuestionContainer';
 import QuestionFilterButton from '@/components/question/QuestionFilterButton';
-import QuestionPageButton from '@/components/question/QuestionPageButton';
+import QuestionStats from '@/components/question/QuestionStats';
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { getQuestionListOnServer } from '@/hooks/queries/question/useGetQuestionList';
 import { QuestionSearchByType } from '@/hooks/question/useQuestionSearchParams';
@@ -51,7 +51,10 @@ export default async function QuestionPage({
             <QuestionFilterButton type='unanswered' />
             <QuestionFilterButton type='answered' />
           </div>
-          <QuestionPageButton />
+          <QuestionStats
+            lectureId={lectureId}
+            searchParams={{ filter, page, searchBy, keyword }}
+          />
         </div>
         <QuestionContainer />
       </HydrationBoundary>

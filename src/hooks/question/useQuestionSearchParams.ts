@@ -8,6 +8,8 @@ export type QuestionSearchByType = 'title' | 'content' | 'author' | 'all';
 export type QuestionPageButtonType = 'prev' | 'next';
 
 type useQuestionSearchParamsReturnType = {
+  initialFilter: QuestionListFilterType;
+  initialPage: number;
   initialSearchBy: QuestionSearchByType;
   initialKeyword: string;
   filter: QuestionListFilterType;
@@ -81,6 +83,8 @@ export const useQuestionSearchParams = (): useQuestionSearchParamsReturnType => 
   };
 
   return {
+    initialFilter: initialFilter as QuestionListFilterType,
+    initialPage: initialPage as number,
     initialSearchBy: initialSearchBy as QuestionSearchByType,
     initialKeyword,
     filter: filterState,

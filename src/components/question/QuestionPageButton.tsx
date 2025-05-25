@@ -1,12 +1,31 @@
 'use client';
 
 import { useGetQuestionList } from '@/hooks/queries/question/useGetQuestionList';
-import { useLectureId } from '@/hooks/queries/useLectureId';
-import { useQuestionSearchParams } from '@/hooks/question/useQuestionSearchParams';
+import {
+  QuestionListFilterType,
+  QuestionSearchByType,
+  useQuestionSearchParams,
+} from '@/hooks/question/useQuestionSearchParams';
 
-export default function QuestionPageButton() {
-  const lectureId = useLectureId();
-  const { data: questionList } = useGetQuestionList({ lectureId });
+type QuestionPageButtonProps = {
+  lectureId: string;
+  searchParams: {
+    keyword: string;
+    searchBy: QuestionSearchByType;
+    filter: QuestionListFilterType;
+    page: number;
+  };
+};
+
+export default function QuestionPageButton({ lectureId, searchParams }: QuestionPageButtonProps) {
+  const { data: questionList } = useGetQuestionList({
+    lectureId,
+    keyword: searchParams.keyword,
+    searchBy: searchParams.searchBy,
+    filter: searchParams.filter,
+    page: searchParams.page,
+  });
+
   const { currentPage, setCurrentPage } = useQuestionSearchParams();
 
   const totalPage = questionList?.totalPages ?? 1;
