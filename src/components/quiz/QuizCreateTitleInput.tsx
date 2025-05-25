@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { useActiveProblemStore } from '@/stores/activeProblemStore';
 import TipTapField from '../ui/TipTapField';
 import { Editor } from '@tiptap/react';
+import { format } from 'date-fns';
+import { useQuizEditMode } from '@/hooks/queries/quiz/useQuizEditMode';
 
 type QuizCreateTitleInputProps = {
   setEditor: (editor: Editor | null) => void;
@@ -14,11 +16,17 @@ export default function QuizCreateTitleInput({ setEditor }: QuizCreateTitleInput
   const [isActive, setIsActive] = useState(false);
   const { activeProblemId, resetActiveProblemId } = useActiveProblemStore();
   const { control } = useFormContext<QuizFormValues>();
+  const { field: startTimeField } = useController({ control, name: 'startTime' });
   const { field: dueTimeField } = useController({ control, name: 'dueTime' });
   const { field: limitTimeField } = useController({ control, name: 'limitTime' });
 
-  const handleSelectDueTime = (value: string) => {
-    dueTimeField.onChange(value);
+  const handleSelectPeriod = (value: string) => {
+    const [startDate, endDate] = value.split('-');
+    const startDateTime = new Date(startDate).toISOString();
+    const endDateTime = new Date(endDate).toISOString();
+
+    startTimeField.onChange(startDateTime);
+    dueTimeField.onChange(endDateTime);
   };
 
   const handleSelectLimitTime = (value: string) => {
@@ -33,6 +41,12 @@ export default function QuizCreateTitleInput({ setEditor }: QuizCreateTitleInput
   const handleBlur = () => {
     setIsActive(false);
   };
+
+  const { isEditMode } = useQuizEditMode();
+  const defaultPeriod =
+    startTimeField.value && dueTimeField.value
+      ? `${format(new Date(startTimeField.value), 'yyyy.MM.dd')}-${format(new Date(dueTimeField.value), 'yyyy.MM.dd')}`
+      : '';
 
   return (
     <div
@@ -54,7 +68,8 @@ export default function QuizCreateTitleInput({ setEditor }: QuizCreateTitleInput
           type='CALENDAR'
           calendar='PERIOD_TYPE'
           placeholder='응시기한'
-          onSelectDate={handleSelectDueTime}
+          defaultValue={isEditMode ? defaultPeriod : undefined}
+          onSelectDate={handleSelectPeriod}
           customImageSize='w-[20px] h-[20px]'
           customTextStyle='text-headline2 font-semibold'
           customWidthSize='w-fit px-[10px] py-[5px]'
@@ -64,6 +79,7 @@ export default function QuizCreateTitleInput({ setEditor }: QuizCreateTitleInput
           type='TIME'
           time='LIMIT_TIME'
           placeholder='응시시간'
+          defaultValue={isEditMode ? limitTimeField.value : undefined}
           onSelectDate={handleSelectLimitTime}
           customImageSize='w-[20px] h-[20px]'
           customTextStyle='text-headline2 font-semibold'
