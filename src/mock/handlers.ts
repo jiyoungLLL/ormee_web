@@ -75,7 +75,7 @@ export const handlers = [
   http.get('/api/teachers/:lectureId/questions', ({ request }) => {
     const url = new URL(request.url);
     const page = Number(url.searchParams.get('page') || '1');
-    const pageSize = Number(url.searchParams.get('page_size') || '10');
+    const pageSize = Number(url.searchParams.get('page_size') ?? '15');
     const filter = url.searchParams.get('filter'); // 'answered' | 'unanswered' | undefined
 
     let filtered = [...MOCK_PAGINATED_QUESTION_RESPONSE];
