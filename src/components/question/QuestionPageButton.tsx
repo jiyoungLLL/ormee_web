@@ -1,11 +1,15 @@
 'use client';
 
+import { useGetQuestionList } from '@/hooks/queries/question/useGetQuestionList';
+import { useLectureId } from '@/hooks/queries/useLectureId';
 import { useQuestionSearchParams } from '@/hooks/question/useQuestionSearchParams';
 
 export default function QuestionPageButton() {
+  const lectureId = useLectureId();
+  const { data: questionList } = useGetQuestionList({ lectureId });
   const { currentPage, setCurrentPage } = useQuestionSearchParams();
 
-  const totalPage = 3;
+  const totalPage = questionList?.totalPages ?? 1;
   const isFirstPage = currentPage === 1;
   const isLastPage = currentPage === totalPage;
 
