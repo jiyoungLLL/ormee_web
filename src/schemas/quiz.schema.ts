@@ -97,3 +97,67 @@ export const ClosedQuizStatsSchema = z
     }),
   )
   .max(4);
+
+export const ProblemStatsResponseSchema = z
+  .object({
+    problem_label: z.string().min(1),
+    description: z.string().min(1),
+    type: z.enum(Object.keys(QUIZ_TYPE_MAP) as [keyof typeof QUIZ_TYPE_MAP, ...Array<keyof typeof QUIZ_TYPE_MAP>]),
+  })
+  .and(
+    z.discriminatedUnion('type', [
+      z.object({
+        type: z.literal('choice'),
+        items: z.array(
+          z.object({
+            is_answer: z.boolean(),
+            text: z.string().min(1),
+            selected_students: z.number(),
+          }),
+        ),
+      }),
+      z.object({
+        type: z.literal('essay'),
+        answer: z.string().min(1),
+        incorrect_submit: z.array(
+          z.object({
+            rank: z.number(),
+            answer: z.string(),
+            incorrect_students: z.number(),
+          }),
+        ),
+      }),
+    ]),
+  );
+
+export const ProblemStatsSchema = z
+  .object({
+    problemLabel: z.string().min(1),
+    description: z.string().min(1),
+    type: z.enum(Object.keys(QUIZ_TYPE_MAP) as [keyof typeof QUIZ_TYPE_MAP, ...Array<keyof typeof QUIZ_TYPE_MAP>]),
+  })
+  .and(
+    z.discriminatedUnion('type', [
+      z.object({
+        type: z.literal('choice'),
+        items: z.array(
+          z.object({
+            isAnswer: z.boolean(),
+            text: z.string().min(1),
+            selectedStudents: z.number(),
+          }),
+        ),
+      }),
+      z.object({
+        type: z.literal('essay'),
+        answer: z.string().min(1),
+        incorrectSubmit: z.array(
+          z.object({
+            rank: z.number(),
+            answer: z.string(),
+            incorrectStudents: z.number(),
+          }),
+        ),
+      }),
+    ]),
+  );

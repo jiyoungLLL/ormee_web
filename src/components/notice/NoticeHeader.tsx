@@ -1,6 +1,7 @@
 'use client';
 
 import Button from '@/components/ui/Button';
+import { useLectureId } from '@/hooks/queries/useLectureId';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -17,7 +18,7 @@ export default function NoticeTitle() {
     // 검색 로직 실행
   };
 
-  const lectureNum: number = 1;
+  const lectureNum = useLectureId();
 
   return (
     <>

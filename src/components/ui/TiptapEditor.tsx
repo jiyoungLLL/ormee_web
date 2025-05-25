@@ -12,7 +12,7 @@ import { useEffect } from 'react';
 import Toolbar from './Toolbar';
 
 type TipTapProps = {
-  type: '공지' | '과제';
+  type: '공지' | '숙제';
   contents: string;
   onChange: (text: string) => void;
 };

@@ -1,6 +1,12 @@
 import { http, HttpResponse } from 'msw';
 import { MOCK_NOTIFICATION_LIST_BULK } from './notification';
-import { CLOSED_QUIZ_STATS_MAP, QUIZ_DETAIL_MAP, QUIZ_LIST_RESPONSE_MIXED, TEMPORARY_QUIZ_LIST } from './quiz';
+import {
+  CLOSED_QUIZ_STATS_MAP,
+  PROBLEM_STATS_MAP,
+  QUIZ_DETAIL_MAP,
+  QUIZ_LIST_RESPONSE_MIXED,
+  TEMPORARY_QUIZ_LIST,
+} from './quiz';
 import { QuizState } from '@/types/quiz.types';
 
 export const handlers = [
@@ -73,6 +79,21 @@ export const handlers = [
     }
 
     return HttpResponse.json(quiz, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }),
+  http.get('/api/teachers/quizzes/problems/:problemId/stats', ({ params }) => {
+    const { problemId } = params;
+    const stats = PROBLEM_STATS_MAP[problemId as string] ?? {};
+
+    if (Object.keys(stats).length === 0) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    return HttpResponse.json(stats, {
       status: 200,
       headers: {
         'Content-Type': 'application/json',

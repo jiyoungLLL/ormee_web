@@ -9,7 +9,7 @@ import Input from '../ui/Input';
 import Modal from '../ui/Modal';
 
 type ClassModalProps = {
-  type: 'ing' | 'new';
+  type: 'ongoing' | 'new';
   isOpen: boolean;
   closeModal: () => void;
 };
@@ -20,7 +20,7 @@ type ModalContents = {
 };
 
 export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps) {
-  const title = type === 'ing' ? '강의 설정' : '신규 강의 개설';
+  const title = type === 'ongoing' ? '강의 설정' : '신규 강의 개설';
 
   // 유효성 검사 및 제출
   const onSubmit = (data: ClassModalValues) => {

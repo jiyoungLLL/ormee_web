@@ -5,7 +5,7 @@ import { useLectureId } from '@/hooks/queries/useLectureId';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
-export default function NoticeWrite() {
+export default function HomeworkCreate() {
   const lectureNum = useLectureId();
 
   const pathname = usePathname();
@@ -15,7 +15,7 @@ export default function NoticeWrite() {
   return (
     <div>
       <Create
-        type='notice'
+        type='homework'
         params={lectureNum}
       />
     </div>

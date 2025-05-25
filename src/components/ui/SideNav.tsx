@@ -124,7 +124,7 @@ export default function SideNav({ type, title, student, date }: SideNavProps) {
             </div>
             <div className='h-[62px] w-full border-t-0.5 border-purple-20 flex justify-center items-center text-center text-gray-80 text-headline2 font-normal'>
               <Link
-                href='/'
+                href='/mypage/class'
                 className='flex-1'
               >
                 강의 설정
