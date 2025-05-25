@@ -1,5 +1,5 @@
 import { QuizFormValues } from '@/types/quiz.types';
-import { Control, Path, useController } from 'react-hook-form';
+import { Control, Path, useController, useFormContext } from 'react-hook-form';
 import DateTimePicker from '../ui/DateTimePicker';
 import { useState } from 'react';
 import { useActiveProblemStore } from '@/stores/activeProblemStore';
@@ -7,14 +7,13 @@ import TipTapField from '../ui/TipTapField';
 import { Editor } from '@tiptap/react';
 
 type QuizCreateTitleInputProps = {
-  control: Control<QuizFormValues>;
-  name: Path<QuizFormValues>;
   setEditor: (editor: Editor | null) => void;
 };
 
-export default function QuizCreateTitleInput({ control, name, setEditor }: QuizCreateTitleInputProps) {
+export default function QuizCreateTitleInput({ setEditor }: QuizCreateTitleInputProps) {
   const [isActive, setIsActive] = useState(false);
   const { activeProblemId, resetActiveProblemId } = useActiveProblemStore();
+  const { control } = useFormContext<QuizFormValues>();
   const { field: dueTimeField } = useController({ control, name: 'dueTime' });
   const { field: limitTimeField } = useController({ control, name: 'limitTime' });
 
@@ -41,7 +40,7 @@ export default function QuizCreateTitleInput({ control, name, setEditor }: QuizC
     >
       <TipTapField
         control={control}
-        name={name}
+        name='title'
         setEditor={setEditor}
         placeholder='퀴즈 제목을 입력하세요'
         fieldStyle='w-full min-h-[50px] border-none bg-white p-[10px] focus:outline-none'

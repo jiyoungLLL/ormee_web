@@ -76,11 +76,7 @@ export default function QuizCreateForm() {
         <div className='flex-1 flex flex-col justify-start items-center gap-[26px]'>
           <FormProvider {...methods}>
             <form className='flex flex-col justify-start items-center gap-[26px] w-full h-full'>
-              <QuizCreateTitleInput
-                control={control}
-                name='title'
-                setEditor={setEditor}
-              />
+              <QuizCreateTitleInput setEditor={setEditor} />
               {problems.map((problem, index) => (
                 <ProblemInput
                   key={problem.id}
