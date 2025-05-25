@@ -96,6 +96,16 @@ export default function TipTapFieldContent({
   useEffect(() => {
     if (editor && editor.getHTML() !== value) {
       editor.commands.setContent(value);
+
+      const editorDOM = editor.view.dom as HTMLElement;
+
+      if (isVisuallyEmpty(value)) {
+        editorDOM.setAttribute('data-placeholder-visible', 'true');
+        editorDOM.setAttribute('data-placeholder', placeholder ?? '');
+      } else {
+        editorDOM.removeAttribute('data-placeholder-visible');
+        editorDOM.removeAttribute('data-placeholder');
+      }
     }
   }, [editor, value]);
 
