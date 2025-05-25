@@ -1,4 +1,4 @@
-import { ClosedQuizStatsResponse, Quiz, QuizListResponse } from '@/types/quiz.types';
+import { ClosedQuizStatsResponse, Quiz, QuizFormValues, QuizListResponse } from '@/types/quiz.types';
 
 export const QUIZ_LIST_RESPONSE_MIXED: QuizListResponse = [
   {
@@ -184,3 +184,95 @@ export const TEMPORARY_QUIZ_LIST: QuizListResponse = [
     total_students: 20,
   },
 ];
+
+export const QUIZ_TEMPORARY_1_EDIT: QuizFormValues & { id: string } = {
+  id: 'mock-temporary-quiz-1',
+  title: '미친토익 기본반 RC 퀴즈 1 (업데이트)',
+  description: '기본 문법과 어휘를 테스트하는 퀴즈입니다.',
+  dueTime: '2025-06-20T14:00:00.000Z',
+  limitTime: '30분',
+  problems: [
+    {
+      type: 'choice',
+      context: '문항 1',
+      answerItemId: 'mock-item-1',
+      item: [
+        {
+          text: '선지 1',
+          id: 'mock-item-1',
+        },
+        {
+          text: '선지 2',
+          id: 'mock-item-2',
+        },
+      ],
+    },
+    {
+      type: 'choice',
+      context: '문항 2',
+      answerItemId: '',
+      item: [
+        {
+          text: '선지 1',
+          id: 'mock-problem-2-item-1',
+        },
+        {
+          text: '선지 2',
+          id: 'mock-problem-2-item-2',
+        },
+      ],
+    },
+  ],
+};
+
+export const QUIZ_TEMPORARY_2_EDIT: QuizFormValues & { id: string } = {
+  id: 'mock-temporary-quiz-2',
+  title: '미친토익 기본반 RC 퀴즈 2 (수정중)',
+  description: '기본 문법과 어휘를 테스트하는 퀴즈입니다.',
+  dueTime: '2025-06-20T14:00:00.000Z',
+  limitTime: '10분',
+  problems: [
+    {
+      type: 'choice',
+      context: '문항 1',
+      answerItemId: '',
+      item: [
+        {
+          text: '선지 1',
+          id: 'mock-problem-1-item-1',
+        },
+        {
+          text: '선지 2',
+          id: 'mock-problem-1-item-2',
+        },
+      ],
+    },
+  ],
+};
+
+export const QUIZ_TEMPORARY_3_EDIT: QuizFormValues & { id: string } = {
+  id: 'mock-temporary-quiz-3',
+  title: '미친토익 기본반 RC 퀴즈 3 (수정중)',
+  description: '기본 문법과 어휘를 테스트하는 퀴즈입니다.',
+  dueTime: '2025-06-20T14:00:00.000Z',
+  limitTime: '20분',
+  problems: [
+    {
+      type: 'choice',
+      context: '문항 1',
+      answerItemId: '',
+      item: [
+        {
+          text: '',
+          id: 'mock-item-1',
+        },
+      ],
+    },
+  ],
+};
+
+export const QUIZ_DETAIL_MAP: Record<string, QuizFormValues & { id: string }> = {
+  'mock-temporary-quiz-1': QUIZ_TEMPORARY_1_EDIT,
+  'mock-temporary-quiz-2': QUIZ_TEMPORARY_2_EDIT,
+  'mock-temporary-quiz-3': QUIZ_TEMPORARY_3_EDIT,
+};
