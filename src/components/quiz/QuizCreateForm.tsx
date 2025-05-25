@@ -9,12 +9,22 @@ import ProblemInput from './ProblemInput';
 import AddProblemButton from './AddProblemButton';
 import { DEFAULT_CHOICE_ITEM, DEFAULT_PROBLEM } from '@/constants/quiz.constants';
 import Toolbar from '../ui/Toolbar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
 import QuizCreateHeader from './QuizCreateHeader';
 import { QuizFormValues } from '@/types/quiz.types';
+import { useSearchParams } from 'next/navigation';
+import { useGetQuizDetail } from '@/hooks/queries/quiz/useGetQuizDetail';
 
 export default function QuizCreateForm() {
+  const searchParams = useSearchParams();
+  const createType = searchParams.get('type');
+  const quizId = searchParams.get('quizId');
+
+  const isEdit = createType === 'edit' && quizId;
+
+  const { data } = useGetQuizDetail(quizId ?? '');
+
   const methods = useForm<QuizFormValues>({
     mode: 'onSubmit',
     defaultValues: {
@@ -26,6 +36,13 @@ export default function QuizCreateForm() {
     },
     resolver: zodResolver(QuizFormSchema),
   });
+
+  useEffect(() => {
+    if (data) {
+      const { id, ...rest } = data;
+      methods.reset(rest);
+    }
+  }, [data]);
 
   const { control } = methods;
 
