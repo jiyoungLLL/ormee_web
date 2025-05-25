@@ -8,9 +8,10 @@ import CloseQuizStats from './CloseQuizStats';
 
 type CloseQuizItemProps = {
   quiz: Quiz;
+  isLastQuiz: boolean;
 };
 
-export default function CloseQuizItem({ quiz }: CloseQuizItemProps) {
+export default function CloseQuizItem({ quiz, isLastQuiz }: CloseQuizItemProps) {
   const { id, title, dueTime, limitTime, submitStudents, totalStudents } = quiz;
   const formattedDueTime = formatDatetimeWithTime(dueTime);
 
@@ -19,6 +20,8 @@ export default function CloseQuizItem({ quiz }: CloseQuizItemProps) {
   const handleStatsToggle = () => {
     setIsOpen(!isOpen);
   };
+
+  const showSeparator = !isOpen && !isLastQuiz;
 
   return (
     <div className='flex flex-col w-full gap-[5px]'>
@@ -63,7 +66,7 @@ export default function CloseQuizItem({ quiz }: CloseQuizItemProps) {
           />
         </div>
       </div>
-      {!isOpen && <div className='w-full h-[1px] bg-gray-30' />}
+      {showSeparator && <div className='w-full h-[1px] bg-gray-30' />}
       {isOpen && <CloseQuizStats quizId={id} />}
     </div>
   );
