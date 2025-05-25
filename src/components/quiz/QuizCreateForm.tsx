@@ -13,23 +13,17 @@ import { useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
 import QuizCreateHeader from './QuizCreateHeader';
 import { QuizFormValues } from '@/types/quiz.types';
-import { useSearchParams } from 'next/navigation';
-import { useGetQuizDetail } from '@/hooks/queries/quiz/useGetQuizDetail';
+import { useQuizEditMode } from '@/hooks/queries/quiz/useQuizEditMode';
 
 export default function QuizCreateForm() {
-  const searchParams = useSearchParams();
-  const createType = searchParams.get('type');
-  const quizId = searchParams.get('quizId');
-
-  const isEdit = createType === 'edit' && quizId;
-
-  const { data } = useGetQuizDetail(quizId ?? '');
+  const { isEditMode, quizDetail } = useQuizEditMode();
 
   const methods = useForm<QuizFormValues>({
     mode: 'onSubmit',
     defaultValues: {
       title: '',
       description: '',
+      startTime: '',
       dueTime: '',
       limitTime: '',
       problems: [{ ...DEFAULT_PROBLEM, item: [{ text: DEFAULT_CHOICE_ITEM.text, id: 'initial-item-id' }] }],
@@ -38,11 +32,11 @@ export default function QuizCreateForm() {
   });
 
   useEffect(() => {
-    if (data) {
-      const { id, ...rest } = data;
+    if (isEditMode && quizDetail) {
+      const { id, ...rest } = quizDetail;
       methods.reset(rest);
     }
-  }, [data]);
+  }, [isEditMode, quizDetail]);
 
   const { control } = methods;
 

@@ -28,6 +28,7 @@ export const ProblemSchema = z.object({
 export const QuizFormSchema = z.object({
   title: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_TITLE }),
   description: z.string().optional(),
+  startTime: z.string().datetime().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_DUE_TIME }),
   dueTime: z.string().datetime().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_DUE_TIME }),
   limitTime: z.union([z.enum(QUIZ_LIMIT_TIME_OPTIONS), z.literal('')], {
     message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_LIMIT_TIME,
@@ -62,6 +63,7 @@ export const QuizSchema = z.object({
   state: z.enum(['ready', 'ongoing', 'closed', 'temporary'] as const satisfies readonly QuizState[]),
   title: z.string().min(1),
   description: z.string().optional(),
+  startTime: z.string().datetime().min(1),
   dueTime: z.string().datetime().min(1),
   limitTime: z.enum(QUIZ_LIMIT_TIME_OPTIONS),
   updatedAt: z.string().datetime().min(1),
