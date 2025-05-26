@@ -3,7 +3,7 @@
 import Button from '@/components/ui/Button';
 import Image from 'next/image';
 import { Quiz } from '@/types/quiz.types';
-import { formatDatetimeToYYYYMMDD } from '@/utils/date/formatDate';
+import { formatDatetimeWithTime } from '@/utils/date/formatDate';
 import { useModal } from '@/hooks/ui/useModal';
 import Modal from '@/components/ui/Modal';
 import { usePutQuizState } from '@/hooks/queries/quiz/usePutQuizState';
@@ -29,7 +29,7 @@ export default function OpenQuizItem({ quiz, type, isLastQuiz }: OpenQuizItemPro
   } = useModal({ defaultOpen: false });
 
   const { id: quizId, title, limitTime, dueTime } = quiz;
-  const formattedDueTime = formatDatetimeToYYYYMMDD(dueTime);
+  const formattedDueTime = formatDatetimeWithTime(dueTime);
 
   const lectureId = useLectureId();
   const { mutate: mutateQuizState } = usePutQuizState({ quizId, lectureId, prevState: type });
