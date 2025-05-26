@@ -9,23 +9,34 @@ import ProblemInput from './ProblemInput';
 import AddProblemButton from './AddProblemButton';
 import { DEFAULT_CHOICE_ITEM, DEFAULT_PROBLEM } from '@/constants/quiz.constants';
 import Toolbar from '../ui/Toolbar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
 import QuizCreateHeader from './QuizCreateHeader';
 import { QuizFormValues } from '@/types/quiz.types';
+import { useQuizEditMode } from '@/hooks/queries/quiz/useQuizEditMode';
 
 export default function QuizCreateForm() {
+  const { isEditMode, quizDetail } = useQuizEditMode();
+
   const methods = useForm<QuizFormValues>({
     mode: 'onSubmit',
     defaultValues: {
       title: '',
       description: '',
+      startTime: '',
       dueTime: '',
       limitTime: '',
       problems: [{ ...DEFAULT_PROBLEM, item: [{ text: DEFAULT_CHOICE_ITEM.text, id: 'initial-item-id' }] }],
     },
     resolver: zodResolver(QuizFormSchema),
   });
+
+  useEffect(() => {
+    if (isEditMode && quizDetail) {
+      const { id, ...rest } = quizDetail;
+      methods.reset(rest);
+    }
+  }, [isEditMode, quizDetail]);
 
   const { control } = methods;
 
@@ -59,11 +70,7 @@ export default function QuizCreateForm() {
         <div className='flex-1 flex flex-col justify-start items-center gap-[26px]'>
           <FormProvider {...methods}>
             <form className='flex flex-col justify-start items-center gap-[26px] w-full h-full'>
-              <QuizCreateTitleInput
-                control={control}
-                name='title'
-                setEditor={setEditor}
-              />
+              <QuizCreateTitleInput setEditor={setEditor} />
               {problems.map((problem, index) => (
                 <ProblemInput
                   key={problem.id}

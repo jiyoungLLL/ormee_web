@@ -10,6 +10,7 @@ import OpenQuizList from './OpenQuizList';
 import { usePathname } from 'next/navigation';
 import CloseQuizList from './CloseQuizList';
 import { useLectureId } from '@/hooks/queries/useLectureId';
+import TemporaryQuizList from './TemporaryQuizList';
 
 const QUIZ_DROPDOWN_LIST: MenuItem[] = [
   { id: 'quiz-list-total', label: '전체' },
@@ -61,6 +62,7 @@ export default function QuizListContainer() {
           </div>
         </>
       )}
+      {selectedQuizCategory === '임시저장' && <TemporaryQuizList />}
     </div>
   );
 }

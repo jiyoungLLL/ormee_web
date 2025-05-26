@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../queryKeys';
 import { useToastStore } from '@/stores/toastStore';
 
-const SUCCESS_MESSAGE: Record<Exclude<QuizState, 'closed'>, string> = {
+const SUCCESS_MESSAGE: Record<Exclude<QuizState, 'closed' | 'temporary'>, string> = {
   ongoing: '퀴즈가 마감되었습니다.',
   ready: '퀴즈가 게시되었습니다.',
 };
@@ -32,7 +32,7 @@ export const usePutQuizState = ({
 }: {
   quizId: string;
   lectureId: string;
-  prevState: Exclude<QuizState, 'closed'>;
+  prevState: Exclude<QuizState, 'closed' | 'temporary'>;
 }) => {
   const queryClient = useQueryClient();
   const { addToast } = useToastStore();

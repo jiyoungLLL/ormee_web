@@ -28,6 +28,7 @@ export const ProblemSchema = z.object({
 export const QuizFormSchema = z.object({
   title: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_TITLE }),
   description: z.string().optional(),
+  startTime: z.string().datetime().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_DUE_TIME }),
   dueTime: z.string().datetime().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_DUE_TIME }),
   limitTime: z.union([z.enum(QUIZ_LIMIT_TIME_OPTIONS), z.literal('')], {
     message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_LIMIT_TIME,
@@ -45,7 +46,7 @@ export const ProblemResponseSchema = z.object({
 
 export const QuizResponseSchema = z.object({
   id: z.string().min(1),
-  state: z.enum(['ready', 'ongoing', 'closed'] as const satisfies readonly QuizState[]),
+  state: z.enum(['ready', 'ongoing', 'closed', 'temporary'] as const satisfies readonly QuizState[]),
   title: z.string().min(1),
   description: z.string().optional(),
   due_time: z.string().datetime().min(1),
@@ -59,7 +60,7 @@ export const QuizListResponseSchema = z.array(QuizResponseSchema);
 
 export const QuizSchema = z.object({
   id: z.string().min(1),
-  state: z.enum(['ready', 'ongoing', 'closed'] as const satisfies readonly QuizState[]),
+  state: z.enum(['ready', 'ongoing', 'closed', 'temporary'] as const satisfies readonly QuizState[]),
   title: z.string().min(1),
   description: z.string().optional(),
   dueTime: z.string().datetime().min(1),
