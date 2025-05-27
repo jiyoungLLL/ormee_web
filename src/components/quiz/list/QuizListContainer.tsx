@@ -10,6 +10,7 @@ import OpenQuizList from './OpenQuizList';
 import { usePathname } from 'next/navigation';
 import CloseQuizList from './CloseQuizList';
 import { useLectureId } from '@/hooks/queries/useLectureId';
+import TemporaryQuizList from './TemporaryQuizList';
 
 const QUIZ_DROPDOWN_LIST: MenuItem[] = [
   { id: 'quiz-list-total', label: '전체' },
@@ -27,12 +28,11 @@ export default function QuizListContainer() {
   const lectureId = useLectureId();
   const { data: quizList } = useGetQuizList(lectureId);
 
-  const { readyQuizzes, ongoingQuizzes, closedQuizzes } = useMemo(() => {
-    const ready = quizList?.filter((quiz) => quiz.state === 'ready') ?? [];
-    const ongoing = quizList?.filter((quiz) => quiz.state === 'ongoing') ?? [];
+  const { openQuizzes, closedQuizzes } = useMemo(() => {
+    const open = quizList?.filter((quiz) => quiz.state === 'ready' || quiz.state === 'ongoing') ?? [];
     const closed = quizList?.filter((quiz) => quiz.state === 'closed') ?? [];
 
-    return { readyQuizzes: ready, ongoingQuizzes: ongoing, closedQuizzes: closed };
+    return { openQuizzes: open, closedQuizzes: closed };
   }, [quizList]);
 
   return (
@@ -57,14 +57,12 @@ export default function QuizListContainer() {
       {selectedQuizCategory === '전체' && (
         <>
           <div className='flex flex-col justify-start items-start gap-[45px]'>
-            <OpenQuizList
-              readyQuizzes={readyQuizzes}
-              ongoingQuizzes={ongoingQuizzes}
-            />
+            <OpenQuizList openQuizzes={openQuizzes} />
             <CloseQuizList closedQuizzes={closedQuizzes} />
           </div>
         </>
       )}
+      {selectedQuizCategory === '임시저장' && <TemporaryQuizList />}
     </div>
   );
 }

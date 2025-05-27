@@ -1,24 +1,27 @@
 'use client';
 
 import { Quiz } from '@/types/quiz.types';
-import { formatDatetimeToYYYYMMDD } from '@/utils/date/formatDate';
+import { formatDatetimeWithTime } from '@/utils/date/formatDate';
 import Image from 'next/image';
 import { useState } from 'react';
 import CloseQuizStats from './CloseQuizStats';
 
 type CloseQuizItemProps = {
   quiz: Quiz;
+  isLastQuiz: boolean;
 };
 
-export default function CloseQuizItem({ quiz }: CloseQuizItemProps) {
+export default function CloseQuizItem({ quiz, isLastQuiz }: CloseQuizItemProps) {
   const { id, title, dueTime, limitTime, submitStudents, totalStudents } = quiz;
-  const formattedDueTime = formatDatetimeToYYYYMMDD(dueTime);
+  const formattedDueTime = formatDatetimeWithTime(dueTime);
 
   const [isOpen, setIsOpen] = useState(false);
 
   const handleStatsToggle = () => {
     setIsOpen(!isOpen);
   };
+
+  const showSeparator = !isOpen && !isLastQuiz;
 
   return (
     <div className='flex flex-col w-full gap-[5px]'>
@@ -63,7 +66,7 @@ export default function CloseQuizItem({ quiz }: CloseQuizItemProps) {
           />
         </div>
       </div>
-      {!isOpen && <div className='w-full h-[1px] bg-gray-30' />}
+      {showSeparator && <div className='w-full h-[1px] bg-gray-30' />}
       {isOpen && <CloseQuizStats quizId={id} />}
     </div>
   );

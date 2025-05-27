@@ -6,6 +6,8 @@ type CloseQuizListProps = {
 };
 
 export default function CloseQuizList({ closedQuizzes }: CloseQuizListProps) {
+  const isLastQuiz = (index: number) => index === closedQuizzes.length - 1;
+
   return (
     <div className='flex flex-col w-full'>
       <h2 className='text-heading2 font-semibold mb-[20px]'>마감 퀴즈</h2>
@@ -14,10 +16,11 @@ export default function CloseQuizList({ closedQuizzes }: CloseQuizListProps) {
           마감된 퀴즈가 없어요.
         </div>
       )}
-      {closedQuizzes.map((quiz) => (
+      {closedQuizzes.map((quiz, index) => (
         <CloseQuizItem
           key={quiz.id}
           quiz={quiz}
+          isLastQuiz={isLastQuiz(index)}
         />
       ))}
     </div>

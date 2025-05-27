@@ -33,7 +33,7 @@ export type QuizRequest = {
   problems: Problem[];
 };
 
-export type QuizState = 'ready' | 'ongoing' | 'closed';
+export type QuizState = 'ready' | 'ongoing' | 'closed' | 'temporary';
 
 export type QuizFormValues = z.infer<typeof QuizFormSchema>;
 export type QuizListResponse = z.infer<typeof QuizListResponseSchema>;
