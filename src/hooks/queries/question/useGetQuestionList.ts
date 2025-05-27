@@ -2,9 +2,8 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../queryKeys';
 import { QuestionListFilterType } from '@/hooks/question/useQuestionSearchParams';
 import { QuestionSearchByType } from '@/hooks/question/useQuestionSearchParams';
-import { PaginatedQuestion } from '@/types/question.types';
-import { PaginatedQuestionResponseSchema } from '@/schemas/question.schema';
-import { transformPaginatedQuestionResponseToCamelCase } from '@/utils/transforms/question.transform';
+import { PaginatedQuestionDataSchema, PaginatedQuestionResponseSchema } from '@/schemas/question.schema';
+import { PaginatedQuestionData } from '@/types/question.types';
 
 export const getQuestionList = async ({
   lectureId,
@@ -26,7 +25,9 @@ export const getQuestionList = async ({
   if (searchBy) params.append('searchBy', searchBy);
   if (keyword) params.append('keyword', keyword);
 
-  const response = await fetch(`/api/teachers/${lectureId}/questions?${params}`);
+  const response = await fetch(`/api/teachers/${lectureId}/questions?${params}`, {
+    method: 'GET',
+  });
 
   if (!response.ok) {
     if (process.env.NODE_ENV === 'development') console.error(response.statusText);
@@ -38,10 +39,21 @@ export const getQuestionList = async ({
 
   if (!parsedData.success) {
     if (process.env.NODE_ENV === 'development') console.error(parsedData.error);
-    throw new Error('잘못된 질문 목록입니다.');
+    throw new Error('질문 리스트 응답 데이터가 예상과 다릅니다.');
   }
 
-  return transformPaginatedQuestionResponseToCamelCase(parsedData.data);
+  if (parsedData.data.status === 'error') {
+    throw new Error(parsedData.data.message ?? '알 수 없는 오류가 발생했습니다.');
+  }
+
+  const parsedQuestionData = PaginatedQuestionDataSchema.safeParse(parsedData.data.data);
+
+  if (!parsedQuestionData.success) {
+    if (process.env.NODE_ENV === 'development') console.error(parsedQuestionData.error);
+    throw new Error('질문 리스트 데이터가 예상과 다릅니다.');
+  }
+
+  return parsedQuestionData.data;
 };
 
 export const getQuestionListOnServer = async ({
@@ -64,7 +76,9 @@ export const getQuestionListOnServer = async ({
   if (searchBy) params.append('searchBy', searchBy);
   if (keyword) params.append('keyword', keyword);
 
-  const response = await fetch(`http://localhost:8080/api/teachers/${lectureId}/questions?${params}`);
+  const response = await fetch(`http://localhost:8080/api/teachers/${lectureId}/questions?${params}`, {
+    method: 'GET',
+  });
 
   if (!response.ok) {
     if (process.env.NODE_ENV === 'development') console.error(response.statusText);
@@ -76,10 +90,21 @@ export const getQuestionListOnServer = async ({
 
   if (!parsedData.success) {
     if (process.env.NODE_ENV === 'development') console.error(parsedData.error);
-    throw new Error('잘못된 질문 목록입니다.');
+    throw new Error('질문 리스트 응답 데이터가 예상과 다릅니다.');
   }
 
-  return transformPaginatedQuestionResponseToCamelCase(parsedData.data);
+  if (parsedData.data.status === 'error') {
+    throw new Error(parsedData.data.message ?? '알 수 없는 오류가 발생했습니다.');
+  }
+
+  const parsedQuestionData = PaginatedQuestionDataSchema.safeParse(parsedData.data.data);
+
+  if (!parsedQuestionData.success) {
+    if (process.env.NODE_ENV === 'development') console.error(parsedQuestionData.error);
+    throw new Error('질문 리스트 데이터가 예상과 다릅니다.');
+  }
+
+  return parsedQuestionData.data;
 };
 
 export const useGetQuestionList = ({
@@ -95,7 +120,7 @@ export const useGetQuestionList = ({
   searchBy?: QuestionSearchByType;
   keyword?: string;
 }) => {
-  return useQuery<PaginatedQuestion>({
+  return useQuery<PaginatedQuestionData>({
     queryKey: QUERY_KEYS.questionList({ lectureId, filter, page, searchBy, keyword }),
     queryFn: () => getQuestionList({ lectureId, filter, page, searchBy, keyword }),
     enabled: !!lectureId,
