@@ -47,9 +47,9 @@ export default async function QuestionPage({
         </div>
         <div className='flex justify-between items-center mb-[12px]'>
           <div className='flex items-center gap-[10px]'>
-            <QuestionFilterButton type='all' />
-            <QuestionFilterButton type='unanswered' />
-            <QuestionFilterButton type='answered' />
+            <QuestionFilterButton type='전체' />
+            <QuestionFilterButton type='답변 미등록' />
+            <QuestionFilterButton type='답변 등록' />
           </div>
           <QuestionStats
             lectureId={lectureId}

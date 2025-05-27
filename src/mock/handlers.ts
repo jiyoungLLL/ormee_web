@@ -109,8 +109,8 @@ export const handlers = [
 
     let filtered = [...MOCK_PAGINATED_QUESTION_RESPONSE];
 
-    if (filter === 'answered') filtered = filtered.filter((q) => q.isAnswered);
-    if (filter === 'unanswered') filtered = filtered.filter((q) => !q.isAnswered);
+    if (filter === '답변 등록') filtered = filtered.filter((q) => q.isAnswered);
+    if (filter === '답변 미등록') filtered = filtered.filter((q) => !q.isAnswered);
 
     const totalCount = filtered.length;
     const totalPages = Math.ceil(totalCount / pageSize);

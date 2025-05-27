@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export type QuestionListFilterType = 'all' | 'unanswered' | 'answered';
+export type QuestionListFilterType = '전체' | '답변 미등록' | '답변 등록';
 export type QuestionSearchByType = 'title' | 'content' | 'author' | 'all';
 export type QuestionPageButtonType = 'prev' | 'next';
 
@@ -23,7 +23,7 @@ export const useQuestionSearchParams = (): useQuestionSearchParamsReturnType => 
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const initialFilter = searchParams.get('filter') ?? 'all';
+  const initialFilter = searchParams.get('filter') ?? '전체';
   const initialPage = searchParams.get('page') ?? 1;
   const initialSearchBy = searchParams.get('searchBy') ?? 'title';
   const initialKeyword = searchParams.get('keyword') ?? '';
@@ -33,10 +33,10 @@ export const useQuestionSearchParams = (): useQuestionSearchParamsReturnType => 
 
   useEffect(() => {
     const filter = searchParams.get('filter');
-    if (filter === 'unanswered' || filter === 'answered') {
+    if (filter === '답변 미등록' || filter === '답변 등록') {
       setFilterState(filter);
     } else {
-      setFilterState('all');
+      setFilterState('전체');
     }
 
     const page = searchParams.get('page');
@@ -48,7 +48,7 @@ export const useQuestionSearchParams = (): useQuestionSearchParamsReturnType => 
 
     const params = new URLSearchParams(searchParams.toString());
 
-    if (newFilter === 'all') {
+    if (newFilter === '전체') {
       params.delete('filter');
     } else {
       params.set('filter', newFilter);
