@@ -1,8 +1,8 @@
 'use client';
 
 import QuestionSearch from '@/components/question/QuestionSearch';
-import { useGetQuestionList } from '@/hooks/queries/question/useGetQuestionList';
-import { QuestionListFilterType, QuestionSearchByType } from '@/hooks/question/useQuestionSearchParams';
+import { useGetQuestionList } from '@/features/question/hooks/queries/useGetQuestionList';
+import { QuestionListFilterType, QuestionSearchByType } from '@/features/question/hooks/useQuestionSearchParams';
 import QuestionList from './QuestionList';
 
 type QuestionContainerProps = {

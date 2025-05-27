@@ -1,4 +1,4 @@
-import { QuestionListFilterType, QuestionSearchByType } from '../question/useQuestionSearchParams';
+import { QuestionListFilterType, QuestionSearchByType } from '../../features/question/hooks/useQuestionSearchParams';
 
 export const QUERY_KEYS = {
   notification: () => ['notification'],

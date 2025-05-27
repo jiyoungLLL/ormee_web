@@ -2,10 +2,10 @@ import QuestionContainer from '@/components/question/QuestionContainer';
 import QuestionFilterButton from '@/components/question/QuestionFilterButton';
 import QuestionStats from '@/components/question/QuestionStats';
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
-import { getQuestionListOnServer } from '@/hooks/queries/question/useGetQuestionList';
-import { QuestionSearchByType } from '@/hooks/question/useQuestionSearchParams';
-import { QuestionListFilterType } from '@/hooks/question/useQuestionSearchParams';
+import { QuestionSearchByType } from '@/features/question/hooks/useQuestionSearchParams';
+import { QuestionListFilterType } from '@/features/question/hooks/useQuestionSearchParams';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+import { getQuestionListOnServer } from '@/features/question/api/getQuestionListOnServer';
 
 export default async function QuestionPage({
   params,

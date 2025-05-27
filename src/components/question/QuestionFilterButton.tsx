@@ -1,6 +1,6 @@
 'use client';
 
-import { QuestionListFilterType, useQuestionSearchParams } from '@/hooks/question/useQuestionSearchParams';
+import { QuestionListFilterType, useQuestionSearchParams } from '@/features/question/hooks/useQuestionSearchParams';
 
 type QuestionFilterButtonProps = {
   type: QuestionListFilterType;

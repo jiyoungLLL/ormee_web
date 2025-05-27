@@ -1,8 +1,8 @@
 'use client';
 
 import QuestionPageButton from '@/components/question/QuestionPageButton';
-import { useGetQuestionList } from '@/hooks/queries/question/useGetQuestionList';
-import { QuestionListFilterType, QuestionSearchByType } from '@/hooks/question/useQuestionSearchParams';
+import { useGetQuestionList } from '@/features/question/hooks/queries/useGetQuestionList';
+import { QuestionListFilterType, QuestionSearchByType } from '@/features/question/hooks/useQuestionSearchParams';
 
 type QuestionStatsProps = {
   lectureId: string;
