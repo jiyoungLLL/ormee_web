@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Question } from '@/features/question/question.types';
 import { formatDatetimeWithoutTime } from '@/utils/date/formatDate';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 type QuestionItemProps = {
   question: Question;
@@ -11,6 +11,8 @@ type QuestionItemProps = {
 
 export default function QuestionItem({ question }: QuestionItemProps) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const { order, id, title, isAnswered, author, createdAt } = question;
   const formattedCreatedAt = formatDatetimeWithoutTime(createdAt);
 
@@ -18,7 +20,7 @@ export default function QuestionItem({ question }: QuestionItemProps) {
     <article className='grid grid-cols-[34px_360px_55px_68px_82px] justify-between items-center w-full min-h-[50px]'>
       <span className='text-headline2 font-normal text-gray-70'>{order}</span>
       <Link
-        href={`${pathname}/${id}`}
+        href={`${pathname}/${id}?${searchParams}`}
         className='text-headline2 font-semibold text-gray-90 cursor-pointer'
       >
         {title}
