@@ -7,7 +7,8 @@ export const getAccessToken = async () => {
   const accessToken = cookieStore.get('acceesToken')?.value;
 
   if (!accessToken) {
-    throw new Error('로그인이 필요합니다.');
+    // TODO: 로그인 로직 완료 후 throw error로 변경
+    console.error('로그인이 필요합니다.');
   }
 
   return accessToken;
