@@ -1,6 +1,6 @@
 'use client';
 
-import FeedBack from '@/components/homework/FeedBack';
+import Feedback from '@/components/homework/Feedback';
 import RenderHomework from '@/components/homework/RenderHomework';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -14,6 +14,17 @@ export default function Homework() {
 
   return (
     <div>
+      <div className='flex gap-[10px] items-center px-[5px] text-title3 font-bold'>
+        <div className='w-[28px] h-[28px] flex justify-center items-center'>
+          <Image
+            src='/assets/icons/sidenav/homework_selected.png'
+            width={28}
+            height={28}
+            alt='숙제 아이콘'
+          />
+        </div>
+        숙제
+      </div>
       {/* 탭 */}
       <div className='pt-[20px] flex gap-4 items-center'>
         <div className='relative flex items-end'>
@@ -62,7 +73,7 @@ export default function Homework() {
           )}
         </div>
       </div>
-      <div className='w-[1018px] max-h-[666px]'>{tab === 'ongoing' ? <RenderHomework /> : <FeedBack />}</div>
+      <div className='w-[1018px] max-h-[666px]'>{tab === 'ongoing' ? <RenderHomework /> : <Feedback />}</div>
     </div>
   );
 }
