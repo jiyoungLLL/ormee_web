@@ -19,19 +19,36 @@ export const PaginatedQuestionDataSchema = z.object({
   questions: z.array(QuestionSchema),
 });
 
-const SuccessResponseSchema = z.object({
+const SuccessPaginatedQuestionResponseSchema = z.object({
   status: z.literal('success'),
   code: z.literal(200),
   data: PaginatedQuestionDataSchema,
 });
 
-const ErrorResponseSchema = z.object({
+const ErrorPaginatedQuestionResponseSchema = z.object({
   status: z.literal('error'),
   code: z.number(),
   message: z.string(),
 });
 
 export const PaginatedQuestionResponseSchema = z.discriminatedUnion('status', [
-  SuccessResponseSchema,
-  ErrorResponseSchema,
+  SuccessPaginatedQuestionResponseSchema,
+  ErrorPaginatedQuestionResponseSchema,
+]);
+
+const SuccessQuestionDetailResponseSchema = z.object({
+  status: z.literal('success'),
+  code: z.literal(200),
+  data: QuestionSchema,
+});
+
+const ErrorQuestionDetailResponseSchema = z.object({
+  status: z.literal('error'),
+  code: z.number(),
+  message: z.string(),
+});
+
+export const QuestionDetailResponseSchema = z.discriminatedUnion('status', [
+  SuccessQuestionDetailResponseSchema,
+  ErrorQuestionDetailResponseSchema,
 ]);
