@@ -129,4 +129,22 @@ export const handlers = [
       },
     });
   }),
+  http.get('/api/teachers/questions/:questionId', ({ params }) => {
+    const { questionId } = params;
+    const question = MOCK_PAGINATED_QUESTION_RESPONSE.find((q) => q.id === questionId);
+
+    if (!question) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    return HttpResponse.json(
+      { status: 'success', code: 200, data: question },
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+  }),
 ];
