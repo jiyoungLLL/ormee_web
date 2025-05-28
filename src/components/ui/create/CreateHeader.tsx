@@ -1,16 +1,27 @@
 import Button from '@/components/ui/Button';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 type CreateProps = {
   type: 'notice' | 'homework';
   params: string;
 };
+
 export default function CreateHeader({ type, params }: CreateProps) {
+  const searchParams = useSearchParams();
+  const isModify = !!searchParams.get('filter');
+  const filter = searchParams.get('filter');
+  const id = searchParams.get('id');
+
   return (
     <div className='w-full h-[50px] flex justify-between items-center'>
       <Link
-        href={`/lectures/${params}/${type}`}
+        href={
+          isModify && type === 'homework'
+            ? `/lectures/${params}/${type}/detail?filter=${filter}&id=${id}`
+            : `/lectures/${params}/${type}`
+        }
         className='w-[136px] px-[5px] text-title3 font-bold flex items-center gap-[15px]'
       >
         <Image

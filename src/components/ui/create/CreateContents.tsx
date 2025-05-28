@@ -1,6 +1,9 @@
 'use client';
 
 import Input from '@/components/ui/Input';
+import { MOCK_HOMEWORK } from '@/mock/homework';
+import { format } from 'date-fns';
+import { useSearchParams } from 'next/navigation';
 import { useFormContext } from 'react-hook-form';
 import DateTimePicker from '../DateTimePicker';
 import WriteBox from '../WriteBox';
@@ -11,6 +14,10 @@ type CreateTitleProps = {
 
 export default function CreateContents({ type }: CreateTitleProps) {
   const { control } = useFormContext();
+  const searchParams = useSearchParams();
+  const dataId = searchParams.get('id');
+  const dataFilter = searchParams.get('filter') === 'ongoing' ? 'openedAssignments' : 'closedAssignments';
+  const preData = MOCK_HOMEWORK.data[dataFilter].find((item) => item.id === Number(dataId));
 
   return (
     <div className='absolute top-[144px] w-[1018px] h-[906px] flex flex-col gap-[20px]'>
@@ -25,11 +32,20 @@ export default function CreateContents({ type }: CreateTitleProps) {
         <DateTimePicker
           type='CALENDAR'
           calendar='DATE_TYPE'
-          placeholder={type === '공지' ? '공지 등록일' : '제출기한'}
+          placeholder={
+            preData?.dueTime
+              ? format(new Date(preData.dueTime), 'yy.MM.dd')
+              : type === '공지'
+                ? '공지 등록일'
+                : '제출기한'
+          }
         />
       </div>
 
-      <WriteBox type={type} />
+      <WriteBox
+        type={type}
+        description={preData?.description ?? undefined}
+      />
     </div>
   );
 }
