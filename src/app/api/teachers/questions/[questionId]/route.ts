@@ -1,6 +1,7 @@
 import { getHeaders } from '@/utils/getApiConfig';
+import { NextRequest } from 'next/server';
 
-export async function GET({ params }: { params: { questionId: string } }) {
+export async function GET(request: NextRequest, { params }: { params: { questionId: string } }) {
   const { questionId } = params;
   const headers = await getHeaders();
 
