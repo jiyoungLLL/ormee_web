@@ -2,7 +2,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { QuestionListFilterType } from '@/features/question/hooks/useQuestionSearchParams';
 import { QuestionSearchByType } from '@/features/question/hooks/useQuestionSearchParams';
-import { PaginatedQuestionData } from '@/types/question.types';
+import { PaginatedQuestionData } from '@/features/question/question.types';
 import { getQuestionList } from '@/features/question/api/getQuestionList';
 
 export const useGetQuestionList = ({

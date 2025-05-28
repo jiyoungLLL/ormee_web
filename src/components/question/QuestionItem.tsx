@@ -1,6 +1,6 @@
 'use client';
 
-import { Question } from '@/types/question.types';
+import { Question } from '@/features/question/question.types';
 import { formatDatetimeWithoutTime } from '@/utils/date/formatDate';
 
 type QuestionItemProps = {

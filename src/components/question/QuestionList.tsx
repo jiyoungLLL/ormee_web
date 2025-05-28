@@ -1,4 +1,4 @@
-import { Question } from '@/types/question.types';
+import { Question } from '@/features/question/question.types';
 import QuestionItem from '@/components/question/QuestionItem';
 
 type QuestionListProps = {

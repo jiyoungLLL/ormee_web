@@ -1,4 +1,4 @@
-import { Question } from '@/types/question.types';
+import { Question } from '@/features/question/question.types';
 
 export const MOCK_PAGINATED_QUESTION_RESPONSE: Question[] = Array.from({ length: 42 }, (_, i) => ({
   id: (i + 1).toString(),
