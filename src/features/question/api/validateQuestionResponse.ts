@@ -1,4 +1,3 @@
-// src/features/question/api/validateQuestionResponse.ts
 import { PaginatedQuestionDataSchema, PaginatedQuestionResponseSchema } from '@/features/question/question.schema';
 
 export const validateQuestionListResponse = async (response: Response) => {
