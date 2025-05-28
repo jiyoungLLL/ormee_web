@@ -1,8 +1,8 @@
+import { QUIZ_LIMIT_TIME_OPTIONS } from '@/constants/quiz.constants';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import Calendar from './Calendar';
 import Dropdown from './dropdown/Dropdown';
-import { QUIZ_LIMIT_TIME_OPTIONS } from '@/constants/quiz.constants';
 
 type ComponentType = 'CALENDAR' | 'TIME';
 type CalendarType = 'DATE_TYPE' | 'PERIOD_TYPE';
@@ -20,6 +20,7 @@ type DateTimePickerProps = {
   customTextStyle?: string;
   customWidthSize?: string;
   customDropdownSize?: string;
+  disabled?: boolean;
 };
 
 const TIME_OPTIONS = [
@@ -51,15 +52,8 @@ const TIME_OPTIONS = [
   '20:30',
 ];
 
-const TIME_MENU_LIST = TIME_OPTIONS.map((time, index) => ({
-  id: `t${index}`,
-  label: time,
-}));
-
-const LIMIT_TIME_MENU_LIST = QUIZ_LIMIT_TIME_OPTIONS.map((time, index) => ({
-  id: `lt${index}`,
-  label: time,
-}));
+const TIME_MENU_LIST = TIME_OPTIONS.map((time, index) => ({ id: `t${index}`, label: time }));
+const LIMIT_TIME_MENU_LIST = QUIZ_LIMIT_TIME_OPTIONS.map((time, index) => ({ id: `lt${index}`, label: time }));
 
 export default function DateTimePicker({
   type,
@@ -73,6 +67,7 @@ export default function DateTimePicker({
   customTextStyle,
   customWidthSize,
   customDropdownSize,
+  disabled = false,
 }: DateTimePickerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [value, setValue] = useState(defaultValue ?? '');
@@ -81,12 +76,9 @@ export default function DateTimePicker({
   const [dropdownStyle, setDropdownStyle] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
-    if (defaultValue) {
-      setValue(defaultValue);
-    }
+    if (defaultValue) setValue(defaultValue);
   }, [defaultValue]);
 
-  // 외부 클릭 감지
   const pickerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (pickerRef.current && isOpen) {
@@ -109,15 +101,14 @@ export default function DateTimePicker({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen]);
 
-  const fontStyle = value !== '' ? '' : 'text-gray-60';
+  const isPlaceholder = value === '';
+  const fontStyle = disabled ? '' : isPlaceholder ? 'text-gray-60' : '';
 
   const commonStyle = 'rounded-[5px] bg-gray-10';
   const basicTextStyle =
     customTextStyle ?? (calendar === 'DATE_TYPE' ? 'text-headline2 font-semibold' : 'text-headline1 font-semibold');
-
   const imageSrc = type === 'CALENDAR' ? 'calendar.png' : 'timer.png';
   const imageSize = customImageSize ?? (calendar === 'DATE_TYPE' ? 'w-[20px] h-[20px]' : 'w-[24px] h-[24px]');
-
   const ComponentSize =
     customComponentSize ?? (calendar === 'DATE_TYPE' ? 'h-[32px] gap-[10px]' : 'h-[51px] gap-[10px]');
   const widthSize =
@@ -128,7 +119,9 @@ export default function DateTimePicker({
         ? 'w-[184px] px-[20px] py-[13px]'
         : 'w-fit px-[10px] py-[5px]');
 
-  const handlePick = () => setIsOpen((prev) => !prev);
+  const handlePick = () => {
+    if (!disabled) setIsOpen((prev) => !prev);
+  };
 
   const handleSelectDate = (formattedValue: string) => {
     setValue(formattedValue);
@@ -144,6 +137,7 @@ export default function DateTimePicker({
   };
 
   const handleSelectedLimitTime = (time: string) => {
+    if (disabled) return;
     setValue(time);
     onSelectDate?.(time);
     setIsOpen(false);
@@ -152,7 +146,7 @@ export default function DateTimePicker({
   return (
     <div ref={pickerRef}>
       <div
-        className={`${commonStyle} ${basicTextStyle} ${ComponentSize} ${widthSize} flex items-center cursor-pointer`}
+        className={`${commonStyle} ${basicTextStyle} ${ComponentSize} ${widthSize} flex items-center ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
         onClick={handlePick}
       >
         <Image
@@ -165,7 +159,7 @@ export default function DateTimePicker({
         <div className={`${fontStyle} whitespace-nowrap`}>{value || placeholder}</div>
       </div>
 
-      {isOpen && calendar && (
+      {isOpen && !disabled && calendar && (
         <div
           className={`absolute z-[100] ${calendar === 'PERIOD_TYPE' ? 'bottom-[170px]' : 'top-[120px]'}`}
           style={{ top: `${dropdownStyle.top}px`, left: `${dropdownStyle.left}px`, position: 'fixed' }}
@@ -177,7 +171,7 @@ export default function DateTimePicker({
         </div>
       )}
 
-      {isOpen && time === 'TIME' && (
+      {isOpen && !disabled && time === 'TIME' && (
         <div
           className='absolute z-[100] top-[10px] bg-white shadow-md rounded-md p-4 flex flex-col gap-2'
           style={{ top: `${dropdownStyle.top}px`, left: `${dropdownStyle.left}px`, position: 'fixed' }}
@@ -187,9 +181,7 @@ export default function DateTimePicker({
               showTrigger
               menuList={TIME_MENU_LIST.map((item) => ({
                 ...item,
-                onClick: () => {
-                  setStartTime(item.label as string);
-                },
+                onClick: () => setStartTime(item.label as string),
               }))}
               selectedItem={startTime || '시작 시간'}
               size={customDropdownSize}
@@ -198,9 +190,7 @@ export default function DateTimePicker({
               showTrigger
               menuList={TIME_MENU_LIST.map((item) => ({
                 ...item,
-                onClick: () => {
-                  setEndTime(item.label as string);
-                },
+                onClick: () => setEndTime(item.label as string),
               }))}
               selectedItem={endTime || '종료 시간'}
               size={customDropdownSize}
@@ -215,17 +205,16 @@ export default function DateTimePicker({
           </div>
         </div>
       )}
+
       {time === 'LIMIT_TIME' && (
         <Dropdown
           showTrigger={false}
           menuList={LIMIT_TIME_MENU_LIST.map((item) => ({
             ...item,
-            onClick: () => {
-              handleSelectedLimitTime(item.label as string);
-            },
+            onClick: () => handleSelectedLimitTime(item.label as string),
           }))}
           selectedItem={value || '제한 시간'}
-          isOpen={isOpen}
+          isOpen={isOpen && !disabled}
           triggerRef={pickerRef}
           size={customDropdownSize}
         />
