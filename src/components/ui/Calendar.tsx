@@ -45,6 +45,9 @@ export default function Calendar({ type, onSelectDate }: CalendarProps) {
           mode='single'
           selected={selectedDay}
           onSelect={handleSelectSingle}
+          classNames={{
+            day_selected: 'rdp-day_selected bg-purple-50 text-white',
+          }}
           className={defaultStyle}
         />
       ) : (
@@ -53,6 +56,11 @@ export default function Calendar({ type, onSelectDate }: CalendarProps) {
           mode='range'
           selected={selectedRange}
           onSelect={handleSelectRange}
+          classNames={{
+            day_range_start: 'rdp-day_range_start bg-purple-50 text-white',
+            day_range_end: 'rdp-day_range_end bg-purple-50 text-white',
+            day_range_middle: 'rdp-day_range_middle bg-purple-10 text-white',
+          }}
           className={defaultStyle}
         />
       )}
