@@ -6,9 +6,10 @@ import TiptapEditor from './TiptapEditor';
 
 type WriteBoxProps = {
   type: '공지' | '숙제';
+  description?: string;
 };
 
-export default function WriteBox({ type }: WriteBoxProps) {
+export default function WriteBox({ type, description }: WriteBoxProps) {
   const { watch, setValue } = useFormContext();
   const contents = watch('contents');
   // 버튼 업로드
@@ -66,6 +67,7 @@ export default function WriteBox({ type }: WriteBoxProps) {
           type={type}
           contents={contents}
           onChange={(html) => setValue('contents', html)}
+          value={description}
         />
       </div>
 
