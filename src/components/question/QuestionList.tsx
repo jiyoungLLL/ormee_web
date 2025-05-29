@@ -9,14 +9,13 @@ type QuestionListProps = {
 export default function QuestionList({ questionList, error }: QuestionListProps) {
   return (
     <div className='flex flex-col w-full'>
-      <div className='grid grid-cols-[34px_360px_55px_68px_82px] justify-between items-center w-full h-[50px] py-[10px] text-headline2 font-semibold text-gray-70'>
+      <div className='grid grid-cols-[34px_360px_55px_68px_82px] justify-between items-center w-full h-[50px] py-[10px] border-b border-gray-30 text-headline2 font-semibold text-gray-70'>
         <span className=''>No.</span>
         <span className=''>제목</span>
         <span className=''>답변여부</span>
         <span className=''>작성자</span>
         <span className=''>등록일</span>
       </div>
-      <div className='w-full h-[1px] bg-gray-30' />
       <div className='flex flex-col w-full h-[474px] overflow-y-auto'>
         {error && (
           <div className='flex justify-center items-center w-full h-full text-headline2 font-semibold text-label-assistive'>
