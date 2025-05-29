@@ -43,7 +43,7 @@ export default function HomeworkDetail() {
           onClick={handleDelete}
         />
       </div>
-      <div className='bg-white p-[30px] flex flex-col gap-[20px] rounded-[20px] max-h-[666px]'>
+      <div className='bg-white p-[30px] flex flex-col gap-[20px] rounded-[20px]'>
         <div className='flex justify-between items-center'>
           <span className='pl-[10px] text-heading2 font-semibold'>{detailData?.title}</span>
           <DateTimePicker
