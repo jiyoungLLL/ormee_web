@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import Button from './Button';
 import TiptapEditor from './TiptapEditor';
@@ -7,9 +7,10 @@ import TiptapEditor from './TiptapEditor';
 type WriteBoxProps = {
   type: '공지' | '숙제';
   description?: string;
+  files?: string[];
 };
 
-export default function WriteBox({ type, description }: WriteBoxProps) {
+export default function WriteBox({ type, description, files }: WriteBoxProps) {
   const { watch, setValue } = useFormContext();
   const contents = watch('contents');
   // 버튼 업로드
@@ -17,6 +18,12 @@ export default function WriteBox({ type, description }: WriteBoxProps) {
   const [fileNames, setFileNames] = useState<string[]>([]);
   // 드래그 앤 드랍
   const [isDragging, setIsDragging] = useState(false);
+
+  useEffect(() => {
+    if (!files) return;
+    // 현재 파일이 하나일 때
+    setFileNames(files);
+  }, []);
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();

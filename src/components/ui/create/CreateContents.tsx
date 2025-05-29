@@ -4,6 +4,7 @@ import Input from '@/components/ui/Input';
 import { MOCK_HOMEWORK } from '@/mock/homework';
 import { format } from 'date-fns';
 import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import DateTimePicker from '../DateTimePicker';
 import WriteBox from '../WriteBox';
@@ -13,11 +14,19 @@ type CreateTitleProps = {
 };
 
 export default function CreateContents({ type }: CreateTitleProps) {
-  const { control } = useFormContext();
+  const { setValue, control } = useFormContext();
   const searchParams = useSearchParams();
   const dataId = searchParams.get('id');
   const dataFilter = searchParams.get('filter') === 'ongoing' ? 'openedAssignments' : 'closedAssignments';
   const preData = MOCK_HOMEWORK.data[dataFilter].find((item) => item.id === Number(dataId));
+
+  const files = [preData?.filePaths].filter(Boolean) as string[];
+
+  useEffect(() => {
+    if (preData?.title) {
+      setValue('title', preData.title);
+    }
+  }, []);
 
   return (
     <div className='absolute top-[144px] w-[1018px] h-[906px] flex flex-col gap-[20px]'>
@@ -45,6 +54,7 @@ export default function CreateContents({ type }: CreateTitleProps) {
       <WriteBox
         type={type}
         description={preData?.description ?? undefined}
+        files={files}
       />
     </div>
   );
