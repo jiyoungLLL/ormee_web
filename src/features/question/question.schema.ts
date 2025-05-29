@@ -52,3 +52,8 @@ export const QuestionDetailResponseSchema = z.discriminatedUnion('status', [
   SuccessQuestionDetailResponseSchema,
   ErrorQuestionDetailResponseSchema,
 ]);
+
+export const AnswerSchema = z.object({
+  content: z.string().min(1, { message: '답변을 작성해주세요' }),
+  files: z.array(z.instanceof(File)),
+});
