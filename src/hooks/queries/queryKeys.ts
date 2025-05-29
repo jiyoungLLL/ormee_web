@@ -20,4 +20,5 @@ export const QUERY_KEYS = {
     searchBy?: QuestionSearchByType;
     keyword?: string;
   }) => ['questionList', lectureId, filter, page, searchBy, keyword],
+  questionDetail: (questionId: string) => ['questionDetail', questionId],
 } as const;

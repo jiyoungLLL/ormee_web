@@ -1,9 +1,11 @@
 'use server';
 
-import { PaginatedQuestionDataSchema, PaginatedQuestionResponseSchema } from '@/schemas/question.schema';
+import { PaginatedQuestionDataSchema, PaginatedQuestionResponseSchema } from '@/features/question/question.schema';
 import { QuestionListFilterType } from '@/features/question/hooks/useQuestionSearchParams';
 import { QuestionSearchByType } from '@/features/question/hooks/useQuestionSearchParams';
 import { cookies } from 'next/headers';
+import { validateQuestionListResponse } from './validateQuestionResponse';
+import { getHeaders } from '@/utils/getApiConfig';
 
 export const getQuestionListOnServer = async ({
   lectureId,
@@ -18,12 +20,7 @@ export const getQuestionListOnServer = async ({
   searchBy?: QuestionSearchByType;
   keyword?: string;
 }) => {
-  const cookieStore = cookies();
-  const accessToken = cookieStore.get('acceesToken')?.value;
-
-  if (!accessToken) {
-    throw new Error('로그인이 필요합니다.');
-  }
+  const headers = await getHeaders();
 
   const params = new URLSearchParams();
 
@@ -33,12 +30,10 @@ export const getQuestionListOnServer = async ({
   if (keyword) params.append('keyword', keyword);
 
   const response = await fetch(
-    `${process.env.API_BASE_URL ?? 'http://localhost:8080/api'}/teachers/${lectureId}/questions?${params}`,
+    `${process.env.API_BASE_URL || 'http://localhost:8080/api'}/teachers/${lectureId}/questions?${params}`,
     {
       method: 'GET',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      headers,
     },
   );
 
@@ -47,24 +42,5 @@ export const getQuestionListOnServer = async ({
     throw new Error('질문 목록을 불러오는데 에러가 발생했습니다.');
   }
 
-  const json = await response.json();
-  const parsedData = PaginatedQuestionResponseSchema.safeParse(json);
-
-  if (!parsedData.success) {
-    if (process.env.NODE_ENV === 'development') console.error(parsedData.error);
-    throw new Error('질문 리스트 응답 데이터가 예상과 다릅니다.');
-  }
-
-  if (parsedData.data.status === 'error') {
-    throw new Error(parsedData.data.message ?? '알 수 없는 오류가 발생했습니다.');
-  }
-
-  const parsedQuestionData = PaginatedQuestionDataSchema.safeParse(parsedData.data.data);
-
-  if (!parsedQuestionData.success) {
-    if (process.env.NODE_ENV === 'development') console.error(parsedQuestionData.error);
-    throw new Error('질문 리스트 데이터가 예상과 다릅니다.');
-  }
-
-  return parsedQuestionData.data;
+  return validateQuestionListResponse(response);
 };

@@ -104,7 +104,7 @@ export const handlers = [
   http.get('/api/teachers/:lectureId/questions', ({ request }) => {
     const url = new URL(request.url);
     const page = Number(url.searchParams.get('page') || '1');
-    const pageSize = Number(url.searchParams.get('pageSize') ?? '15');
+    const pageSize = Number(url.searchParams.get('pageSize') ?? '10');
     const filter = url.searchParams.get('filter'); // 'answered' | 'unanswered' | undefined
 
     let filtered = [...MOCK_PAGINATED_QUESTION_RESPONSE];
@@ -128,5 +128,23 @@ export const handlers = [
         questions: paginated,
       },
     });
+  }),
+  http.get('/api/teachers/questions/:questionId', ({ params }) => {
+    const { questionId } = params;
+    const question = MOCK_PAGINATED_QUESTION_RESPONSE.find((q) => q.id === questionId);
+
+    if (!question) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    return HttpResponse.json(
+      { status: 'success', code: 200, data: question },
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
   }),
 ];

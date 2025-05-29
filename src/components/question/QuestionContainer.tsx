@@ -27,7 +27,7 @@ export default function QuestionContainer({ lectureId, searchParams }: QuestionC
   const questionList = data?.questions ?? [];
 
   return (
-    <div className='flex flex-col gap-[20px] w-[1018px] h-[660px] px-[30px] py-[20px] rounded-[10px] bg-white'>
+    <div className='flex flex-col w-[1018px] h-[656px] px-[30px] py-[20px] rounded-[10px] bg-white'>
       <QuestionSearch />
       <QuestionList
         questionList={questionList}
