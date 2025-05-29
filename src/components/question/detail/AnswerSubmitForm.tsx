@@ -28,13 +28,20 @@ export default function AnswerSubmitForm() {
         size='w-full h-[50px]'
         inputStyle='pl-[20px] pr-[56px] py-[15px] rounded-[10px] border-[1px] border-gray-20 focus:border-[1px] focus:border-purple-50 focus:outline-none disabled:bg-gray-10'
       >
-        <button
-          type='button'
-          className='absolute right-[20px] top-[50%] transform -translate-y-1/2 w-[24px] h-[24px] bg-center bg-no-repeat bg-contain'
+        <label
+          htmlFor='file-upload'
+          className='absolute right-[20px] top-[50%] transform -translate-y-1/2 w-[24px] h-[24px] bg-center bg-no-repeat bg-contain cursor-pointer'
           style={{
             backgroundImage: 'url(/assets/icons/tiptapTools/image.png)',
           }}
-        />
+        >
+          <input
+            id='file-upload'
+            type='file'
+            className='hidden'
+            accept='image/*'
+          />
+        </label>
       </Input>
       <Button
         type='BUTTON_BASE_TYPE'
