@@ -13,3 +13,7 @@ export type PaginatedQuestionResponse = z.infer<typeof PaginatedQuestionResponse
 export type QuestionDetailResponse = z.infer<typeof QuestionDetailResponseSchema>;
 
 export type AnswerFormValues = z.infer<typeof AnswerFormSchema>;
+export type PreviewImagesState = {
+  id: string;
+  url: string;
+};
