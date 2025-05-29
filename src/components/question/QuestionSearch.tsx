@@ -38,7 +38,7 @@ export default function QuestionSearch() {
   };
 
   return (
-    <div className='flex items-center gap-[10px]'>
+    <div className='flex items-center gap-[10px] mb-[20px]'>
       <Dropdown
         showTrigger
         menuList={menuListForDropdown}
