@@ -24,6 +24,7 @@ export default function QuestionDetail() {
     );
 
   const formattedCreatedAt = data ? formatDatetimeWithAMPM(data.createdAt) : '';
+
   return (
     <article className='flex flex-col gap-[20px] w-full h-full'>
       <div className='flex flex-col gap-[10px]'>

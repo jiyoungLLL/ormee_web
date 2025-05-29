@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import {
-  AnswerSchema,
+  AnswerFormSchema,
   PaginatedQuestionDataSchema,
   PaginatedQuestionResponseSchema,
   QuestionDetailResponseSchema,
@@ -12,4 +12,4 @@ export type PaginatedQuestionData = z.infer<typeof PaginatedQuestionDataSchema>;
 export type PaginatedQuestionResponse = z.infer<typeof PaginatedQuestionResponseSchema>;
 export type QuestionDetailResponse = z.infer<typeof QuestionDetailResponseSchema>;
 
-export type Answer = z.infer<typeof AnswerSchema>;
+export type AnswerFormValues = z.infer<typeof AnswerFormSchema>;

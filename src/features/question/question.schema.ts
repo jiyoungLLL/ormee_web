@@ -53,7 +53,7 @@ export const QuestionDetailResponseSchema = z.discriminatedUnion('status', [
   ErrorQuestionDetailResponseSchema,
 ]);
 
-export const AnswerSchema = z.object({
+export const AnswerFormSchema = z.object({
   content: z.string().min(1, { message: '답변을 작성해주세요' }),
-  files: z.array(z.instanceof(File)),
+  files: z.array(z.object({ id: z.string(), file: z.instanceof(File) })),
 });
