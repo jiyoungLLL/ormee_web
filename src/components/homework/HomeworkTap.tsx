@@ -48,7 +48,7 @@ export default function HomeworkTap({ type }: HomeworkProps) {
   };
 
   const renderTap = (name: '진행중' | '마감') => {
-    const badgeStyle = name === '진행중' ? 'bg-purple-15 text-purple-50' : 'bg-gray-10 text-gray-60';
+    const badgeStyle = name === '진행중' ? 'bg-purple-15 text-purple-50' : 'border border-gray-30';
     const openIds = isOpen[name] || [];
     const validData = name === '진행중' ? HOMEWORK.openedAssignments : HOMEWORK.closedAssignments;
 
@@ -88,9 +88,14 @@ export default function HomeworkTap({ type }: HomeworkProps) {
                   </Link>
                 </div>
                 <div className='flex gap-[30px]'>
-                  <div className={`rounded-[24px] px-[15px] py-[6px] text-headline2 font-semibold ${badgeStyle}`}>
-                    {name}
-                  </div>
+                  <Link
+                    href={`/lectures/${lectureNum}/homework/feedback?id=${data.id}`}
+                    className={`h-[40px] rounded-[10px] px-[20px] py-[12px] text-headline2 flex items-center ${badgeStyle}`}
+                  >
+                    {/* 피드백 완료/미완료 get 수정 필요 */}
+                    <span className='font-semibold'>피드백&nbsp;</span>
+                    <span> {name === '진행중' ? ' (미완료)' : ' (완료)'}</span>
+                  </Link>
                   <Image
                     src='/assets/icons/sidenav/dropdown.png'
                     width={24}

@@ -50,7 +50,7 @@ export default function RenderHomework() {
   ];
 
   return (
-    <div className='bg-white max-h-[666px] rounded-tr-[25px] rounded-b-[25px] px-[30px] py-[20px] flex flex-col gap-[20px]'>
+    <div className='bg-white rounded-[25px] px-[30px] py-[20px] flex flex-col gap-[20px]'>
       {/* 과제 드롭다운 & 과제 생성 */}
       <div className='w-full flex justify-between'>
         <Dropdown
@@ -68,7 +68,7 @@ export default function RenderHomework() {
           />
         </Link>
       </div>
-      <div className='flex flex-col gap-[45px]  overflow-auto'>
+      <div className='flex flex-col gap-[45px] overflow-auto'>
         <HomeworkTap type={selected} />
       </div>
     </div>
