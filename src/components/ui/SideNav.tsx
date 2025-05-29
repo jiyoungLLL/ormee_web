@@ -181,7 +181,7 @@ export default function SideNav({ type, title, student, date }: SideNavProps) {
   };
 
   return (
-    <div className='flex flex-col gap-[30px] w-[252px] h-[521px] rounded-[20px] bg-gray-70 p-[20px] text-white'>
+    <div className='fix top-[74px] left-[300px] flex flex-col gap-[30px] w-[252px] h-[521px] rounded-[20px] bg-gray-70 p-[20px] text-white'>
       <div className='text-headline1 font-semibold'>마이페이지</div>
       <div className='flex flex-col gap-[20px]'>
         <div className='flex flex-col justify-between h-[132px] text-headline2'>
