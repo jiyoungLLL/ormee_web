@@ -104,25 +104,47 @@ export const handlers = [
   http.get('/api/teachers/:lectureId/questions', ({ request }) => {
     const url = new URL(request.url);
     const page = Number(url.searchParams.get('page') || '1');
-    const pageSize = Number(url.searchParams.get('page_size') ?? '15');
+    const pageSize = Number(url.searchParams.get('pageSize') ?? '10');
     const filter = url.searchParams.get('filter'); // 'answered' | 'unanswered' | undefined
 
     let filtered = [...MOCK_PAGINATED_QUESTION_RESPONSE];
 
-    if (filter === 'answered') filtered = filtered.filter((q) => q.is_answered);
-    if (filter === 'unanswered') filtered = filtered.filter((q) => !q.is_answered);
+    if (filter === '답변 등록') filtered = filtered.filter((q) => q.isAnswered);
+    if (filter === '답변 미등록') filtered = filtered.filter((q) => !q.isAnswered);
 
-    const total_count = filtered.length;
-    const total_pages = Math.ceil(total_count / pageSize);
+    const totalCount = filtered.length;
+    const totalPages = Math.ceil(totalCount / pageSize);
     const offset = (page - 1) * pageSize;
     const paginated = filtered.slice(offset, offset + pageSize);
 
     return HttpResponse.json({
-      total_count,
-      total_pages,
-      current_page: page,
-      page_size: pageSize,
-      questions: paginated,
+      status: 'success',
+      code: 200,
+      data: {
+        totalCount,
+        totalPages,
+        currentPage: page,
+        pageSize,
+        questions: paginated,
+      },
     });
+  }),
+  http.get('/api/teachers/questions/:questionId', ({ params }) => {
+    const { questionId } = params;
+    const question = MOCK_PAGINATED_QUESTION_RESPONSE.find((q) => q.id === questionId);
+
+    if (!question) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    return HttpResponse.json(
+      { status: 'success', code: 200, data: question },
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
   }),
 ];

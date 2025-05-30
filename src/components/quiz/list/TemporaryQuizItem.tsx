@@ -1,6 +1,6 @@
 import Button from '@/components/ui/Button';
 import { Quiz } from '@/types/quiz.types';
-import { formatDatetimeToYYYYMMDD } from '@/utils/date/formatDate';
+import { formatDatetimeWithTime } from '@/utils/date/formatDate';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -12,7 +12,7 @@ type TemporaryQuizItemProps = {
 
 export default function TemporaryQuizItem({ quiz, isLastQuiz }: TemporaryQuizItemProps) {
   const { id: quizId, title, limitTime, dueTime } = quiz;
-  const formattedDueTime = formatDatetimeToYYYYMMDD(dueTime);
+  const formattedDueTime = formatDatetimeWithTime(dueTime);
 
   const pathname = usePathname();
 
