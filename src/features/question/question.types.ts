@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import {
   AnswerFormSchema,
+  AnswerResponseSchema,
+  AnswerSubmitRequestSchema,
   PaginatedQuestionDataSchema,
   PaginatedQuestionResponseSchema,
   QuestionDetailResponseSchema,
@@ -17,3 +19,6 @@ export type PreviewImagesState = {
   id: string;
   url: string;
 };
+export type AnswerSubmitRequest = z.infer<typeof AnswerSubmitRequestSchema>;
+
+export type AnswerResponse = z.infer<typeof AnswerResponseSchema>;

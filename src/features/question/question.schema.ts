@@ -57,3 +57,17 @@ export const AnswerFormSchema = z.object({
   content: z.string().min(1, { message: '답변을 작성해주세요' }),
   files: z.array(z.object({ id: z.string(), file: z.instanceof(File) })),
 });
+
+export const AnswerSubmitRequestSchema = z.object({
+  content: z.string().min(1, { message: '답변을 작성해주세요' }),
+  files: z.array(z.instanceof(File)),
+});
+
+export const AnswerResponseSchema = z.array(
+  z.object({
+    id: z.string(),
+    content: z.string(),
+    files: z.array(z.object({ id: z.string(), url: z.string() })),
+    createdAt: z.string().datetime(),
+  }),
+);

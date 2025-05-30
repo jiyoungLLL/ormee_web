@@ -6,9 +6,11 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import AnswerInput from '@/components/question/detail/AnswerInput';
 import AnswerImagePreview from '@/components/question/detail/AnswerImagePreview';
+import { usePostAnswer } from '@/features/question/hooks/queries/useAnswer';
+import { useParams } from 'next/navigation';
 
 export default function AnswerSubmitForm() {
-  const { control, getValues, setValue, handleSubmit } = useForm<AnswerFormValues>({
+  const { control, getValues, setValue, handleSubmit, reset } = useForm<AnswerFormValues>({
     mode: 'onSubmit',
     defaultValues: {
       content: '',
@@ -46,8 +48,16 @@ export default function AnswerSubmitForm() {
     );
   };
 
-  const handleAnswerSubmit = (data: AnswerFormValues) => {
-    alert(JSON.stringify(data));
+  const { questionId } = useParams();
+  const { mutate: postAnswer } = usePostAnswer(questionId as string);
+
+  const handleAnswerSubmit = async (data: AnswerFormValues) => {
+    postAnswer(data, {
+      onSuccess: () => {
+        reset();
+        setPreviewImages(null);
+      },
+    });
   };
 
   return (
