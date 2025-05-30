@@ -8,7 +8,7 @@ import {
   TEMPORARY_QUIZ_LIST,
 } from './quiz';
 import { QuizState } from '@/types/quiz.types';
-import { MOCK_PAGINATED_QUESTION_RESPONSE } from './question';
+import { MOCK_ANSWER, MOCK_PAGINATED_QUESTION_RESPONSE } from './question';
 
 export const handlers = [
   http.get('/api/teacher/notification/', () => {
@@ -139,6 +139,47 @@ export const handlers = [
 
     return HttpResponse.json(
       { status: 'success', code: 200, data: question },
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+  }),
+  http.post('/api/teachers/questions/:questionId', async ({ params, request }) => {
+    const { questionId } = params;
+    const question = MOCK_PAGINATED_QUESTION_RESPONSE.find((q) => q.id === questionId);
+
+    if (!question) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    const formData = await request.formData();
+    const content = formData.get('content') as string;
+    const files = formData.getAll('files') as File[];
+
+    // Blob URL 생성
+    const imageUrls = files.map((file) => {
+      const blob = new Blob([file], { type: file.type });
+      return URL.createObjectURL(blob);
+    });
+
+    const newAnswer = {
+      id: crypto.randomUUID(),
+      content,
+      files: imageUrls.map((url) => ({ id: crypto.randomUUID(), url })),
+      createdAt: new Date().toISOString(),
+    };
+
+    MOCK_ANSWER.push(newAnswer);
+    question.isAnswered = true;
+
+    return HttpResponse.json(
+      {
+        status: 'success',
+        code: 200,
+      },
       {
         status: 200,
         headers: {

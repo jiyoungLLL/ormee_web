@@ -1,4 +1,4 @@
-import { Question } from '@/features/question/question.types';
+import { AnswerResponse, Question } from '@/features/question/question.types';
 
 export const MOCK_PAGINATED_QUESTION_RESPONSE: Question[] = Array.from({ length: 42 }, (_, i) => ({
   id: (i + 1).toString(),
@@ -12,3 +12,21 @@ export const MOCK_PAGINATED_QUESTION_RESPONSE: Question[] = Array.from({ length:
   ],
   createdAt: new Date(Date.now() - i * 1000 * 60 * 60 * 12).toISOString(),
 }));
+
+export const MOCK_ANSWER: AnswerResponse = [
+  {
+    id: 'mock-answer-1',
+    content: '답변 내용',
+    files: [
+      {
+        id: 'mock-answer-file-1',
+        url: 'https://img.freepik.com/free-photo/miniature-chihuahua-dog-concept_53876-41435.jpg',
+      },
+      {
+        id: 'mock-answer-file-2',
+        url: 'https://img.freepik.com/free-photo/miniature-chihuahua-dog-concept_53876-31121.jpg',
+      },
+    ],
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString(),
+  },
+];
