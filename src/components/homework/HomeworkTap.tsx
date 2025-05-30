@@ -18,6 +18,14 @@ const HOMEWORK = MOCK_HOMEWORK.data;
 
 export default function HomeworkTap({ type }: HomeworkProps) {
   const lectureNum = useLectureId();
+
+  // const { data, isLoading, error } = useApiQuery<AssignmentsResponse>(
+  //   ['assignments', lectureNum.toString()],
+  //   `/teachers/${lectureNum}/assignments`,
+  // );
+
+  // const validData = data?.data;
+
   const [isOpen, setIsOpen] = useState<{ [key in '진행중' | '마감']?: number[] }>({});
   const [selected, setSelected] = useState<Record<number, '전체' | '미제출' | '미확인'>>({});
   const [selectedStudentIds, setSelectedStudentIds] = useState<string[]>([]);
@@ -50,7 +58,7 @@ export default function HomeworkTap({ type }: HomeworkProps) {
   const renderTap = (name: '진행중' | '마감') => {
     const badgeStyle = name === '진행중' ? 'bg-purple-15 text-purple-50' : 'border border-gray-30';
     const openIds = isOpen[name] || [];
-    const validData = name === '진행중' ? HOMEWORK.openedAssignments : HOMEWORK.closedAssignments;
+    const validData = name === '진행중' ? HOMEWORK?.openedAssignments : HOMEWORK?.closedAssignments;
 
     return (
       <div
@@ -59,7 +67,7 @@ export default function HomeworkTap({ type }: HomeworkProps) {
       >
         <div className='text-heading2 font-semibold'>{name === '마감' ? name : '진행'} 숙제</div>
         <div>
-          {validData.map((data, index) => (
+          {validData?.map((data, index) => (
             <div key={`${data.id}-${data.title}`}>
               <div className='flex justify-between items-center px-[10px] py-[20px]'>
                 <div className='w-[509px] flex gap-[20px]'>
@@ -87,9 +95,9 @@ export default function HomeworkTap({ type }: HomeworkProps) {
                     </div>
                   </Link>
                 </div>
-                <div className='flex gap-[30px]'>
+                <div className='flex gap-[30px] items-center'>
                   <Link
-                    href={`/lectures/${lectureNum}/homework/feedback?id=${data.id}`}
+                    href={`/lectures/${lectureNum}/homework/feedback?id=${data.id}&title=${data.title}`}
                     className={`h-[40px] rounded-[10px] px-[20px] py-[12px] text-headline2 flex items-center ${badgeStyle}`}
                   >
                     {/* 피드백 완료/미완료 get 수정 필요 */}
