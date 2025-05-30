@@ -1,4 +1,5 @@
 import { QUIZ_LIMIT_TIME_OPTIONS } from '@/constants/quiz.constants';
+import { format } from 'date-fns';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import Calendar from './Calendar';
@@ -70,13 +71,13 @@ export default function DateTimePicker({
   disabled = false,
 }: DateTimePickerProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [value, setValue] = useState(defaultValue ?? '');
+  const [dateTimeValue, setDateTimeValue] = useState(defaultValue ?? '');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [dropdownStyle, setDropdownStyle] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
-    if (defaultValue) setValue(defaultValue);
+    if (defaultValue) setDateTimeValue(defaultValue);
   }, [defaultValue]);
 
   const pickerRef = useRef<HTMLDivElement>(null);
@@ -101,7 +102,7 @@ export default function DateTimePicker({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen]);
 
-  const isPlaceholder = value === '';
+  const isPlaceholder = dateTimeValue === '';
   const fontStyle = disabled ? '' : isPlaceholder ? 'text-gray-60' : '';
 
   const commonStyle = 'rounded-[5px] bg-gray-10';
@@ -124,24 +125,33 @@ export default function DateTimePicker({
   };
 
   const handleSelectDate = (formattedValue: string) => {
-    setValue(formattedValue);
+    setDateTimeValue(formattedValue);
     onSelectDate?.(formattedValue);
     setIsOpen(false);
   };
 
   const handleSelectTime = (start: string, end: string) => {
     const formattedValue = `${start} - ${end}`;
-    setValue(formattedValue);
+    setDateTimeValue(formattedValue);
     onSelectDate?.(formattedValue);
     setIsOpen(false);
   };
 
   const handleSelectedLimitTime = (time: string) => {
     if (disabled) return;
-    setValue(time);
+    setDateTimeValue(time);
     onSelectDate?.(time);
     setIsOpen(false);
   };
+
+  function getFormattedValue(value: string, placeholder: string) {
+    if (!value) return placeholder;
+    const date = new Date(value);
+    if (date) {
+      return format(date, 'yy.MM.dd');
+    }
+    return value;
+  }
 
   return (
     <div ref={pickerRef}>
@@ -156,7 +166,7 @@ export default function DateTimePicker({
           alt={`${type} 아이콘`}
           className={`${imageSize}`}
         />
-        <div className={`${fontStyle} whitespace-nowrap`}>{value || placeholder}</div>
+        <div className={`${fontStyle} whitespace-nowrap`}>{getFormattedValue(dateTimeValue, placeholder)}</div>
       </div>
 
       {isOpen && !disabled && calendar && (
@@ -213,7 +223,7 @@ export default function DateTimePicker({
             ...item,
             onClick: () => handleSelectedLimitTime(item.label as string),
           }))}
-          selectedItem={value || '제한 시간'}
+          selectedItem={dateTimeValue || '제한 시간'}
           isOpen={isOpen && !disabled}
           triggerRef={pickerRef}
           size={customDropdownSize}

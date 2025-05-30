@@ -6,40 +6,37 @@ import TiptapEditor from './TiptapEditor';
 
 type WriteBoxProps = {
   type: '공지' | '숙제';
-  description?: string;
   files?: string[];
 };
 
-export default function WriteBox({ type, description, files }: WriteBoxProps) {
+export default function WriteBox({ type, files }: WriteBoxProps) {
   const { watch, setValue } = useFormContext();
-  const contents = watch('contents');
-  // 버튼 업로드
   const selectedFiles = useRef<HTMLInputElement>(null);
   const [fileNames, setFileNames] = useState<string[]>([]);
-  // 드래그 앤 드랍
   const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
-    if (!files) return;
-    // 현재 파일이 하나일 때
-    setFileNames(files);
-  }, []);
+    if (files) {
+      setFileNames(files);
+    }
+  }, [files]);
+
+  useEffect(() => {
+    setValue('files', fileNames);
+  }, [fileNames, setValue]);
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    e.stopPropagation();
     setIsDragging(false);
     const files = e.dataTransfer.files;
     if (files && files.length > 0) {
       const newNames = Array.from(files)
         .map((file) => file.name)
         .filter((name) => !fileNames.includes(name));
-
-      if (newNames.length > 0) {
-        setFileNames((prev) => [...prev, ...newNames]);
-      }
+      if (newNames.length > 0) setFileNames((prev) => [...prev, ...newNames]);
     }
   };
+
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(true);
@@ -56,10 +53,7 @@ export default function WriteBox({ type, description, files }: WriteBoxProps) {
       const newNames = Array.from(files)
         .map((file) => file.name)
         .filter((name) => !fileNames.includes(name));
-
-      if (newNames.length > 0) {
-        setFileNames((prev) => [...prev, ...newNames]);
-      }
+      if (newNames.length > 0) setFileNames((prev) => [...prev, ...newNames]);
     }
   };
 
@@ -72,9 +66,8 @@ export default function WriteBox({ type, description, files }: WriteBoxProps) {
       <div className='h-[482px] flex flex-col gap-[12px]'>
         <TiptapEditor
           type={type}
-          contents={contents}
-          onChange={(html) => setValue('contents', html)}
-          value={description}
+          contents={watch('description')}
+          onChange={(html) => setValue('description', html)}
         />
       </div>
 

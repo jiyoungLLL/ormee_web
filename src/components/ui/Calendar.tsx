@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useState } from 'react';
 import { DateRange, DayPicker, SelectRangeEventHandler, SelectSingleEventHandler } from 'react-day-picker';
@@ -20,20 +19,20 @@ export default function Calendar({ type, onSelectDate }: CalendarProps) {
   const handleSelectSingle: SelectSingleEventHandler = (day) => {
     setSelectedDay(day);
     if (day) {
-      const formatted = format(day, 'yy.MM.dd');
-      onSelectDate(formatted);
+      const isoDate = day.toISOString().split('.')[0];
+      onSelectDate(isoDate);
     }
   };
 
   const handleSelectRange: SelectRangeEventHandler = (range) => {
     setSelectedRange(range);
     if (range?.from && range?.to && range.from.getTime() !== range.to.getTime()) {
-      const from = format(range.from, 'yyyy.MM.dd');
-      const to = format(range.to, 'yyyy.MM.dd');
-      onSelectDate(`${from}-${to}`);
+      const fromISO = range.from.toISOString().split('.')[0];
+      const toISO = range.to.toISOString().split('.')[0];
+      onSelectDate(`${fromISO}/${toISO}`);
     } else if (range?.from && !range?.to) {
-      const from = format(range.from, 'yyyy.MM.dd');
-      onSelectDate(`${from}-`);
+      const fromISO = range.from.toISOString().split('.')[0];
+      onSelectDate(`${fromISO}/`);
     }
   };
 
