@@ -25,7 +25,7 @@ export const getAnswer = async (questionId: string) => {
 };
 
 export const postAnswer = async (data: AnswerFormValues, questionId: string) => {
-  if (data.content.trim() === '' || data.files.length === 0) {
+  if (data.content.trim() === '' && data.files.length === 0) {
     throw new Error('답변을 작성해주세요.');
   }
 
@@ -43,6 +43,23 @@ export const postAnswer = async (data: AnswerFormValues, questionId: string) => 
   if (!response.ok) {
     if (process.env.NODE_ENV === 'development') console.error(response.statusText);
     throw new Error('답변 등록 중 오류가 발생했습니다.');
+  }
+
+  const json = await response.json();
+  if (json.status === 'error') {
+    if (process.env.NODE_ENV === 'development') console.error(json.message);
+    throw new Error(json.message ?? '알 수 없는 오류가 발생했습니다.');
+  }
+};
+
+export const deleteAnswer = async (answerId: string) => {
+  const response = await fetch(`/api/teachers/questions/answers/${answerId}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    if (process.env.NODE_ENV === 'development') console.error(response.statusText);
+    throw new Error('답변 삭제 중 오류가 발생했습니다.');
   }
 
   const json = await response.json();

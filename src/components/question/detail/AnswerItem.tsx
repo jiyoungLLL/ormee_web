@@ -1,32 +1,38 @@
 'use client';
 
 import Dropdown from '@/components/ui/dropdown/Dropdown';
+import { useDeleteAnswer } from '@/features/question/hooks/queries/useAnswer';
 import { Answer } from '@/features/question/question.types';
 import { useDropdown } from '@/hooks/ui/useDropdown';
 import { formatDatetimeWithoutTime } from '@/utils/date/formatDate';
 import Image from 'next/image';
+import { useParams } from 'next/navigation';
 import { useRef } from 'react';
 
 type AnswerItemProps = {
   answer: Answer;
 };
 
-const menuList = [
-  {
-    id: 'edit',
-    label: '답변 수정',
-  },
-  {
-    id: 'delete',
-    label: '답변 삭제',
-  },
-];
-
 export default function AnswerItem({ answer }: AnswerItemProps) {
-  const { author, content, files, createdAt } = answer;
+  const { id, author, content, files, createdAt } = answer;
   const formattedCreatedAt = createdAt ? formatDatetimeWithoutTime(createdAt) : '';
 
+  const { questionId } = useParams();
+  const { mutate: deleteAnswer } = useDeleteAnswer({ questionId: questionId as string, answerId: id });
   const moreDropdownRef = useRef<HTMLDivElement>(null);
+  const menuList = [
+    {
+      id: 'edit',
+      label: '답변 수정',
+    },
+    {
+      id: 'delete',
+      label: '답변 삭제',
+      onClick: () => {
+        deleteAnswer();
+      },
+    },
+  ];
   const { isOpen, handleToggle, menuListForDropdown } = useDropdown({ initialOpen: false, menuList });
 
   return (

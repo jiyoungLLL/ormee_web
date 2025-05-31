@@ -211,4 +211,27 @@ export const handlers = [
       },
     );
   }),
+  http.delete('/api/teachers/questions/answers/:answerId', ({ params }) => {
+    const { answerId } = params;
+    const answerIndex = MOCK_ANSWER.findIndex((a) => a.id === answerId);
+
+    if (answerIndex === -1) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    MOCK_ANSWER.splice(answerIndex, 1);
+
+    return HttpResponse.json(
+      {
+        status: 'success',
+        code: 200,
+      },
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+  }),
 ];
