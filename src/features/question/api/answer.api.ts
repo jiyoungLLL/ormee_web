@@ -25,6 +25,10 @@ export const getAnswer = async (questionId: string) => {
 };
 
 export const postAnswer = async (data: AnswerFormValues, questionId: string) => {
+  if (data.content.trim() === '' || data.files.length === 0) {
+    throw new Error('답변을 작성해주세요.');
+  }
+
   const formData = new FormData();
   formData.append('content', data.content);
   data.files.forEach((file) => {
