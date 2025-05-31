@@ -1,4 +1,4 @@
-import { AnswerResponse, Question } from '@/features/question/question.types';
+import { Answer, Question } from '@/features/question/question.types';
 
 export const MOCK_PAGINATED_QUESTION_RESPONSE: Question[] = Array.from({ length: 42 }, (_, i) => ({
   id: (i + 1).toString(),
@@ -13,9 +13,10 @@ export const MOCK_PAGINATED_QUESTION_RESPONSE: Question[] = Array.from({ length:
   createdAt: new Date(Date.now() - i * 1000 * 60 * 60 * 12).toISOString(),
 }));
 
-export const MOCK_ANSWER: AnswerResponse = [
+export const MOCK_ANSWER: Answer[] = [
   {
     id: 'mock-answer-1',
+    author: '강수이',
     content: '답변 내용',
     files: [
       {
