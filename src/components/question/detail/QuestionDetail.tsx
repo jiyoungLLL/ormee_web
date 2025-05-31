@@ -39,8 +39,9 @@ export default function QuestionDetail() {
         <p>{data?.content}</p>
       </div>
       <div className='w-full h-[1px] bg-gray-30' />
-      {data?.filePaths.map((filePath) => (
+      {data?.filePaths.map((filePath, index) => (
         <Image
+          key={`${questionId}-attachment-${index}`}
           src={filePath}
           alt='첨부파일'
           width={450}
