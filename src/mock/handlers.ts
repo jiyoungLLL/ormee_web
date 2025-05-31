@@ -167,6 +167,7 @@ export const handlers = [
 
     const newAnswer = {
       id: crypto.randomUUID(),
+      author: '강수이',
       content,
       files: imageUrls.map((url) => ({ id: crypto.randomUUID(), url })),
       createdAt: new Date().toISOString(),
@@ -179,6 +180,28 @@ export const handlers = [
       {
         status: 'success',
         code: 200,
+      },
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+  }),
+  http.get('/api/teachers/questions/:questionId/answer', ({ params }) => {
+    const { questionId } = params;
+    const question = MOCK_PAGINATED_QUESTION_RESPONSE.find((q) => q.id === questionId);
+
+    if (!question) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    return HttpResponse.json(
+      {
+        status: 'success',
+        code: 200,
+        data: MOCK_ANSWER,
       },
       {
         status: 200,

@@ -1,10 +1,23 @@
 'use client';
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { AnswerFormValues } from '../../question.types';
-import { postAnswer } from '../../api/answer.api';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { AnswerFormValues } from '@/features/question/question.types';
+import { getAnswer, postAnswer } from '@/features/question/api/answer.api';
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { useToastStore } from '@/stores/toastStore';
+
+export const useGetAnswer = (questionId: string) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.answer(questionId),
+    queryFn: () => getAnswer(questionId),
+    enabled: !!questionId,
+    staleTime: 1 * 60 * 60 * 1000,
+    gcTime: 5 * 60 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+};
 
 export const usePostAnswer = (questionId: string) => {
   const queryClient = useQueryClient();
