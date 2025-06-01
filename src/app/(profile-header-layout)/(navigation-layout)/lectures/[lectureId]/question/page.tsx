@@ -30,6 +30,8 @@ export default async function QuestionPage({
   });
 
   if (process.env.CI !== 'true') {
+    console.log('process.env.CI !== true, prefetch Query 실행');
+
     await queryClient.prefetchQuery({
       queryKey: QUERY_KEYS.questionList({ lectureId, filter, page, searchBy, keyword }),
       queryFn: () => getQuestionListOnServer({ lectureId, filter, page, searchBy, keyword }),

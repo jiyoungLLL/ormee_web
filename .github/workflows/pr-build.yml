@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NEXT_PUBLIC_API_BASE_URL: ${{ secrets.API_BASE_URL }}
+      CI: true
     outputs:
       nextjs_build_result: ${{ steps.test_results.outputs.nextjs_build_result }}
       storybook_build_result: ${{ steps.test_results.outputs.storybook_build_result }}
