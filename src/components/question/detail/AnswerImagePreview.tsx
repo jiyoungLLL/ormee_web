@@ -1,7 +1,7 @@
 'use client';
 
 import XIcon from '@/components/icon/XIcon';
-import { PreviewImagesState } from '@/features/question/question.types';
+import { PreviewImagesState } from '@/features/question/types/answer.types';
 
 type AnswerImagePreviewProps = {
   previewImages: PreviewImagesState[] | null;

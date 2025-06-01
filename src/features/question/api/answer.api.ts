@@ -1,5 +1,5 @@
-import { AnswerFormValues } from '@/features/question/question.types';
-import { AnswerResponseSchema } from '@/features/question/question.schema';
+import { AnswerFormValues } from '@/features/question/types/answer.types';
+import { AnswerResponseSchema } from '@/features/question/schemas/answer.schema';
 
 export const getAnswer = async (questionId: string) => {
   const response = await fetch(`/api/teachers/questions/${questionId}/answer`);

@@ -1,7 +1,7 @@
 'use client';
 
 import Input from '@/components/ui/Input';
-import { AnswerFormValues } from '@/features/question/question.types';
+import { AnswerFormValues } from '@/features/question/types/answer.types';
 import { Control } from 'react-hook-form';
 
 type AnswerInputProps = {

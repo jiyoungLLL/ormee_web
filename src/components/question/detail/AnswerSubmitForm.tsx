@@ -1,7 +1,7 @@
 'use client';
 
 import Button from '@/components/ui/Button';
-import { AnswerFormValues, PreviewImagesState } from '@/features/question/question.types';
+import { AnswerFormValues, PreviewImagesState } from '@/features/question/types/answer.types';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import AnswerInput from '@/components/question/detail/AnswerInput';

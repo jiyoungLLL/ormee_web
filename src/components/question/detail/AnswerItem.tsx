@@ -2,7 +2,7 @@
 
 import Dropdown from '@/components/ui/dropdown/Dropdown';
 import { useDeleteAnswer } from '@/features/question/hooks/queries/useAnswer';
-import { Answer } from '@/features/question/question.types';
+import { Answer } from '@/features/question/types/answer.types';
 import { useDropdown } from '@/hooks/ui/useDropdown';
 import { formatDatetimeWithoutTime } from '@/utils/date/formatDate';
 import Image from 'next/image';

@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { AnswerFormValues } from '@/features/question/question.types';
+import { AnswerFormValues } from '@/features/question/types/answer.types';
 import { deleteAnswer, getAnswer, postAnswer } from '@/features/question/api/answer.api';
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { useToastStore } from '@/stores/toastStore';
