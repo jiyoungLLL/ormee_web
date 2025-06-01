@@ -1,11 +1,10 @@
 'use server';
 
-import { PaginatedQuestionDataSchema, PaginatedQuestionResponseSchema } from '@/features/question/question.schema';
 import { QuestionListFilterType } from '@/features/question/hooks/useQuestionSearchParams';
 import { QuestionSearchByType } from '@/features/question/hooks/useQuestionSearchParams';
-import { cookies } from 'next/headers';
 import { validateQuestionListResponse } from './validateQuestionResponse';
 import { getHeaders } from '@/utils/getApiConfig';
+import fetchPonyfill from 'fetch-ponyfill';
 
 export const getQuestionListOnServer = async ({
   lectureId,
@@ -29,6 +28,8 @@ export const getQuestionListOnServer = async ({
   if (searchBy) params.append('searchBy', searchBy);
   if (keyword) params.append('keyword', keyword);
 
+  // TODO: 서버 배포 후 next/fetch 사용
+  const fetch = fetchPonyfill().fetch;
   const response = await fetch(
     `${process.env.API_BASE_URL || 'http://localhost:8080/api'}/teachers/${lectureId}/questions?${params}`,
     {
