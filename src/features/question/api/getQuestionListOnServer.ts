@@ -1,10 +1,10 @@
 'use server';
 
+import '@/utils/file';
 import { QuestionListFilterType } from '@/features/question/hooks/useQuestionSearchParams';
 import { QuestionSearchByType } from '@/features/question/hooks/useQuestionSearchParams';
 import { validateQuestionListResponse } from './validateQuestionResponse';
 import { getHeaders } from '@/utils/getApiConfig';
-import { polyfillFileIfNeeded } from '@/utils/file';
 
 export const getQuestionListOnServer = async ({
   lectureId,
@@ -19,8 +19,6 @@ export const getQuestionListOnServer = async ({
   searchBy?: QuestionSearchByType;
   keyword?: string;
 }) => {
-  await polyfillFileIfNeeded();
-
   const headers = await getHeaders();
 
   const params = new URLSearchParams();
