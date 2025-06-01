@@ -50,7 +50,13 @@ export default function PhoneNumberInput<T extends FieldValues>({
 
   const [watchedPrefixValue, watchedNumberValue] = useWatch({ control, name: [prefixName, numberName] });
   const [verificationCode, setVerificationCode] = useState('');
-  const isVerified = verificationName ? useWatch({ control, name: verificationName }) : false;
+
+  const watchedVerificationValue = useWatch({
+    control,
+    name: verificationName ?? ('__unused' as Path<T>),
+  });
+
+  const isVerified = Boolean(watchedVerificationValue);
 
   const handleVertification = () => {
     if (isVerified) return;

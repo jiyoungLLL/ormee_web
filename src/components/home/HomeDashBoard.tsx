@@ -13,9 +13,7 @@ const minidashList: string[][] = [
   ['공지 작성', '/assets/icons/sidenav/notice_selected.png', 'notice'],
 ];
 
-const renderMiniDash = () => {
-  const lectureNum = useLectureId();
-
+const renderMiniDash = (lectureNum: string) => {
   return minidashList.map(([dash, src, path], index) => (
     <Link
       href={`/lectures/${lectureNum}/${path}/create`}
@@ -35,6 +33,8 @@ const renderMiniDash = () => {
 };
 
 export default function HomeDashBoard() {
+  const lectureNum = useLectureId();
+
   const handleCopy = () => {
     // 강의코드 데이터 변경 필요
     const text = '강의코드';
@@ -89,7 +89,7 @@ export default function HomeDashBoard() {
             늦었다고 생각할 때는 이미 늦었다
           </div>
         </div>
-        <div className='flex flex-wrap w-[509px] gap-[9px]'>{renderMiniDash()}</div>
+        <div className='flex flex-wrap w-[509px] gap-[9px]'>{renderMiniDash(lectureNum)}</div>
       </div>
 
       <div className='absolute top-[330px] w-[1018px] flex flex-col gap-[30px]'>
