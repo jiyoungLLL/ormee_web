@@ -8,6 +8,8 @@ jobs:
   build:
     name: 🛠️ 프로젝트 빌드
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_API_BASE_URL: ${{ secrets.API_BASE_URL }}
     outputs:
       nextjs_build_result: ${{ steps.test_results.outputs.nextjs_build_result }}
       storybook_build_result: ${{ steps.test_results.outputs.storybook_build_result }}
@@ -39,6 +41,8 @@ jobs:
       - name: 🔨 Next.js 빌드
         id: nextbuild
         continue-on-error: true
+        env:
+          NEXT_PUBLIC_API_BASE_URL: ${{ secrets.API_BASE_URL }}
         run: |
           set -o pipefail
           pnpm build 2>&1 | tee build.log
