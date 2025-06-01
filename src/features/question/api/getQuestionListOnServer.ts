@@ -1,5 +1,6 @@
 'use server';
 
+import '@/utils/file';
 import { QuestionListFilterType } from '@/features/question/hooks/useQuestionSearchParams';
 import { QuestionSearchByType } from '@/features/question/hooks/useQuestionSearchParams';
 import { validateQuestionListResponse } from './validateQuestionResponse';
