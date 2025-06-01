@@ -29,10 +29,12 @@ export default async function QuestionPage({
     },
   });
 
-  await queryClient.prefetchQuery({
-    queryKey: QUERY_KEYS.questionList({ lectureId, filter, page, searchBy, keyword }),
-    queryFn: () => getQuestionListOnServer({ lectureId, filter, page, searchBy, keyword }),
-  });
+  if (process.env.CI !== 'true') {
+    await queryClient.prefetchQuery({
+      queryKey: QUERY_KEYS.questionList({ lectureId, filter, page, searchBy, keyword }),
+      queryFn: () => getQuestionListOnServer({ lectureId, filter, page, searchBy, keyword }),
+    });
+  }
 
   return (
     <div className='flex flex-col max-w-[1018px] h-full'>
