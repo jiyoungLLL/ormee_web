@@ -1,9 +1,7 @@
 'use server';
 
-import { PaginatedQuestionDataSchema, PaginatedQuestionResponseSchema } from '@/features/question/question.schema';
 import { QuestionListFilterType } from '@/features/question/hooks/useQuestionSearchParams';
 import { QuestionSearchByType } from '@/features/question/hooks/useQuestionSearchParams';
-import { cookies } from 'next/headers';
 import { validateQuestionListResponse } from './validateQuestionResponse';
 import { getHeaders } from '@/utils/getApiConfig';
 
