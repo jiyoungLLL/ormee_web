@@ -1,4 +1,4 @@
-import { QuestionDetailResponseSchema, QuestionSchema } from '@/features/question/question.schema';
+import { QuestionDetailResponseSchema, QuestionSchema } from '@/features/question/schemas/question.schema';
 
 export const getQuestionDetail = async (questionId: string) => {
   const response = await fetch(`/api/teachers/questions/${questionId}`, {

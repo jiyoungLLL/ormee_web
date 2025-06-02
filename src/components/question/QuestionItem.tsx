@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Question } from '@/features/question/question.types';
+import { Question } from '@/features/question/types/question.types';
 import { formatDatetimeWithoutTime } from '@/utils/date/formatDate';
 import { usePathname, useSearchParams } from 'next/navigation';
 

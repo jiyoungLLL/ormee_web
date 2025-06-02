@@ -12,3 +12,16 @@ export async function GET(request: NextRequest, { params }: { params: { question
 
   return response;
 }
+
+export async function POST(request: NextRequest, { params }: { params: { questionId: string } }) {
+  const { questionId } = params;
+  const headers = await getHeaders();
+
+  const response = await fetch(`${process.env.API_BASE_URL}/teachers/questions/${questionId}`, {
+    method: 'POST',
+    headers,
+    body: request.body,
+  });
+
+  return response;
+}

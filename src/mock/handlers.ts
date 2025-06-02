@@ -8,7 +8,7 @@ import {
   TEMPORARY_QUIZ_LIST,
 } from './quiz';
 import { QuizState } from '@/types/quiz.types';
-import { MOCK_PAGINATED_QUESTION_RESPONSE } from './question';
+import { MOCK_ANSWER, MOCK_PAGINATED_QUESTION_RESPONSE } from './question';
 
 export const handlers = [
   http.get('/api/teacher/notification/', () => {
@@ -139,6 +139,93 @@ export const handlers = [
 
     return HttpResponse.json(
       { status: 'success', code: 200, data: question },
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+  }),
+  http.post('/api/teachers/questions/:questionId', async ({ params, request }) => {
+    const { questionId } = params;
+    const question = MOCK_PAGINATED_QUESTION_RESPONSE.find((q) => q.id === questionId);
+
+    if (!question) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    const formData = await request.formData();
+    const content = formData.get('content') as string;
+    const files = formData.getAll('files') as File[];
+
+    // Blob URL 생성
+    const imageUrls = files.map((file) => {
+      const blob = new Blob([file], { type: file.type });
+      return URL.createObjectURL(blob);
+    });
+
+    const newAnswer = {
+      id: crypto.randomUUID(),
+      author: '강수이',
+      content,
+      files: imageUrls.map((url) => ({ id: crypto.randomUUID(), url })),
+      createdAt: new Date().toISOString(),
+    };
+
+    MOCK_ANSWER.push(newAnswer);
+    question.isAnswered = true;
+
+    return HttpResponse.json(
+      {
+        status: 'success',
+        code: 200,
+      },
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+  }),
+  http.get('/api/teachers/questions/:questionId/answer', ({ params }) => {
+    const { questionId } = params;
+    const question = MOCK_PAGINATED_QUESTION_RESPONSE.find((q) => q.id === questionId);
+
+    if (!question) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    return HttpResponse.json(
+      {
+        status: 'success',
+        code: 200,
+        data: MOCK_ANSWER,
+      },
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+  }),
+  http.delete('/api/teachers/questions/answers/:answerId', ({ params }) => {
+    const { answerId } = params;
+    const answerIndex = MOCK_ANSWER.findIndex((a) => a.id === answerId);
+
+    if (answerIndex === -1) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    MOCK_ANSWER.splice(answerIndex, 1);
+
+    return HttpResponse.json(
+      {
+        status: 'success',
+        code: 200,
+      },
       {
         status: 200,
         headers: {

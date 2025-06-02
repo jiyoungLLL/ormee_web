@@ -4,7 +4,7 @@ import {
   PaginatedQuestionResponseSchema,
   QuestionDetailResponseSchema,
   QuestionSchema,
-} from '@/features/question/question.schema';
+} from '@/features/question/schemas/question.schema';
 
 export type Question = z.infer<typeof QuestionSchema>;
 export type PaginatedQuestionData = z.infer<typeof PaginatedQuestionDataSchema>;

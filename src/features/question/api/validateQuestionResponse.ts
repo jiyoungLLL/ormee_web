@@ -1,4 +1,7 @@
-import { PaginatedQuestionDataSchema, PaginatedQuestionResponseSchema } from '@/features/question/question.schema';
+import {
+  PaginatedQuestionDataSchema,
+  PaginatedQuestionResponseSchema,
+} from '@/features/question/schemas/question.schema';
 
 export const validateQuestionListResponse = async (response: Response) => {
   if (!response.ok) {
