@@ -2,14 +2,18 @@
 
 import Button from '@/components/ui/Button';
 import DateTimePicker from '@/components/ui/DateTimePicker';
+import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { useLectureId } from '@/hooks/queries/useLectureId';
+import { useApiMutation } from '@/hooks/useApi';
 import { MOCK_HOMEWORK } from '@/mock/homework';
+import { useToastStore } from '@/stores/toastStore';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
 export default function HomeworkDetail() {
+  const { addToast } = useToastStore();
   const lectureNum = useLectureId();
   const searchParams = useSearchParams();
   const filter = searchParams.get('filter') === 'ongoing' ? 'openedAssignments' : 'closedAssignments';
@@ -17,8 +21,19 @@ export default function HomeworkDetail() {
   // GET : 과제 목록 (진행중, 마감) 에서 받아온 데이터로 변경하기
   const detailData = MOCK_HOMEWORK.data[filter].find((item) => item.id === Number(id));
 
+  const deleteMutation = useApiMutation<unknown, any>(
+    'DELETE',
+    `/teachers/assignments/${id}`,
+    () => addToast({ message: '과제가 삭제되었어요', type: 'success', duration: 2500 }),
+    [QUERY_KEYS.homeworkList(lectureNum)],
+    (err) => {
+      addToast({ message: '과제가 삭제되지 않았어요. 다시 시도해주세요.', type: 'error', duration: 2500 });
+      console.log(err);
+    },
+  );
+
   const handleDelete = () => {
-    alert('삭제하기');
+    deleteMutation.mutate(undefined);
   };
 
   return (

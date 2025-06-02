@@ -3,10 +3,12 @@
 import Button from '@/components/ui/Button';
 import CreateContents from '@/components/ui/create/CreateContents';
 import type { Assignment } from '@/features/homework/homework.types';
+import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { useApiMutation } from '@/hooks/useApi';
 import { MOCK_HOMEWORK } from '@/mock/homework';
 import { WriteBoxFormValues, writeBoxSchema } from '@/schemas/writeBox.schema';
+import { useToastStore } from '@/stores/toastStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -20,6 +22,7 @@ type CreateProps = {
 };
 
 export default function Create({ type, params }: CreateProps) {
+  const { addToast } = useToastStore();
   const lectureNum = useLectureId();
   const searchParams = useSearchParams();
   const homeworkId = type === 'homework' && searchParams.get('id');
@@ -60,10 +63,25 @@ export default function Create({ type, params }: CreateProps) {
 
   const method = homeworkId ? 'PUT' : 'POST';
   const endpoint = homeworkId ? `/teachers/${lectureNum}/assignments` : `/teachers/assignments/${lectureNum}`;
+  const invalidateKeys = homeworkId
+    ? [QUERY_KEYS.homeworkDetail(homeworkId), QUERY_KEYS.homeworkList(lectureNum)]
+    : [QUERY_KEYS.homeworkList(lectureNum)];
 
-  const mutation = useApiMutation<unknown, any>(method, endpoint, () => {
-    alert(`${title} ${homeworkId ? '수정' : '생성'} 완료`);
-  });
+  const mutation = useApiMutation<unknown, any>(
+    method,
+    endpoint,
+    () => {
+      addToast({ message: `${title}가 ${homeworkId ? '수정' : '생성'}되었어요.`, type: 'success', duration: 2500 });
+    },
+    invalidateKeys,
+    (err) => {
+      addToast({
+        message: `${title}가 ${homeworkId ? '수정' : '생성'}되지 않았어요. 다시 시도해주세요.`,
+        type: 'error',
+        duration: 2500,
+      });
+    },
+  );
 
   const onSubmit = (data: WriteBoxFormValues) => {
     const payload = {
