@@ -7,6 +7,8 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'img.freepik.com',
       },
+      // 피드백 임시 이미지
+      { hostname: 'static.cdn.soomgo.com' },
     ],
   },
   webpack: (config) => {
