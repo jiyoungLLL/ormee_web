@@ -115,8 +115,7 @@ export default function HomeworkFeedback() {
             </div>
             <div className='text-body1-reading'>{MOCK_FEEDBACK.data[0].content}</div>
             <div className='flex justify-center'>
-              {/* Image로 대체 (지금은 외부 링크여서 임시로) */}
-              <img
+              <Image
                 src='https://static.cdn.soomgo.com/upload/portfolio/3fb583d6-6e4b-4495-893b-af8224ababbd.jpg?webp=1'
                 width={451}
                 height={494}
