@@ -24,6 +24,7 @@ export default function QuestionDetail() {
     );
 
   const formattedCreatedAt = data ? formatDatetimeWithAMPM(data.createdAt) : '';
+
   return (
     <article className='flex flex-col gap-[20px] w-full h-full'>
       <div className='flex flex-col gap-[10px]'>
@@ -38,8 +39,9 @@ export default function QuestionDetail() {
         <p>{data?.content}</p>
       </div>
       <div className='w-full h-[1px] bg-gray-30' />
-      {data?.filePaths.map((filePath) => (
+      {data?.filePaths.map((filePath, index) => (
         <Image
+          key={`${questionId}-attachment-${index}`}
           src={filePath}
           alt='첨부파일'
           width={450}

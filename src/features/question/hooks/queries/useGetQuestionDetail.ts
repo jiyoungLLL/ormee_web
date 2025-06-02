@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Question } from '../../question.types';
+import { Question } from '../../types/question.types';
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { getQuestionDetail } from '../../api/getQuestionDetail';
 

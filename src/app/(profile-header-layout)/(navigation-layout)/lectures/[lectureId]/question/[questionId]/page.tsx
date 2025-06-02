@@ -1,3 +1,5 @@
+import AnswerContainer from '@/components/question/detail/AnswerContainer';
+import AnswerSubmitForm from '@/components/question/detail/AnswerSubmitForm';
 import QuestionDetail from '@/components/question/detail/QuestionDetail';
 import Link from 'next/link';
 
@@ -32,8 +34,10 @@ export default function QuestionDetailPage({
         />
         <h1 className='text-title3 font-bold'>질문</h1>
       </Link>
-      <div className='flex flex-col gap-[40px] w-full h-[710px] px-[30px] py-[20px] bg-white rounded-[20px]'>
+      <div className='flex flex-col gap-[40px] w-full h-full px-[30px] py-[20px] bg-white rounded-[20px]'>
         <QuestionDetail />
+        <AnswerContainer />
+        <AnswerSubmitForm />
       </div>
     </div>
   );
