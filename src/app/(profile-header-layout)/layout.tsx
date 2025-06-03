@@ -1,6 +1,6 @@
 import Header from '@/components/layouts/Header';
-import HeaderProfile from '@/components/profiles/HeaderProfile';
 import Notification from '@/components/notification/Notification';
+import HeaderProfile from '@/components/profiles/HeaderProfile';
 import { MOCK_USER_PROFILE } from '@/mock/profile';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -15,7 +15,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <HeaderProfile userProfileData={MOCK_USER_PROFILE} />
           </div>
         </Header>
-        <main className='flex-1 flex flex-col justify-center items-center w-full h-full'>{children}</main>
+        <main className='flex-1 flex flex-col justify-center w-full h-full'>{children}</main>
       </div>
       <div id='profile-root' />
       <div id='notification-root' />

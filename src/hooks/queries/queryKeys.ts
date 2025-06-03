@@ -22,4 +22,6 @@ export const QUERY_KEYS = {
   }) => ['questionList', lectureId, filter, page, searchBy, keyword],
   questionDetail: (questionId: string) => ['questionDetail', questionId],
   answer: (questionId: string) => ['answer', questionId],
+  homeworkList: (lectureId: string) => ['homeworkList', lectureId],
+  homeworkDetail: (homeworkId: string) => ['homeworkDetail', homeworkId],
 } as const;

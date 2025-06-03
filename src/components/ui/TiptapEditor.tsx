@@ -15,9 +15,10 @@ type TipTapProps = {
   type: '공지' | '숙제';
   contents: string;
   onChange: (text: string) => void;
+  value?: string;
 };
 
-export default function TiptapEditor({ type, contents, onChange }: TipTapProps) {
+export default function TiptapEditor({ type, contents, onChange, value }: TipTapProps) {
   const isVisuallyEmpty = (html: string) => {
     const cleaned = html
       .replace(/<p><\/p>/g, '')
@@ -69,6 +70,9 @@ export default function TiptapEditor({ type, contents, onChange }: TipTapProps) 
   useEffect(() => {
     if (!editor) return;
 
+    if (editor && value) {
+      editor.commands.setContent(value);
+    }
     const html = editor.getHTML();
     const editorDOM = editor.view.dom as HTMLElement;
 

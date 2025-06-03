@@ -108,7 +108,7 @@ export default function NoteContent() {
 
         <div className={commonStyle}>
           <div>마감 쪽지</div>
-          <div className='flex flex-col gap-[5px] max-h-[530px] overflow-y-auto'>
+          <div className='flex flex-col gap-[5px]'>
             {closedNotes.map((note, index) => {
               const lastNote = closedNotes.length - 1;
 
