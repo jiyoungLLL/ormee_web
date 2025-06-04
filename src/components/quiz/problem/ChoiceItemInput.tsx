@@ -3,7 +3,7 @@
 import XIcon from '@/components/icon/XIcon';
 import Radio from '@/components/ui/radio/Radio';
 import TipTapField from '@/components/ui/TipTapField';
-import { QuizFormValues } from '@/types/quiz.types';
+import { QuizFormValues } from '@/features/quiz/quiz.types';
 import { Editor } from '@tiptap/react';
 import { useFormContext } from 'react-hook-form';
 

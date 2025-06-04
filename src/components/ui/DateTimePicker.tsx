@@ -1,4 +1,4 @@
-import { QUIZ_LIMIT_TIME_OPTIONS } from '@/constants/quiz.constants';
+import { QUIZ_LIMIT_TIME_OPTIONS } from '@/features/quiz/quiz.constants';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
@@ -146,10 +146,25 @@ export default function DateTimePicker({
 
   function getFormattedValue(value: string, placeholder: string) {
     if (!value) return placeholder;
-    const date = new Date(value);
-    if (date) {
-      return format(date, 'yy.MM.dd');
+
+    try {
+      if (type === 'CALENDAR' && calendar === 'DATE_TYPE') {
+        const date = new Date(value);
+        if (date) {
+          return format(date, 'yy.MM.dd');
+        }
+      }
+
+      if (type === 'CALENDAR' && calendar === 'PERIOD_TYPE') {
+        const [from, to] = value.split('-').map((date) => date.trim());
+        return `${from} - ${to}`;
+      }
+
+      return value;
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') console.error(error);
     }
+
     return value;
   }
 
@@ -166,7 +181,7 @@ export default function DateTimePicker({
           alt={`${type} 아이콘`}
           className={`${imageSize}`}
         />
-        <div className={`${fontStyle} whitespace-nowrap`}>{getFormattedValue(dateTimeValue, placeholder)}</div>
+        <div className={`${fontStyle}`}>{getFormattedValue(dateTimeValue, placeholder)}</div>
       </div>
 
       {isOpen && !disabled && calendar && (

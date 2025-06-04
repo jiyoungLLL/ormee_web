@@ -1,12 +1,13 @@
-import { QuizFormValues } from '@/types/quiz.types';
-import { Control, Path, useController, useFormContext } from 'react-hook-form';
-import DateTimePicker from '../ui/DateTimePicker';
-import { useState } from 'react';
-import { useActiveProblemStore } from '@/stores/activeProblemStore';
-import TipTapField from '../ui/TipTapField';
+import { QuizFormValues } from '@/features/quiz/quiz.types';
+import { useController, useFormContext } from 'react-hook-form';
+import DateTimePicker from '@/components/ui/DateTimePicker';
+import { useEffect, useState } from 'react';
+import { useActiveProblemStore } from '@/features/quiz/activeProblemStore';
+import TipTapField from '@/components/ui/TipTapField';
 import { Editor } from '@tiptap/react';
-import { format } from 'date-fns';
-import { useQuizEditMode } from '@/hooks/queries/quiz/useQuizEditMode';
+import { format, parse } from 'date-fns';
+import { useQuizEditMode } from '@/features/quiz/hooks/useQuizEditMode';
+import { ko } from 'date-fns/locale';
 
 type QuizCreateTitleInputProps = {
   setEditor: (editor: Editor | null) => void;
@@ -15,15 +16,17 @@ type QuizCreateTitleInputProps = {
 export default function QuizCreateTitleInput({ setEditor }: QuizCreateTitleInputProps) {
   const [isActive, setIsActive] = useState(false);
   const { activeProblemId, resetActiveProblemId } = useActiveProblemStore();
-  const { control } = useFormContext<QuizFormValues>();
+  const { control, watch } = useFormContext<QuizFormValues>();
   const { field: startTimeField } = useController({ control, name: 'startTime' });
   const { field: dueTimeField } = useController({ control, name: 'dueTime' });
   const { field: limitTimeField } = useController({ control, name: 'limitTime' });
+  const [defaultPeriod, setDefaultPeriod] = useState('');
 
   const handleSelectPeriod = (value: string) => {
     const [startDate, endDate] = value.split('-');
-    const startDateTime = new Date(startDate).toISOString();
-    const endDateTime = new Date(endDate).toISOString();
+
+    const startDateTime = parse(startDate.trim(), 'yyyy.MM.dd', new Date(), { locale: ko });
+    const endDateTime = parse(endDate.trim(), 'yyyy.MM.dd', new Date(), { locale: ko });
 
     startTimeField.onChange(startDateTime);
     dueTimeField.onChange(endDateTime);
@@ -43,10 +46,16 @@ export default function QuizCreateTitleInput({ setEditor }: QuizCreateTitleInput
   };
 
   const { isEditMode } = useQuizEditMode();
-  const defaultPeriod =
-    startTimeField.value && dueTimeField.value
-      ? `${format(new Date(startTimeField.value), 'yyyy.MM.dd')}-${format(new Date(dueTimeField.value), 'yyyy.MM.dd')}`
-      : '';
+  const startTime = watch('startTime');
+  const dueTime = watch('dueTime');
+
+  useEffect(() => {
+    if (startTime && dueTime) {
+      setDefaultPeriod(
+        `${format(new Date(startTimeField.value), 'yyyy.MM.dd')} - ${format(new Date(dueTimeField.value), 'yyyy.MM.dd')}`,
+      );
+    }
+  }, [startTime, dueTime]);
 
   return (
     <div
