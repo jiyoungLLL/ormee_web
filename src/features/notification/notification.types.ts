@@ -1,4 +1,4 @@
-export type NotificationType = 'assignment' | 'question' | 'quiz' | 'memo' | 'ormee';
+export type NotificationType = 'assignment' | 'question' | 'quiz' | 'memo';
 
 export type Notification = {
   id: string;
