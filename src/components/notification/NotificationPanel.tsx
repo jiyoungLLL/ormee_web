@@ -1,14 +1,14 @@
 'use client';
 
-import { NotificationFilterType } from '@/types/notification.types';
+import { NotificationFilterType } from '@/features/notification/notification.types';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
-import NotificationItem from './NotificationItem';
+import NotificationItem from '@/components/notification/NotificationItem';
 import useMounted from '@/hooks/useMounted';
-import Button from '../ui/Button';
-import { NOTIFICATION_TYPE_LABEL } from '@/constants/notification.constants';
-import NotificationFilterButton from './NotificationFilterButton';
-import { useGetNotifications } from '@/hooks/queries/notification/useGetNotifications';
+import Button from '@/components/ui/Button';
+import { NOTIFICATION_TYPE_LABEL } from '@/features/notification/notification.constants';
+import NotificationFilterButton from '@/components/notification/NotificationFilterButton';
+import { useGetNotifications } from '@/features/notification/hooks/useGetNotifications';
 
 type NotificationPanelProps = {
   /** 알림 패널 열림 여부 */

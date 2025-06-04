@@ -1,8 +1,8 @@
 'use client';
 
-import { NOTIFICATION_TYPE_LABEL } from '@/constants/notification.constants';
-import { NotificationFilterType, Notification } from '@/types/notification.types';
-import { useGetNotifications } from '@/hooks/queries/notification/useGetNotifications';
+import { useGetNotifications } from '@/features/notification/hooks/useGetNotifications';
+import { NOTIFICATION_TYPE_LABEL } from '@/features/notification/notification.constants';
+import { NotificationFilterType } from '@/features/notification/notification.types';
 
 type NotificationFilterButtonProps = {
   /** 현재 버튼의 필터 타입 */
@@ -22,6 +22,7 @@ export default function NotificationFilterButton({ type, currentType, onClick }:
     if (type === 'total') {
       return !notification.read;
     }
+
     return notification.type === type && !notification.read;
   });
 

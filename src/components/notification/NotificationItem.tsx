@@ -1,7 +1,7 @@
 'use client';
 
-import { Notification } from '@/types/notification.types';
-import NotificationBadge from './NotificationBadge';
+import NotificationBadge from '@/components/notification/NotificationBadge';
+import { Notification } from '@/features/notification/notification.types';
 
 type NotificationItemProps = {
   /** 표시할 알림 데이터 */
