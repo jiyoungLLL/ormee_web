@@ -6,6 +6,7 @@ type TipTapFieldProps<T extends FieldValues> = {
   control: Control<T>;
   name: Path<T>;
   placeholder?: string;
+  size?: string;
   fieldStyle?: string;
   textStyle?: string;
   setEditor: (editor: Editor | null) => void;
@@ -18,6 +19,7 @@ export default function TipTapField<T extends FieldValues>({
   control,
   name,
   placeholder,
+  size,
   fieldStyle,
   textStyle,
   setEditor,
@@ -34,6 +36,7 @@ export default function TipTapField<T extends FieldValues>({
           value={value ?? ''}
           onChange={onChange}
           placeholder={placeholder}
+          size={size}
           fieldStyle={fieldStyle}
           textStyle={textStyle}
           setEditor={setEditor}
