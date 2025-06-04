@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useState } from 'react';
 import { DateRange, DayPicker, SelectRangeEventHandler, SelectSingleEventHandler } from 'react-day-picker';
@@ -26,12 +27,17 @@ export default function Calendar({ type, onSelectDate }: CalendarProps) {
 
   const handleSelectRange: SelectRangeEventHandler = (range) => {
     setSelectedRange(range);
+
     if (range?.from && range?.to && range.from.getTime() !== range.to.getTime()) {
-      const fromISO = range.from.toISOString().split('.')[0];
-      const toISO = range.to.toISOString().split('.')[0];
+      const fromDate = new Date(range.from.setHours(0, 0, 0, 0));
+      const toDate = new Date(range.to.setHours(0, 0, 0, 0));
+
+      const fromISO = format(fromDate, 'yyyy-MM-dd', { locale: ko });
+      const toISO = format(toDate, 'yyyy-MM-dd', { locale: ko });
+
       onSelectDate(`${fromISO}/${toISO}`);
     } else if (range?.from && !range?.to) {
-      const fromISO = range.from.toISOString().split('.')[0];
+      const fromISO = format(range.from, 'yyyy-MM-dd', { locale: ko });
       onSelectDate(`${fromISO}/`);
     }
   };
