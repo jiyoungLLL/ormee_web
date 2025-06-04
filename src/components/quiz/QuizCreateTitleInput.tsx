@@ -57,7 +57,8 @@ export default function QuizCreateTitleInput({ setEditor }: QuizCreateTitleInput
         name='title'
         setEditor={setEditor}
         placeholder='퀴즈 제목을 입력하세요'
-        fieldStyle='w-full min-h-[50px] border-none bg-white p-[10px] focus:outline-none'
+        size='w-full min-h-[48px]'
+        fieldStyle='border-none bg-white p-[10px] focus:outline-none'
         textStyle='text-heading2 text-gray-90 placeholder:text-gray-50'
         placeholderStyle='placeholder-pl-10'
         onFocus={handleFocus}
@@ -92,7 +93,8 @@ export default function QuizCreateTitleInput({ setEditor }: QuizCreateTitleInput
         control={control}
         name='description'
         placeholder='설명'
-        fieldStyle='w-full min-h-[50px] pl-[20px] py-[15px] bg-white rounded-[10px] border border-gray-20 focus:outline-none disabled:bg-gray-10'
+        size='w-full min-h-[50px]'
+        fieldStyle='pl-[20px] py-[15px] bg-white rounded-[10px] border border-gray-20 focus:outline-none disabled:bg-gray-10'
         setEditor={setEditor}
         onFocus={handleFocus}
         onBlur={handleBlur}
