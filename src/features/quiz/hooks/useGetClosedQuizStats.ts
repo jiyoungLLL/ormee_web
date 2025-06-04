@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { QUERY_KEYS } from '../queryKeys';
-import { ClosedQuizStatsResponseSchema } from '@/schemas/quiz.schema';
+import { QUERY_KEYS } from '../../../hooks/queries/queryKeys';
+import { ClosedQuizStatsResponseSchema } from '@/features/quiz/quiz.schema';
 import { transformClosedQuizStatsToCamelCase } from '@/utils/transforms/quiz.transform';
-import { ClosedQuizStats } from '@/types/quiz.types';
+import { ClosedQuizStats } from '@/features/quiz/quiz.types';
 
 const getClosedQuizStats = async (quizId: string) => {
   const response = await fetch(`/api/teachers/quizzes/${quizId}/stats`);

@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetClosedQuizStats } from '@/hooks/queries/quiz/useGetClosedQuizStats';
+import { useGetClosedQuizStats } from '@/features/quiz/hooks/useGetClosedQuizStats';
 import { useModal } from '@/hooks/ui/useModal';
 import ProblemStatsModal from '@/components/quiz/list/ProblemStatsModal';
 import { useState } from 'react';

@@ -1,8 +1,8 @@
 'use client';
 
-import { QuizState } from '@/types/quiz.types';
+import { QuizState } from '@/features/quiz/quiz.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { QUERY_KEYS } from '../queryKeys';
+import { QUERY_KEYS } from '../../../hooks/queries/queryKeys';
 import { useToastStore } from '@/stores/toastStore';
 
 const SUCCESS_MESSAGE: Record<Exclude<QuizState, 'closed' | 'temporary'>, string> = {

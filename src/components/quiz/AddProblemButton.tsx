@@ -1,7 +1,7 @@
 'use client';
 
-import { DEFAULT_CHOICE_ITEM, DEFAULT_PROBLEM } from '@/constants/quiz.constants';
-import { QuizFormValues } from '@/types/quiz.types';
+import { DEFAULT_CHOICE_ITEM, DEFAULT_PROBLEM } from '@/features/quiz/quiz.constants';
+import { QuizFormValues } from '@/features/quiz/quiz.types';
 import { UseFieldArrayAppend } from 'react-hook-form';
 
 type AddProblemButtonProps = {

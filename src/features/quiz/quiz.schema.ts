@@ -1,5 +1,5 @@
-import { QUIZ_LIMIT_TIME_OPTIONS, QUIZ_TYPE_MAP } from '@/constants/quiz.constants';
-import { QuizState } from '@/types/quiz.types';
+import { QUIZ_LIMIT_TIME_OPTIONS, QUIZ_TYPE_MAP } from '@/features/quiz/quiz.constants';
+import { QuizState } from '@/features/quiz/quiz.types';
 import { z } from 'zod';
 
 // 퀴즈 생성 폼 관련 스키마

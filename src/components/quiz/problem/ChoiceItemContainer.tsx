@@ -1,9 +1,9 @@
 'use client';
 
-import { QuizFormValues } from '@/types/quiz.types';
+import { QuizFormValues } from '@/features/quiz/quiz.types';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import ChoiceItemInput from './ChoiceItemInput';
-import AddChoiceButton from './AddChoiceButton';
+import ChoiceItemInput from '@/components/quiz/problem/ChoiceItemInput';
+import AddChoiceButton from '@/components/quiz/problem/AddChoiceButton';
 import { Editor } from '@tiptap/react';
 
 type ChoiceItemContainerProps = {

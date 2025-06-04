@@ -1,10 +1,10 @@
-import { QuizFormValues } from '@/types/quiz.types';
-import { useActiveProblemStore } from '@/stores/activeProblemStore';
+import { QuizFormValues } from '@/features/quiz/quiz.types';
+import { useActiveProblemStore } from '@/features/quiz/activeProblemStore';
 import { FieldArrayWithId, UseFieldArrayRemove, useFormContext } from 'react-hook-form';
-import ProblemTypeDropdown from './problem/ProblemTypeDropdown';
-import ChoiceItemContainer from './problem/ChoiceItemContainer';
-import Answer from './problem/Answer';
-import RemoveProblemButton from './problem/RemoveProblemButton';
+import ProblemTypeDropdown from '@/components/quiz/problem/ProblemTypeDropdown';
+import ChoiceItemContainer from '@/components/quiz/problem/ChoiceItemContainer';
+import Answer from '@/components/quiz/problem/Answer';
+import RemoveProblemButton from '@/components/quiz/problem/RemoveProblemButton';
 import TipTapField from '../ui/TipTapField';
 import { Editor } from '@tiptap/react';
 

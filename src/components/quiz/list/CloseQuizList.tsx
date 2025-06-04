@@ -1,5 +1,5 @@
-import { Quiz } from '@/types/quiz.types';
-import CloseQuizItem from './CloseQuizItem';
+import { Quiz } from '@/features/quiz/quiz.types';
+import CloseQuizItem from '@/components/quiz/list/CloseQuizItem';
 
 type CloseQuizListProps = {
   closedQuizzes: Quiz[];

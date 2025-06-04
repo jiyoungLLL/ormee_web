@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { QUERY_KEYS } from '../queryKeys';
+import { QUERY_KEYS } from '../../../hooks/queries/queryKeys';
 
 const getQuizDetail = async (quizId: string) => {
   const response = await fetch(`/api/teachers/quizzes/${quizId}`);

@@ -5,7 +5,7 @@ import {
   ProblemStatsResponse,
   QuizList,
   QuizListResponse,
-} from '@/types/quiz.types';
+} from '@/features/quiz/quiz.types';
 
 export const transformQuizListToCamelCase = (response: QuizListResponse): QuizList => {
   return response.map((quiz) => ({

@@ -1,9 +1,9 @@
 'use client';
 
 import Dropdown from '@/components/ui/dropdown/Dropdown';
-import { QUIZ_TYPE_MAP } from '@/constants/quiz.constants';
+import { QUIZ_TYPE_MAP } from '@/features/quiz/quiz.constants';
 import { useDropdown } from '@/hooks/ui/useDropdown';
-import { ProblemType, QuizFormValues } from '@/types/quiz.types';
+import { ProblemType, QuizFormValues } from '@/features/quiz/quiz.types';
 import { useFormContext } from 'react-hook-form';
 
 type ProblemTypeDropdownProps = {

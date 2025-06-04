@@ -1,4 +1,4 @@
-import { ChoiceItem, Problem, ProblemType } from '@/types/quiz.types';
+import { ChoiceItem, Problem, ProblemType } from '@/features/quiz/quiz.types';
 
 export const QUIZ_TYPE_MAP: Record<ProblemType, { type: ProblemType; label: string }> = {
   choice: { type: 'choice', label: '객관식' },
