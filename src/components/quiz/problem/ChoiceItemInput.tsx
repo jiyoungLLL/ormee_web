@@ -3,7 +3,7 @@
 import XIcon from '@/components/icon/XIcon';
 import Radio from '@/components/ui/radio/Radio';
 import TipTapField from '@/components/ui/TipTapField';
-import { QuizFormValues } from '@/types/quiz.types';
+import { QuizFormValues } from '@/features/quiz/quiz.types';
 import { Editor } from '@tiptap/react';
 import { useFormContext } from 'react-hook-form';
 
@@ -41,7 +41,8 @@ export default function ChoiceItemInput({ problemIndex, itemIndex, setEditor }: 
         control={control}
         name={`problems.${problemIndex}.item.${itemIndex}.text`}
         placeholder='선지를 입력하세요.'
-        fieldStyle='flex-1 w-full h-[28px] bg-transparent focus:outline-none disabled:text-label-assistive'
+        size='min-w-[150px] h-[28px]'
+        fieldStyle='bg-transparent focus:outline-none disabled:text-label-assistive'
         setEditor={setEditor}
       />
       <button

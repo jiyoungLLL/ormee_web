@@ -1,10 +1,10 @@
-import { QuizFormValues } from '@/types/quiz.types';
-import { useActiveProblemStore } from '@/stores/activeProblemStore';
+import { QuizFormValues } from '@/features/quiz/quiz.types';
+import { useActiveProblemStore } from '@/features/quiz/activeProblemStore';
 import { FieldArrayWithId, UseFieldArrayRemove, useFormContext } from 'react-hook-form';
-import ProblemTypeDropdown from './problem/ProblemTypeDropdown';
-import ChoiceItemContainer from './problem/ChoiceItemContainer';
-import Answer from './problem/Answer';
-import RemoveProblemButton from './problem/RemoveProblemButton';
+import ProblemTypeDropdown from '@/components/quiz/problem/ProblemTypeDropdown';
+import ChoiceItemContainer from '@/components/quiz/problem/ChoiceItemContainer';
+import Answer from '@/components/quiz/problem/Answer';
+import RemoveProblemButton from '@/components/quiz/problem/RemoveProblemButton';
 import TipTapField from '../ui/TipTapField';
 import { Editor } from '@tiptap/react';
 
@@ -46,7 +46,8 @@ export default function ProblemInput({ problem, index, remove, setEditor }: Prob
           control={control}
           name={`problems.${index}.context`}
           placeholder='질문을 입력하세요.'
-          fieldStyle='p-[20px] rounded-[10px] border border-gray-20 focus:outline-none w-full min-h-[50px]'
+          size='w-full min-h-[50px]'
+          fieldStyle='p-[20px] rounded-[10px] border border-gray-20 focus:outline-none'
           placeholderStyle='placeholder-pl-20'
           setEditor={setEditor}
         />

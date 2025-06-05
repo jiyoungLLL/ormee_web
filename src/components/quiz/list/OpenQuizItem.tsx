@@ -2,11 +2,11 @@
 
 import Button from '@/components/ui/Button';
 import Image from 'next/image';
-import { Quiz } from '@/types/quiz.types';
+import { Quiz } from '@/features/quiz/quiz.types';
 import { formatDatetimeWithTime } from '@/utils/date/formatDate';
 import { useModal } from '@/hooks/ui/useModal';
 import Modal from '@/components/ui/Modal';
-import { usePutQuizState } from '@/hooks/queries/quiz/usePutQuizState';
+import { usePutQuizState } from '@/features/quiz/hooks/usePutQuizState';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 
 type OpenQuizItemProps = {

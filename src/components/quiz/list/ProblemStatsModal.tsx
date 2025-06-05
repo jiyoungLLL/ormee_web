@@ -3,7 +3,7 @@
 import Badge from '@/components/ui/Badge';
 import Modal from '@/components/ui/Modal';
 import RadioIndicator from '@/components/ui/radio/RadioIndicator';
-import { useGetProblemStats } from '@/hooks/queries/quiz/useGetProblemStats';
+import { useGetProblemStats } from '@/features/quiz/hooks/useGetProblemStats';
 import Image from 'next/image';
 
 type ProblemStatsModalProps = {

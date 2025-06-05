@@ -1,19 +1,19 @@
 'use client';
 
-import { QuizFormSchema } from '@/schemas/quiz.schema';
+import { QuizFormSchema } from '@/features/quiz/quiz.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
-import QuizCreateTitleInput from './QuizCreateTitleInput';
-import RemoteController from './RemoteController';
-import ProblemInput from './ProblemInput';
-import AddProblemButton from './AddProblemButton';
-import { DEFAULT_CHOICE_ITEM, DEFAULT_PROBLEM } from '@/constants/quiz.constants';
+import QuizCreateTitleInput from '@/components/quiz/QuizCreateTitleInput';
+import RemoteController from '@/components/quiz/RemoteController';
+import ProblemInput from '@/components/quiz/ProblemInput';
+import AddProblemButton from '@/components/quiz/AddProblemButton';
+import { DEFAULT_CHOICE_ITEM, DEFAULT_PROBLEM } from '@/features/quiz/quiz.constants';
 import Toolbar from '../ui/Toolbar';
 import { useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
-import QuizCreateHeader from './QuizCreateHeader';
-import { QuizFormValues } from '@/types/quiz.types';
-import { useQuizEditMode } from '@/hooks/queries/quiz/useQuizEditMode';
+import QuizCreateHeader from '@/components/quiz/QuizCreateHeader';
+import { QuizFormValues } from '@/features/quiz/quiz.types';
+import { useQuizEditMode } from '@/features/quiz/hooks/useQuizEditMode';
 
 export default function QuizCreateForm() {
   const { isEditMode, quizDetail } = useQuizEditMode();

@@ -1,8 +1,8 @@
-import { QuizList } from '@/types/quiz.types';
+import { QuizList } from '@/features/quiz/quiz.types';
 import { useQuery } from '@tanstack/react-query';
-import { QUERY_KEYS } from '../queryKeys';
+import { QUERY_KEYS } from '../../../hooks/queries/queryKeys';
 import { transformQuizListToCamelCase } from '@/utils/transforms/quiz.transform';
-import { QuizListResponseSchema } from '@/schemas/quiz.schema';
+import { QuizListResponseSchema } from '@/features/quiz/quiz.schema';
 
 const fetchQuizList = async (lectureId: string): Promise<QuizList> => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_MOCK_BASE_URL}/api/teachers/${lectureId}/quizzes/`);

@@ -1,12 +1,15 @@
-import { QuizFormValues } from '@/types/quiz.types';
-import { Control, Path, useController, useFormContext } from 'react-hook-form';
-import DateTimePicker from '../ui/DateTimePicker';
-import { useState } from 'react';
-import { useActiveProblemStore } from '@/stores/activeProblemStore';
-import TipTapField from '../ui/TipTapField';
+'use client';
+
+import { QuizFormValues } from '@/features/quiz/quiz.types';
+import { useController, useFormContext } from 'react-hook-form';
+import DateTimePicker from '@/components/ui/DateTimePicker';
+import { useEffect, useState } from 'react';
+import { useActiveProblemStore } from '@/features/quiz/activeProblemStore';
+import TipTapField from '@/components/ui/TipTapField';
 import { Editor } from '@tiptap/react';
-import { format } from 'date-fns';
-import { useQuizEditMode } from '@/hooks/queries/quiz/useQuizEditMode';
+import { format, parse } from 'date-fns';
+import { useQuizEditMode } from '@/features/quiz/hooks/useQuizEditMode';
+import { ko } from 'date-fns/locale';
 
 type QuizCreateTitleInputProps = {
   setEditor: (editor: Editor | null) => void;
@@ -15,15 +18,17 @@ type QuizCreateTitleInputProps = {
 export default function QuizCreateTitleInput({ setEditor }: QuizCreateTitleInputProps) {
   const [isActive, setIsActive] = useState(false);
   const { activeProblemId, resetActiveProblemId } = useActiveProblemStore();
-  const { control } = useFormContext<QuizFormValues>();
+  const { control, watch } = useFormContext<QuizFormValues>();
   const { field: startTimeField } = useController({ control, name: 'startTime' });
   const { field: dueTimeField } = useController({ control, name: 'dueTime' });
   const { field: limitTimeField } = useController({ control, name: 'limitTime' });
+  const [defaultPeriod, setDefaultPeriod] = useState('');
 
   const handleSelectPeriod = (value: string) => {
     const [startDate, endDate] = value.split('-');
-    const startDateTime = new Date(startDate).toISOString();
-    const endDateTime = new Date(endDate).toISOString();
+
+    const startDateTime = parse(startDate.trim(), 'yy.MM.dd', new Date(), { locale: ko });
+    const endDateTime = parse(endDate.trim(), 'yy.MM.dd', new Date(), { locale: ko });
 
     startTimeField.onChange(startDateTime);
     dueTimeField.onChange(endDateTime);
@@ -43,10 +48,16 @@ export default function QuizCreateTitleInput({ setEditor }: QuizCreateTitleInput
   };
 
   const { isEditMode } = useQuizEditMode();
-  const defaultPeriod =
-    startTimeField.value && dueTimeField.value
-      ? `${format(new Date(startTimeField.value), 'yyyy.MM.dd')}-${format(new Date(dueTimeField.value), 'yyyy.MM.dd')}`
-      : '';
+  const startTime = watch('startTime');
+  const dueTime = watch('dueTime');
+
+  useEffect(() => {
+    if (startTime && dueTime) {
+      setDefaultPeriod(
+        `${format(new Date(startTimeField.value), 'yy.MM.dd')} - ${format(new Date(dueTimeField.value), 'yy.MM.dd')}`,
+      );
+    }
+  }, [startTime, dueTime]);
 
   return (
     <div
@@ -57,7 +68,8 @@ export default function QuizCreateTitleInput({ setEditor }: QuizCreateTitleInput
         name='title'
         setEditor={setEditor}
         placeholder='퀴즈 제목을 입력하세요'
-        fieldStyle='w-full min-h-[50px] border-none bg-white p-[10px] focus:outline-none'
+        size='w-full min-h-[48px]'
+        fieldStyle='border-none bg-white p-[10px] focus:outline-none'
         textStyle='text-heading2 text-gray-90 placeholder:text-gray-50'
         placeholderStyle='placeholder-pl-10'
         onFocus={handleFocus}
@@ -92,7 +104,8 @@ export default function QuizCreateTitleInput({ setEditor }: QuizCreateTitleInput
         control={control}
         name='description'
         placeholder='설명'
-        fieldStyle='w-full min-h-[50px] pl-[20px] py-[15px] bg-white rounded-[10px] border border-gray-20 focus:outline-none disabled:bg-gray-10'
+        size='w-full min-h-[50px]'
+        fieldStyle='pl-[20px] py-[15px] bg-white rounded-[10px] border border-gray-20 focus:outline-none disabled:bg-gray-10'
         setEditor={setEditor}
         onFocus={handleFocus}
         onBlur={handleBlur}

@@ -7,7 +7,7 @@ import {
   QUIZ_LIST_RESPONSE_MIXED,
   TEMPORARY_QUIZ_LIST,
 } from './quiz';
-import { QuizState } from '@/types/quiz.types';
+import { QuizState } from '@/features/quiz/quiz.types';
 import { MOCK_ANSWER, MOCK_PAGINATED_QUESTION_RESPONSE } from './question';
 
 export const handlers = [

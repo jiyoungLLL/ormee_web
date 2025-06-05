@@ -13,6 +13,7 @@ type TipTapFieldContentProps = {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  size?: string;
   fieldStyle?: string;
   textStyle?: string;
   onFocus?: () => void;
@@ -25,6 +26,7 @@ export default function TipTapFieldContent({
   value,
   onChange,
   placeholder,
+  size = 'w-full h-full',
   fieldStyle,
   textStyle,
   onFocus,
@@ -59,7 +61,7 @@ export default function TipTapFieldContent({
     content: value,
     editorProps: {
       attributes: {
-        class: `${fieldStyle || 'relative p-[20px] rounded-[10px] border border-gray-20 focus:outline-none min-h-[50px]'} ${textStyle || 'text-body-reading text-gray-90 placeholder:text-gray-50'}`,
+        class: `${fieldStyle || 'relative p-[20px] rounded-[10px] border border-gray-20 focus:outline-none min-h-[50px]'} ${textStyle || 'text-body-reading text-gray-90 placeholder:text-gray-50'} w-full h-full`,
       },
     },
     onUpdate: ({ editor }) => {
@@ -133,7 +135,7 @@ export default function TipTapFieldContent({
   return (
     <EditorContent
       editor={editor}
-      className={`prose list-outside list-disc w-full tiptap-field-editor ${placeholderStyle || ''}`}
+      className={`prose list-outside list-disc tiptap-field-editor ${placeholderStyle || ''} ${size}`}
       onFocus={handleFocus}
       onBlur={handleBlur}
     />

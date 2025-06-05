@@ -1,7 +1,7 @@
 'use client';
 
-import { DEFAULT_CHOICE_ITEM } from '@/constants/quiz.constants';
-import { QuizFormValues } from '@/types/quiz.types';
+import { DEFAULT_CHOICE_ITEM } from '@/features/quiz/quiz.constants';
+import { QuizFormValues } from '@/features/quiz/quiz.types';
 import { useFormContext } from 'react-hook-form';
 
 type AddChoiceButtonProps = {

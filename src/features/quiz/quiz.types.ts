@@ -8,7 +8,7 @@ import {
   QuizFormSchema,
   ProblemStatsResponseSchema,
   ProblemStatsSchema,
-} from '@/schemas/quiz.schema';
+} from '@/features/quiz/quiz.schema';
 
 export type ProblemType = 'choice' | 'essay';
 

@@ -1,10 +1,10 @@
 'use client';
 
-import { Quiz } from '@/types/quiz.types';
+import { Quiz } from '@/features/quiz/quiz.types';
 import { formatDatetimeWithTime } from '@/utils/date/formatDate';
 import Image from 'next/image';
 import { useState } from 'react';
-import CloseQuizStats from './CloseQuizStats';
+import CloseQuizStats from '@/components/quiz/list/CloseQuizStats';
 
 type CloseQuizItemProps = {
   quiz: Quiz;

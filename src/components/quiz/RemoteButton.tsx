@@ -1,7 +1,7 @@
 'use client';
 
-import { QuizFormValues } from '@/types/quiz.types';
-import { useActiveProblemStore } from '@/stores/activeProblemStore';
+import { QuizFormValues } from '@/features/quiz/quiz.types';
+import { useActiveProblemStore } from '@/features/quiz/activeProblemStore';
 import { FieldArrayWithId } from 'react-hook-form';
 
 type RemoteButtonProps = {

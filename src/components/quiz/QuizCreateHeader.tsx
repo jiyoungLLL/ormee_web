@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useLectureId } from '@/hooks/queries/useLectureId';
-import Button from '../ui/Button';
+import Button from '@/components/ui/Button';
 
 type QuizCreateHeaderProps = {
   onTemporarySave: () => void;

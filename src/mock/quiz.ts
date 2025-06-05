@@ -4,7 +4,7 @@ import {
   Quiz,
   QuizFormValues,
   QuizListResponse,
-} from '@/types/quiz.types';
+} from '@/features/quiz/quiz.types';
 
 export const QUIZ_LIST_RESPONSE_MIXED: QuizListResponse = [
   {

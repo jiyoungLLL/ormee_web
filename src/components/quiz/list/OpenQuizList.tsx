@@ -1,5 +1,5 @@
-import { QuizList } from '@/types/quiz.types';
-import OpenQuizItem from './OpenQuizItem';
+import { QuizList } from '@/features/quiz/quiz.types';
+import OpenQuizItem from '@/components/quiz/list/OpenQuizItem';
 
 type OpenQuizListProps = {
   openQuizzes: QuizList;

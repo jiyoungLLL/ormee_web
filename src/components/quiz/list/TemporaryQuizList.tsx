@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetTemporaryQuizList } from '@/hooks/queries/quiz/useGetTemporaryQuizList';
+import { useGetTemporaryQuizList } from '@/features/quiz/hooks/useGetTemporaryQuizList';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import TemporaryQuizItem from '@/components/quiz/list/TemporaryQuizItem';
 

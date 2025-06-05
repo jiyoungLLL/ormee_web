@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import ProblemInput from './ProblemInput';
+import ProblemInput from '@/components/quiz/ProblemInput';
 import { useForm, FormProvider } from 'react-hook-form';
-import { QuizFormValues } from '@/types/quiz.types';
+import { QuizFormValues } from '@/features/quiz/quiz.types';
 import { Editor } from '@tiptap/react';
 
 const meta: Meta<typeof ProblemInput> = {
