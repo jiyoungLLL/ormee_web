@@ -32,12 +32,12 @@ export default function Calendar({ type, onSelectDate }: CalendarProps) {
       const fromDate = new Date(range.from.setHours(0, 0, 0, 0));
       const toDate = new Date(range.to.setHours(0, 0, 0, 0));
 
-      const fromISO = format(fromDate, 'yyyy.MM.dd', { locale: ko });
-      const toISO = format(toDate, 'yyyy.MM.dd', { locale: ko });
+      const fromISO = format(fromDate, 'yy.MM.dd', { locale: ko });
+      const toISO = format(toDate, 'yy.MM.dd', { locale: ko });
 
       onSelectDate(`${fromISO} - ${toISO}`);
     } else if (range?.from && !range?.to) {
-      const fromISO = format(range.from, 'yyyy.MM.dd', { locale: ko });
+      const fromISO = format(range.from, 'yy.MM.dd', { locale: ko });
       onSelectDate(`${fromISO}`);
     }
   };

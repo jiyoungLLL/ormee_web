@@ -27,8 +27,8 @@ export default function QuizCreateTitleInput({ setEditor }: QuizCreateTitleInput
   const handleSelectPeriod = (value: string) => {
     const [startDate, endDate] = value.split('-');
 
-    const startDateTime = parse(startDate.trim(), 'yyyy.MM.dd', new Date(), { locale: ko });
-    const endDateTime = parse(endDate.trim(), 'yyyy.MM.dd', new Date(), { locale: ko });
+    const startDateTime = parse(startDate.trim(), 'yy.MM.dd', new Date(), { locale: ko });
+    const endDateTime = parse(endDate.trim(), 'yy.MM.dd', new Date(), { locale: ko });
 
     startTimeField.onChange(startDateTime);
     dueTimeField.onChange(endDateTime);
@@ -54,7 +54,7 @@ export default function QuizCreateTitleInput({ setEditor }: QuizCreateTitleInput
   useEffect(() => {
     if (startTime && dueTime) {
       setDefaultPeriod(
-        `${format(new Date(startTimeField.value), 'yyyy.MM.dd')} - ${format(new Date(dueTimeField.value), 'yyyy.MM.dd')}`,
+        `${format(new Date(startTimeField.value), 'yy.MM.dd')} - ${format(new Date(dueTimeField.value), 'yy.MM.dd')}`,
       );
     }
   }, [startTime, dueTime]);
