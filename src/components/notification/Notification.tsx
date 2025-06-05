@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import NotificationPanel from './NotificationPanel';
+import NotificationPanel from '@/components/notification/NotificationPanel';
+
 export default function Notification() {
   const [isOpen, setIsOpen] = useState(false);
   const openNotification = () => setIsOpen(true);

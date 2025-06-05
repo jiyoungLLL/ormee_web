@@ -1,4 +1,4 @@
-import { Notification } from '@/types/notification.types';
+import { Notification } from '@/features/notification/notification.types';
 
 export const MOCK_NOTIFICATION_LIST_ONE_UNREAD: Notification[] = [
   {
@@ -55,15 +55,15 @@ export const MOCK_NOTIFICATION_LIST_BULK: Notification[] = [
     createdAt: '오전 11시 20분',
     read: true,
     title: '미친토익 기본반 lc',
-    description: '새로운 메모가 등록됐습니다.',
+    description: '새로운 쪽지가 등록됐습니다.',
   },
   {
     id: '5',
-    type: 'ormee',
+    type: 'assignment',
     createdAt: '오후 1시 10분',
     read: false,
     title: '미친토익 기본반 rc',
-    description: '오르미에서 새로운 소식이 있습니다.',
+    description: '과제 마감까지 하루 남았습니다.',
   },
   {
     id: '6',
@@ -95,15 +95,15 @@ export const MOCK_NOTIFICATION_LIST_BULK: Notification[] = [
     createdAt: '오후 5시 10분',
     read: false,
     title: '미친토익 중급반 lc',
-    description: '새로운 메모가 등록됐습니다.',
+    description: '새로운 쪽지가 등록됐습니다.',
   },
   {
     id: '10',
-    type: 'ormee',
+    type: 'assignment',
     createdAt: '오후 6시 30분',
     read: true,
     title: '미친토익 중급반 rc',
-    description: '오르미에서 새로운 소식이 있습니다.',
+    description: '과제 마감까지 이틀 남았습니다.',
   },
   {
     id: '11',
@@ -135,15 +135,15 @@ export const MOCK_NOTIFICATION_LIST_BULK: Notification[] = [
     createdAt: '오후 1시 15분',
     read: true,
     title: '미친토익 고급반 lc',
-    description: '새로운 메모가 등록됐습니다.',
+    description: '새로운 쪽지가 등록됐습니다.',
   },
   {
     id: '15',
-    type: 'ormee',
+    type: 'quiz',
     createdAt: '오후 2시 40분',
     read: false,
     title: '미친토익 고급반 rc',
-    description: '오르미에서 새로운 소식이 있습니다.',
+    description: '새로운 퀴즈가 등록됐습니다.',
   },
   {
     id: '16',
@@ -175,15 +175,15 @@ export const MOCK_NOTIFICATION_LIST_BULK: Notification[] = [
     createdAt: '오전 9시 10분',
     read: false,
     title: '토스 중급반',
-    description: '새로운 메모가 등록됐습니다.',
+    description: '새로운 쪽지가 등록됐습니다.',
   },
   {
     id: '20',
-    type: 'ormee',
+    type: 'memo',
     createdAt: '오전 10시 40분',
     read: true,
     title: '토스 중급반',
-    description: '오르미에서 새로운 소식이 있습니다.',
+    description: '새로운 쪽지가 등록됐습니다.',
   },
   {
     id: '21',
@@ -215,15 +215,15 @@ export const MOCK_NOTIFICATION_LIST_BULK: Notification[] = [
     createdAt: '오후 3시 55분',
     read: true,
     title: '토스 고급반',
-    description: '새로운 메모가 등록됐습니다.',
+    description: '새로운 쪽지가 등록됐습니다.',
   },
   {
     id: '25',
-    type: 'ormee',
+    type: 'memo',
     createdAt: '오후 4시 35분',
     read: false,
     title: '오픽 기본반',
-    description: '오르미에서 새로운 소식이 있습니다.',
+    description: '새로운 쪽지가 등록됐습니다.',
   },
   {
     id: '26',
@@ -255,14 +255,14 @@ export const MOCK_NOTIFICATION_LIST_BULK: Notification[] = [
     createdAt: '오전 11시 35분',
     read: false,
     title: '오픽 고급반',
-    description: '새로운 메모가 등록됐습니다.',
+    description: '새로운 쪽지가 등록됐습니다.',
   },
   {
     id: '30',
-    type: 'ormee',
+    type: 'question',
     createdAt: '오후 1시 25분',
     read: true,
     title: '오픽 고급반',
-    description: '오르미에서 새로운 소식이 있습니다.',
+    description: '새로운 질문이 등록됐습니다.',
   },
 ];

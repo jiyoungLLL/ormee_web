@@ -1,6 +1,6 @@
-import { NotificationType } from '@/types/notification.types';
-import Badge, { BadgeProps } from '../ui/Badge';
-import { NOTIFICATION_TYPE_LABEL } from '@/constants/notification.constants';
+import { NotificationType } from '@/features/notification/notification.types';
+import Badge, { BadgeProps } from '@/components/ui/Badge';
+import { NOTIFICATION_TYPE_LABEL } from '@/features/notification/notification.constants';
 
 type NotificationBadgeProps = {
   /** 배지가 표시할 알림의 타입 */
@@ -12,9 +12,8 @@ type NotificationBadgeProps = {
 const NOTIFICATION_BADGE_COLOR: Record<NotificationType, BadgeProps['color']> = {
   assignment: 'blue',
   quiz: 'orange',
-  question: 'green',
-  memo: 'purple',
-  ormee: 'gray',
+  question: 'purple',
+  memo: 'green',
 } as const;
 
 export default function NotificationBadge({ type, read }: NotificationBadgeProps) {

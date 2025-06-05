@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { QUERY_KEYS } from '../queryKeys';
-import { Notification } from '@/types/notification.types';
+import { Notification } from '@/features/notification/notification.types';
+import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 
 const fetchNotifications = async (): Promise<Notification[]> => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_MOCK_BASE_URL}/api/teacher/notification/`);
