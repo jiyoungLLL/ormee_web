@@ -347,3 +347,5 @@ export const QUIZ_DETAIL_MAP: Record<string, QuizFormValues & { id: string }> = 
   'mock-temporary-quiz-2': QUIZ_TEMPORARY_2_EDIT,
   'mock-temporary-quiz-3': QUIZ_TEMPORARY_3_EDIT,
 };
+
+export const QUIZ_ATTACHMENT_MAP: Record<string, string> = {};
