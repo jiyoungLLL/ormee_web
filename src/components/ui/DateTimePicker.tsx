@@ -9,18 +9,46 @@ type ComponentType = 'CALENDAR' | 'TIME';
 type CalendarType = 'DATE_TYPE' | 'PERIOD_TYPE';
 type TimeType = 'TIME' | 'LIMIT_TIME';
 
+/**
+ * DateTimePicker 컴포넌트의 props 타입 정의
+ * @typedef {Object} DateTimePickerProps
+ * @property {ComponentType} type - 컴포넌트 타입 ('CALENDAR' | 'TIME')
+ * @property {CalendarType} [calendar] - 캘린더 타입 ('DATE_TYPE' | 'PERIOD_TYPE')
+ * @property {TimeType} [time] - 시간 타입 ('TIME' | 'LIMIT_TIME')
+ * @property {string} placeholder - 입력 필드에 표시될 placeholder 텍스트
+ * @property {string} [defaultValue] - 초기값
+ * @property {function} [onSelectDate] - 날짜/시간 선택 시 호출되는 콜백 함수
+ * @property {string} [customImageSize] - 이미지 크기 커스텀 스타일
+ * @property {string} [customComponentSize] - 컴포넌트 크기 커스텀 스타일
+ * @property {string} [customTextStyle] - 텍스트 스타일 커스텀
+ * @property {string} [customWidthSize] - 너비 크기 커스텀
+ * @property {string} [customDropdownSize] - 드롭다운 크기 커스텀
+ * @property {boolean} [disabled=false] - 컴포넌트 비활성화 여부
+ */
 type DateTimePickerProps = {
+  /** 컴포넌트 타입 (날짜 선택 혹은 시간 선택) */
   type: ComponentType;
+  /** 캘린더 타입 (날짜 선택 혹은 기간 선택) */
   calendar?: CalendarType;
+  /** 시간 타입 (시간 선택 혹은 제한 시간 선택) */
   time?: TimeType;
+  /** 입력 필드에 표시될 placeholder 텍스트 */
   placeholder: string;
+  /** 초기값 */
   defaultValue?: string;
+  /** 날짜/시간 선택 시 호출되는 콜백 함수 */
   onSelectDate?: (value: string) => void;
+  /** 이미지 크기 커스텀 스타일 */
   customImageSize?: string;
+  /** 컴포넌트 크기 커스텀 스타일 */
   customComponentSize?: string;
+  /** 텍스트 스타일 커스텀 */
   customTextStyle?: string;
+  /** 너비 커스텀 */
   customWidthSize?: string;
+  /** 드롭다운 크기 커스텀 */
   customDropdownSize?: string;
+  /** 컴포넌트 비활성화 여부 */
   disabled?: boolean;
 };
 
