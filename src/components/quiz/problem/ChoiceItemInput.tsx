@@ -5,13 +5,15 @@ import Radio from '@/components/ui/radio/Radio';
 import { QuizFormValues } from '@/features/quiz/quiz.types';
 import { useFormContext } from 'react-hook-form';
 import { useRef, useEffect, useState } from 'react';
+import { useActiveProblemStore } from '@/features/quiz/activeProblemStore';
 
 type ChoiceItemInputProps = {
   problemIndex: number;
+  problemId: string;
   itemIndex: number;
 };
 
-export default function ChoiceItemInput({ problemIndex, itemIndex }: ChoiceItemInputProps) {
+export default function ChoiceItemInput({ problemIndex, problemId, itemIndex }: ChoiceItemInputProps) {
   const { register, setValue, getValues, watch } = useFormContext<QuizFormValues>();
   const spanRef = useRef<HTMLSpanElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -44,10 +46,13 @@ export default function ChoiceItemInput({ problemIndex, itemIndex }: ChoiceItemI
     setValue(`problems.${problemIndex}.answerItemId`, itemId);
   };
 
+  const { handleClickProblem } = useActiveProblemStore();
+
   return (
     <div
       ref={containerRef}
       className='flex items-center gap-[12px] w-full min-w-0'
+      onClick={() => handleClickProblem(problemId)}
     >
       <Radio
         register={register}
