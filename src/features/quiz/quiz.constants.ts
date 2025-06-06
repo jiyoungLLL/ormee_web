@@ -1,13 +1,13 @@
 import { ChoiceItem, ProblemFormValues, ProblemType } from '@/features/quiz/quiz.types';
 
-export const QUIZ_TYPE_MAP: Record<ProblemType, { type: ProblemType; label: string }> = {
-  choice: { type: 'choice', label: '객관식' },
-  essay: { type: 'essay', label: '주관식' },
+export const QUIZ_LABEL_MAP: Record<ProblemType, string> = {
+  CHOICE: '객관식',
+  ESSAY: '단답식',
 };
 
 export const DEFAULT_PROBLEM: Omit<ProblemFormValues, 'item'> = {
   content: '',
-  type: QUIZ_TYPE_MAP.choice.type,
+  type: 'CHOICE',
   answerItemId: '',
   files: [],
 };

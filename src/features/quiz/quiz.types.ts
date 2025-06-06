@@ -11,7 +11,7 @@ import {
   ProblemSchema,
 } from '@/features/quiz/quiz.schema';
 
-export type ProblemType = 'choice' | 'essay';
+export type ProblemType = 'CHOICE' | 'ESSAY';
 
 export type ChoiceItem = {
   id: string;

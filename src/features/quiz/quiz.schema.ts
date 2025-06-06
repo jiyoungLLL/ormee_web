@@ -1,4 +1,4 @@
-import { QUIZ_LIMIT_TIME_OPTIONS, QUIZ_TYPE_MAP } from '@/features/quiz/quiz.constants';
+import { QUIZ_LIMIT_TIME_OPTIONS } from '@/features/quiz/quiz.constants';
 import { QuizState } from '@/features/quiz/quiz.types';
 import { z } from 'zod';
 
@@ -19,7 +19,7 @@ export const QUIZ_FORM_ERROR_MESSAGE = {
 
 export const ProblemSchema = z.object({
   content: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_CONTENT }),
-  type: z.enum(Object.keys(QUIZ_TYPE_MAP) as [keyof typeof QUIZ_TYPE_MAP, ...Array<keyof typeof QUIZ_TYPE_MAP>]),
+  type: z.enum(['CHOICE', 'ESSAY']),
   item: z.array(z.object({ id: z.string(), text: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ITEM }) })),
   answerItemId: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ANSWER }),
   files: z.array(z.object({ id: z.string(), previewUrl: z.string() })),
@@ -40,7 +40,7 @@ export const QuizFormSchema = z.object({
 export const ProblemResponseSchema = z.object({
   context: z.string().min(1),
   description: z.string().optional(),
-  type: z.enum(Object.keys(QUIZ_TYPE_MAP) as [keyof typeof QUIZ_TYPE_MAP, ...Array<keyof typeof QUIZ_TYPE_MAP>]),
+  type: z.enum(['CHOICE', 'ESSAY']),
   item: z.array(z.object({ id: z.string(), text: z.string() })).optional(),
 });
 
@@ -101,12 +101,12 @@ export const ProblemStatsResponseSchema = z
   .object({
     problem_label: z.string().min(1),
     description: z.string().min(1),
-    type: z.enum(Object.keys(QUIZ_TYPE_MAP) as [keyof typeof QUIZ_TYPE_MAP, ...Array<keyof typeof QUIZ_TYPE_MAP>]),
+    type: z.enum(['CHOICE', 'ESSAY']),
   })
   .and(
     z.discriminatedUnion('type', [
       z.object({
-        type: z.literal('choice'),
+        type: z.literal('CHOICE'),
         items: z.array(
           z.object({
             is_answer: z.boolean(),
@@ -116,7 +116,7 @@ export const ProblemStatsResponseSchema = z
         ),
       }),
       z.object({
-        type: z.literal('essay'),
+        type: z.literal('ESSAY'),
         answer: z.string().min(1),
         incorrect_submit: z.array(
           z.object({
@@ -133,12 +133,12 @@ export const ProblemStatsSchema = z
   .object({
     problemLabel: z.string().min(1),
     description: z.string().min(1),
-    type: z.enum(Object.keys(QUIZ_TYPE_MAP) as [keyof typeof QUIZ_TYPE_MAP, ...Array<keyof typeof QUIZ_TYPE_MAP>]),
+    type: z.enum(['CHOICE', 'ESSAY']),
   })
   .and(
     z.discriminatedUnion('type', [
       z.object({
-        type: z.literal('choice'),
+        type: z.literal('CHOICE'),
         items: z.array(
           z.object({
             isAnswer: z.boolean(),
@@ -148,7 +148,7 @@ export const ProblemStatsSchema = z
         ),
       }),
       z.object({
-        type: z.literal('essay'),
+        type: z.literal('ESSAY'),
         answer: z.string().min(1),
         incorrectSubmit: z.array(
           z.object({

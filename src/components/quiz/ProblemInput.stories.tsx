@@ -14,7 +14,7 @@ const meta: Meta<typeof ProblemInput> = {
         defaultValues: {
           problems: [
             {
-              type: 'choice',
+              type: 'CHOICE',
               content: '',
               item: [
                 { id: '1', text: '선택지 1' },
@@ -44,7 +44,7 @@ export const Default: Story = {
   args: {
     problem: {
       id: '1',
-      type: 'choice',
+      type: 'CHOICE',
       context: '',
       item: [
         { id: '1', text: '선택지 1' },

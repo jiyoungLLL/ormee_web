@@ -1,10 +1,10 @@
 'use client';
 
 import Dropdown from '@/components/ui/dropdown/Dropdown';
-import { QUIZ_TYPE_MAP } from '@/features/quiz/quiz.constants';
 import { useDropdown } from '@/hooks/ui/useDropdown';
 import { ProblemType, QuizFormValues } from '@/features/quiz/quiz.types';
 import { useFormContext } from 'react-hook-form';
+import { QUIZ_LABEL_MAP } from '@/features/quiz/quiz.constants';
 
 type ProblemTypeDropdownProps = {
   index: number;
@@ -21,12 +21,12 @@ export default function ProblemTypeDropdown({ index }: ProblemTypeDropdownProps)
     menuList: [
       {
         id: 'p-type-choice',
-        label: QUIZ_TYPE_MAP.choice.label,
-        onClick: () => setProblemType(QUIZ_TYPE_MAP.choice.type),
+        label: QUIZ_LABEL_MAP.CHOICE,
+        onClick: () => setProblemType('CHOICE'),
       },
-      { id: 'p-type-essay', label: QUIZ_TYPE_MAP.essay.label, onClick: () => setProblemType(QUIZ_TYPE_MAP.essay.type) },
+      { id: 'p-type-essay', label: QUIZ_LABEL_MAP.ESSAY, onClick: () => setProblemType('ESSAY') },
     ],
-    initialSelectedItem: QUIZ_TYPE_MAP.choice.label,
+    initialSelectedItem: QUIZ_LABEL_MAP.CHOICE,
   });
 
   return (
