@@ -8,6 +8,7 @@ import {
   QuizFormSchema,
   ProblemStatsResponseSchema,
   ProblemStatsSchema,
+  ProblemSchema,
 } from '@/features/quiz/quiz.schema';
 
 export type ProblemType = 'choice' | 'essay';
@@ -35,6 +36,7 @@ export type QuizRequest = {
 
 export type QuizState = 'ready' | 'ongoing' | 'closed' | 'temporary';
 
+export type ProblemFormValues = z.infer<typeof ProblemSchema>;
 export type QuizFormValues = z.infer<typeof QuizFormSchema>;
 export type QuizListResponse = z.infer<typeof QuizListResponseSchema>;
 export type Quiz = z.infer<typeof QuizSchema>;

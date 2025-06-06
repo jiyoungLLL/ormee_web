@@ -15,7 +15,7 @@ const meta: Meta<typeof ProblemInput> = {
           problems: [
             {
               type: 'choice',
-              context: '',
+              content: '',
               item: [
                 { id: '1', text: '선택지 1' },
                 { id: '2', text: '' },
