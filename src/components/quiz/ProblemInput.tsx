@@ -55,10 +55,7 @@ export default function ProblemInput({ problem, index, remove, setEditor }: Prob
           setEditor={setEditor}
         />
       </div>
-      {/* <ChoiceItemContainer
-        problemIndex={index}
-        setEditor={setEditor}
-      /> */}
+      <ChoiceItemContainer problemIndex={index} />
       <div className='flex justify-between items-center w-full'>
         <Answer problemIndex={index} />
         <RemoveProblemButton
