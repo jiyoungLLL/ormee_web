@@ -2,7 +2,7 @@
 
 import { QuizFormSchema } from '@/features/quiz/quiz.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
+import { FormProvider, Path, useFieldArray, useForm } from 'react-hook-form';
 import QuizCreateTitleInput from '@/components/quiz/QuizCreateTitleInput';
 import RemoteController from '@/components/quiz/RemoteController';
 import ProblemInput from '@/components/quiz/ProblemInput';
@@ -38,10 +38,16 @@ export default function QuizCreateForm() {
     }
   }, [isEditMode, quizDetail]);
 
-  const { control } = methods;
+  const { control, setValue, getValues } = methods;
 
   const { fields: problems, append, remove } = useFieldArray({ control, name: 'problems' });
   const [editor, setEditor] = useState<Editor | null>(null);
+  const [currentFileName, setCurrentFileName] = useState<Path<QuizFormValues> | null>(null);
+
+  const handleSetEditor = (editor: Editor | null, fileName: Path<QuizFormValues> | null) => {
+    setEditor(editor);
+    setCurrentFileName(fileName);
+  };
 
   const handleRegister = () => {
     alert(JSON.stringify(methods.getValues()));
@@ -62,6 +68,14 @@ export default function QuizCreateForm() {
           <Toolbar
             editor={editor}
             enableImage={true}
+            imageUploadConfig={{
+              strategy: 'IMMEDIATE_UPLOAD',
+              onImageUpload: (_, id, previewUrl) => {
+                if (!currentFileName) return;
+
+                setValue(currentFileName, [...((getValues(currentFileName) as any[]) || []), { id, previewUrl }]);
+              },
+            }}
             enableList={false}
             containerStyle='flex justify-between items-center gap-[10px] w-full px-[30px] py-[10px] rounded-[20px] bg-white'
           />
@@ -77,7 +91,7 @@ export default function QuizCreateForm() {
                   problem={problem}
                   index={index}
                   remove={remove}
-                  setEditor={setEditor}
+                  setEditor={handleSetEditor}
                 />
               ))}
             </form>

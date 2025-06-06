@@ -4,9 +4,6 @@ import { useRef } from 'react';
 import { Editor } from '@tiptap/react';
 import Image from 'next/image';
 
-/** 이미지 업로드 전략: 즉시 서버에 업로드하거나 폼 제출 시 업로드 */
-type ImageUploadStrategy = 'IMMEDIATE_UPLOAD' | 'UPLOAD_AT_SUBMIT';
-
 type ImmediateUploadConfig = {
   strategy: 'IMMEDIATE_UPLOAD';
   uploadUrl?: string;

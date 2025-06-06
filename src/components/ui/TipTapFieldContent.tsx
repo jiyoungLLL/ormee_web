@@ -7,9 +7,11 @@ import Underline from '@tiptap/extension-underline';
 import { Editor, EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { useEffect } from 'react';
+import { FieldValues, Path } from 'react-hook-form';
 
-type TipTapFieldContentProps = {
-  setEditor: (editor: Editor | null) => void;
+type TipTapFieldContentProps<T extends FieldValues> = {
+  setEditor: (editor: Editor | null, fileName: Path<T> | null) => void;
+  fileName?: Path<T>;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
@@ -21,8 +23,9 @@ type TipTapFieldContentProps = {
   placeholderStyle?: string;
 };
 
-export default function TipTapFieldContent({
+export default function TipTapFieldContent<T extends FieldValues>({
   setEditor,
+  fileName,
   value,
   onChange,
   placeholder,
@@ -32,7 +35,7 @@ export default function TipTapFieldContent({
   onFocus,
   onBlur,
   placeholderStyle,
-}: TipTapFieldContentProps) {
+}: TipTapFieldContentProps<T>) {
   const isVisuallyEmpty = (html: string) => {
     const cleaned = html
       .replace(/<p><\/p>/g, '')
@@ -113,18 +116,19 @@ export default function TipTapFieldContent({
 
   useEffect(() => {
     if (editor) {
-      setEditor(editor);
+      setEditor(editor, fileName || null);
     }
 
     return () => {
-      setEditor(null);
+      setEditor(null, null);
     };
-  }, [editor, setEditor]);
+  }, []);
 
   const handleFocus = () => {
     onFocus?.();
+
     if (editor) {
-      setEditor(editor);
+      setEditor(editor, fileName || null);
     }
   };
 

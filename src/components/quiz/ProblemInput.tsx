@@ -1,12 +1,13 @@
 import { QuizFormValues } from '@/features/quiz/quiz.types';
 import { useActiveProblemStore } from '@/features/quiz/activeProblemStore';
-import { FieldArrayWithId, UseFieldArrayRemove, useFormContext } from 'react-hook-form';
+import { FieldArrayWithId, Path, UseFieldArrayRemove, useFormContext } from 'react-hook-form';
 import ProblemTypeDropdown from '@/components/quiz/problem/ProblemTypeDropdown';
 import ChoiceItemContainer from '@/components/quiz/problem/ChoiceItemContainer';
 import Answer from '@/components/quiz/problem/Answer';
 import RemoveProblemButton from '@/components/quiz/problem/RemoveProblemButton';
-import TipTapField from '../ui/TipTapField';
+import TipTapField from '@/components/ui/TipTapField';
 import { Editor } from '@tiptap/react';
+import ProblemImagePreview from '@/components/quiz/problem/ProblemImagePreview';
 
 type ProblemInputProps = {
   /** useFieldArray의 fields에서 가져온 problem 데이터 */
@@ -15,8 +16,8 @@ type ProblemInputProps = {
   index: number;
   /** problem fields의 remove 함수 */
   remove: UseFieldArrayRemove;
-  /** Toolbar에 에디터를 세팅할 함수 */
-  setEditor: (editor: Editor | null) => void;
+  /** Toolbar에 에디터, react-hook-form의 file 경로를 세팅할 함수 */
+  setEditor: (editor: Editor | null, fileName: Path<QuizFormValues> | null) => void;
 };
 
 const ACTIVE_BORDER_STYLE = 'border-purple-50';
@@ -42,9 +43,11 @@ export default function ProblemInput({ problem, index, remove, setEditor }: Prob
           <span className='text-title3 font-normal text-center'>{index + 1}</span>
           <ProblemTypeDropdown index={index} />
         </div>
+        <ProblemImagePreview fileName={`problems.${index}.files`} />
         <TipTapField
           control={control}
-          name={`problems.${index}.context`}
+          name={`problems.${index}.content`}
+          fileName={`problems.${index}.files`}
           placeholder='질문을 입력하세요.'
           size='w-full min-h-[50px]'
           fieldStyle='p-[20px] rounded-[10px] border border-gray-20 focus:outline-none'
@@ -52,10 +55,10 @@ export default function ProblemInput({ problem, index, remove, setEditor }: Prob
           setEditor={setEditor}
         />
       </div>
-      <ChoiceItemContainer
+      {/* <ChoiceItemContainer
         problemIndex={index}
         setEditor={setEditor}
-      />
+      /> */}
       <div className='flex justify-between items-center w-full'>
         <Answer problemIndex={index} />
         <RemoveProblemButton
