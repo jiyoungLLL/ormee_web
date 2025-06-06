@@ -14,16 +14,23 @@ type ChoiceItemInputProps = {
 export default function ChoiceItemInput({ problemIndex, itemIndex }: ChoiceItemInputProps) {
   const { register, setValue, getValues, watch } = useFormContext<QuizFormValues>();
   const spanRef = useRef<HTMLSpanElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [inputWidth, setInputWidth] = useState(140);
 
   const { id: itemId } = getValues(`problems.${problemIndex}.item.${itemIndex}`);
   const inputValue = watch(`problems.${problemIndex}.item.${itemIndex}.text`) || '';
 
   useEffect(() => {
-    if (spanRef.current) {
+    if (spanRef.current && containerRef.current) {
       const textWidth = spanRef.current.getBoundingClientRect().width;
-      const calculatedWidth = textWidth + 10;
-      setInputWidth(calculatedWidth);
+      const containerWidth = containerRef.current.getBoundingClientRect().width;
+
+      // Radio(20px) + gap(12px) + XIcon(14px) + gap(12px) + 여유공간(20px) = 78px
+      const availableWidth = containerWidth - 78;
+      const calculatedWidth = Math.min(textWidth + 10, availableWidth);
+      const finalWidth = Math.max(calculatedWidth, 140);
+
+      setInputWidth(finalWidth);
     }
   }, [inputValue]);
 
@@ -38,7 +45,10 @@ export default function ChoiceItemInput({ problemIndex, itemIndex }: ChoiceItemI
   };
 
   return (
-    <div className='flex items-center gap-[12px] w-full'>
+    <div
+      ref={containerRef}
+      className='flex items-center gap-[12px] w-full min-w-0'
+    >
       <Radio
         register={register}
         name={`problems.${problemIndex}.answerItemId`}
@@ -57,15 +67,15 @@ export default function ChoiceItemInput({ problemIndex, itemIndex }: ChoiceItemI
         type='text'
         placeholder='선지를 입력하세요.'
         {...register(`problems.${problemIndex}.item.${itemIndex}.text`)}
-        className='h-[28px] text-body-reading text-gray-90 placeholder:text-gray-50 bg-transparent focus:outline-none disabled:text-label-assistive'
+        className='h-[28px] text-body-reading text-gray-90 placeholder:text-gray-50 bg-transparent focus:outline-none disabled:text-label-assistive min-w-0 flex-shrink'
         style={{
           width: `${inputWidth}px`,
-          maxWidth: '100%',
         }}
       />
       <button
         type='button'
         onClick={handleRemoveItem}
+        className='flex-shrink-0'
       >
         <XIcon
           size={14}
