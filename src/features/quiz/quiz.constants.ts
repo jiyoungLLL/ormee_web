@@ -9,6 +9,7 @@ export const DEFAULT_PROBLEM: Omit<ProblemFormValues, 'item'> = {
   content: '',
   type: 'CHOICE',
   answerItemId: '',
+  answer: '',
   files: [],
 };
 
@@ -43,3 +44,21 @@ export const QUIZ_LIMIT_TIME_REQUEST_OPTIONS = [
   '55',
   '60',
 ] as const;
+
+export const QUIZ_LIMIT_TIME_MAP: Record<
+  (typeof QUIZ_LIMIT_TIME_OPTIONS)[number],
+  (typeof QUIZ_LIMIT_TIME_REQUEST_OPTIONS)[number]
+> = {
+  제한없음: '제한없음',
+  '10분': '10',
+  '15분': '15',
+  '20분': '20',
+  '25분': '25',
+  '30분': '30',
+  '35분': '35',
+  '40분': '40',
+  '45분': '45',
+  '50분': '50',
+  '55분': '55',
+  '60분': '60',
+};

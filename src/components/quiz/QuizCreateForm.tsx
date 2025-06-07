@@ -7,13 +7,20 @@ import QuizCreateTitleInput from '@/components/quiz/QuizCreateTitleInput';
 import RemoteController from '@/components/quiz/RemoteController';
 import ProblemInput from '@/components/quiz/ProblemInput';
 import AddProblemButton from '@/components/quiz/AddProblemButton';
-import { DEFAULT_CHOICE_ITEM, DEFAULT_PROBLEM } from '@/features/quiz/quiz.constants';
+import {
+  DEFAULT_CHOICE_ITEM,
+  DEFAULT_PROBLEM,
+  QUIZ_LIMIT_TIME_MAP,
+  QUIZ_LIMIT_TIME_OPTIONS,
+} from '@/features/quiz/quiz.constants';
 import Toolbar from '../ui/Toolbar';
 import { useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
 import QuizCreateHeader from '@/components/quiz/QuizCreateHeader';
-import { QuizFormValues } from '@/features/quiz/quiz.types';
+import { QuizCreateRequest, QuizFormValues } from '@/features/quiz/quiz.types';
 import { useQuizEditMode } from '@/features/quiz/hooks/useQuizEditMode';
+import { usePostQuiz } from '@/features/quiz/hooks/useQuiz';
+import { useLectureId } from '@/hooks/queries/useLectureId';
 
 export default function QuizCreateForm() {
   const { isEditMode, quizDetail } = useQuizEditMode();
@@ -49,8 +56,42 @@ export default function QuizCreateForm() {
     setCurrentFileName(fileName);
   };
 
+  const lectureId = useLectureId();
+  const { mutate: postQuiz } = usePostQuiz({ lectureId });
+
   const handleRegister = () => {
-    alert(JSON.stringify(methods.getValues()));
+    const formValues = getValues();
+    const submitValues: QuizCreateRequest = {
+      isDraft: false,
+      title: formValues.title,
+      description: formValues.description || '',
+      openTime: new Date(formValues.startTime).toISOString(),
+      dueTime: new Date(formValues.dueTime).toISOString(),
+      timeLimit: QUIZ_LIMIT_TIME_MAP[formValues.limitTime as (typeof QUIZ_LIMIT_TIME_OPTIONS)[number]] || '',
+      problems: formValues.problems.map((problem) =>
+        problem.type === 'CHOICE'
+          ? {
+              type: 'CHOICE' as const,
+              content: problem.content,
+              answer: problem.answer,
+              items: problem.item.map((item) => item.text),
+              fileIds: problem.files.map((file) => file.id),
+            }
+          : {
+              type: 'ESSAY' as const,
+              content: problem.content,
+              answer: problem.answer,
+              items: null,
+              fileIds: problem.files.map((file) => file.id),
+            },
+      ),
+    };
+
+    console.log(submitValues);
+
+    postQuiz(submitValues, {
+      onSuccess: () => alert(JSON.stringify(submitValues)),
+    });
   };
 
   const handleTemporarySave = () => {
