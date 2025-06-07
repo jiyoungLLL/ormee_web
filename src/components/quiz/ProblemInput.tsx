@@ -8,6 +8,7 @@ import RemoveProblemButton from '@/components/quiz/problem/RemoveProblemButton';
 import TipTapField from '@/components/ui/TipTapField';
 import { Editor } from '@tiptap/react';
 import ProblemImagePreview from '@/components/quiz/problem/ProblemImagePreview';
+import EssayAnswerInput from '@/components/quiz/problem/EssayAnswerInput';
 
 type ProblemInputProps = {
   /** useFieldArray의 fields에서 가져온 problem 데이터 */
@@ -60,6 +61,7 @@ export default function ProblemInput({ problem, index, remove, setEditor }: Prob
       {problemType === 'CHOICE' && <ChoiceItemContainer problemIndex={index} />}
       <div className='flex justify-between items-center w-full'>
         {problemType === 'CHOICE' && <ChoiceAnswer problemIndex={index} />}
+        {problemType === 'ESSAY' && <EssayAnswerInput problemIndex={index} />}
         <RemoveProblemButton
           problemIndex={index}
           remove={remove}
