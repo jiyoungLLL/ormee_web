@@ -15,8 +15,6 @@ type ProblemInputProps = {
   problem: FieldArrayWithId<QuizFormValues, 'problems', 'id'>;
   /** problem의 index */
   index: number;
-  /** problem fields의 remove 함수 */
-  remove: UseFieldArrayRemove;
   /** Toolbar에 에디터, react-hook-form의 file 경로를 세팅할 함수 */
   setEditor: (editor: Editor | null, fileName: Path<QuizFormValues> | null) => void;
 };
@@ -24,7 +22,7 @@ type ProblemInputProps = {
 const ACTIVE_BORDER_STYLE = 'border-purple-50';
 const INACTIVE_BORDER_STYLE = 'border-white';
 
-export default function ProblemInput({ problem, index, remove, setEditor }: ProblemInputProps) {
+export default function ProblemInput({ problem, index, setEditor }: ProblemInputProps) {
   const { activeProblemId, setActiveProblemId } = useActiveProblemStore();
   const { control, watch } = useFormContext<QuizFormValues>();
   const isActive = activeProblemId === problem.id;
@@ -62,10 +60,7 @@ export default function ProblemInput({ problem, index, remove, setEditor }: Prob
       <div className='flex justify-between items-center w-full'>
         {problemType === 'CHOICE' && <ChoiceAnswer problemIndex={index} />}
         {problemType === 'ESSAY' && <EssayAnswerInput problemIndex={index} />}
-        <RemoveProblemButton
-          problemIndex={index}
-          remove={remove}
-        />
+        <RemoveProblemButton problemIndex={index} />
       </div>
     </div>
   );

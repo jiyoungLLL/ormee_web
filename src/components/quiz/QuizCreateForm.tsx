@@ -40,7 +40,7 @@ export default function QuizCreateForm() {
 
   const { control, setValue, getValues } = methods;
 
-  const { fields: problems, append, remove } = useFieldArray({ control, name: 'problems' });
+  const { fields: problems, append } = useFieldArray({ control, name: 'problems' });
   const [editor, setEditor] = useState<Editor | null>(null);
   const [currentFileName, setCurrentFileName] = useState<Path<QuizFormValues> | null>(null);
 
@@ -90,7 +90,6 @@ export default function QuizCreateForm() {
                   key={problem.id}
                   problem={problem}
                   index={index}
-                  remove={remove}
                   setEditor={handleSetEditor}
                 />
               ))}

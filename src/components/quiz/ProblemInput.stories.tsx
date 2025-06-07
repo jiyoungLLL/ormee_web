@@ -53,7 +53,6 @@ export const Default: Story = {
       answerItemId: '',
     } as any,
     index: 0,
-    remove: () => {},
     setEditor: (editor: Editor | null) => {},
   },
 };
