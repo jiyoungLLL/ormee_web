@@ -87,11 +87,7 @@ export default function QuizCreateForm() {
       ),
     };
 
-    console.log(submitValues);
-
-    postQuiz(submitValues, {
-      onSuccess: () => alert(JSON.stringify(submitValues)),
-    });
+    postQuiz(submitValues);
   };
 
   const handleTemporarySave = () => {
