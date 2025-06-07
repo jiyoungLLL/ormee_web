@@ -20,6 +20,9 @@ export default function ChoiceItemInput({ problemIndex, itemIndex }: ChoiceItemI
 
   const handleRemoveItem = () => {
     const currentItem = getValues(`problems.${problemIndex}.item`) || [];
+
+    if (currentItem.length <= 1) return;
+
     const newItem = currentItem.filter((_, idx) => idx !== itemIndex);
     setValue(`problems.${problemIndex}.item`, newItem);
   };
