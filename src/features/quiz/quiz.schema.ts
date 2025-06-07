@@ -1,4 +1,4 @@
-import { QUIZ_LIMIT_TIME_OPTIONS } from '@/features/quiz/quiz.constants';
+import { QUIZ_LIMIT_TIME_OPTIONS, QUIZ_LIMIT_TIME_REQUEST_OPTIONS } from '@/features/quiz/quiz.constants';
 import { QuizState } from '@/features/quiz/quiz.types';
 import { z } from 'zod';
 
@@ -6,6 +6,7 @@ import { z } from 'zod';
 export const QUIZ_FORM_ERROR_MESSAGE = {
   // 퀴즈 관련 에러 메세지
   EMPTY_TITLE: '제목을 입력해주세요.',
+  EMPTY_DESCRIPTION: '설명을 입력해주세요.',
   EMPTY_DUE_TIME: '응시기한을 입력해주세요.',
   EMPTY_LIMIT_TIME: '응시시간을 선택해주세요.',
   EMPTY_PROBLEMS: '한 문제 이상 입력해주세요.',
@@ -34,6 +35,36 @@ export const QuizFormSchema = z.object({
     message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_LIMIT_TIME,
   }),
   problems: z.array(ProblemSchema).min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_PROBLEMS }),
+});
+
+// 퀴즈 생성 요청 스키마
+export const ProblemChoiceRequestSchema = z.object({
+  content: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_CONTENT }),
+  type: z.literal('CHOICE'),
+  answer: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ANSWER }),
+  items: z.array(z.string()).min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ITEM }),
+  fileIds: z.array(z.string()),
+});
+
+export const ProblemEssayRequestSchema = z.object({
+  content: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_CONTENT }),
+  type: z.literal('ESSAY'),
+  answer: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ANSWER }),
+  items: z.null(),
+  fileIds: z.array(z.string()),
+});
+
+export const QuizCreateRequestSchema = z.object({
+  title: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_TITLE }),
+  description: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_DESCRIPTION }),
+  openTime: z.string().datetime().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_DUE_TIME }),
+  dueTime: z.string().datetime().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_DUE_TIME }),
+  timeLimit: z.union([z.enum(QUIZ_LIMIT_TIME_REQUEST_OPTIONS), z.literal('')], {
+    message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_LIMIT_TIME,
+  }),
+  problems: z.array(z.discriminatedUnion('type', [ProblemChoiceRequestSchema, ProblemEssayRequestSchema])).min(1, {
+    message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_PROBLEMS,
+  }),
 });
 
 // 퀴즈 api 응답 관련 스키마
