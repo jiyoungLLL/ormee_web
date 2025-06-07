@@ -3,7 +3,7 @@ import { useActiveProblemStore } from '@/features/quiz/activeProblemStore';
 import { FieldArrayWithId, Path, UseFieldArrayRemove, useFormContext } from 'react-hook-form';
 import ProblemTypeDropdown from '@/components/quiz/problem/ProblemTypeDropdown';
 import ChoiceItemContainer from '@/components/quiz/problem/ChoiceItemContainer';
-import Answer from '@/components/quiz/problem/Answer';
+import ChoiceAnswer from '@/components/quiz/problem/ChoiceAnswer';
 import RemoveProblemButton from '@/components/quiz/problem/RemoveProblemButton';
 import TipTapField from '@/components/ui/TipTapField';
 import { Editor } from '@tiptap/react';
@@ -25,13 +25,15 @@ const INACTIVE_BORDER_STYLE = 'border-white';
 
 export default function ProblemInput({ problem, index, remove, setEditor }: ProblemInputProps) {
   const { activeProblemId, setActiveProblemId } = useActiveProblemStore();
-  const { control } = useFormContext<QuizFormValues>();
+  const { control, watch } = useFormContext<QuizFormValues>();
   const isActive = activeProblemId === problem.id;
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isActive) return;
     setActiveProblemId(problem.id);
   };
+
+  const problemType = watch(`problems.${index}.type`);
 
   return (
     <div
@@ -55,9 +57,9 @@ export default function ProblemInput({ problem, index, remove, setEditor }: Prob
           setEditor={setEditor}
         />
       </div>
-      <ChoiceItemContainer problemIndex={index} />
+      {problemType === 'CHOICE' && <ChoiceItemContainer problemIndex={index} />}
       <div className='flex justify-between items-center w-full'>
-        <Answer problemIndex={index} />
+        {problemType === 'CHOICE' && <ChoiceAnswer problemIndex={index} />}
         <RemoveProblemButton
           problemIndex={index}
           remove={remove}
