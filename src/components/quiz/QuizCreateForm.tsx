@@ -65,8 +65,8 @@ export default function QuizCreateForm() {
       isDraft: false,
       title: formValues.title,
       description: formValues.description || '',
-      openTime: new Date(formValues.startTime).toISOString(),
-      dueTime: new Date(formValues.dueTime).toISOString(),
+      openTime: formValues.startTime ? new Date(formValues.startTime).toISOString() : '',
+      dueTime: formValues.dueTime ? new Date(formValues.dueTime).toISOString() : '',
       timeLimit: QUIZ_LIMIT_TIME_MAP[formValues.limitTime as (typeof QUIZ_LIMIT_TIME_OPTIONS)[number]] || '',
       problems: formValues.problems.map((problem) =>
         problem.type === 'CHOICE'
