@@ -4,12 +4,14 @@ import {
   CLOSED_QUIZ_STATS_MAP,
   PROBLEM_STATS_MAP,
   QUIZ_ATTACHMENT_MAP,
+  QUIZ_DB,
   QUIZ_DETAIL_MAP,
   QUIZ_LIST_RESPONSE_MIXED,
   TEMPORARY_QUIZ_LIST,
 } from './quiz';
 import { QuizState } from '@/features/quiz/quiz.types';
 import { MOCK_ANSWER, MOCK_PAGINATED_QUESTION_RESPONSE } from './question';
+import { QuizCreateRequestSchema } from '@/features/quiz/quiz.schema';
 
 export const handlers = [
   http.get('/api/teacher/notification/', () => {
@@ -260,6 +262,26 @@ export const handlers = [
         status: 'success',
         code: 200,
         data: id,
+      },
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+  }),
+  http.post('/api/teachers/:lectureId/quizzes', async ({ request, params }) => {
+    const body = await request.json();
+    const validatedBody = QuizCreateRequestSchema.parse(body);
+
+    const id = crypto.randomUUID();
+    QUIZ_DB[id] = validatedBody;
+
+    return HttpResponse.json(
+      {
+        status: 'success',
+        code: 200,
       },
       {
         status: 200,

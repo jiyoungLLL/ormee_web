@@ -2,6 +2,7 @@ import {
   ClosedQuizStatsResponse,
   ProblemStatsResponse,
   Quiz,
+  QuizCreateRequest,
   QuizFormValues,
   QuizListResponse,
 } from '@/features/quiz/quiz.types';
@@ -265,6 +266,7 @@ export const QUIZ_TEMPORARY_1_EDIT: QuizFormValues & { id: string } = {
       type: 'CHOICE',
       content: '문항 1',
       answerItemId: 'mock-item-1',
+      answer: '',
       files: [],
       item: [
         {
@@ -281,6 +283,7 @@ export const QUIZ_TEMPORARY_1_EDIT: QuizFormValues & { id: string } = {
       type: 'CHOICE',
       content: '문항 2',
       answerItemId: '',
+      answer: '',
       files: [],
       item: [
         {
@@ -308,6 +311,7 @@ export const QUIZ_TEMPORARY_2_EDIT: QuizFormValues & { id: string } = {
       type: 'CHOICE',
       content: '문항 1',
       answerItemId: '',
+      answer: '',
       files: [],
       item: [
         {
@@ -335,6 +339,7 @@ export const QUIZ_TEMPORARY_3_EDIT: QuizFormValues & { id: string } = {
       type: 'CHOICE',
       content: '문항 1',
       answerItemId: '',
+      answer: '',
       files: [],
       item: [
         {
@@ -353,3 +358,5 @@ export const QUIZ_DETAIL_MAP: Record<string, QuizFormValues & { id: string }> = 
 };
 
 export const QUIZ_ATTACHMENT_MAP: Record<string, string> = {};
+
+export const QUIZ_DB: Record<string, QuizCreateRequest> = {};
