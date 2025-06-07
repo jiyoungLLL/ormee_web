@@ -28,6 +28,7 @@ export default function ChoiceItemInput({ problemIndex, itemIndex }: ChoiceItemI
   };
 
   const handleChangeAnswer = () => {
+    setValue(`problems.${problemIndex}.answer`, getValues(`problems.${problemIndex}.item.${itemIndex}.text`));
     setValue(`problems.${problemIndex}.answerItemId`, itemId);
   };
 

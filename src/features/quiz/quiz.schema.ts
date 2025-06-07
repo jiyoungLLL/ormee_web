@@ -23,6 +23,7 @@ export const ProblemSchema = z.object({
   type: z.enum(['CHOICE', 'ESSAY']),
   item: z.array(z.object({ id: z.string(), text: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ITEM }) })),
   answerItemId: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ANSWER }),
+  answer: z.string(),
   files: z.array(z.object({ id: z.string(), previewUrl: z.string() })),
 });
 
@@ -62,6 +63,7 @@ export const QuizCreateRequestSchema = z.object({
   timeLimit: z.union([z.enum(QUIZ_LIMIT_TIME_REQUEST_OPTIONS), z.literal('')], {
     message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_LIMIT_TIME,
   }),
+  isDraft: z.boolean(),
   problems: z.array(z.discriminatedUnion('type', [ProblemChoiceRequestSchema, ProblemEssayRequestSchema])).min(1, {
     message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_PROBLEMS,
   }),
