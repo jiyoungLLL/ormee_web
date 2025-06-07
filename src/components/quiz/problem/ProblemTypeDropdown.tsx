@@ -11,7 +11,9 @@ type ProblemTypeDropdownProps = {
 };
 
 export default function ProblemTypeDropdown({ index }: ProblemTypeDropdownProps) {
-  const { setValue } = useFormContext<QuizFormValues>();
+  const { setValue, watch } = useFormContext<QuizFormValues>();
+
+  const currentProblemType = watch(`problems.${index}.type`);
 
   const setProblemType = (type: ProblemType) => {
     setValue(`problems.${index}.type`, type);
@@ -26,14 +28,14 @@ export default function ProblemTypeDropdown({ index }: ProblemTypeDropdownProps)
       },
       { id: 'p-type-essay', label: QUIZ_LABEL_MAP.ESSAY, onClick: () => setProblemType('ESSAY') },
     ],
-    initialSelectedItem: QUIZ_LABEL_MAP.CHOICE,
+    initialSelectedItem: QUIZ_LABEL_MAP[currentProblemType] || QUIZ_LABEL_MAP.CHOICE,
   });
 
   return (
     <Dropdown
       showTrigger
       menuList={menuListForDropdown}
-      selectedItem={selectedItem}
+      selectedItem={QUIZ_LABEL_MAP[currentProblemType] || selectedItem}
       triggerAreaOnOpenStyle='bg-white'
     />
   );
