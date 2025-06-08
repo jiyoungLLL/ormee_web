@@ -2,13 +2,22 @@
 
 import ClassModal from '@/components/class/ClassModal';
 import Button from '@/components/ui/Button';
+import { useDeleteClass } from '@/features/class/hooks/queries/useClassApi';
 import { MOCK_CLASSES } from '@/mock/class';
+import { useToastStore } from '@/stores/toastStore';
+import { format } from 'date-fns';
 import Image from 'next/image';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 export default function Class() {
-  const [classes, setClasses] = useState(MOCK_CLASSES);
-  const [tab, setTab] = useState<'ongoing' | 'done'>('ongoing');
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { mutateAsync: deleteClass } = useDeleteClass();
+
+  const { addToast } = useToastStore();
+  const [classes, setClasses] = useState(MOCK_CLASSES.data);
+  const [tab, setTab] = useState<'openLectures' | 'closedLectures'>('openLectures');
   const [openMenu, setOpenMenu] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [modalType, setModalType] = useState<'new' | 'ongoing' | null>(null);
@@ -18,9 +27,10 @@ export default function Class() {
   const openModal = (type: 'new' | 'ongoing') => setModalType(type);
   const closeModal = () => setModalType(null);
 
-  const handleCopy = () => {
-    const text = '강의코드';
-    navigator.clipboard.writeText(text).then(() => alert('복사 성공!'));
+  const handleCopy = (code: number) => {
+    navigator.clipboard
+      .writeText(code.toString())
+      .then(() => addToast({ message: `강의코드를 복사했어요. (코드: ${code}) `, type: 'success', duration: 2500 }));
   };
 
   const toggleMenu = (index: number) => {
@@ -29,15 +39,31 @@ export default function Class() {
 
   const handleNewClass = () => {
     openModal('new');
-    setTab('ongoing');
+    setTab('openLectures');
   };
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    params.set('filter', tab);
+
+    if (openMenu !== null) {
+      params.set('id', openMenu.toString());
+    } else {
+      params.delete('id');
+    }
+
+    router.push(`?${params.toString()}`);
+  }, [tab, openMenu]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const openCard = document.getElementById(`menu-${openMenu}`);
       const moreButton = document.getElementById(`more-btn-${openMenu}`);
 
-      if (openCard && !openCard.contains(e.target as Node) && moreButton && !moreButton.contains(e.target as Node)) {
+      const target = e.target as Node;
+
+      if (openMenu !== null && !openCard?.contains(target) && !moreButton?.contains(target)) {
         setOpenMenu(null);
       }
     };
@@ -48,26 +74,34 @@ export default function Class() {
     };
   }, [openMenu]);
 
-  const handleDeleteClass = (classState: 'ongoing' | 'done', id: string) => {
-    const updatedClassList = classes[classState].filter(([index, title]) => `${index}-${title}` !== id);
+  // 강의 삭제
+  const handleDeleteClass = async (classState: 'openLectures' | 'closedLectures', id: string, lectureId: string) => {
+    setOpenMenu(null);
+    try {
+      await deleteClass(lectureId);
 
-    setClasses({
-      ...classes,
-      [classState]: updatedClassList,
-    });
+      const updatedClassList = classes[classState].filter((data) => `${data.id}-${data.code}` !== id);
+
+      setClasses({
+        ...classes,
+        [classState]: updatedClassList,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const renderClass = (classState: 'ongoing' | 'done') => {
+  const renderClass = (classState: 'openLectures' | 'closedLectures') => {
     if (classes[classState] && classes[classState].length !== 0) {
       const commonStyle = 'flex gap-[10px] text-headline2 h-[22px] items-center';
-      const IconSrc = classState === 'ongoing' ? 'home-ui.png' : 'pre-lecture.png';
+      const IconSrc = classState === 'openLectures' ? 'home-ui.png' : 'pre-lecture.png';
 
       return (
         <div className={`${basicStyle} px-[30px] py-[20px] flex gap-[15px] flex-wrap`}>
-          {classes[classState].map(([index, title, students, date]) => (
+          {classes[classState].map((data, index) => (
             <div
-              id={`${index}-${title}`}
-              key={`${title}-${students}-${date}-${index}`}
+              id={`${index}-${data.title}`}
+              key={`${data.id}-${data.code}`}
               className='relative w-[309px] flex justify-between gap-[41px] px-[30px] py-[20px] rounded-[15px] border border-gray-30'
             >
               <div className='w-[178px] flex flex-col gap-[41px]'>
@@ -78,7 +112,7 @@ export default function Class() {
                     height={28}
                     alt='강의 아이콘'
                   />
-                  {title}
+                  {data.title}
                 </div>
                 <div className='flex flex-col gap-[1px]'>
                   <div className={commonStyle}>
@@ -89,7 +123,7 @@ export default function Class() {
                       className='w-[18px] h-[18px]'
                       alt='학생 아이콘'
                     />
-                    {students}명
+                    {data.students}명
                   </div>
                   <div className={commonStyle}>
                     <Image
@@ -99,16 +133,16 @@ export default function Class() {
                       className='w-[18px] h-[18px]'
                       alt='달력 아이콘'
                     />
-                    {date}
+                    {format(data.startDate, 'yyyy.MM.dd')}
                   </div>
                 </div>
               </div>
-              {classState === 'ongoing' && (
+              {classState === 'openLectures' && (
                 <div className='flex flex-col justify-between'>
                   <button
                     type='button'
-                    id={`more-btn-${index}`}
-                    onClick={() => toggleMenu(index)}
+                    id={`more-btn-${data.code}`}
+                    onClick={() => toggleMenu(Number(data.id))}
                   >
                     <Image
                       src={'/assets/icons/more.png'}
@@ -119,7 +153,7 @@ export default function Class() {
                   </button>
                   <button
                     type='button'
-                    onClick={handleCopy}
+                    onClick={() => handleCopy(data.code)}
                   >
                     <Image
                       src={'/assets/icons/dark-copy.png'}
@@ -130,7 +164,7 @@ export default function Class() {
                   </button>
                 </div>
               )}
-              {openMenu === index && (
+              {openMenu?.toString() === data.id && (
                 <div
                   id={`menu-${openMenu}`}
                   ref={menuRef}
@@ -146,7 +180,7 @@ export default function Class() {
                   <button
                     type='button'
                     className='h-[40px] px-[10px] py-[5px] rounded-[5px]'
-                    onClick={() => handleDeleteClass(classState, `${index}-${title}`)}
+                    onClick={() => handleDeleteClass(classState, `${data.id}-${data.code}`, data.id)}
                   >
                     강의 삭제
                   </button>
@@ -161,33 +195,34 @@ export default function Class() {
         <div
           className={`${basicStyle} h-[184px] flex justify-center items-center text-heading2 font-semibold text-[rgb(181_182_188)]`}
         >
-          {tab === 'ongoing' ? '현재 진행 중인 강의가 없어요' : '이전에 진행한 강의가 없어요'}
+          {tab === 'openLectures' ? '현재 진행 중인 강의가 없어요' : '종료된 강의가 없어요'}
         </div>
       );
     }
   };
 
   return (
-    <div>
+    <div className='w-full'>
       <div className='relative top-[8px] px-[5px] text-title3 font-bold'>강의 설정</div>
       <div className='relative top-[13px] flex flex-col'>
         <div className='h-[75px] flex justify-between items-center'>
           {/* 탭 */}
-          <div className='pt-[20px] flex gap-4 items-center'>
-            <div className='relative flex items-end'>
+          <div className='pt-[20px] flex items-center relative'>
+            {/* 진행 중 강의 버튼 */}
+            <div className='relative flex items-end z-10'>
               <button
                 className={`text-headline1 ${
-                  tab === 'ongoing'
-                    ? 'h-[55px] rounded-t-[20px] px-[15px] pr-[30px] flex items-center gap-[9px] bg-white font-semibold text-purple-50'
+                  tab === 'openLectures'
+                    ? 'h-[55px] rounded-t-[20px] px-[15px] flex items-center gap-[9px] bg-white font-semibold text-purple-50'
                     : 'w-[145px] h-[43px] rounded-[20px] bg-gray-20 text-gray-60'
                 }`}
-                onClick={() => setTab('ongoing')}
+                onClick={() => setTab('openLectures')}
               >
                 진행 중 강의
-                <div>{tab === 'ongoing' && classes['ongoing'].length}</div>
+                <div>{tab === 'openLectures' && classes['openLectures'].length}</div>
               </button>
 
-              {tab === 'ongoing' && (
+              {tab === 'openLectures' && (
                 <Image
                   src={'/assets/icons/class/right-vector.png'}
                   width={25}
@@ -198,8 +233,9 @@ export default function Class() {
               )}
             </div>
 
-            <div className='relative flex items-end'>
-              {tab === 'done' && (
+            {/* 이전 강의 버튼 */}
+            <div className='relative flex items-end ml-[10px] z-0'>
+              {tab === 'closedLectures' && (
                 <Image
                   src={'/assets/icons/class/left-vector.png'}
                   width={25}
@@ -210,16 +246,16 @@ export default function Class() {
               )}
               <button
                 className={`text-headline1 ${
-                  tab === 'done'
+                  tab === 'closedLectures'
                     ? 'h-[55px] rounded-t-[20px] px-[15px] flex items-center gap-[9px] bg-white font-semibold text-purple-50'
                     : 'w-[145px] h-[43px] rounded-[20px] bg-gray-20 text-gray-60'
                 }`}
-                onClick={() => setTab('done')}
+                onClick={() => setTab('closedLectures')}
               >
                 이전 강의
-                <div>{tab === 'done' && classes['done'].length}</div>
+                <div>{tab === 'closedLectures' && classes['closedLectures'].length}</div>
               </button>
-              {tab === 'done' && (
+              {tab === 'closedLectures' && (
                 <Image
                   src={'/assets/icons/class/right-vector.png'}
                   width={25}

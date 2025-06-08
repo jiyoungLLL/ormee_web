@@ -17,12 +17,18 @@ export async function fetcher<T>({ method, endpoint, body }: FetchOptions): Prom
     body: body ? JSON.stringify(body) : undefined,
   });
 
-  if (!res.ok) {
-    const err = await res.json().catch(() => {});
-    throw new Error(err.message || 'API 요청 실패');
+  let data: any = null;
+
+  try {
+    data = await res.json();
+  } catch (e) {
+    data = null;
   }
 
-  const data = await res.json();
-  console.log('요청 성공', data);
+  if (!res.ok) {
+    const errorMessage = data?.message || 'API 요청 실패';
+    throw new Error(errorMessage);
+  }
+
   return data;
 }
