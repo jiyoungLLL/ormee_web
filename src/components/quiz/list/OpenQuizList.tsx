@@ -1,8 +1,8 @@
-import { QuizList } from '@/features/quiz/quiz.types';
+import { Quiz } from '@/features/quiz/quiz.types';
 import OpenQuizItem from '@/components/quiz/list/OpenQuizItem';
 
 type OpenQuizListProps = {
-  openQuizzes: QuizList;
+  openQuizzes: Quiz[];
 };
 
 export default function OpenQuizList({ openQuizzes }: OpenQuizListProps) {
@@ -21,7 +21,6 @@ export default function OpenQuizList({ openQuizzes }: OpenQuizListProps) {
           <OpenQuizItem
             key={quiz.id}
             quiz={quiz}
-            type={quiz.state as 'ongoing' | 'ready'}
             isLastQuiz={isLastQuiz(index)}
           />
         ))}

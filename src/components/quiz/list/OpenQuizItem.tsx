@@ -2,7 +2,7 @@
 
 import Button from '@/components/ui/Button';
 import Image from 'next/image';
-import { Quiz } from '@/features/quiz/quiz.types';
+import { Quiz, QuizState } from '@/features/quiz/quiz.types';
 import { formatDatetimeWithTime } from '@/utils/date/formatDate';
 import { useModal } from '@/hooks/ui/useModal';
 import Modal from '@/components/ui/Modal';
@@ -11,11 +11,10 @@ import { useLectureId } from '@/hooks/queries/useLectureId';
 
 type OpenQuizItemProps = {
   quiz: Quiz;
-  type: 'ongoing' | 'ready';
   isLastQuiz: boolean;
 };
 
-export default function OpenQuizItem({ quiz, type, isLastQuiz }: OpenQuizItemProps) {
+export default function OpenQuizItem({ quiz, isLastQuiz }: OpenQuizItemProps) {
   const {
     isOpen: isUploadModalOpen,
     openModal: openUploadModal,
@@ -28,11 +27,15 @@ export default function OpenQuizItem({ quiz, type, isLastQuiz }: OpenQuizItemPro
     closeModal: closeCloseModal,
   } = useModal({ defaultOpen: false });
 
-  const { id: quizId, title, limitTime, dueTime } = quiz;
+  const { id: quizId, title, limitTime, dueTime, state } = quiz;
   const formattedDueTime = formatDatetimeWithTime(dueTime);
 
   const lectureId = useLectureId();
-  const { mutate: mutateQuizState } = usePutQuizState({ quizId, lectureId, prevState: type });
+  const { mutate: mutateQuizState } = usePutQuizState({
+    quizId,
+    lectureId,
+    prevState: state as Exclude<QuizState, 'closed' | 'temporary'>,
+  });
 
   // TODO: 로딩상태 추가
 
@@ -76,7 +79,7 @@ export default function OpenQuizItem({ quiz, type, isLastQuiz }: OpenQuizItemPro
             />
             <span className='text-headline1 font-semibold'>{limitTime}</span>
           </div>
-          {type === 'ongoing' && (
+          {state === 'ongoing' && (
             <>
               <Button
                 type='BUTTON_BASE_TYPE'
@@ -96,7 +99,7 @@ export default function OpenQuizItem({ quiz, type, isLastQuiz }: OpenQuizItemPro
               />
             </>
           )}
-          {type === 'ready' && (
+          {state === 'ready' && (
             <>
               <Button
                 type='BUTTON_BASE_TYPE'

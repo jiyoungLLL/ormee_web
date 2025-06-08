@@ -28,12 +28,7 @@ export default function QuizListContainer() {
   const lectureId = useLectureId();
   const { data: quizList } = useGetQuizList(lectureId);
 
-  const { openQuizzes, closedQuizzes } = useMemo(() => {
-    const open = quizList?.filter((quiz) => quiz.state === 'ready' || quiz.state === 'ongoing') ?? [];
-    const closed = quizList?.filter((quiz) => quiz.state === 'closed') ?? [];
-
-    return { openQuizzes: open, closedQuizzes: closed };
-  }, [quizList]);
+  const { openQuizzes, closedQuizzes } = quizList ?? { openQuizzes: [], closedQuizzes: [] };
 
   return (
     <div className='flex flex-col gap-[20px] w-full h-[721px] px-[30px] py-[20px] rounded-[20px] box-border bg-white overflow-y-auto'>
