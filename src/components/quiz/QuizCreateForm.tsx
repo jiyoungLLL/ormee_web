@@ -17,7 +17,7 @@ import Toolbar from '../ui/Toolbar';
 import { useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
 import QuizCreateHeader from '@/components/quiz/QuizCreateHeader';
-import { QuizCreateRequest, QuizFormValues } from '@/features/quiz/quiz.types';
+import { QuizCreateRequest, QuizDraftRequest, QuizFormValues } from '@/features/quiz/quiz.types';
 import { useQuizEditMode } from '@/features/quiz/hooks/useQuizEditMode';
 import { usePostQuiz } from '@/features/quiz/hooks/useQuiz';
 import { useLectureId } from '@/hooks/queries/useLectureId';
@@ -91,7 +91,34 @@ export default function QuizCreateForm() {
   };
 
   const handleTemporarySave = () => {
-    alert('퀴즈가 임시저장 되었습니다.');
+    const formValues = getValues();
+    const submitValues: QuizDraftRequest = {
+      isDraft: true,
+      title: formValues.title,
+      description: formValues.description || '',
+      openTime: formValues.startTime ? new Date(formValues.startTime).toISOString() : '',
+      dueTime: formValues.dueTime ? new Date(formValues.dueTime).toISOString() : '',
+      timeLimit: QUIZ_LIMIT_TIME_MAP[formValues.limitTime as (typeof QUIZ_LIMIT_TIME_OPTIONS)[number]] || '',
+      problems: formValues.problems.map((problem) =>
+        problem.type === 'CHOICE'
+          ? {
+              type: 'CHOICE' as const,
+              content: problem.content,
+              answer: problem.answer,
+              items: problem.item.map((item) => item.text),
+              fileIds: problem.files.map((file) => file.id),
+            }
+          : {
+              type: 'ESSAY' as const,
+              content: problem.content,
+              answer: problem.answer,
+              items: null,
+              fileIds: problem.files.map((file) => file.id),
+            },
+      ),
+    };
+
+    postQuiz(submitValues);
   };
 
   return (

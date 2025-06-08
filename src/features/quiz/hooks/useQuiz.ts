@@ -3,14 +3,14 @@
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { useToastStore } from '@/stores/toastStore';
 import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query';
-import { QuizCreateRequest } from '@/features/quiz/quiz.types';
+import { QuizCreateRequest, QuizDraftRequest } from '@/features/quiz/quiz.types';
 import { postQuiz } from '@/features/quiz/api/quiz.api';
 import { useRouter } from 'next/navigation';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { ToastData } from '@/types/toast.types';
 
 const handleQuizSuccess = (
-  quiz: QuizCreateRequest,
+  quiz: QuizCreateRequest | QuizDraftRequest,
   lectureId: string,
   queryClient: QueryClient,
   router: AppRouterInstance,
@@ -31,7 +31,7 @@ export const usePostQuiz = ({ lectureId }: { lectureId: string }) => {
   const router = useRouter();
 
   return useMutation({
-    mutationFn: (quiz: QuizCreateRequest) => postQuiz(lectureId, quiz),
+    mutationFn: (quiz: QuizCreateRequest | QuizDraftRequest) => postQuiz(lectureId, quiz),
     onSuccess: (_, quiz) => handleQuizSuccess(quiz, lectureId, queryClient, router, addToast),
     onError: (error) => {
       addToast({ message: error.message, type: 'error' });

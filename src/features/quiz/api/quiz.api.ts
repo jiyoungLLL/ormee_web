@@ -1,7 +1,7 @@
-import { QuizCreateRequest } from '@/features/quiz/quiz.types';
+import { QuizCreateRequest, QuizDraftRequest } from '@/features/quiz/quiz.types';
 import { QuizCreateRequestSchema, QuizDraftRequestSchema } from '@/features/quiz/quiz.schema';
 
-export const postQuiz = async (lectureId: string, quiz: QuizCreateRequest) => {
+export const postQuiz = async (lectureId: string, quiz: QuizCreateRequest | QuizDraftRequest) => {
   const { isDraft } = quiz;
   const schema = isDraft ? QuizDraftRequestSchema : QuizCreateRequestSchema;
   const validatedQuiz = schema.safeParse(quiz);
