@@ -106,6 +106,11 @@ export default function DateTimePicker({
 
   useEffect(() => {
     if (defaultValue) setDateTimeValue(defaultValue);
+    if (defaultValue && type === 'TIME' && time === 'TIME') {
+      const [start, end] = defaultValue.split('-').map((t) => t.trim());
+      setStartTime(start);
+      setEndTime(end);
+    }
   }, [defaultValue]);
 
   const pickerRef = useRef<HTMLDivElement>(null);
@@ -155,7 +160,13 @@ export default function DateTimePicker({
   const handleSelectDate = (formattedValue: string) => {
     setDateTimeValue(formattedValue);
     onSelectDate?.(formattedValue);
-    setIsOpen(false);
+    if (calendar === 'DATE_TYPE') {
+      setIsOpen(false);
+    }
+
+    if (calendar === 'PERIOD_TYPE' && formattedValue.includes('-')) {
+      setIsOpen(false);
+    }
   };
 
   const handleSelectTime = (start: string, end: string) => {
@@ -185,7 +196,12 @@ export default function DateTimePicker({
 
       if (type === 'CALENDAR' && calendar === 'PERIOD_TYPE') {
         const [from, to] = value.split('-').map((date) => date.trim());
-        return `${from} - ${to}`;
+        return `${from}-${to}`;
+      }
+
+      if (type === 'TIME' && time === 'TIME') {
+        const [start, end] = value.split('-').map((time) => time.trim());
+        return `${start}-${end}`;
       }
 
       return value;
@@ -209,7 +225,7 @@ export default function DateTimePicker({
           alt={`${type} 아이콘`}
           className={`${imageSize}`}
         />
-        <div className={`${fontStyle}`}>{getFormattedValue(dateTimeValue, placeholder)}</div>
+        <div className={`${fontStyle} whitespace-nowrap`}>{getFormattedValue(dateTimeValue, placeholder)}</div>
       </div>
 
       {isOpen && !disabled && calendar && (
@@ -220,11 +236,12 @@ export default function DateTimePicker({
           <Calendar
             type={calendar}
             onSelectDate={handleSelectDate}
+            defaultValue={defaultValue}
           />
         </div>
       )}
 
-      {isOpen && !disabled && time === 'TIME' && (
+      {isOpen && !disabled && type === 'TIME' && time === 'TIME' && (
         <div
           className='absolute z-[100] top-[10px] bg-white shadow-md rounded-md p-4 flex flex-col gap-2'
           style={{ top: `${dropdownStyle.top}px`, left: `${dropdownStyle.left}px`, position: 'fixed' }}
