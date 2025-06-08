@@ -21,7 +21,7 @@ export function useApiQuery<T>(
 
 export function useApiMutation<T, V>(
   method: Exclude<Method, 'GET'>,
-  endpoint: string,
+  endpoint: string | ((variables: V) => string),
   onSuccess?: () => void,
   invalidateKey?: readonly unknown[] | readonly unknown[][],
   onError?: (err: Error) => void,
@@ -29,7 +29,10 @@ export function useApiMutation<T, V>(
   const queryClient = useQueryClient();
 
   return useMutation<T, Error, V>({
-    mutationFn: (body: V) => fetcher<T>({ method, endpoint, body }),
+    mutationFn: (body: V) => {
+      const url = typeof endpoint === 'function' ? endpoint(body) : endpoint;
+      return fetcher<T>({ method, endpoint: url, body });
+    },
     onSuccess: () => {
       if (Array.isArray(invalidateKey)) {
         invalidateKey.forEach((key) => queryClient.invalidateQueries({ queryKey: key }));
