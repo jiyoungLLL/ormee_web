@@ -1,16 +1,41 @@
+'use client';
+
+import { useRef } from 'react';
 import { Editor } from '@tiptap/react';
 import Image from 'next/image';
+
+type ImmediateUploadConfig = {
+  strategy: 'IMMEDIATE_UPLOAD';
+  uploadUrl?: string;
+  onImageUpload: (file: File, id: string, previewUrl: string) => void;
+};
+
+type DeferredUploadConfig = {
+  strategy: 'UPLOAD_AT_SUBMIT';
+  onImageUpload: (file: File, previewUrl: string) => void;
+};
+
+type ImageUploadConfig = ImmediateUploadConfig | DeferredUploadConfig;
 
 type ToolbarProps = {
   editor: Editor | null;
   enableList?: boolean;
   enableImage?: boolean;
   containerStyle?: string;
+  imageUploadConfig?: ImageUploadConfig;
 };
 
 const DEFAULT_CONTAINER_STYLE = 'w-[262px] h-[48px] py-[10px] flex gap-[31px] items-center';
 
-export default function Toolbar({ editor, enableImage = false, enableList = true, containerStyle }: ToolbarProps) {
+export default function Toolbar({
+  editor,
+  enableImage = false,
+  enableList = true,
+  containerStyle,
+  imageUploadConfig,
+}: ToolbarProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const textToolList = ['bold', 'italic', 'underlined'];
   const phraseToolList = ['list', 'list_numbered'];
   const imageToolList = ['image'];
@@ -41,8 +66,8 @@ export default function Toolbar({ editor, enableImage = false, enableList = true
         }
         break;
       case 'image':
-        if (enableImage) {
-          // TODO: 이미지 처리 추가
+        if (enableImage && fileInputRef.current) {
+          fileInputRef.current.click();
         }
         break;
       default:
@@ -50,8 +75,32 @@ export default function Toolbar({ editor, enableImage = false, enableList = true
     }
   };
 
-  const handleInsertImage = () => {
-    // TODO: 이미지 처리 추가
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !editor || !imageUploadConfig) return;
+
+    const previewUrl = URL.createObjectURL(file);
+
+    if (imageUploadConfig.strategy === 'IMMEDIATE_UPLOAD') {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch(imageUploadConfig.uploadUrl || '/api/attachment', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+      const imageId = data.data;
+
+      imageUploadConfig.onImageUpload(file, imageId, previewUrl);
+    } else {
+      imageUploadConfig.onImageUpload(file, previewUrl);
+    }
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const renderToolBar = (list: string[]) => {
@@ -91,6 +140,13 @@ export default function Toolbar({ editor, enableImage = false, enableList = true
           {renderToolBar(imageToolList)}
         </>
       )}
+      <input
+        ref={fileInputRef}
+        type='file'
+        accept='image/*'
+        className='hidden'
+        onChange={handleImageUpload}
+      />
     </div>
   );
 }

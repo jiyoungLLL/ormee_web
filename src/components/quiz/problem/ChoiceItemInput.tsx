@@ -2,34 +2,38 @@
 
 import XIcon from '@/components/icon/XIcon';
 import Radio from '@/components/ui/radio/Radio';
-import TipTapField from '@/components/ui/TipTapField';
 import { QuizFormValues } from '@/features/quiz/quiz.types';
-import { Editor } from '@tiptap/react';
 import { useFormContext } from 'react-hook-form';
+import DynamicWidthInput from '@/components/ui/inputs/DynamicWidthInput';
 
 type ChoiceItemInputProps = {
   problemIndex: number;
   itemIndex: number;
-  setEditor: (editor: Editor | null) => void;
 };
 
-export default function ChoiceItemInput({ problemIndex, itemIndex, setEditor }: ChoiceItemInputProps) {
-  const { control, register, setValue, getValues } = useFormContext<QuizFormValues>();
+const MAX_WIDTH = 877;
+
+export default function ChoiceItemInput({ problemIndex, itemIndex }: ChoiceItemInputProps) {
+  const { register, setValue, getValues } = useFormContext<QuizFormValues>();
 
   const { id: itemId } = getValues(`problems.${problemIndex}.item.${itemIndex}`);
 
   const handleRemoveItem = () => {
     const currentItem = getValues(`problems.${problemIndex}.item`) || [];
+
+    if (currentItem.length <= 1) return;
+
     const newItem = currentItem.filter((_, idx) => idx !== itemIndex);
     setValue(`problems.${problemIndex}.item`, newItem);
   };
 
   const handleChangeAnswer = () => {
+    setValue(`problems.${problemIndex}.answer`, getValues(`problems.${problemIndex}.item.${itemIndex}.text`));
     setValue(`problems.${problemIndex}.answerItemId`, itemId);
   };
 
   return (
-    <div className='flex items-center gap-[12px] w-full'>
+    <div className='flex items-center gap-[12px] w-full min-w-0'>
       <Radio
         register={register}
         name={`problems.${problemIndex}.answerItemId`}
@@ -37,17 +41,16 @@ export default function ChoiceItemInput({ problemIndex, itemIndex, setEditor }: 
         value={itemId}
         onChange={handleChangeAnswer}
       />
-      <TipTapField
-        control={control}
+      <DynamicWidthInput
         name={`problems.${problemIndex}.item.${itemIndex}.text`}
         placeholder='선지를 입력하세요.'
-        size='min-w-[150px] h-[28px]'
-        fieldStyle='bg-transparent focus:outline-none disabled:text-label-assistive'
-        setEditor={setEditor}
+        inputStyle='h-[28px] text-body-reading text-gray-90 placeholder:text-gray-50 bg-transparent focus:outline-none disabled:text-label-assistive min-w-0 flex-shrink'
+        maxWidth={MAX_WIDTH}
       />
       <button
         type='button'
         onClick={handleRemoveItem}
+        className='flex-shrink-0'
       >
         <XIcon
           size={14}

@@ -5,11 +5,12 @@ import { Editor } from '@tiptap/react';
 type TipTapFieldProps<T extends FieldValues> = {
   control: Control<T>;
   name: Path<T>;
+  fileName?: Path<T>;
   placeholder?: string;
   size?: string;
   fieldStyle?: string;
   textStyle?: string;
-  setEditor: (editor: Editor | null) => void;
+  setEditor: (editor: Editor | null, fileName: Path<T> | null) => void;
   onFocus?: () => void;
   onBlur?: () => void;
   placeholderStyle?: string;
@@ -18,6 +19,7 @@ type TipTapFieldProps<T extends FieldValues> = {
 export default function TipTapField<T extends FieldValues>({
   control,
   name,
+  fileName,
   placeholder,
   size,
   fieldStyle,
@@ -40,6 +42,7 @@ export default function TipTapField<T extends FieldValues>({
           fieldStyle={fieldStyle}
           textStyle={textStyle}
           setEditor={setEditor}
+          fileName={fileName}
           onFocus={onFocus}
           onBlur={onBlur}
           placeholderStyle={placeholderStyle}

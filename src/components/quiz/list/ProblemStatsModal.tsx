@@ -44,7 +44,7 @@ export default function ProblemStatsModal({ problemId, isOpen, onCancel, onConfi
       <div className='flex flex-col gap-[10px] w-full h-full'>
         <span className='text-headline1 font-bold text-purple-50 h-[25px]'>{problemStats?.problemLabel}</span>
         <p className='w-full px-[10px] text-body1-reading font-normal text-gray-90'>{problemStats?.description}</p>
-        {problemStats?.type === 'essay' && (
+        {problemStats?.type === 'ESSAY' && (
           <div className='flex gap-[5px]'>
             <Badge
               color='purple'
@@ -54,7 +54,7 @@ export default function ProblemStatsModal({ problemId, isOpen, onCancel, onConfi
             <span className='text-headline2 font-semibold text-purple-50'>{problemStats?.answer}</span>
           </div>
         )}
-        {problemStats?.type === 'essay' && (
+        {problemStats?.type === 'ESSAY' && (
           <div className='w-full p-[10px] bg-gray-10 rounded-[10px]'>
             <table className='w-full'>
               <thead>
@@ -79,7 +79,7 @@ export default function ProblemStatsModal({ problemId, isOpen, onCancel, onConfi
             </table>
           </div>
         )}
-        {problemStats?.type === 'choice' && (
+        {problemStats?.type === 'CHOICE' && (
           <div className='flex flex-col gap-[9px] w-full px-[15px] py-[10px] bg-gray-10 rounded-[10px]'>
             {problemStats?.items.map((item) => (
               <div

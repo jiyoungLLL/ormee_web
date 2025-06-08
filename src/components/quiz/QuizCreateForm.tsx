@@ -2,18 +2,25 @@
 
 import { QuizFormSchema } from '@/features/quiz/quiz.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
+import { FormProvider, Path, useFieldArray, useForm } from 'react-hook-form';
 import QuizCreateTitleInput from '@/components/quiz/QuizCreateTitleInput';
 import RemoteController from '@/components/quiz/RemoteController';
 import ProblemInput from '@/components/quiz/ProblemInput';
 import AddProblemButton from '@/components/quiz/AddProblemButton';
-import { DEFAULT_CHOICE_ITEM, DEFAULT_PROBLEM } from '@/features/quiz/quiz.constants';
+import {
+  DEFAULT_CHOICE_ITEM,
+  DEFAULT_PROBLEM,
+  QUIZ_LIMIT_TIME_MAP,
+  QUIZ_LIMIT_TIME_OPTIONS,
+} from '@/features/quiz/quiz.constants';
 import Toolbar from '../ui/Toolbar';
 import { useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
 import QuizCreateHeader from '@/components/quiz/QuizCreateHeader';
-import { QuizFormValues } from '@/features/quiz/quiz.types';
+import { QuizCreateRequest, QuizFormValues } from '@/features/quiz/quiz.types';
 import { useQuizEditMode } from '@/features/quiz/hooks/useQuizEditMode';
+import { usePostQuiz } from '@/features/quiz/hooks/useQuiz';
+import { useLectureId } from '@/hooks/queries/useLectureId';
 
 export default function QuizCreateForm() {
   const { isEditMode, quizDetail } = useQuizEditMode();
@@ -38,13 +45,49 @@ export default function QuizCreateForm() {
     }
   }, [isEditMode, quizDetail]);
 
-  const { control } = methods;
+  const { control, setValue, getValues } = methods;
 
-  const { fields: problems, append, remove } = useFieldArray({ control, name: 'problems' });
+  const { fields: problems, append } = useFieldArray({ control, name: 'problems' });
   const [editor, setEditor] = useState<Editor | null>(null);
+  const [currentFileName, setCurrentFileName] = useState<Path<QuizFormValues> | null>(null);
+
+  const handleSetEditor = (editor: Editor | null, fileName: Path<QuizFormValues> | null) => {
+    setEditor(editor);
+    setCurrentFileName(fileName);
+  };
+
+  const lectureId = useLectureId();
+  const { mutate: postQuiz } = usePostQuiz({ lectureId });
 
   const handleRegister = () => {
-    alert(JSON.stringify(methods.getValues()));
+    const formValues = getValues();
+    const submitValues: QuizCreateRequest = {
+      isDraft: false,
+      title: formValues.title,
+      description: formValues.description || '',
+      openTime: formValues.startTime ? new Date(formValues.startTime).toISOString() : '',
+      dueTime: formValues.dueTime ? new Date(formValues.dueTime).toISOString() : '',
+      timeLimit: QUIZ_LIMIT_TIME_MAP[formValues.limitTime as (typeof QUIZ_LIMIT_TIME_OPTIONS)[number]] || '',
+      problems: formValues.problems.map((problem) =>
+        problem.type === 'CHOICE'
+          ? {
+              type: 'CHOICE' as const,
+              content: problem.content,
+              answer: problem.answer,
+              items: problem.item.map((item) => item.text),
+              fileIds: problem.files.map((file) => file.id),
+            }
+          : {
+              type: 'ESSAY' as const,
+              content: problem.content,
+              answer: problem.answer,
+              items: null,
+              fileIds: problem.files.map((file) => file.id),
+            },
+      ),
+    };
+
+    postQuiz(submitValues);
   };
 
   const handleTemporarySave = () => {
@@ -58,10 +101,18 @@ export default function QuizCreateForm() {
         onRegister={handleRegister}
       />
       <div className='flex justify-center items-start gap-[30px] w-full'>
-        <div className='sticky top-[30px] flex flex-col gap-[20px] w-[212px]'>
+        <div className='sticky top-[30px] flex flex-col gap-[20px] min-w-[212px]'>
           <Toolbar
             editor={editor}
             enableImage={true}
+            imageUploadConfig={{
+              strategy: 'IMMEDIATE_UPLOAD',
+              onImageUpload: (_, id, previewUrl) => {
+                if (!currentFileName) return;
+
+                setValue(currentFileName, [...((getValues(currentFileName) as any[]) || []), { id, previewUrl }]);
+              },
+            }}
             enableList={false}
             containerStyle='flex justify-between items-center gap-[10px] w-full px-[30px] py-[10px] rounded-[20px] bg-white'
           />
@@ -76,8 +127,7 @@ export default function QuizCreateForm() {
                   key={problem.id}
                   problem={problem}
                   index={index}
-                  remove={remove}
-                  setEditor={setEditor}
+                  setEditor={handleSetEditor}
                 />
               ))}
             </form>

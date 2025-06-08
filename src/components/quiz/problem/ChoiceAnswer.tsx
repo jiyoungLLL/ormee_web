@@ -2,14 +2,14 @@ import Badge from '@/components/ui/Badge';
 import { QuizFormValues } from '@/features/quiz/quiz.types';
 import { useFormContext } from 'react-hook-form';
 
-type AnswerProps = {
+type ChoiceAnswerProps = {
   problemIndex: number;
 };
 
 const INACTIVE_TEXT_STYLE = 'font-normal text-gray-60 decoration-gray-60';
 const ACTIVE_TEXT_STYLE = 'font-semibold text-purple-40 decoration-purple-40';
 
-export default function Answer({ problemIndex }: AnswerProps) {
+export default function ChoiceAnswer({ problemIndex }: ChoiceAnswerProps) {
   const { watch } = useFormContext<QuizFormValues>();
   const answerItemId = watch(`problems.${problemIndex}.answerItemId`);
   const item = watch(`problems.${problemIndex}.item`);
