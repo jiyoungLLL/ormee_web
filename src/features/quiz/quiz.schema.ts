@@ -107,31 +107,33 @@ export const ProblemResponseSchema = z.object({
 
 export const QuizResponseSchema = z.object({
   id: z.string().min(1),
-  state: z.enum(['ready', 'ongoing', 'closed', 'temporary'] as const satisfies readonly QuizState[]),
-  title: z.string().min(1),
-  description: z.string().optional(),
-  due_time: z.string().datetime().min(1),
-  limit_time: z.enum(QUIZ_LIMIT_TIME_OPTIONS),
-  updated_at: z.string().datetime().min(1),
-  submit_students: z.number(),
-  total_students: z.number(),
+  quizName: z.string().min(1),
+  quizDate: z.string().min(1),
+  timeLimit: z.enum(QUIZ_LIMIT_TIME_REQUEST_OPTIONS),
+  quizAvailable: z.boolean(),
+  submitCount: z.number(),
 });
 
-export const QuizListResponseSchema = z.array(QuizResponseSchema);
+export const QuizListResponseSchema = z.object({
+  openQuizzes: z.array(QuizResponseSchema),
+  closedQuizzes: z.array(QuizResponseSchema),
+});
 
 export const QuizSchema = z.object({
   id: z.string().min(1),
   state: z.enum(['ready', 'ongoing', 'closed', 'temporary'] as const satisfies readonly QuizState[]),
   title: z.string().min(1),
-  description: z.string().optional(),
   dueTime: z.string().datetime().min(1),
+  isAvailable: z.boolean(),
   limitTime: z.enum(QUIZ_LIMIT_TIME_OPTIONS),
-  updatedAt: z.string().datetime().min(1),
-  submitStudents: z.number(),
-  totalStudents: z.number(),
+  submitCount: z.number(),
+  totalCount: z.number(),
 });
 
-export const QuizListSchema = z.array(QuizSchema);
+export const QuizListSchema = z.object({
+  openQuizzes: z.array(QuizSchema),
+  closedQuizzes: z.array(QuizSchema),
+});
 
 // 마감 퀴즈 관련 스키마
 export const ClosedQuizStatsResponseSchema = z
