@@ -2,6 +2,7 @@ import {
   ClosedQuizStatsResponse,
   ProblemStatsResponse,
   Quiz,
+  QuizCreateRequest,
   QuizFormValues,
   QuizListResponse,
 } from '@/features/quiz/quiz.types';
@@ -158,7 +159,7 @@ export const CLOSED_QUIZ_STATS_MAP: Record<string, ClosedQuizStatsResponse> = {
 export const PROBLEM_STATS_CHOICE: ProblemStatsResponse = {
   problem_label: '문항 1',
   description: 'Four football matches will be broadcast live on three major stations _______ this weekend.',
-  type: 'choice',
+  type: 'CHOICE',
   items: [
     {
       is_answer: false,
@@ -186,7 +187,7 @@ export const PROBLEM_STATS_CHOICE: ProblemStatsResponse = {
 export const PROBLEM_STATS_ESSAY: ProblemStatsResponse = {
   problem_label: '문항 1',
   description: 'Four football matches will be broadcast live on three major stations _______ this weekend.',
-  type: 'essay',
+  type: 'ESSAY',
   answer: 'nationally',
   incorrect_submit: [
     {
@@ -262,9 +263,10 @@ export const QUIZ_TEMPORARY_1_EDIT: QuizFormValues & { id: string } = {
   limitTime: '30분',
   problems: [
     {
-      type: 'choice',
+      type: 'CHOICE',
       content: '문항 1',
       answerItemId: 'mock-item-1',
+      answer: '',
       files: [],
       item: [
         {
@@ -278,9 +280,10 @@ export const QUIZ_TEMPORARY_1_EDIT: QuizFormValues & { id: string } = {
       ],
     },
     {
-      type: 'choice',
+      type: 'CHOICE',
       content: '문항 2',
       answerItemId: '',
+      answer: '',
       files: [],
       item: [
         {
@@ -305,9 +308,10 @@ export const QUIZ_TEMPORARY_2_EDIT: QuizFormValues & { id: string } = {
   limitTime: '10분',
   problems: [
     {
-      type: 'choice',
+      type: 'CHOICE',
       content: '문항 1',
       answerItemId: '',
+      answer: '',
       files: [],
       item: [
         {
@@ -332,9 +336,10 @@ export const QUIZ_TEMPORARY_3_EDIT: QuizFormValues & { id: string } = {
   limitTime: '20분',
   problems: [
     {
-      type: 'choice',
+      type: 'CHOICE',
       content: '문항 1',
       answerItemId: '',
+      answer: '',
       files: [],
       item: [
         {
@@ -353,3 +358,5 @@ export const QUIZ_DETAIL_MAP: Record<string, QuizFormValues & { id: string }> = 
 };
 
 export const QUIZ_ATTACHMENT_MAP: Record<string, string> = {};
+
+export const QUIZ_DB: Record<string, QuizCreateRequest> = {};

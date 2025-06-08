@@ -1,11 +1,22 @@
-import { UseFieldArrayRemove } from 'react-hook-form';
+import { QuizFormValues } from '@/features/quiz/quiz.types';
+import { UseFieldArrayRemove, useFormContext } from 'react-hook-form';
 
 type RemoveProblemButtonProps = {
   problemIndex: number;
-  remove: UseFieldArrayRemove;
 };
 
-export default function RemoveProblemButton({ problemIndex, remove }: RemoveProblemButtonProps) {
+export default function RemoveProblemButton({ problemIndex }: RemoveProblemButtonProps) {
+  const { getValues, setValue } = useFormContext<QuizFormValues>();
+
+  const handleRemove = () => {
+    const currentProblems = getValues('problems') || [];
+
+    if (currentProblems.length <= 1) return;
+
+    const newProblems = currentProblems.filter((_, idx) => idx !== problemIndex);
+    setValue('problems', newProblems);
+  };
+
   return (
     <button
       type='button'
@@ -13,7 +24,7 @@ export default function RemoveProblemButton({ problemIndex, remove }: RemoveProb
       style={{
         backgroundImage: `url('/assets/icons/trash.png')`,
       }}
-      onClick={() => remove(problemIndex)}
+      onClick={handleRemove}
     />
   );
 }

@@ -6,11 +6,10 @@ import ChoiceItemInput from '@/components/quiz/problem/ChoiceItemInput';
 import AddChoiceButton from '@/components/quiz/problem/AddChoiceButton';
 
 type ChoiceItemContainerProps = {
-  problemId: string;
   problemIndex: number;
 };
 
-export default function ChoiceItemContainer({ problemId, problemIndex }: ChoiceItemContainerProps) {
+export default function ChoiceItemContainer({ problemIndex }: ChoiceItemContainerProps) {
   const { control } = useFormContext<QuizFormValues>();
   const { fields: itemFields } = useFieldArray<QuizFormValues>({
     control,
@@ -23,7 +22,6 @@ export default function ChoiceItemContainer({ problemId, problemIndex }: ChoiceI
         <ChoiceItemInput
           key={`${item.id}`}
           problemIndex={problemIndex}
-          problemId={problemId}
           itemIndex={index}
         />
       ))}
