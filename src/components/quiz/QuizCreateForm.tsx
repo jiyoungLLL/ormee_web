@@ -59,10 +59,11 @@ export default function QuizCreateForm() {
   const lectureId = useLectureId();
   const { mutate: postQuiz } = usePostQuiz({ lectureId });
 
-  const handleRegister = () => {
+  const createSubmitValues = (isDraft: boolean): QuizCreateRequest | QuizDraftRequest => {
     const formValues = getValues();
-    const submitValues: QuizCreateRequest = {
-      isDraft: false,
+
+    return {
+      isDraft,
       title: formValues.title,
       description: formValues.description || '',
       openTime: formValues.startTime ? new Date(formValues.startTime).toISOString() : '',
@@ -86,38 +87,15 @@ export default function QuizCreateForm() {
             },
       ),
     };
+  };
 
+  const handleRegister = () => {
+    const submitValues = createSubmitValues(false);
     postQuiz(submitValues);
   };
 
   const handleTemporarySave = () => {
-    const formValues = getValues();
-    const submitValues: QuizDraftRequest = {
-      isDraft: true,
-      title: formValues.title,
-      description: formValues.description || '',
-      openTime: formValues.startTime ? new Date(formValues.startTime).toISOString() : '',
-      dueTime: formValues.dueTime ? new Date(formValues.dueTime).toISOString() : '',
-      timeLimit: QUIZ_LIMIT_TIME_MAP[formValues.limitTime as (typeof QUIZ_LIMIT_TIME_OPTIONS)[number]] || '',
-      problems: formValues.problems.map((problem) =>
-        problem.type === 'CHOICE'
-          ? {
-              type: 'CHOICE' as const,
-              content: problem.content,
-              answer: problem.answer,
-              items: problem.item.map((item) => item.text),
-              fileIds: problem.files.map((file) => file.id),
-            }
-          : {
-              type: 'ESSAY' as const,
-              content: problem.content,
-              answer: problem.answer,
-              items: null,
-              fileIds: problem.files.map((file) => file.id),
-            },
-      ),
-    };
-
+    const submitValues = createSubmitValues(true);
     postQuiz(submitValues);
   };
 
