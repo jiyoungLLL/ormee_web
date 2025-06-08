@@ -11,7 +11,7 @@ import {
 } from './quiz';
 import { QuizState } from '@/features/quiz/quiz.types';
 import { MOCK_ANSWER, MOCK_PAGINATED_QUESTION_RESPONSE } from './question';
-import { QuizCreateRequestSchema } from '@/features/quiz/quiz.schema';
+import { QuizCreateRequestSchema, QuizDraftRequestSchema } from '@/features/quiz/quiz.schema';
 
 export const handlers = [
   http.get('/api/teacher/notification/', () => {
@@ -272,8 +272,11 @@ export const handlers = [
     );
   }),
   http.post('/api/teachers/:lectureId/quizzes', async ({ request, params }) => {
-    const body = await request.json();
-    const validatedBody = QuizCreateRequestSchema.parse(body);
+    const body = (await request.json()) as { isDraft: boolean };
+    const { isDraft } = body;
+
+    const schema = isDraft ? QuizDraftRequestSchema : QuizCreateRequestSchema;
+    const validatedBody = schema.parse(body);
 
     const id = crypto.randomUUID();
     QUIZ_DB[id] = validatedBody;

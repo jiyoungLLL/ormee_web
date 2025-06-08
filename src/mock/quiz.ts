@@ -3,6 +3,7 @@ import {
   ProblemStatsResponse,
   Quiz,
   QuizCreateRequest,
+  QuizDraftRequest,
   QuizFormValues,
   QuizListResponse,
 } from '@/features/quiz/quiz.types';
@@ -359,4 +360,4 @@ export const QUIZ_DETAIL_MAP: Record<string, QuizFormValues & { id: string }> = 
 
 export const QUIZ_ATTACHMENT_MAP: Record<string, string> = {};
 
-export const QUIZ_DB: Record<string, QuizCreateRequest> = {};
+export const QUIZ_DB: Record<string, QuizCreateRequest | QuizDraftRequest> = {};
