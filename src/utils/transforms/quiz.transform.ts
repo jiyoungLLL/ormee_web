@@ -35,10 +35,10 @@ export const transformProblemStatsToCamelCase = (response: ProblemStatsResponse)
     type: response.type,
   };
 
-  if (response.type === 'choice') {
+  if (response.type === 'CHOICE') {
     return {
       ...base,
-      type: 'choice',
+      type: 'CHOICE',
       items: response.items.map((item) => ({
         text: item.text,
         isAnswer: item.is_answer,
@@ -48,7 +48,7 @@ export const transformProblemStatsToCamelCase = (response: ProblemStatsResponse)
   } else {
     return {
       ...base,
-      type: 'essay',
+      type: 'ESSAY',
       answer: response.answer,
       incorrectSubmit: response.incorrect_submit.map((submit) => ({
         rank: submit.rank,

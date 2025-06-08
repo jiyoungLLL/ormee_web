@@ -4,14 +4,12 @@ import { QuizFormValues } from '@/features/quiz/quiz.types';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import ChoiceItemInput from '@/components/quiz/problem/ChoiceItemInput';
 import AddChoiceButton from '@/components/quiz/problem/AddChoiceButton';
-import { Editor } from '@tiptap/react';
 
 type ChoiceItemContainerProps = {
   problemIndex: number;
-  setEditor: (editor: Editor | null) => void;
 };
 
-export default function ChoiceItemContainer({ problemIndex, setEditor }: ChoiceItemContainerProps) {
+export default function ChoiceItemContainer({ problemIndex }: ChoiceItemContainerProps) {
   const { control } = useFormContext<QuizFormValues>();
   const { fields: itemFields } = useFieldArray<QuizFormValues>({
     control,
@@ -25,7 +23,6 @@ export default function ChoiceItemContainer({ problemIndex, setEditor }: ChoiceI
           key={`${item.id}`}
           problemIndex={problemIndex}
           itemIndex={index}
-          setEditor={setEditor}
         />
       ))}
       <AddChoiceButton problemIndex={problemIndex} />
