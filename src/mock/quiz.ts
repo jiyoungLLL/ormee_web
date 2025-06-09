@@ -374,4 +374,21 @@ export const QUIZ_DB: Record<string, QuizCreateRequest | QuizDraftRequest> = {
       },
     ],
   },
+  'mock-quiz-db-2': {
+    title: '미친토익 기본반 RC 퀴즈 2',
+    description: '기본 문법과 어휘를 테스트하는 퀴즈입니다.',
+    openTime: '2025-03-20T14:00:00.000Z',
+    dueTime: '2025-03-20T14:00:00.000Z',
+    timeLimit: '30',
+    isDraft: true,
+    problems: [
+      {
+        type: 'CHOICE',
+        content: '문항 1',
+        answer: '',
+        items: ['선지 1', '선지 2'],
+        fileIds: [],
+      },
+    ],
+  },
 };
