@@ -1,3 +1,8 @@
+export type ClassListType = {
+  openLectures: ClassTypes[];
+  closedLectures: ClassTypes[];
+};
+
 export type ClassTypes = {
   id: string;
   code: number;

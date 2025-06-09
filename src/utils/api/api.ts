@@ -8,7 +8,7 @@ type FetchOptions = {
 
 export async function fetcher<T>({ method, endpoint, body }: FetchOptions): Promise<T> {
   // 서버 주소 .env -> 나중 반영 필요
-  const res = await fetch(`http://localhost:8080${endpoint}`, {
+  const res = await fetch(`https://52.78.13.49.nip.io:8443${endpoint}`, {
     method,
     headers: {
       'Content-Type': 'application/json',

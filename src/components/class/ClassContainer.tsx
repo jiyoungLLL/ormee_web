@@ -2,8 +2,8 @@
 
 import ClassModal from '@/components/class/ClassModal';
 import Button from '@/components/ui/Button';
-import { useDeleteClass } from '@/features/class/hooks/queries/useClassApi';
-import { MOCK_CLASSES } from '@/mock/class';
+import { ClassListType } from '@/features/class/class.types';
+import { useDeleteClass, useGetClass } from '@/features/class/hooks/queries/useClassApi';
 import { useToastStore } from '@/stores/toastStore';
 import { format } from 'date-fns';
 import Image from 'next/image';
@@ -13,10 +13,11 @@ import { useEffect, useRef, useState } from 'react';
 export default function ClassContainer() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { data: classData, error } = useGetClass();
   const { mutateAsync: deleteClass } = useDeleteClass();
 
   const { addToast } = useToastStore();
-  const [classes, setClasses] = useState(MOCK_CLASSES.data);
+  const [classes, setClasses] = useState<ClassListType | null>(null);
   const [tab, setTab] = useState<'openLectures' | 'closedLectures'>('openLectures');
   const [openMenu, setOpenMenu] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -27,6 +28,13 @@ export default function ClassContainer() {
   const openModal = (type: 'new' | 'ongoing') => setModalType(type);
   const closeModal = () => setModalType(null);
 
+  useEffect(() => {
+    if (classData) {
+      setClasses(classData);
+    }
+  }, [classData]);
+
+  // QR로 변경됨
   const handleCopy = (code: number) => {
     navigator.clipboard
       .writeText(code.toString())
@@ -78,7 +86,9 @@ export default function ClassContainer() {
     try {
       await deleteClass(lectureId);
 
-      const updatedClassList = classes[classState].filter((data) => `${data.id}-${data.code}` !== id);
+      if (!classes) return;
+
+      const updatedClassList = classes?.[classState].filter((data) => `${data.id}-${data.code}` !== id);
 
       setClasses({
         ...classes,
@@ -90,7 +100,7 @@ export default function ClassContainer() {
   };
 
   const renderClass = (classState: 'openLectures' | 'closedLectures') => {
-    if (classes[classState] && classes[classState].length !== 0) {
+    if (classes?.[classState] && classes[classState].length !== 0) {
       const commonStyle = 'flex gap-[10px] text-headline2 h-[22px] items-center';
       const IconSrc = classState === 'openLectures' ? 'home-ui.png' : 'pre-lecture.png';
 
@@ -215,7 +225,7 @@ export default function ClassContainer() {
                 onClick={() => setTab('openLectures')}
               >
                 진행 중 강의
-                <div>{tab === 'openLectures' && classes['openLectures'].length}</div>
+                <div>{tab === 'openLectures' && classes?.['openLectures'].length}</div>
               </button>
 
               {tab === 'openLectures' && (
@@ -248,7 +258,7 @@ export default function ClassContainer() {
                 onClick={() => setTab('closedLectures')}
               >
                 이전 강의
-                <div>{tab === 'closedLectures' && classes['closedLectures'].length}</div>
+                <div>{tab === 'closedLectures' && classes?.['closedLectures'].length}</div>
               </button>
               {tab === 'closedLectures' && (
                 <Image
