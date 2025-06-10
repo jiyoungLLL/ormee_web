@@ -186,7 +186,7 @@ export default function SignUpPage() {
                   className='text-gray-70 text-[18px] font-bold leading-[25.2px] tracking-[-0.36px]'
                   htmlFor='englishName'
                 >
-                  영문명
+                  강사명
                 </label>
               </div>
               <Input
