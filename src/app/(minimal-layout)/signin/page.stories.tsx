@@ -3,7 +3,7 @@ import { expect } from '@storybook/jest';
 import { userEvent, within } from '@storybook/testing-library';
 import SignInPage from './page';
 import { fn } from '@storybook/test';
-import { AUTH_ERROR_MESSAGES } from '@/schemas/auth.schema';
+import { AUTH_ERROR_MESSAGES } from '@/features/auth/auth.schema';
 
 type Story = StoryObj<typeof SignInPage>;
 

@@ -1,6 +1,6 @@
 'use server';
 
-import { SignupFormValues } from '@/schemas/auth.schema';
+import { SignupFormValues } from '@/features/auth/auth.schema';
 
 export type SignupResponse = {
   status: string;

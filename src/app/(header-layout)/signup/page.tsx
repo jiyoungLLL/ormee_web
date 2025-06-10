@@ -5,7 +5,7 @@ import Input from '@/components/ui/Input';
 import EmailInput from '@/components/ui/inputs/EmailInput';
 import PhoneNumberInput from '@/components/ui/inputs/PhoneNumberInput';
 import { signupAction } from '@/features/auth/auth.action';
-import { PHONE_NUMBER_PREFIX, SignupFormValues, signupSchema } from '@/schemas/auth.schema';
+import { PHONE_NUMBER_PREFIX, SignupFormValues, signupSchema } from '@/features/auth/auth.schema';
 import { useToastStore } from '@/stores/toastStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';

@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
 import PhoneNumberInput from './PhoneNumberInput';
 import { useForm } from 'react-hook-form';
-import { PHONE_NUMBER_PREFIX } from '@/schemas/auth.schema';
+import { PHONE_NUMBER_PREFIX } from '@/features/auth/auth.schema';
 
 const meta: Meta<typeof PhoneNumberInput> = {
   title: 'Components/Inputs/PhoneNumberInput',

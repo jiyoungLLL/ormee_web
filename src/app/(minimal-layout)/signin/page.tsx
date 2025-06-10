@@ -2,7 +2,7 @@
 
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
-import { SigninFormValues, signinSchema } from '@/schemas/auth.schema';
+import { SigninFormValues, signinSchema } from '@/features/auth/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import Link from 'next/link';
