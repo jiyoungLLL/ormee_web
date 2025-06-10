@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import ProfilePanel from './ProfilePanel';
-import { UserProfileData } from '@/types/user.types';
+import { UserProfileData } from '@/features/profile/profile.types';
 
 type HeaderProfileProps = {
   /** 프로필 패널에 보여질 데이터 */

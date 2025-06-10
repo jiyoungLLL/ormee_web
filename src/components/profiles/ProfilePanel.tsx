@@ -2,7 +2,7 @@
 
 import { signoutAction } from '@/features/auth/auth.action';
 import useMounted from '@/hooks/useMounted';
-import { UserProfileData } from '@/types/user.types';
+import { UserProfileData } from '@/features/profile/profile.types';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
