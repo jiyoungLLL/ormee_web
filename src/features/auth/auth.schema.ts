@@ -93,7 +93,9 @@ export const signupSchema = z
     teacherName: z
       .string()
       .min(1, { message: AUTH_ERROR_MESSAGES.EMPTY_TEACHER_NAME })
-      .regex(/^[가-힣A-Za-z\s]+$/, { message: AUTH_ERROR_MESSAGES.INVALID_TEACHER_NAME }),
+      .regex(/^[\uAC00-\uD7A3\u1100-\u11FF\u3130-\u318F\uA960-\uA97FA-Za-z\s]+$/, {
+        message: AUTH_ERROR_MESSAGES.INVALID_TEACHER_NAME,
+      }),
   })
   .refine((data) => data.password === data.passwordConfirm, {
     message: AUTH_ERROR_MESSAGES.NOT_MATCH_PASSWORD,
