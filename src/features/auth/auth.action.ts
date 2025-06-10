@@ -20,7 +20,7 @@ export async function signupAction(formData: SignupFormValues): Promise<SignupRe
   const submitData = {
     username: formData.id,
     password: formData.password,
-    phoneNumber: formData.primaryPhone.prefix + formData.primaryPhone.number,
+    phoneNumber: formData.phoneNumber,
     email: formData.emailId + '@' + formData.emailDomain,
     name: formData.name,
   };
