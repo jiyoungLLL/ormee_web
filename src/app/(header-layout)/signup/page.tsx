@@ -35,7 +35,7 @@ export default function SignUpPage() {
       teacherName: '',
     },
     resolver: zodResolver(signupSchema),
-    mode: 'onSubmit',
+    mode: 'onBlur',
   });
 
   const handleSingnUp = async (data: SignupFormValues) => {
