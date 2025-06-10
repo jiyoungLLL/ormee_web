@@ -5,7 +5,7 @@ import Input from '@/components/ui/Input';
 import EmailInput from '@/components/ui/inputs/EmailInput';
 import PhoneNumberInput from '@/components/ui/inputs/PhoneNumberInput';
 import { signupAction } from '@/features/auth/auth.action';
-import { PHONE_NUMBER_PREFIX, SignupFormValues, signupSchema } from '@/features/auth/auth.schema';
+import { SignupFormValues, signupSchema } from '@/features/auth/auth.schema';
 import { useToastStore } from '@/stores/toastStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -17,24 +17,22 @@ export default function SignUpPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { addToast } = useToastStore();
 
-  const { control, handleSubmit, setValue } = useForm<SignupFormValues>({
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<SignupFormValues>({
     defaultValues: {
       id: '',
       password: '',
       passwordConfirm: '',
-      primaryPhone: {
-        prefix: PHONE_NUMBER_PREFIX.MOBILE_010,
-        number: '',
-      },
-      isVerifiedPrimaryPhone: false,
-      secondaryPhone: {
-        prefix: PHONE_NUMBER_PREFIX.SEOUL,
-        number: '',
-      },
+      phoneNumber: '',
+      isVerifiedPhoneNumber: false,
       emailId: '',
       emailDomain: '',
       name: '',
-      englishName: '',
+      teacherName: '',
     },
     resolver: zodResolver(signupSchema),
     mode: 'onSubmit',
@@ -62,18 +60,9 @@ export default function SignUpPage() {
     const errorFields = Object.entries(errors);
 
     if (errorFields.length > 0) {
-      const [field, error] = errorFields[0];
+      const [_, error] = errorFields[0];
 
-      if (field === 'primaryPhone' || field === 'secondaryPhone') {
-        const phoneError = error as any;
-        if (phoneError.number) {
-          addToast({ message: phoneError.number.message, type: 'error' });
-        } else if (phoneError.prefix) {
-          addToast({ message: phoneError.prefix.message, type: 'error' });
-        }
-      } else if (error.message) {
-        addToast({ message: error.message, type: 'error' });
-      }
+      addToast({ message: error.message || '회원가입에 실패했어요.', type: 'error' });
     }
   };
 
@@ -148,28 +137,15 @@ export default function SignUpPage() {
                   className='text-gray-70 text-[18px] font-bold leading-[25.2px] tracking-[-0.36px]'
                   htmlFor='passwordConfirm'
                 >
-                  연락처 1
+                  연락처
                 </label>
               </div>
               <PhoneNumberInput
                 control={control}
-                prefixName='primaryPhone.prefix'
-                numberName='primaryPhone.number'
-                verificationName='isVerifiedPrimaryPhone'
+                name='phoneNumber'
+                inputSize='w-full h-[50px]'
+                verificationName='isVerifiedPhoneNumber'
                 setValue={setValue}
-              />
-              <div className='flex items-start gap-[8px] py-[4px]'>
-                <label
-                  className='text-gray-70 text-[18px] font-bold leading-[25.2px] tracking-[-0.36px]'
-                  htmlFor='passwordConfirm'
-                >
-                  연락처 2
-                </label>
-              </div>
-              <PhoneNumberInput
-                control={control}
-                prefixName='secondaryPhone.prefix'
-                numberName='secondaryPhone.number'
               />
               <div className='flex items-start gap-[8px] py-[4px]'>
                 <div className='top-0 left-[-12px] w-[6px] h-[6px] rounded-full bg-purple-50' />
@@ -214,7 +190,7 @@ export default function SignUpPage() {
                 </label>
               </div>
               <Input
-                name='englishName'
+                name='teacherName'
                 control={control}
                 size='w-full h-full'
               />
@@ -228,7 +204,7 @@ export default function SignUpPage() {
         title={'회원가입 완료하기'}
         isPurple
         isfilled
-        disabled={isSubmitting}
+        disabled={isSubmitting || Object.keys(errors).length > 0}
         font='text-headline1 font-bold'
         onClick={handleSubmit(handleSingnUp, handleSignupError)}
       />

@@ -8,47 +8,29 @@ import Button from '../Button';
 type PhoneNumberInputProps<T extends FieldValues> = {
   /** useForm에서 사용할 컨트롤러 */
   control: Control<T>;
-  /** 전화번호 앞자리 입력 필드의 이름 */
-  prefixName: Path<T>;
-  /** 전화번호 뒷자리 입력 필드의 이름 */
-  numberName: Path<T>;
+  /** 전화번호 입력 필드의 이름 */
+  name: Path<T>;
   /** 인증번호 확인 필드의 이름 */
   verificationName?: Path<T>;
   /** 값 세팅을 위한 setValue 함수 */
   setValue?: (name: Path<T>, value: any) => void;
-  /** 전화번호 앞자리 입력 필드의 크기 */
-  prefixInputSize?: string;
-  /** 전화번호 뒷자리 입력 필드의 크기 */
-  numberInputSize?: string;
-  /** 전화번호 뒷자리 입력 필드의 테스트용 아이디 */
-  numberTestId?: string;
-};
-
-const getPrefixList = (field: ControllerRenderProps, instanceId: string) => {
-  const prefixList = Object.values(PHONE_NUMBER_PREFIX).map((prefix) => ({
-    id: `${instanceId}-${prefix}`,
-    label: prefix,
-    onClick: () => field.onChange(prefix),
-  }));
-
-  return prefixList;
+  /** 전화번호 입력 필드의 크기 */
+  inputSize?: string;
+  /** 전화번호 입력 필드의 테스트용 아이디 */
+  testId?: string;
 };
 
 export default function PhoneNumberInput<T extends FieldValues>({
   control,
-  prefixName,
-  numberName,
-  prefixInputSize,
-  numberInputSize,
+  name,
+  inputSize,
   verificationName,
   setValue,
-  numberTestId,
+  testId,
 }: PhoneNumberInputProps<T>) {
-  const instanceIdRef = useRef(crypto.randomUUID());
-
   const [isSendVertification, setIsSendVertification] = useState(false);
 
-  const [watchedPrefixValue, watchedNumberValue] = useWatch({ control, name: [prefixName, numberName] });
+  const watchedValue = useWatch({ control, name });
   const [verificationCode, setVerificationCode] = useState('');
 
   const watchedVerificationValue = useWatch({
@@ -59,9 +41,10 @@ export default function PhoneNumberInput<T extends FieldValues>({
   const isVerified = Boolean(watchedVerificationValue);
 
   const handleVertification = () => {
+    console.log(watchedValue);
     if (isVerified) return;
 
-    const isValid = phoneNumberSchema.safeParse({ prefix: watchedPrefixValue, number: watchedNumberValue });
+    const isValid = phoneNumberSchema.safeParse(watchedValue);
 
     if (isValid.error) {
       alert(isValid.error.errors[0].message);
@@ -84,27 +67,12 @@ export default function PhoneNumberInput<T extends FieldValues>({
   return (
     <div>
       <div className='flex items-center gap-[6px]'>
-        <Controller
-          control={control}
-          name={prefixName as Path<T>}
-          render={({ field }) => (
-            <Dropdown
-              showTrigger
-              type='withInput'
-              menuList={getPrefixList(field as ControllerRenderProps<FieldValues, string>, instanceIdRef.current)}
-              selectedItem={field.value || PHONE_NUMBER_PREFIX.MOBILE_010}
-              size={prefixInputSize}
-              disabled={isVerified}
-            />
-          )}
-        />
-        <span>-</span>
         <Input
-          name={numberName}
+          name={name}
           control={control}
-          size={numberInputSize || 'w-full h-[50px]'}
+          size={inputSize || 'w-full h-[50px]'}
           disabled={isVerified}
-          testId={numberTestId}
+          testId={testId}
         />
         {verificationName && (
           <Button
