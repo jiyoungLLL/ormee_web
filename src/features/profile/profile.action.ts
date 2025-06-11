@@ -23,7 +23,7 @@ export const getProfileAction = async (): Promise<UserProfileData> => {
 
   if (!response.ok) {
     if (process.env.NODE_ENV === 'development') console.error('----- api 응답 에러 ------');
-    if (process.env.NODE_ENV === 'development') console.error(response.statusText);
+    if (process.env.NODE_ENV === 'development') console.error(response.status);
     throw new Error('프로필 정보를 가져오는데 실패했어요.');
   }
 
