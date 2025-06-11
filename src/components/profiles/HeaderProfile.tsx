@@ -4,11 +4,18 @@ import Image from 'next/image';
 import { useState } from 'react';
 import ProfilePanel from '@/components/profiles/ProfilePanel';
 import { useGetProfileData } from '@/features/profile/useProfileQuery';
+import { UserProfileData } from '@/features/profile/profile.types';
 
-export default function HeaderProfile() {
+type HeaderProfileProps = {
+  initialProfileData: UserProfileData;
+};
+
+export default function HeaderProfile({ initialProfileData }: HeaderProfileProps) {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
-  const { data: profileData, isLoading } = useGetProfileData();
+  const { data: profileData, isLoading } = useGetProfileData({
+    initialData: initialProfileData,
+  });
 
   if (isLoading) {
     return <div className='w-[24px] h-[24px] rounded-full bg-gray-50 animate-pulse' />;

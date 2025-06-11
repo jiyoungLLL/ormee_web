@@ -18,7 +18,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
     },
   });
 
-  await queryClient.prefetchQuery({
+  const profileData = await queryClient.fetchQuery({
     queryKey: QUERY_KEYS.profile(),
     queryFn: getProfileAction,
   });
@@ -30,7 +30,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
           <Header>
             <div className='flex flex-row justify-between items-center gap-[30px]'>
               <Notification />
-              <HeaderProfile />
+              <HeaderProfile initialProfileData={profileData} />
             </div>
           </Header>
           <main className='flex-1 flex flex-col justify-center w-full h-full'>{children}</main>
