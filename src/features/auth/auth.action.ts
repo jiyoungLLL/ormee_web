@@ -92,7 +92,7 @@ export const signinAction = async (formData: SigninFormValues): Promise<AuthResp
 
   cookies().set('accessToken', accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
     sameSite: 'none',
     path: '/',
     maxAge: 60 * 60 * 24,
