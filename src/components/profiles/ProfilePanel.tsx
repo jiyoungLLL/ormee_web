@@ -15,13 +15,13 @@ type ProfilePanelProps = {
 
 export default function ProfilePanel({ profileData, onClose }: ProfilePanelProps) {
   const isMounted = useMounted();
+  const router = useRouter();
+
   const profileRoot = document.getElementById('profile-root');
 
   if (!isMounted || !profileRoot) return null;
 
   const { name, image, bio } = profileData;
-
-  const router = useRouter();
 
   const handleSignOut = () => {
     signoutAction();
