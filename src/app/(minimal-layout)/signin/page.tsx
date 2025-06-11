@@ -8,7 +8,7 @@ import { useToastStore } from '@/stores/toastStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { FieldErrors, useForm } from 'react-hook-form';
 
@@ -16,6 +16,7 @@ export default function SignInPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const { addToast } = useToastStore();
+  const searchParams = useSearchParams();
 
   const { control, handleSubmit } = useForm<SigninFormValues>({
     defaultValues: {
@@ -33,7 +34,8 @@ export default function SignInPage() {
       const response = await signinAction(data);
 
       if (response.status === 'success') {
-        router.push('/lectures/1/home'); // TODO: 기본 강의 홈으로 이동
+        const directPath = searchParams.get('redirect') || '/lectures/1/home'; // TODO: 기본 강의 홈으로 이동
+        router.push(directPath);
       } else {
         // TODO: 비밀번호 오류 카운트 처리
         addToast({ message: response.message || '로그인에 실패했어요.', type: 'error' });
