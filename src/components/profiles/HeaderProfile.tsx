@@ -2,18 +2,19 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-import ProfilePanel from './ProfilePanel';
-import { UserProfileData } from '@/features/profile/profile.types';
+import ProfilePanel from '@/components/profiles/ProfilePanel';
+import { useGetProfileData } from '@/features/profile/useProfileQuery';
 
-type HeaderProfileProps = {
-  /** 프로필 패널에 보여질 데이터 */
-  userProfileData: UserProfileData;
-};
-
-export default function HeaderProfile({ userProfileData }: HeaderProfileProps) {
+export default function HeaderProfile() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
-  const { name, image } = userProfileData;
+  const { data: profileData, isLoading } = useGetProfileData();
+
+  if (isLoading) {
+    return <div className='w-[24px] h-[24px] rounded-full bg-gray-50 animate-pulse' />;
+  }
+
+  const { name, image } = profileData || {};
 
   const handlePanelToggle = () => {
     setIsPanelOpen((prev) => !prev);
@@ -48,9 +49,9 @@ export default function HeaderProfile({ userProfileData }: HeaderProfileProps) {
           <span className='font-normal ml-[3px]'>선생님</span>
         </p>
       </div>
-      {isPanelOpen && (
+      {isPanelOpen && profileData && (
         <ProfilePanel
-          profileData={userProfileData}
+          profileData={profileData}
           onClose={handlePanelClose}
         />
       )}
