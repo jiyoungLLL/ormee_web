@@ -1,5 +1,10 @@
+import { z } from 'zod';
+import { profileSchema } from '@/features/profile/profile.schema';
+
 export type UserProfileData = {
   name: string;
   image: string | null;
   bio: string | null;
 };
+
+export type ProfileResponse = z.infer<typeof profileSchema>;
