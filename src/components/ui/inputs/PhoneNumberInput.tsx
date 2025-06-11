@@ -1,19 +1,19 @@
-import { Control, Controller, ControllerRenderProps, FieldValues, Path, useWatch } from 'react-hook-form';
+import { Control, useWatch, Path } from 'react-hook-form';
 import Input from '@/components/ui/Input';
-import Dropdown from '@/components/ui/dropdown/Dropdown';
-import { PHONE_NUMBER_PREFIX, phoneNumberSchema } from '@/features/auth/auth.schema';
-import { useRef, useState } from 'react';
+import { phoneNumberSchema } from '@/features/auth/auth.schema';
+import { useState } from 'react';
 import Button from '../Button';
+import { FieldValues } from 'react-hook-form';
 
-type PhoneNumberInputProps<T extends FieldValues> = {
+export type PhoneNumberInputProps<T extends FieldValues> = {
   /** useForm에서 사용할 컨트롤러 */
   control: Control<T>;
   /** 전화번호 입력 필드의 이름 */
   name: Path<T>;
   /** 인증번호 확인 필드의 이름 */
-  verificationName?: Path<T>;
+  verificationName: Path<T>;
   /** 값 세팅을 위한 setValue 함수 */
-  setValue?: (name: Path<T>, value: any) => void;
+  setValue?: (name: keyof T, value: any) => void;
   /** 전화번호 입력 필드의 크기 */
   inputSize?: string;
   /** 전화번호 입력 필드의 테스트용 아이디 */
@@ -35,7 +35,7 @@ export default function PhoneNumberInput<T extends FieldValues>({
 
   const watchedVerificationValue = useWatch({
     control,
-    name: verificationName ?? ('__unused' as Path<T>),
+    name: verificationName,
   });
 
   const isVerified = Boolean(watchedVerificationValue);
