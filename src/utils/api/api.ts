@@ -1,7 +1,8 @@
 'use server';
 
-import { AuthError } from '@/types/errors.types';
+import { ERROR_MESSAGES } from '@/constants/error.constant';
 import { cookies } from 'next/headers';
+import { ActionResponse } from '@/types/response.types';
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export type ContentType = 'application/json' | 'multipart/form-data';
@@ -32,14 +33,14 @@ export async function fetcher<T>({
   contentType = 'application/json',
   authorization = true,
   errorMessage,
-}: FetchOptions): Promise<T> {
+}: FetchOptions): Promise<ActionResponse<T>> {
   let accessToken = null;
 
   if (authorization) {
     const accessTokenCookie = cookies().get('accessToken');
 
     if (!accessTokenCookie) {
-      throw new AuthError();
+      return { status: 'error', code: 401, message: ERROR_MESSAGES.ACCESS_TOKEN_NOT_FOUND };
     }
 
     accessToken = accessTokenCookie?.value;
@@ -76,12 +77,12 @@ export async function fetcher<T>({
     if (process.env.NODE_ENV === 'development') console.error(err);
 
     if (res.status === 401) {
-      throw new AuthError();
+      return { status: 'error', code: 401, message: ERROR_MESSAGES.UNAUTHORIZED };
     }
 
-    throw new Error(errorMessage || err.message || 'API 요청 실패');
+    return { status: 'error', code: res.status, message: errorMessage || err.message || 'API 요청 실패' };
   }
 
   const data = await res.json();
-  return data;
+  return { status: data.status, code: data.code, data: data.data as T };
 }
