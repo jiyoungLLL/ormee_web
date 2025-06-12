@@ -1,21 +1,34 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ProfilePanel from '@/components/profiles/ProfilePanel';
 import { useGetProfileData } from '@/features/profile/useProfileQuery';
-import { UserProfileData } from '@/features/profile/profile.types';
+import { ERROR_TYPES, getErrorType } from '@/constants/error.constant';
+import { useRouter } from 'next/navigation';
+import { useToastStore } from '@/stores/toastStore';
 
-type HeaderProfileProps = {
-  initialProfileData: UserProfileData;
-};
-
-export default function HeaderProfile({ initialProfileData }: HeaderProfileProps) {
+export default function HeaderProfile() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const { addToast } = useToastStore();
+  const router = useRouter();
 
-  const { data: profileData, isLoading } = useGetProfileData({
-    initialData: initialProfileData,
-  });
+  const { data: profileData, isLoading, error } = useGetProfileData();
+
+  useEffect(() => {
+    if (error) {
+      addToast({ message: error.message, type: 'error' });
+
+      const isAuthError = getErrorType(error.message) === ERROR_TYPES.UNAUTHORIZED;
+      if (isAuthError) {
+        router.push('/signin');
+      }
+    }
+  }, [error, addToast, router]);
+
+  if (error) {
+    return <div className='w-[24px] h-[24px] rounded-full bg-gray-50' />;
+  }
 
   if (isLoading) {
     return <div className='w-[24px] h-[24px] rounded-full bg-gray-50 animate-pulse' />;
