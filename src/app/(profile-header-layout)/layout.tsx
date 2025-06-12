@@ -1,7 +1,7 @@
 import Header from '@/components/layouts/Header';
 import Notification from '@/components/notification/Notification';
 import HeaderProfile from '@/components/profiles/HeaderProfile';
-import { getProfileAction } from '@/features/profile/profile.action';
+import { getProfileServer } from '@/features/profile/profile.action';
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
@@ -18,9 +18,9 @@ export default async function Layout({ children }: { children: React.ReactNode }
     },
   });
 
-  const profileData = await queryClient.fetchQuery({
+  await queryClient.prefetchQuery({
     queryKey: QUERY_KEYS.profile(),
-    queryFn: getProfileAction,
+    queryFn: getProfileServer,
   });
 
   return (
@@ -30,7 +30,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
           <Header>
             <div className='flex flex-row justify-between items-center gap-[30px]'>
               <Notification />
-              <HeaderProfile initialProfileData={profileData} />
+              <HeaderProfile />
             </div>
           </Header>
           <main className='flex-1 flex flex-col justify-center w-full h-full'>{children}</main>
