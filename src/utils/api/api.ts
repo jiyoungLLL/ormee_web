@@ -6,9 +6,11 @@ type FetchOptions = {
   body?: any;
 };
 
+const BASE_URL = process.env.BASE_URL;
+
 export async function fetcher<T>({ method, endpoint, body }: FetchOptions): Promise<T> {
   // 서버 주소 .env -> 나중 반영 필요
-  const res = await fetch(`http://localhost:8080${endpoint}`, {
+  const res = await fetch(`${BASE_URL}/${endpoint}`, {
     method,
     headers: {
       'Content-Type': 'application/json',
@@ -19,16 +21,22 @@ export async function fetcher<T>({ method, endpoint, body }: FetchOptions): Prom
 
   let data: any = null;
 
-  try {
-    data = await res.json();
-  } catch (e) {
-    data = null;
-  }
+  // try {
+  //   data = await res.json();
+  // } catch {
+  //   data = null;
+  // }
 
-  if (!res.ok) {
-    const errorMessage = data?.message || 'API 요청 실패';
-    throw new Error(errorMessage);
-  }
+  // if (!res.ok) {
+  //   return {
+  //     success: false,
+  //     error: data?.message || 'API 요청 실패',
+  //     code: data?.code, // 필요에 따라
+  //   };
+  // }
 
-  return data;
+  // return {
+  //   success: true,
+  //   data,
+  // };
 }
