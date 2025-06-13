@@ -10,9 +10,15 @@ export function useApiQuery<T>(
     gcTime?: number;
   },
 ) {
-  return useQuery<T>({
+  return useQuery<T, Error>({
     queryKey: key,
-    queryFn: () => fetcher<T>({ method: 'GET', endpoint }),
+    queryFn: async () => {
+      const response = await fetcher<T>({ method: 'GET', endpoint });
+      if (response.status === 'error') {
+        throw new Error(response.message);
+      }
+      return response.data;
+    },
     enabled,
     staleTime: options?.staleTime,
     gcTime: options?.gcTime,
@@ -29,15 +35,14 @@ export function useApiMutation<T, V>(
   const queryClient = useQueryClient();
 
   return useMutation<T, Error, V>({
-    mutationFn: (body: V) => fetcher<T>({ method, endpoint, body }),
-    onSuccess: () => {
-      if (Array.isArray(invalidateKey)) {
-        invalidateKey.forEach((key) => queryClient.invalidateQueries({ queryKey: key }));
-      } else if (invalidateKey) {
-        queryClient.invalidateQueries({ queryKey: invalidateKey });
+    mutationFn: async (body: V) => {
+      const response = await fetcher<T>({ method, endpoint, body });
+      if (response.status === 'error') {
+        throw new Error(response.message);
       }
-      onSuccess?.();
+      return response.data;
     },
+    onSuccess,
     onError,
   });
 }

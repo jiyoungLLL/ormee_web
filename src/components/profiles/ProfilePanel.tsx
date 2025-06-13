@@ -1,9 +1,11 @@
 'use client';
 
+import { signoutAction } from '@/features/auth/auth.action';
 import useMounted from '@/hooks/useMounted';
-import { UserProfileData } from '@/types/user.types';
+import { UserProfileData } from '@/features/profile/profile.types';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
 
 type ProfilePanelProps = {
@@ -13,11 +15,18 @@ type ProfilePanelProps = {
 
 export default function ProfilePanel({ profileData, onClose }: ProfilePanelProps) {
   const isMounted = useMounted();
+  const router = useRouter();
+
   const profileRoot = document.getElementById('profile-root');
 
   if (!isMounted || !profileRoot) return null;
 
   const { name, image, bio } = profileData;
+
+  const handleSignOut = () => {
+    signoutAction();
+    router.push('/signin');
+  };
 
   return createPortal(
     <div
@@ -43,8 +52,10 @@ export default function ProfilePanel({ profileData, onClose }: ProfilePanelProps
             ) : (
               <div className='w-[40px] h-[40px] rounded-full bg-gray-50' />
             )}
-            {/* TODO: 버튼 컴포넌트 수정 논의 후 변경 */}
-            <button className='w-[71px] px-[10px] py-[5px] rounded-[5px] bg-white border-[1px] border-gray-20 text-[14px] text-body2 font-normal text-gray-90'>
+            <button
+              onClick={handleSignOut}
+              className='w-[71px] px-[10px] py-[5px] rounded-[5px] bg-white border-[1px] border-gray-20 text-[14px] text-body2 font-normal text-gray-90'
+            >
               로그아웃
             </button>
           </div>
