@@ -1,14 +1,16 @@
 // useClassApi.ts
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
+import { useLectureId } from '@/hooks/queries/useLectureId';
 import { useApiMutation } from '@/hooks/useApi';
 import { useToastStore } from '@/stores/toastStore';
 
 export const useDeleteClass = () => {
+  const lectureId = useLectureId();
   const { addToast } = useToastStore();
 
   return useApiMutation<string, any>(
     'DELETE',
-    (lectureId) => `/teachers/lectures/${lectureId}`,
+    `/teachers/lectures/${lectureId}`,
     () => addToast({ message: '강의가 삭제되었어요.', type: 'success', duration: 2500 }),
     [QUERY_KEYS.classList()],
     (err) => {
