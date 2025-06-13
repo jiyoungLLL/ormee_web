@@ -16,5 +16,6 @@ export const useGetNotifications = () => {
   return useQuery<Notification[]>({
     queryKey: QUERY_KEYS.notification(),
     queryFn: fetchNotifications,
+    retry: false, // TODO: msw 제거 후 설정 변경
   });
 };

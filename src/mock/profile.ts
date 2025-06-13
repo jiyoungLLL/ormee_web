@@ -1,4 +1,4 @@
-import { UserProfileData } from '@/types/user.types';
+import { UserProfileData } from '@/features/profile/profile.types';
 
 export const MOCK_USER_PROFILE: UserProfileData = {
   name: '강수이',

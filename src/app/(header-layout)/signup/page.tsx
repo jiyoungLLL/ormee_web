@@ -4,60 +4,66 @@ import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import EmailInput from '@/components/ui/inputs/EmailInput';
 import PhoneNumberInput from '@/components/ui/inputs/PhoneNumberInput';
-import { PHONE_NUMBER_PREFIX, SignupFormValues, signupSchema } from '@/schemas/auth.schema';
+import { signupAction } from '@/features/auth/auth.action';
+import { SignupFormValues, signupSchema } from '@/features/auth/auth.schema';
+import { useToastStore } from '@/stores/toastStore';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { FieldErrors, useForm } from 'react-hook-form';
 
 export default function SignUpPage() {
-  const { control, handleSubmit, setValue } = useForm<SignupFormValues>({
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { addToast } = useToastStore();
+
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<SignupFormValues>({
     defaultValues: {
       id: '',
       password: '',
       passwordConfirm: '',
-      primaryPhone: {
-        prefix: PHONE_NUMBER_PREFIX.MOBILE_010,
-        number: '',
-      },
-      isVerifiedPrimaryPhone: false,
-      secondaryPhone: {
-        prefix: PHONE_NUMBER_PREFIX.SEOUL,
-        number: '',
-      },
+      phoneNumber: '',
+      isVerifiedPhoneNumber: false,
       emailId: '',
       emailDomain: '',
       name: '',
-      englishName: '',
+      teacherName: '',
     },
     resolver: zodResolver(signupSchema),
-    mode: 'onSubmit',
+    mode: 'onBlur',
   });
 
-  const handleSingnUp = (data: SignupFormValues) => {
-    // TODO: 회원가입 요청 API 연동
-    alert(
-      `회원가입 요청\n아이디: ${data.id}\n비밀번호: ${data.password}\n비밀번호 확인: ${data.passwordConfirm}\n연락처 1: ${data.primaryPhone.prefix}-${data.primaryPhone.number}\n번호인증: ${data.isVerifiedPrimaryPhone}\n연락처 2: ${data.secondaryPhone?.prefix}-${data.secondaryPhone?.number}\n이메일: ${data.emailId}@${data.emailDomain}\n이름: ${data.name}\n영문명: ${data.englishName}`,
-    );
+  const handleSingnUp = async (data: SignupFormValues) => {
+    try {
+      setIsSubmitting(true);
+      const { status, message } = await signupAction(data);
+
+      if (status === 'success') {
+        addToast({ message: '회원가입에 성공했어요.', type: 'success' });
+        router.push('/signin');
+      } else {
+        addToast({ message: message || '회원가입에 실패했어요.', type: 'error' });
+      }
+    } catch (error) {
+      addToast({ message: '회원가입 중 오류가 발생했어요.', type: 'error' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleSignupError = (errors: FieldErrors<SignupFormValues>) => {
     const errorFields = Object.entries(errors);
 
     if (errorFields.length > 0) {
-      const [field, error] = errorFields[0];
+      const [_, error] = errorFields[0];
 
-      if (field === 'primaryPhone' || field === 'secondaryPhone') {
-        const phoneError = error as any;
-        if (phoneError.number) {
-          alert(phoneError.number.message);
-        } else if (phoneError.prefix) {
-          alert(phoneError.prefix.message);
-        }
-      } else if (error.message) {
-        alert(error.message);
-      }
+      addToast({ message: error.message || '회원가입에 실패했어요.', type: 'error' });
     }
-
-    // TODO: 예상치 못한 에러처리
   };
 
   return (
@@ -131,28 +137,15 @@ export default function SignUpPage() {
                   className='text-gray-70 text-[18px] font-bold leading-[25.2px] tracking-[-0.36px]'
                   htmlFor='passwordConfirm'
                 >
-                  연락처 1
+                  연락처
                 </label>
               </div>
               <PhoneNumberInput
                 control={control}
-                prefixName='primaryPhone.prefix'
-                numberName='primaryPhone.number'
-                verificationName='isVerifiedPrimaryPhone'
+                name='phoneNumber'
+                inputSize='w-full h-[50px]'
+                verificationName='isVerifiedPhoneNumber'
                 setValue={setValue}
-              />
-              <div className='flex items-start gap-[8px] py-[4px]'>
-                <label
-                  className='text-gray-70 text-[18px] font-bold leading-[25.2px] tracking-[-0.36px]'
-                  htmlFor='passwordConfirm'
-                >
-                  연락처 2
-                </label>
-              </div>
-              <PhoneNumberInput
-                control={control}
-                prefixName='secondaryPhone.prefix'
-                numberName='secondaryPhone.number'
               />
               <div className='flex items-start gap-[8px] py-[4px]'>
                 <div className='top-0 left-[-12px] w-[6px] h-[6px] rounded-full bg-purple-50' />
@@ -193,11 +186,11 @@ export default function SignUpPage() {
                   className='text-gray-70 text-[18px] font-bold leading-[25.2px] tracking-[-0.36px]'
                   htmlFor='englishName'
                 >
-                  영문명
+                  강사명
                 </label>
               </div>
               <Input
-                name='englishName'
+                name='teacherName'
                 control={control}
                 size='w-full h-full'
               />
@@ -211,6 +204,7 @@ export default function SignUpPage() {
         title={'회원가입 완료하기'}
         isPurple
         isfilled
+        disabled={isSubmitting || Object.keys(errors).length > 0}
         font='text-headline1 font-bold'
         onClick={handleSubmit(handleSingnUp, handleSignupError)}
       />

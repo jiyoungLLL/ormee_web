@@ -1,6 +1,7 @@
 import { QuestionListFilterType, QuestionSearchByType } from '../../features/question/hooks/useQuestionSearchParams';
 
 export const QUERY_KEYS = {
+  profile: () => ['profile'],
   notification: () => ['notification'],
   quizDetail: (quizId: string) => ['quizDetail', quizId],
   quizList: (lectureId: string) => ['quizList', lectureId],
