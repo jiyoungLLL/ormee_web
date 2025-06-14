@@ -22,7 +22,7 @@ export function validateResponse<T>(schema: z.ZodSchema<T>, data: unknown): T {
 
 type UseApiQueryOptions<T, R = T> = {
   /** Tanstack Query의 쿼리 키 */
-  key: readonly unknown[];
+  queryKey: readonly unknown[];
   /** API 요청을 위한 옵션 (method 제외) */
   fetchOptions: Omit<FetchOptions, 'method'>;
   /** Tanstack Query의 추가 옵션 (queryKey와 queryFn 제외) */
@@ -63,14 +63,14 @@ type UseApiQueryOptions<T, R = T> = {
  */
 
 export function useApiQuery<T, R = T>({
-  key,
+  queryKey,
   fetchOptions,
   queryOptions,
   schema,
   transform,
 }: UseApiQueryOptions<T, R>) {
   return useQuery<R, Error>({
-    queryKey: key,
+    queryKey,
     queryFn: async (): Promise<R> => {
       const response = await fetcher<T>({ method: 'GET', ...fetchOptions });
 

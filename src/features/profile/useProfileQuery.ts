@@ -7,7 +7,7 @@ import { profileSchema } from '@/features/profile/profile.schema';
 
 export const useGetProfileData = () => {
   return useApiQuery<ProfileResponse, UserProfileData>({
-    key: QUERY_KEYS.profile(),
+    queryKey: QUERY_KEYS.profile(),
     fetchOptions: {
       endpoint: '/teachers/profile',
       authorization: true,
