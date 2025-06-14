@@ -21,16 +21,18 @@ export default function HomeworkDetail() {
   // GET : 과제 목록 (진행중, 마감) 에서 받아온 데이터로 변경하기
   const detailData = MOCK_HOMEWORK.data[filter].find((item) => item.id === Number(id));
 
-  const deleteMutation = useApiMutation<unknown, any>(
-    'DELETE',
-    `/teachers/assignments/${id}`,
-    () => addToast({ message: '과제가 삭제되었어요', type: 'success', duration: 2500 }),
-    [QUERY_KEYS.homeworkList(lectureNum)],
-    (err) => {
-      addToast({ message: '과제가 삭제되지 않았어요. 다시 시도해주세요.', type: 'error', duration: 2500 });
-      console.log(err);
+  const deleteMutation = useApiMutation<unknown, void>({
+    method: 'DELETE',
+    endpoint: `/teachers/assignments/${id}`,
+    fetchOptions: {
+      authorization: true,
     },
-  );
+    onSuccess: () => addToast({ message: '과제가 삭제되었어요', type: 'success', duration: 2500 }),
+    invalidateKey: QUERY_KEYS.homeworkList(lectureNum),
+    onError: (error: Error) => {
+      addToast({ message: '과제가 삭제되지 않았어요. 다시 시도해주세요.', type: 'error', duration: 2500 });
+    },
+  });
 
   const handleDelete = () => {
     deleteMutation.mutate(undefined);
