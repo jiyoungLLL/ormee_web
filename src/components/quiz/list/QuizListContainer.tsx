@@ -5,7 +5,6 @@ import Dropdown from '@/components/ui/dropdown/Dropdown';
 import { useGetQuizList } from '@/features/quiz/hooks/useGetQuizList';
 import { MenuItem, useDropdown } from '@/hooks/ui/useDropdown';
 import Link from 'next/link';
-import { useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 import OpenQuizList from '@/components/quiz/list/OpenQuizList';
 import CloseQuizList from '@/components/quiz/list/CloseQuizList';
@@ -26,7 +25,7 @@ export default function QuizListContainer() {
   });
 
   const lectureId = useLectureId();
-  const { data: quizList } = useGetQuizList(lectureId);
+  const { data: quizList, error } = useGetQuizList(lectureId);
 
   const { openQuizzes, closedQuizzes } = quizList ?? { openQuizzes: [], closedQuizzes: [] };
 
@@ -52,8 +51,14 @@ export default function QuizListContainer() {
       {selectedQuizCategory === '전체' && (
         <>
           <div className='flex flex-col justify-start items-start gap-[45px]'>
-            <OpenQuizList openQuizzes={openQuizzes} />
-            <CloseQuizList closedQuizzes={closedQuizzes} />
+            <OpenQuizList
+              openQuizzes={openQuizzes}
+              error={error}
+            />
+            <CloseQuizList
+              closedQuizzes={closedQuizzes}
+              error={error}
+            />
           </div>
         </>
       )}
