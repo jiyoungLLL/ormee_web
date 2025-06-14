@@ -86,15 +86,19 @@ export function useApiQuery<T, R = T>({
         throw new Error(response.data);
       }
 
+      let validatedData = response.data;
+
+      // 스키마 검증
       if (schema) {
-        return validateResponse(schema, response.data, validateErrorMessage) as unknown as R;
+        validatedData = validateResponse(schema, response.data, validateErrorMessage) as unknown as T;
       }
 
+      // 데이터 변환
       if (transform) {
-        return transform(response.data) as R;
+        return transform(validatedData) as R;
       }
 
-      return response.data as unknown as R;
+      return validatedData as unknown as R;
     },
     ...queryOptions,
   });
@@ -266,13 +270,19 @@ export function useApiMutation<T, V, R = T>({
         throw new Error(response.data);
       }
 
+      let validatedData = response.data;
+
       // 응답 데이터 검증
-      const validatedData = responseSchema
-        ? validateResponse(responseSchema, response.data, responseValidateErrorMessage)
-        : response.data;
+      if (responseSchema) {
+        validatedData = validateResponse(responseSchema, response.data, responseValidateErrorMessage) as unknown as T;
+      }
 
       // 응답 데이터 변환
-      return responseTransform ? (responseTransform(validatedData) as R) : (validatedData as unknown as R);
+      if (responseTransform) {
+        return responseTransform(validatedData) as R;
+      }
+
+      return validatedData as unknown as R;
     },
     onSuccess: handleSuccess,
     onError,
