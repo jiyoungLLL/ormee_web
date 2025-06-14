@@ -3,11 +3,11 @@
 import Button from '@/components/ui/Button';
 import Image from 'next/image';
 import { Quiz, QuizState } from '@/features/quiz/quiz.types';
-import { formatDatetimeWithTime } from '@/utils/date/formatDate';
 import { useModal } from '@/hooks/ui/useModal';
 import Modal from '@/components/ui/Modal';
 import { usePutQuizState } from '@/features/quiz/hooks/usePutQuizState';
 import { useLectureId } from '@/hooks/queries/useLectureId';
+import { getPlainText } from '@/utils/getPlainText';
 
 type OpenQuizItemProps = {
   quiz: Quiz;
@@ -28,7 +28,7 @@ export default function OpenQuizItem({ quiz, isLastQuiz }: OpenQuizItemProps) {
   } = useModal({ defaultOpen: false });
 
   const { id: quizId, title, limitTime, dueTime, state } = quiz;
-  const formattedDueTime = formatDatetimeWithTime(dueTime);
+  const plainTitle = getPlainText(title);
 
   const lectureId = useLectureId();
   const { mutate: mutateQuizState } = usePutQuizState({
@@ -64,8 +64,8 @@ export default function OpenQuizItem({ quiz, isLastQuiz }: OpenQuizItemProps) {
             />
           </div>
           <div className='flex flex-col gap-[5px]'>
-            <h3 className='text-headline1 font-semibold'>{title}</h3>
-            <p className='text-label font-semibold text-gray-50'>{formattedDueTime}</p>
+            <h3 className='text-headline1 font-semibold'>{plainTitle}</h3>
+            <p className='text-label font-semibold text-gray-50'>{dueTime}</p>
           </div>
         </div>
         <div className='flex items-center gap-[29px]'>

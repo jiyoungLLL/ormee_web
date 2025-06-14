@@ -109,7 +109,7 @@ export const QuizResponseSchema = z.object({
   id: z.string().min(1),
   quizName: z.string().min(1),
   quizDate: z.string().min(1),
-  timeLimit: z.enum(QUIZ_LIMIT_TIME_REQUEST_OPTIONS),
+  timeLimit: z.number(),
   quizAvailable: z.boolean(),
   submitCount: z.number(),
 });
