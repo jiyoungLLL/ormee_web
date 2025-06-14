@@ -1,5 +1,3 @@
-export type Response<T> = { status: 'success'; code: number; data: T } | { status: 'error'; code: number };
-
 export type ActionResponse<T> =
   | {
       status: 'success';
@@ -7,7 +5,7 @@ export type ActionResponse<T> =
       data: T;
     }
   | {
-      status: 'error';
+      status: 'fail';
       code: number;
-      message: string;
+      data: string;
     };
