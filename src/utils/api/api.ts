@@ -17,7 +17,7 @@ export type ContentType = 'application/json' | 'multipart/form-data';
  * @property {string} [errorMessage] - API 요청 실패 시 표시할 에러 메시지
  * @returns {Promise<T>} API 응답 데이터 (response.json()으로 변환된 값)
  */
-type FetchOptions = {
+export type FetchOptions = {
   method: Method;
   endpoint: string;
   body?: any;
@@ -40,7 +40,7 @@ export async function fetcher<T>({
     const accessTokenCookie = cookies().get('accessToken');
 
     if (!accessTokenCookie) {
-      return { status: 'error', code: 401, message: ERROR_MESSAGES.ACCESS_TOKEN_NOT_FOUND };
+      return { status: 'fail', code: 401, data: ERROR_MESSAGES.ACCESS_TOKEN_NOT_FOUND };
     }
 
     accessToken = accessTokenCookie?.value;
@@ -73,14 +73,10 @@ export async function fetcher<T>({
   if (!res.ok) {
     const err = await res.json().catch(() => {});
     if (process.env.NODE_ENV === 'development') console.error('----- API 요청 실패 ------');
-    if (process.env.NODE_ENV === 'development') console.error(res.status);
+    if (process.env.NODE_ENV === 'development') console.error('상태코드: ', res.status);
     if (process.env.NODE_ENV === 'development') console.error(err);
 
-    if (res.status === 401) {
-      return { status: 'error', code: 401, message: ERROR_MESSAGES.UNAUTHORIZED };
-    }
-
-    return { status: 'error', code: res.status, message: errorMessage || err.message || 'API 요청 실패' };
+    return { status: 'fail', code: res.status, data: errorMessage || err.message || 'API 요청 실패' };
   }
 
   const data = await res.json();
