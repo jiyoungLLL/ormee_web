@@ -67,14 +67,18 @@ export default function Create({ type, params }: CreateProps) {
     ? [QUERY_KEYS.homeworkDetail(homeworkId), QUERY_KEYS.homeworkList(lectureNum)]
     : [QUERY_KEYS.homeworkList(lectureNum)];
 
-  const mutation = useApiMutation<unknown, any>(
+  const mutation = useApiMutation<unknown, FormData>({
     method,
     endpoint,
-    () => {
+    fetchOptions: {
+      authorization: true,
+      contentType: 'multipart/form-data',
+    },
+    onSuccess: () => {
       addToast({ message: `${title}가 ${homeworkId ? '수정' : '생성'}되었어요.`, type: 'success', duration: 2500 });
     },
-    invalidateKeys,
-    (err) => {
+    invalidateKey: invalidateKeys,
+    onError: (error: Error) => {
       addToast({
         message: `${title}가 ${homeworkId ? '수정' : '생성'}되지 않았어요. 다시 시도해주세요.`,
         type: 'error',
@@ -82,15 +86,27 @@ export default function Create({ type, params }: CreateProps) {
       });
       if (process.env.NODE_ENV === 'development') console.error(err);
     },
-  );
+  });
 
   const onSubmit = (data: WriteBoxFormValues) => {
-    const payload = {
-      ...data,
-      files: Array.isArray(data?.files) ? data.files.join(',') : typeof data?.files === 'string' ? data.files : '',
-    };
-    alert(JSON.stringify(payload));
-    mutation.mutate(payload);
+    const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('description', data.description);
+    formData.append('isDraft', String(data.isDraft));
+    formData.append('openTime', data.openTime);
+    formData.append('dueTime', data.dueTime);
+
+    if (data.files) {
+      if (Array.isArray(data.files)) {
+        data.files.forEach((file) => {
+          formData.append('files', file);
+        });
+      } else {
+        formData.append('files', data.files);
+      }
+    }
+
+    mutation.mutate(formData);
   };
 
   return (
