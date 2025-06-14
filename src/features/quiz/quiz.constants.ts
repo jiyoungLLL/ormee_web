@@ -31,7 +31,7 @@ export const QUIZ_LIMIT_TIME_OPTIONS = [
 ] as const;
 
 export const QUIZ_LIMIT_TIME_REQUEST_OPTIONS = [
-  '제한없음',
+  '0',
   '10',
   '15',
   '20',
@@ -49,7 +49,7 @@ export const QUIZ_LIMIT_TIME_MAP: Record<
   (typeof QUIZ_LIMIT_TIME_OPTIONS)[number],
   (typeof QUIZ_LIMIT_TIME_REQUEST_OPTIONS)[number]
 > = {
-  제한없음: '제한없음',
+  제한없음: '0',
   '10분': '10',
   '15분': '15',
   '20분': '20',
@@ -64,16 +64,16 @@ export const QUIZ_LIMIT_TIME_MAP: Record<
 };
 
 export const QUIZ_LIMIT_TIME_MAP_TO_RENDER = {
-  제한없음: '제한없음',
-  '10': '10분',
-  '15': '15분',
-  '20': '20분',
-  '25': '25분',
-  '30': '30분',
-  '35': '35분',
-  '40': '40분',
-  '45': '45분',
-  '50': '50분',
-  '55': '55분',
-  '60': '60분',
+  0: '제한없음',
+  10: '10분',
+  15: '15분',
+  20: '20분',
+  25: '25분',
+  30: '30분',
+  35: '35분',
+  40: '40분',
+  45: '45분',
+  50: '50분',
+  55: '55분',
+  60: '60분',
 } as const;

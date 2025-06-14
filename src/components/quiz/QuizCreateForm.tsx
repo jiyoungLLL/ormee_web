@@ -19,7 +19,7 @@ import { Editor } from '@tiptap/react';
 import QuizCreateHeader from '@/components/quiz/QuizCreateHeader';
 import { QuizCreateRequest, QuizDraftRequest, QuizFormValues } from '@/features/quiz/quiz.types';
 import { useQuizEditMode } from '@/features/quiz/hooks/useQuizEditMode';
-import { usePostQuiz } from '@/features/quiz/hooks/useQuiz';
+import { usePostQuizCreate, usePostQuizDraft } from '@/features/quiz/hooks/useQuizApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 
 export default function QuizCreateForm() {
@@ -57,7 +57,8 @@ export default function QuizCreateForm() {
   };
 
   const lectureId = useLectureId();
-  const { mutate: postQuiz } = usePostQuiz({ lectureId });
+  const { mutate: createQuiz } = usePostQuizCreate({ lectureId });
+  const { mutate: draftQuiz } = usePostQuizDraft({ lectureId });
 
   const createSubmitValues = (isDraft: boolean): QuizCreateRequest | QuizDraftRequest => {
     const formValues = getValues();
@@ -90,13 +91,13 @@ export default function QuizCreateForm() {
   };
 
   const handleRegister = () => {
-    const submitValues = createSubmitValues(false);
-    postQuiz(submitValues);
+    const submitValues = createSubmitValues(false) as QuizCreateRequest;
+    createQuiz(submitValues);
   };
 
   const handleTemporarySave = () => {
-    const submitValues = createSubmitValues(true);
-    postQuiz(submitValues);
+    const submitValues = createSubmitValues(true) as QuizDraftRequest;
+    draftQuiz(submitValues);
   };
 
   return (
