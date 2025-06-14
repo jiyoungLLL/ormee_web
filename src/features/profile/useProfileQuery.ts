@@ -1,26 +1,30 @@
 'use client';
 
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
-import { useQuery } from '@tanstack/react-query';
-import { getProfileAction } from '@/features/profile/profile.action';
-import { UserProfileData } from './profile.types';
+import { ProfileResponse, UserProfileData } from '@/features/profile/profile.types';
+import { useApiQuery } from '@/hooks/useApi';
+import { profileSchema } from '@/features/profile/profile.schema';
 
-export const getProfile = async () => {
-  const response = await getProfileAction();
-
-  if (response.status === 'error') {
-    throw new Error(response.message);
-  }
-
-  return response.data;
-};
-
-export const useGetProfileData = (options?: { initialData?: UserProfileData }) => {
-  return useQuery<UserProfileData>({
-    queryKey: QUERY_KEYS.profile(),
-    queryFn: getProfile,
-    staleTime: 1000 * 60 * 60, // 1시간
-    gcTime: 1000 * 60 * 60 * 3, // 3시간
-    ...options,
+export const useGetProfileData = () => {
+  return useApiQuery<ProfileResponse, UserProfileData>({
+    key: QUERY_KEYS.profile(),
+    fetchOptions: {
+      endpoint: '/teachers/profile',
+      authorization: true,
+      errorMessage: '프로필 정보를 가져오는데 실패했어요.',
+    },
+    schema: profileSchema,
+    transform: (data) => ({
+      name: data.name,
+      image: data.image,
+      bio: data.introduction,
+    }),
+    queryOptions: {
+      staleTime: 1000 * 60 * 60 * 1,
+      gcTime: 1000 * 60 * 60 * 3,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+    },
   });
 };
