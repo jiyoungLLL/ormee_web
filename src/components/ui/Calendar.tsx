@@ -1,6 +1,6 @@
-import { format } from 'date-fns';
+import { format, parse } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DateRange, DayPicker, SelectRangeEventHandler, SelectSingleEventHandler } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 
@@ -9,13 +9,28 @@ type CalendarType = 'DATE_TYPE' | 'PERIOD_TYPE';
 interface CalendarProps {
   type: CalendarType;
   onSelectDate: (value: string) => void;
+  defaultValue?: string;
 }
 
-export default function Calendar({ type, onSelectDate }: CalendarProps) {
+export default function Calendar({ type, onSelectDate, defaultValue }: CalendarProps) {
   const defaultStyle = 'bg-gray-10 px-[20px] py-[10px] rounded-[10px] ';
 
   const [selectedDay, setSelectedDay] = useState<Date | undefined>(undefined);
   const [selectedRange, setSelectedRange] = useState<DateRange | undefined>(undefined);
+
+  useEffect(() => {
+    if (!defaultValue) return;
+
+    const parts = defaultValue.split(' - ');
+
+    if (parts.length === 2) {
+      const [startDate, endDate] = parts.map((date) => parse(date, 'yy.MM.dd', new Date()));
+      setSelectedRange({ from: startDate, to: endDate });
+    } else if (parts.length === 1) {
+      const singleDate = parse(parts[0], 'yy.MM.dd', new Date());
+      setSelectedDay(singleDate);
+    }
+  }, [defaultValue]);
 
   const handleSelectSingle: SelectSingleEventHandler = (day) => {
     setSelectedDay(day);
@@ -51,7 +66,7 @@ export default function Calendar({ type, onSelectDate }: CalendarProps) {
           selected={selectedDay}
           onSelect={handleSelectSingle}
           classNames={{
-            day_selected: 'rdp-day_selected bg-purple-50 text-white',
+            selected: 'rdp-day_selected bg-purple-50 text-white',
           }}
           className={defaultStyle}
         />
@@ -62,9 +77,11 @@ export default function Calendar({ type, onSelectDate }: CalendarProps) {
           selected={selectedRange}
           onSelect={handleSelectRange}
           classNames={{
-            day_range_start: 'rdp-day_range_start bg-purple-50 text-white',
-            day_range_end: 'rdp-day_range_end bg-purple-50 text-white',
-            day_range_middle: 'rdp-day_range_middle bg-purple-10 text-white',
+            today: 'text-purple-70',
+            selected: 'bg-purple-10 text-gray-50',
+            range_start: 'bg-purple-50 text-white rounded-[50px]',
+            range_end: 'bg-purple-50 text-white rounded-[50px]',
+            chevron: 'fill-purple-50',
           }}
           className={defaultStyle}
         />
