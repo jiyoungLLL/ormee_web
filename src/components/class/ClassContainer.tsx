@@ -73,10 +73,10 @@ export default function ClassContainer() {
     };
   }, [openMenu]);
 
-  const handleDeleteClass = async (classState: 'openLectures' | 'closedLectures', id: string, lectureId: string) => {
+  const handleDeleteClass = async (classState: 'openLectures' | 'closedLectures', id: string) => {
     setOpenMenu(null);
     try {
-      await deleteClass(lectureId);
+      await deleteClass();
 
       const updatedClassList = classes[classState].filter((data) => `${data.id}-${data.code}` !== id);
 
@@ -178,7 +178,7 @@ export default function ClassContainer() {
                   <button
                     type='button'
                     className='h-[40px] px-[10px] py-[5px] rounded-[5px]'
-                    onClick={() => handleDeleteClass(classState, `${data.id}-${data.code}`, data.id)}
+                    onClick={() => handleDeleteClass(classState, `${data.id}-${data.code}`)}
                   >
                     강의 삭제
                   </button>
