@@ -50,8 +50,8 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
   const title = type === 'ongoing' ? '강의 설정' : '신규 강의 개설';
 
   // 유효성 검사 및 제출
-  const method = filter && lectureId ? 'PUT' : 'POST';
-  const endpoint = filter && lectureId ? `/teachers/lectures/${lectureId}` : '/teachers/lectures';
+  const classMethod = filter && lectureId ? 'PUT' : 'POST';
+  const classEndpoint = filter && lectureId ? `/teachers/lectures/${lectureId}` : '/teachers/lectures';
 
   const methods = useForm<ClassModalValues>({
     resolver: zodResolver(classSchema),
@@ -81,22 +81,29 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
     }
   }, [data, methods]);
 
-  const mutation = useApiMutation<unknown, any>(
-    method,
-    endpoint,
-    () => {
-      addToast({ message: `강의가 ${method === 'POST' ? '생성' : '수정'}되었어요.`, type: 'success', duration: 2500 });
+  const mutation = useApiMutation<unknown, any>({
+    method: classMethod,
+    endpoint: classEndpoint,
+    fetchOptions: {
+      authorization: true,
     },
-    QUERY_KEYS.classList(),
-    (err) => {
+    onSuccess: () => {
       addToast({
-        message: `강의가 ${method === 'POST' ? '생성' : '수정'}되지 않았어요. 다시 시도해주세요.`,
+        message: `강의가 ${classMethod === 'POST' ? '생성' : '수정'}되었어요.`,
+        type: 'success',
+        duration: 2500,
+      });
+    },
+    invalidateKey: [QUERY_KEYS.classList()],
+    onError: (err) => {
+      addToast({
+        message: `강의가 ${classMethod === 'POST' ? '생성' : '수정'}되지 않았어요. 다시 시도해주세요.`,
         type: 'error',
         duration: 2500,
       });
       if (process.env.NODE_ENV === 'development') console.error(err);
     },
-  );
+  });
 
   const onSubmit = (data: ClassModalValues) => {
     alert(JSON.stringify(data));
