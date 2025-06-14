@@ -58,13 +58,11 @@ type Story = StoryObj<typeof OpenQuizItem>;
 export const Ongoing: Story = {
   args: {
     quiz: QUIZ_ONGOING,
-    type: 'ongoing',
   },
 };
 
 export const Ready: Story = {
   args: {
     quiz: QUIZ_READY,
-    type: 'ready',
   },
 };
