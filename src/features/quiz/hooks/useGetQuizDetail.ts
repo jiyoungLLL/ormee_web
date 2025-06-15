@@ -14,7 +14,8 @@ const getQuizDetail = async (quizId: string) => {
   return json;
 };
 
-export const useGetQuizDetail = (quizId: string) => {
+// TODO: 임시저장 목록 불러오는 api 연동 후 교체
+export const useGetQuizDetailTemp = (quizId: string) => {
   return useQuery({
     queryKey: QUERY_KEYS.quizDetail(quizId),
     queryFn: () => getQuizDetail(quizId),

@@ -1,5 +1,5 @@
 import { useSearchParams } from 'next/navigation';
-import { useGetQuizDetail } from './useGetQuizDetail';
+import { useGetQuizDetailTemp } from './useGetQuizDetail';
 import { QuizFormValues } from '@/features/quiz/types/quiz.types';
 
 type UseQuizEditModeReturn = {
@@ -15,7 +15,7 @@ export const useQuizEditMode = (): UseQuizEditModeReturn => {
 
   const isEditMode = createType === 'edit' && quizId !== null;
 
-  const { data } = useGetQuizDetail(quizId ?? '');
+  const { data } = useGetQuizDetailTemp(quizId ?? '');
 
   return {
     isEditMode,
