@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { QuizListResponseSchema } from '@/features/quiz/quiz.schema';
+import { QuizListResponseSchema } from '@/features/quiz/schemas/quiz.schema';
 import { QUERY_KEYS } from '../../../hooks/queries/queryKeys';
 import { QuizList } from '@/features/quiz/quiz.types';
 

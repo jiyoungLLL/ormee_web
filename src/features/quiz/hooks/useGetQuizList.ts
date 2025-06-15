@@ -1,7 +1,7 @@
 import { QuizList, QuizListResponse } from '@/features/quiz/quiz.types';
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { useApiQuery } from '@/hooks/useApi';
-import { QuizListResponseSchema } from '@/features/quiz/quiz.schema';
+import { QuizListResponseSchema } from '@/features/quiz/schemas/quiz.schema';
 import { QUIZ_LIMIT_TIME_MAP_TO_RENDER } from '@/features/quiz/quiz.constants';
 
 export const useGetQuizList = (lectureId: string) => {

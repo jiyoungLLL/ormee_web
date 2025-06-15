@@ -1,6 +1,6 @@
 'use client';
 
-import { QuizFormSchema } from '@/features/quiz/quiz.schema';
+import { QuizFormSchema } from '@/features/quiz/schemas/quiz.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, Path, useFieldArray, useForm } from 'react-hook-form';
 import QuizCreateTitleInput from '@/components/quiz/QuizCreateTitleInput';

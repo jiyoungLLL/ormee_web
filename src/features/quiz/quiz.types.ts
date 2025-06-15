@@ -13,7 +13,7 @@ import {
   ProblemChoiceRequestSchema,
   ProblemEssayRequestSchema,
   QuizDraftRequestSchema,
-} from '@/features/quiz/quiz.schema';
+} from '@/features/quiz/schemas/quiz.schema';
 
 export type ProblemType = 'CHOICE' | 'ESSAY';
 

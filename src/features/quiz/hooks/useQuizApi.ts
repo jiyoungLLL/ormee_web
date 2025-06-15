@@ -6,7 +6,7 @@ import { QuizCreateRequest, QuizDraftRequest } from '@/features/quiz/quiz.types'
 import { useRouter } from 'next/navigation';
 import { useApiMutation } from '@/hooks/useApi';
 import { ApiResponse } from '@/types/response.types';
-import { QuizCreateRequestSchema, QuizDraftRequestSchema } from '@/features/quiz/quiz.schema';
+import { QuizCreateRequestSchema, QuizDraftRequestSchema } from '@/features/quiz/schemas/quiz.schema';
 
 export const usePostQuizCreate = ({ lectureId }: { lectureId: string }) => {
   const { addToast } = useToastStore();
@@ -49,9 +49,9 @@ export const usePostQuizDraft = ({ lectureId }: { lectureId: string }) => {
     fetchOptions: {
       contentType: 'application/json',
       authorization: true,
+      errorMessage: '임시저장에 실패했어요. 입력값을 확인해주세요.',
     },
     invalidateKey: QUERY_KEYS.temporaryQuizList(lectureId),
-    fetchErrorMessage: '임시저장에 실패했어요. 입력값을 확인해주세요.',
     onSuccess: () => {
       router.push(`/lectures/${lectureId}/quiz`);
 
