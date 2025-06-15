@@ -31,8 +31,6 @@ type UseApiQueryOptions<T, R = T> = {
   schema?: z.ZodSchema<T>;
   /** API 응답 데이터를 변환하는 함수 */
   transform?: (data: T) => R;
-  /** API 요청 실패 시 표시할 에러 메시지 */
-  fetchErrorMessage?: string;
   /** API 응답 데이터 검증 실패 시 표시할 에러 메시지 */
   validateErrorMessage?: string;
 };
@@ -48,7 +46,6 @@ type UseApiQueryOptions<T, R = T> = {
  * @param {Omit<UseQueryOptions<R, Error>, 'queryKey' | 'queryFn'>} [options.queryOptions] - Tanstack Query의 추가 옵션
  * @param {z.ZodSchema<T>} [options.schema] - API 응답 데이터 검증을 위한 Zod 스키마
  * @param {(data: T) => R} [options.transform] - API 응답 데이터를 변환하는 함수
- * @param {string} [options.fetchErrorMessage] - API 요청 실패 시 표시할 에러 메시지
  * @param {string} [options.validateErrorMessage] - API 응답 데이터 검증 실패 시 표시할 에러 메시지
  * @returns Tanstack Query의 쿼리 결과
  * @example
@@ -74,13 +71,12 @@ export function useApiQuery<T, R = T>({
   queryOptions,
   schema,
   transform,
-  fetchErrorMessage,
   validateErrorMessage,
 }: UseApiQueryOptions<T, R>) {
   return useQuery<R, Error>({
     queryKey,
     queryFn: async (): Promise<R> => {
-      const response = await fetcher<T>({ method: 'GET', ...fetchOptions, errorMessage: fetchErrorMessage });
+      const response = await fetcher<T>({ method: 'GET', ...fetchOptions });
 
       if (response.status === 'fail') {
         throw new Error(response.data);
@@ -150,8 +146,6 @@ type UseApiMutationOptions<T, V, R = T> = {
   onError?: (err: Error) => void;
   /** Tanstack Query의 mutation 옵션 (mutationFn, onSuccess, onError 제외) */
   mutationOptions?: Omit<MutationOptions<R, Error, V>, 'mutationFn' | 'onSuccess' | 'onError'>;
-  /** API 요청 실패 시 표시할 에러 메시지 */
-  fetchErrorMessage?: string;
   /** API 요청 데이터 검증 실패 시 표시할 에러 메시지 */
   requestValidateErrorMessage?: string;
   /** API 응답 데이터 검증 실패 시 표시할 에러 메시지 */
@@ -177,7 +171,6 @@ type UseApiMutationOptions<T, V, R = T> = {
  * @param {readonly unknown[] | readonly unknown[][]} [options.invalidateKey] - 무효화할 쿼리 키
  * @param {(err: Error) => void} [options.onError] - 실패 시 콜백 함수
  * @param {Omit<MutationOptions<R, Error, V>, 'mutationFn' | 'onSuccess' | 'onError'>} [options.mutationOptions] - Tanstack Query mutation 옵션
- * @param {string} [options.fetchErrorMessage] - API 요청 실패 시 표시할 에러 메시지
  * @param {string} [options.requestValidateErrorMessage] - API 요청 데이터 검증 실패 시 표시할 에러 메시지
  * @param {string} [options.responseValidateErrorMessage] - API 응답 데이터 검증 실패 시 표시할 에러 메시지
  *
@@ -221,7 +214,6 @@ export function useApiMutation<T, V, R = T>({
   invalidateKey,
   onError,
   mutationOptions,
-  fetchErrorMessage,
   requestValidateErrorMessage,
   responseValidateErrorMessage,
 }: UseApiMutationOptions<T, V, R>) {
@@ -263,7 +255,6 @@ export function useApiMutation<T, V, R = T>({
         endpoint,
         body: transformedBody,
         ...fetchOptions,
-        errorMessage: fetchErrorMessage,
       });
 
       if (response.status === 'fail') {
