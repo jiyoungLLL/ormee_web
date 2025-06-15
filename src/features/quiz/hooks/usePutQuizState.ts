@@ -1,6 +1,6 @@
 'use client';
 
-import { QuizState } from '@/features/quiz/quiz.types';
+import { QuizState } from '@/features/quiz/types/quiz.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../../../hooks/queries/queryKeys';
 import { useToastStore } from '@/stores/toastStore';

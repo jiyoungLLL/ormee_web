@@ -1,5 +1,5 @@
 import Badge from '@/components/ui/Badge';
-import { QuizFormValues } from '@/features/quiz/quiz.types';
+import { QuizFormValues } from '@/features/quiz/types/quiz.types';
 import { useFormContext } from 'react-hook-form';
 
 type ChoiceAnswerProps = {

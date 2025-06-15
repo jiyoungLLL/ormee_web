@@ -1,5 +1,5 @@
 import Button from '@/components/ui/Button';
-import { Quiz } from '@/features/quiz/quiz.types';
+import { Quiz } from '@/features/quiz/types/quiz.types';
 import { formatDatetimeWithTime } from '@/utils/date/formatDate';
 import Image from 'next/image';
 import Link from 'next/link';

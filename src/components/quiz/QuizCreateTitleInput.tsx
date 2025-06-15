@@ -1,6 +1,6 @@
 'use client';
 
-import { QuizFormValues } from '@/features/quiz/quiz.types';
+import { QuizFormValues } from '@/features/quiz/types/quiz.types';
 import { useController, useFormContext } from 'react-hook-form';
 import DateTimePicker from '@/components/ui/DateTimePicker';
 import { useEffect, useState } from 'react';

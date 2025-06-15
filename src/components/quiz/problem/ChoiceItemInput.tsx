@@ -2,7 +2,7 @@
 
 import XIcon from '@/components/icon/XIcon';
 import Radio from '@/components/ui/radio/Radio';
-import { QuizFormValues } from '@/features/quiz/quiz.types';
+import { QuizFormValues } from '@/features/quiz/types/quiz.types';
 import { useFormContext } from 'react-hook-form';
 import DynamicWidthInput from '@/components/ui/inputs/DynamicWidthInput';
 

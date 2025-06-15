@@ -17,7 +17,7 @@ import Toolbar from '../ui/Toolbar';
 import { useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
 import QuizCreateHeader from '@/components/quiz/QuizCreateHeader';
-import { QuizCreateRequest, QuizDraftRequest, QuizFormValues } from '@/features/quiz/quiz.types';
+import { QuizCreateRequest, QuizDraftRequest, QuizFormValues } from '@/features/quiz/types/quiz.types';
 import { useQuizEditMode } from '@/features/quiz/hooks/useQuizEditMode';
 import { usePostQuizCreate, usePostQuizDraft } from '@/features/quiz/hooks/useQuizApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';

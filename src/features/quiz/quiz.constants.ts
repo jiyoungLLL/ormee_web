@@ -1,4 +1,4 @@
-import { ChoiceItem, ProblemFormValues, ProblemType } from '@/features/quiz/quiz.types';
+import { ChoiceItem, ProblemFormValues, ProblemType } from '@/features/quiz/types/quiz.types';
 
 export const QUIZ_LABEL_MAP: Record<ProblemType, string> = {
   CHOICE: '객관식',

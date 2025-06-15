@@ -2,7 +2,7 @@
 
 import Button from '@/components/ui/Button';
 import Image from 'next/image';
-import { Quiz, QuizState } from '@/features/quiz/quiz.types';
+import { Quiz, QuizState } from '@/features/quiz/types/quiz.types';
 import { useModal } from '@/hooks/ui/useModal';
 import Modal from '@/components/ui/Modal';
 import { usePutQuizState } from '@/features/quiz/hooks/usePutQuizState';

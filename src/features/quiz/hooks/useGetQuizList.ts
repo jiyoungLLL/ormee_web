@@ -1,4 +1,4 @@
-import { QuizList, QuizListResponse } from '@/features/quiz/quiz.types';
+import { QuizList, QuizListResponse } from '@/features/quiz/types/quiz.types';
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { useApiQuery } from '@/hooks/useApi';
 import { QuizListResponseSchema } from '@/features/quiz/schemas/quiz.schema';

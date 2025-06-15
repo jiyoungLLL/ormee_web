@@ -1,6 +1,6 @@
 'use client';
 
-import { Quiz } from '@/features/quiz/quiz.types';
+import { Quiz } from '@/features/quiz/types/quiz.types';
 import Image from 'next/image';
 import { useState } from 'react';
 import CloseQuizStats from '@/components/quiz/list/CloseQuizStats';

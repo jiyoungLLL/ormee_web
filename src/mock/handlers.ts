@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import { MOCK_NOTIFICATION_LIST_BULK } from './notification';
 import { CLOSED_QUIZ_STATS_MAP, PROBLEM_STATS_MAP, QUIZ_ATTACHMENT_MAP, QUIZ_DB, QUIZ_DETAIL_MAP } from './quiz';
-import { QuizState } from '@/features/quiz/quiz.types';
+import { QuizState } from '@/features/quiz/types/quiz.types';
 import { MOCK_ANSWER, MOCK_PAGINATED_QUESTION_RESPONSE } from './question';
 import { QuizCreateRequestSchema, QuizDraftRequestSchema } from '@/features/quiz/schemas/quiz.schema';
 

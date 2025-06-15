@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { QuizListResponseSchema } from '@/features/quiz/schemas/quiz.schema';
 import { QUERY_KEYS } from '../../../hooks/queries/queryKeys';
-import { QuizList } from '@/features/quiz/quiz.types';
+import { QuizList } from '@/features/quiz/types/quiz.types';
 
 const getTemporaryQuizList = async (lectureId: string) => {
   const response = await fetch(`/api/teachers/${lectureId}/quizzes/temporary`, { method: 'GET' });

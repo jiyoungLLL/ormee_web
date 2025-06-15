@@ -2,7 +2,7 @@
 
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { useToastStore } from '@/stores/toastStore';
-import { QuizCreateRequest, QuizDraftRequest } from '@/features/quiz/quiz.types';
+import { QuizCreateRequest, QuizDraftRequest } from '@/features/quiz/types/quiz.types';
 import { useRouter } from 'next/navigation';
 import { useApiMutation } from '@/hooks/useApi';
 import { ApiResponse } from '@/types/response.types';

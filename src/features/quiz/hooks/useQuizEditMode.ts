@@ -1,6 +1,6 @@
 import { useSearchParams } from 'next/navigation';
 import { useGetQuizDetail } from './useGetQuizDetail';
-import { QuizFormValues } from '@/features/quiz/quiz.types';
+import { QuizFormValues } from '@/features/quiz/types/quiz.types';
 
 type UseQuizEditModeReturn = {
   isEditMode: boolean;
