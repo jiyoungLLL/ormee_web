@@ -1,31 +1,57 @@
-import { QuizList } from '@/features/quiz/quiz.types';
-import { useQuery } from '@tanstack/react-query';
-import { QUERY_KEYS } from '../../../hooks/queries/queryKeys';
-import { transformQuizListToCamelCase } from '@/utils/transforms/quiz.transform';
+import { QuizList, QuizListResponse } from '@/features/quiz/quiz.types';
+import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
+import { useApiQuery } from '@/hooks/useApi';
 import { QuizListResponseSchema } from '@/features/quiz/quiz.schema';
-
-const fetchQuizList = async (lectureId: string): Promise<QuizList> => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_MOCK_BASE_URL}/api/teachers/${lectureId}/quizzes/`);
-
-  if (!response.ok) {
-    if (process.env.NODE_ENV === 'development') console.error(response.statusText);
-    throw new Error('퀴즈 목록을 불러오는데 실패했습니다.');
-  }
-
-  const json = await response.json();
-
-  const parsedJson = QuizListResponseSchema.safeParse(json);
-  if (!parsedJson.success) {
-    if (process.env.NODE_ENV === 'development') console.error(parsedJson.error);
-    throw new Error('잘못된 퀴즈 목록 형식입니다.');
-  }
-
-  return transformQuizListToCamelCase(parsedJson.data);
-};
+import { QUIZ_LIMIT_TIME_MAP_TO_RENDER } from '@/features/quiz/quiz.constants';
 
 export const useGetQuizList = (lectureId: string) => {
-  return useQuery<QuizList>({
+  return useApiQuery<QuizListResponse, QuizList>({
     queryKey: QUERY_KEYS.quizList(lectureId),
-    queryFn: () => fetchQuizList(lectureId),
+    fetchOptions: {
+      endpoint: `/teachers/${lectureId}/quizzes`,
+      authorization: true,
+    },
+    queryOptions: {
+      staleTime: 0,
+      gcTime: 0,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
+    schema: QuizListResponseSchema,
+    fetchErrorMessage: '퀴즈 목록을 불러오는데 실패했어요.',
+    validateErrorMessage: '퀴즈 목록 형식이 올바르지 않아요.',
+    transform: (data) => {
+      const totalCount = 20; // TODO: API 수정 후 응답 데이터로 변경
+
+      return {
+        openQuizzes: data.openQuizzes.map((quiz) => ({
+          id: quiz.id,
+          title: quiz.quizName,
+          dueTime: quiz.quizDate,
+          isAvailable: quiz.quizAvailable,
+          state: quiz.quizAvailable ? 'ongoing' : 'ready',
+          limitTime:
+            quiz.timeLimit in QUIZ_LIMIT_TIME_MAP_TO_RENDER
+              ? QUIZ_LIMIT_TIME_MAP_TO_RENDER[quiz.timeLimit as keyof typeof QUIZ_LIMIT_TIME_MAP_TO_RENDER]
+              : '제한없음',
+          submitCount: quiz.submitCount,
+          totalCount: totalCount,
+        })),
+        closedQuizzes: data.closedQuizzes.map((quiz) => ({
+          id: quiz.id,
+          title: quiz.quizName,
+          dueTime: quiz.quizDate,
+          isAvailable: quiz.quizAvailable,
+          state: 'closed',
+          limitTime:
+            quiz.timeLimit in QUIZ_LIMIT_TIME_MAP_TO_RENDER
+              ? QUIZ_LIMIT_TIME_MAP_TO_RENDER[quiz.timeLimit as keyof typeof QUIZ_LIMIT_TIME_MAP_TO_RENDER]
+              : '제한없음',
+          submitCount: quiz.submitCount,
+          totalCount: totalCount,
+        })),
+      };
+    },
   });
 };

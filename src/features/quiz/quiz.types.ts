@@ -12,6 +12,7 @@ import {
   QuizCreateRequestSchema,
   ProblemChoiceRequestSchema,
   ProblemEssayRequestSchema,
+  QuizDraftRequestSchema,
 } from '@/features/quiz/quiz.schema';
 
 export type ProblemType = 'CHOICE' | 'ESSAY';
@@ -43,6 +44,7 @@ export type ProblemFormValues = z.infer<typeof ProblemSchema>;
 export type QuizFormValues = z.infer<typeof QuizFormSchema>;
 export type ProblemRequest = z.infer<typeof ProblemChoiceRequestSchema> | z.infer<typeof ProblemEssayRequestSchema>;
 export type QuizCreateRequest = z.infer<typeof QuizCreateRequestSchema>;
+export type QuizDraftRequest = z.infer<typeof QuizDraftRequestSchema>;
 export type QuizListResponse = z.infer<typeof QuizListResponseSchema>;
 export type Quiz = z.infer<typeof QuizSchema>;
 export type QuizList = z.infer<typeof QuizListSchema>;

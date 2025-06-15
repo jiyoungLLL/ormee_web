@@ -18,24 +18,23 @@ export const QUIZ_FORM_ERROR_MESSAGE = {
   EMPTY_ANSWER: '정답을 입력해주세요.',
 };
 
+// 퀴즈 생성 폼 스키마
 export const ProblemSchema = z.object({
-  content: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_CONTENT }),
+  content: z.string(),
   type: z.enum(['CHOICE', 'ESSAY']),
-  item: z.array(z.object({ id: z.string(), text: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ITEM }) })),
-  answerItemId: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ANSWER }),
+  item: z.array(z.object({ id: z.string(), text: z.string() })).min(1),
+  answerItemId: z.string(),
   answer: z.string(),
   files: z.array(z.object({ id: z.string(), previewUrl: z.string() })),
 });
 
 export const QuizFormSchema = z.object({
-  title: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_TITLE }),
-  description: z.string().optional(),
-  startTime: z.string().datetime().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_DUE_TIME }),
-  dueTime: z.string().datetime().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_DUE_TIME }),
-  limitTime: z.union([z.enum(QUIZ_LIMIT_TIME_OPTIONS), z.literal('')], {
-    message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_LIMIT_TIME,
-  }),
-  problems: z.array(ProblemSchema).min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_PROBLEMS }),
+  title: z.string(),
+  description: z.string(),
+  startTime: z.string().datetime(),
+  dueTime: z.string().datetime(),
+  limitTime: z.union([z.enum(QUIZ_LIMIT_TIME_OPTIONS), z.literal('')]),
+  problems: z.array(ProblemSchema).min(1),
 });
 
 // 퀴즈 생성 요청 스키마
@@ -43,7 +42,7 @@ export const ProblemChoiceRequestSchema = z.object({
   content: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_CONTENT }),
   type: z.literal('CHOICE'),
   answer: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ANSWER }),
-  items: z.array(z.string()).min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ITEM }),
+  items: z.array(z.string()).min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ITEM }).min(1),
   fileIds: z.array(z.string()),
 });
 
@@ -57,16 +56,45 @@ export const ProblemEssayRequestSchema = z.object({
 
 export const QuizCreateRequestSchema = z.object({
   title: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_TITLE }),
-  description: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_DESCRIPTION }),
+  description: z.string(),
   openTime: z.string().datetime().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_DUE_TIME }),
   dueTime: z.string().datetime().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_DUE_TIME }),
-  timeLimit: z.union([z.enum(QUIZ_LIMIT_TIME_REQUEST_OPTIONS), z.literal('')], {
+  timeLimit: z.enum(QUIZ_LIMIT_TIME_REQUEST_OPTIONS, {
     message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_LIMIT_TIME,
   }),
-  isDraft: z.boolean(),
+  isDraft: z.literal(false),
   problems: z.array(z.discriminatedUnion('type', [ProblemChoiceRequestSchema, ProblemEssayRequestSchema])).min(1, {
     message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_PROBLEMS,
   }),
+});
+
+// 퀴즈 임시저장 요청 스키마
+export const ProblemChoiceDraftRequestSchema = z.object({
+  content: z.string(),
+  type: z.literal('CHOICE'),
+  answer: z.string(),
+  items: z.array(z.string()).min(1),
+  fileIds: z.array(z.string()),
+});
+
+export const ProblemEssayDraftRequestSchema = z.object({
+  content: z.string(),
+  type: z.literal('ESSAY'),
+  answer: z.string(),
+  items: z.null(),
+  fileIds: z.array(z.string()),
+});
+
+export const QuizDraftRequestSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  openTime: z.union([z.string().datetime(), z.literal('')]),
+  dueTime: z.union([z.string().datetime(), z.literal('')]),
+  timeLimit: z.union([z.enum(QUIZ_LIMIT_TIME_REQUEST_OPTIONS), z.literal('')]),
+  isDraft: z.literal(true),
+  problems: z
+    .array(z.discriminatedUnion('type', [ProblemChoiceDraftRequestSchema, ProblemEssayDraftRequestSchema]))
+    .min(1),
 });
 
 // 퀴즈 api 응답 관련 스키마
@@ -79,31 +107,33 @@ export const ProblemResponseSchema = z.object({
 
 export const QuizResponseSchema = z.object({
   id: z.string().min(1),
-  state: z.enum(['ready', 'ongoing', 'closed', 'temporary'] as const satisfies readonly QuizState[]),
-  title: z.string().min(1),
-  description: z.string().optional(),
-  due_time: z.string().datetime().min(1),
-  limit_time: z.enum(QUIZ_LIMIT_TIME_OPTIONS),
-  updated_at: z.string().datetime().min(1),
-  submit_students: z.number(),
-  total_students: z.number(),
+  quizName: z.string().min(1),
+  quizDate: z.string().min(1),
+  timeLimit: z.number(),
+  quizAvailable: z.boolean(),
+  submitCount: z.number(),
 });
 
-export const QuizListResponseSchema = z.array(QuizResponseSchema);
+export const QuizListResponseSchema = z.object({
+  openQuizzes: z.array(QuizResponseSchema),
+  closedQuizzes: z.array(QuizResponseSchema),
+});
 
 export const QuizSchema = z.object({
   id: z.string().min(1),
   state: z.enum(['ready', 'ongoing', 'closed', 'temporary'] as const satisfies readonly QuizState[]),
   title: z.string().min(1),
-  description: z.string().optional(),
   dueTime: z.string().datetime().min(1),
+  isAvailable: z.boolean(),
   limitTime: z.enum(QUIZ_LIMIT_TIME_OPTIONS),
-  updatedAt: z.string().datetime().min(1),
-  submitStudents: z.number(),
-  totalStudents: z.number(),
+  submitCount: z.number(),
+  totalCount: z.number(),
 });
 
-export const QuizListSchema = z.array(QuizSchema);
+export const QuizListSchema = z.object({
+  openQuizzes: z.array(QuizSchema),
+  closedQuizzes: z.array(QuizSchema),
+});
 
 // 마감 퀴즈 관련 스키마
 export const ClosedQuizStatsResponseSchema = z

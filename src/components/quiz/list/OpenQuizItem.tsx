@@ -2,20 +2,19 @@
 
 import Button from '@/components/ui/Button';
 import Image from 'next/image';
-import { Quiz } from '@/features/quiz/quiz.types';
-import { formatDatetimeWithTime } from '@/utils/date/formatDate';
+import { Quiz, QuizState } from '@/features/quiz/quiz.types';
 import { useModal } from '@/hooks/ui/useModal';
 import Modal from '@/components/ui/Modal';
 import { usePutQuizState } from '@/features/quiz/hooks/usePutQuizState';
 import { useLectureId } from '@/hooks/queries/useLectureId';
+import { getPlainText } from '@/utils/getPlainText';
 
 type OpenQuizItemProps = {
   quiz: Quiz;
-  type: 'ongoing' | 'ready';
   isLastQuiz: boolean;
 };
 
-export default function OpenQuizItem({ quiz, type, isLastQuiz }: OpenQuizItemProps) {
+export default function OpenQuizItem({ quiz, isLastQuiz }: OpenQuizItemProps) {
   const {
     isOpen: isUploadModalOpen,
     openModal: openUploadModal,
@@ -28,11 +27,15 @@ export default function OpenQuizItem({ quiz, type, isLastQuiz }: OpenQuizItemPro
     closeModal: closeCloseModal,
   } = useModal({ defaultOpen: false });
 
-  const { id: quizId, title, limitTime, dueTime } = quiz;
-  const formattedDueTime = formatDatetimeWithTime(dueTime);
+  const { id: quizId, title, limitTime, dueTime, state } = quiz;
+  const plainTitle = getPlainText(title);
 
   const lectureId = useLectureId();
-  const { mutate: mutateQuizState } = usePutQuizState({ quizId, lectureId, prevState: type });
+  const { mutate: mutateQuizState } = usePutQuizState({
+    quizId,
+    lectureId,
+    prevState: state as Exclude<QuizState, 'closed' | 'temporary'>,
+  });
 
   // TODO: 로딩상태 추가
 
@@ -61,8 +64,8 @@ export default function OpenQuizItem({ quiz, type, isLastQuiz }: OpenQuizItemPro
             />
           </div>
           <div className='flex flex-col gap-[5px]'>
-            <h3 className='text-headline1 font-semibold'>{title}</h3>
-            <p className='text-label font-semibold text-gray-50'>{formattedDueTime}</p>
+            <h3 className='text-headline1 font-semibold'>{plainTitle}</h3>
+            <p className='text-label font-semibold text-gray-50'>{dueTime}</p>
           </div>
         </div>
         <div className='flex items-center gap-[29px]'>
@@ -76,7 +79,7 @@ export default function OpenQuizItem({ quiz, type, isLastQuiz }: OpenQuizItemPro
             />
             <span className='text-headline1 font-semibold'>{limitTime}</span>
           </div>
-          {type === 'ongoing' && (
+          {state === 'ongoing' && (
             <>
               <Button
                 type='BUTTON_BASE_TYPE'
@@ -96,7 +99,7 @@ export default function OpenQuizItem({ quiz, type, isLastQuiz }: OpenQuizItemPro
               />
             </>
           )}
-          {type === 'ready' && (
+          {state === 'ready' && (
             <>
               <Button
                 type='BUTTON_BASE_TYPE'
