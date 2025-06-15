@@ -202,7 +202,7 @@ type UseApiMutationOptions<T, V, R = T> = {
  * });
  * ```
  */
-export function useApiMutation<T, V, R = T>({
+export function useApiMutation<T, V = undefined, R = T>({
   method,
   endpoint,
   fetchOptions,
@@ -233,7 +233,7 @@ export function useApiMutation<T, V, R = T>({
   };
 
   return useMutation<R, Error, V>({
-    mutationFn: async (body: V) => {
+    mutationFn: async (body?: V) => {
       // 요청 데이터 검증
       if (requestSchema) {
         const result = requestSchema.safeParse(body);
@@ -248,7 +248,7 @@ export function useApiMutation<T, V, R = T>({
       }
 
       // 요청 데이터 변환
-      const transformedBody = requestTransform ? requestTransform(body) : body;
+      const transformedBody = requestTransform ? requestTransform(body as V) : body;
 
       const response = await fetcher<T>({
         method,
