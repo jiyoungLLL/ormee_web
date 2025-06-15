@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { useState } from 'react';
 import CloseQuizStats from '@/components/quiz/list/CloseQuizStats';
 import { getPlainText } from '@/utils/getPlainText';
+import { useRouter } from 'next/navigation';
+import { useLectureId } from '@/hooks/queries/useLectureId';
 
 type CloseQuizItemProps = {
   quiz: Quiz;
@@ -12,7 +14,7 @@ type CloseQuizItemProps = {
 };
 
 export default function CloseQuizItem({ quiz, isLastQuiz }: CloseQuizItemProps) {
-  const { id, title, dueTime, limitTime, submitCount, totalCount } = quiz;
+  const { id, title, dueTime, limitTime, submitCount, totalCount, state } = quiz;
   const plainTitle = getPlainText(title);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -21,11 +23,24 @@ export default function CloseQuizItem({ quiz, isLastQuiz }: CloseQuizItemProps) 
     setIsOpen(!isOpen);
   };
 
+  const router = useRouter();
+  const lectureId = useLectureId();
+
+  const handleRouteToDetailPage = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('button')) return;
+
+    router.push(`/lectures/${lectureId}/quiz/${id}?state=${state}`);
+  };
+
   const showSeparator = !isOpen && !isLastQuiz;
 
   return (
     <div className='flex flex-col w-full gap-[5px]'>
-      <div className='flex justify-between items-center px-[10px] py-[20px] rounded-[15px]'>
+      <div
+        className='flex justify-between items-center px-[10px] py-[20px] rounded-[15px] cursor-pointer'
+        onClick={handleRouteToDetailPage}
+      >
         <div className='flex flex-col gap-[5px]'>
           <span className='text-headline1 font-semibold text-gray-60'>{plainTitle}</span>
           <span className='text-label font-semibold text-gray-50'>{dueTime}</span>
