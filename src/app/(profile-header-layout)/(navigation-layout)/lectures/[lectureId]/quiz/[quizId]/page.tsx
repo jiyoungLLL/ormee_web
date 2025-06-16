@@ -1,7 +1,7 @@
 'use server';
 
-import QuizDetailBody from '@/components/quiz/\bdetail/QuizDetailBody';
-import QuizDetailHeader from '@/components/quiz/\bdetail/QuizDetailHeader';
+import QuizDetailBody from '@/components/quiz/detail/QuizDetailBody';
+import QuizDetailHeader from '@/components/quiz/detail/QuizDetailHeader';
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { fetcher } from '@/utils/api/api';
 import { QueryClient } from '@tanstack/react-query';

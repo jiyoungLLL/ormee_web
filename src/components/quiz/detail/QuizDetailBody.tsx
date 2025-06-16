@@ -1,7 +1,8 @@
 'use client';
 
 import { useGetQuizDetail } from '@/features/quiz/hooks/useGetQuizDetail';
-import QuizDetailTitle from './QuizDetailTitle';
+import QuizDetailTitle from '@/components/quiz/detail/QuizDetailTitle';
+import QuizDetailProblem from '@/components/quiz/detail/QuizDetailProblem';
 
 type QuizDetailBodyProps = {
   quizId: string;
@@ -18,6 +19,7 @@ export default function QuizDetailBody({ quizId }: QuizDetailBodyProps) {
   return (
     <div className='flex flex-col gap-[21px] w-full'>
       <QuizDetailTitle quizDetail={quizDetail} />
+      <QuizDetailProblem problems={problems} />
     </div>
   );
 }
