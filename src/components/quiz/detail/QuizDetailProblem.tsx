@@ -10,7 +10,7 @@ type QuizDetailProblemProps = {
 
 export default function QuizDetailProblem({ problems }: QuizDetailProblemProps) {
   const getAlphabet = (index: number) => {
-    return String.fromCharCode(97 + index); // 97은 'a'의 ASCII 코드
+    return String.fromCharCode(97 + index);
   };
 
   const getIsAnswer = (problem: ProblemResponse, item: string) => {
