@@ -14,7 +14,7 @@ export function validateResponse<T>(schema: z.ZodSchema<T>, data: unknown, error
       console.error('에러 메시지: ', result.error.message);
     }
 
-    throw new Error(errorMessage || `잘못된 형식의 응답입니다. ${result.error.message}`);
+    throw new Error(errorMessage || `${result.error.issues[0].message}`);
   }
 
   return result.data;
@@ -243,7 +243,7 @@ export function useApiMutation<T, V = undefined, R = T>({
             console.error('요청 데이터: ', body);
             console.error('에러 메시지: ', result.error.message);
           }
-          throw new Error(requestValidateErrorMessage || `잘못된 형식의 요청 데이터입니다. ${result.error.message}`);
+          throw new Error(requestValidateErrorMessage || `${result.error.issues[0].message}`);
         }
       }
 
