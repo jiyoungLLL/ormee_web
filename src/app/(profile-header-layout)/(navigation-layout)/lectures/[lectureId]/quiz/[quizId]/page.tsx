@@ -1,5 +1,6 @@
 'use server';
 
+import QuizDetailBody from '@/components/quiz/\bdetail/QuizDetailBody';
 import QuizDetailHeader from '@/components/quiz/\bdetail/QuizDetailHeader';
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { fetcher } from '@/utils/api/api';
@@ -46,6 +47,7 @@ export default async function QuizDetailPage({ params }: { params: Promise<{ lec
         lectureId={lectureId}
         quizId={quizId}
       />
+      <QuizDetailBody quizId={quizId} />
     </div>
   );
 }
