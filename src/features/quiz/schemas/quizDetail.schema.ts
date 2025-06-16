@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const ChoiceProblemResponseSchema = z.object({
-  id: z.string(),
+  id: z.number(),
   content: z.string(),
   type: z.literal('CHOICE'),
   answer: z.string(),
@@ -13,7 +13,7 @@ export const ChoiceProblemResponseSchema = z.object({
 });
 
 export const EssayProblemResponseSchema = z.object({
-  id: z.string(),
+  id: z.number(),
   content: z.string(),
   type: z.literal('ESSAY'),
   answer: z.string(),
@@ -30,7 +30,7 @@ export const ProblemResponseSchema = z.discriminatedUnion('type', [
 export const QuizDetailResponseSchema = z.object({
   title: z.string(),
   description: z.string(),
-  dueTime: z.string().datetime(),
+  dueTime: z.string(),
   timeLimit: z.number(),
   problems: z.array(ProblemResponseSchema),
   opened: z.boolean(),
