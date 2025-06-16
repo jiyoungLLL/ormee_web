@@ -37,6 +37,7 @@ export default function QuizDetailProblem({ problems }: QuizDetailProblemProps) 
             <div>
               {problem.filePaths.map((filePath) => (
                 <Image
+                  key={filePath}
                   src={filePath || ''}
                   alt='problem-file'
                   width={100}
