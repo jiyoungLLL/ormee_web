@@ -21,9 +21,11 @@ import { QuizCreateRequest, QuizDraftRequest, QuizFormValues } from '@/features/
 import { useQuizEditMode } from '@/features/quiz/hooks/useQuizEditMode';
 import { usePostQuizCreate, usePostQuizDraft } from '@/features/quiz/hooks/usePostQuiz';
 import { useLectureId } from '@/hooks/queries/useLectureId';
+import { useToastStore } from '@/stores/toastStore';
 
 export default function QuizCreateForm() {
   const { isEditMode, quizDetail } = useQuizEditMode();
+  const { addToast } = useToastStore();
 
   const methods = useForm<QuizFormValues>({
     mode: 'onSubmit',
@@ -117,6 +119,12 @@ export default function QuizCreateForm() {
                 if (!currentFileName) return;
 
                 setValue(currentFileName, [...((getValues(currentFileName) as any[]) || []), { id, previewUrl }]);
+              },
+              onImageUploadError: (error) => {
+                addToast({
+                  type: 'error',
+                  message: `${error.message}`,
+                });
               },
             }}
             enableList={false}

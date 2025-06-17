@@ -17,6 +17,10 @@ export const postQuizAttachment = async (file: File): Promise<number> => {
   });
 
   if (response.status === 'fail') {
+    if (response.code === 413) {
+      throw new Error('000MB 이하의 파일만 업로드할 수 있어요.');
+    }
+
     throw new Error(response.data);
   }
 
