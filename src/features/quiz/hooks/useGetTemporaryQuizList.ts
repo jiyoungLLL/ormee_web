@@ -1,34 +1,39 @@
-import { useQuery } from '@tanstack/react-query';
-import { QuizListResponseSchema } from '@/features/quiz/schemas/quiz.schema';
-import { QUERY_KEYS } from '../../../hooks/queries/queryKeys';
-import { QuizList } from '@/features/quiz/types/quiz.types';
-
-const getTemporaryQuizList = async (lectureId: string) => {
-  const response = await fetch(`/api/teachers/${lectureId}/quizzes/temporary`, { method: 'GET' });
-
-  if (!response.ok) {
-    if (process.env.NODE_ENV === 'development') console.error(response.statusText);
-    throw new Error('임시저장 퀴즈를 불러오는데 실패했습니다.');
-  }
-
-  const json = await response.json();
-
-  const parsedJson = QuizListResponseSchema.safeParse(json);
-  if (!parsedJson.success) {
-    if (process.env.NODE_ENV === 'development') console.error(parsedJson.error);
-    throw new Error('잘못된 퀴즈 목록 형식입니다.');
-  }
-
-  return parsedJson.data;
-};
+import { DraftQuizListResponseSchema } from '@/features/quiz/schemas/quiz.schema';
+import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
+import { DraftQuizListResponse, Quiz } from '@/features/quiz/types/quiz.types';
+import { useApiQuery } from '@/hooks/useApi';
+import { QUIZ_LIMIT_TIME_MAP_TO_RENDER } from '@/features/quiz/quiz.constants';
 
 export const useGetTemporaryQuizList = (lectureId: string) => {
-  return useQuery<QuizList>({
+  return useApiQuery<DraftQuizListResponse, Quiz[]>({
     queryKey: QUERY_KEYS.temporaryQuizList(lectureId),
-    // queryFn: () => getTemporaryQuizList(lectureId),
-    staleTime: 1 * 60 * 60 * 1000,
-    retry: 2,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    fetchOptions: {
+      endpoint: `/teachers/${lectureId}/quizzes/draft`,
+      authorization: true,
+      errorMessage: '임시저장 목록을 불러오는데 실패했어요.',
+    },
+    queryOptions: {
+      staleTime: 1000 * 60 * 60 * 24,
+      gcTime: 1000 * 60 * 60 * 24,
+      retry: 1,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      enabled: false, // TODO: api 에러 확인 후 enabled 설정 제거
+    },
+    schema: DraftQuizListResponseSchema,
+    validateErrorMessage: '임시저장 목록 형식이 올바르지 않아요. 잠시 후 다시 시도해주세요.',
+    transform: (data) => {
+      return data.map((quiz) => ({
+        id: quiz.id.toString(),
+        title: quiz.quizName,
+        dueTime: quiz.quizDate,
+        isAvailable: quiz.quizAvailable,
+        limitTime: QUIZ_LIMIT_TIME_MAP_TO_RENDER[quiz.timeLimit as keyof typeof QUIZ_LIMIT_TIME_MAP_TO_RENDER],
+        submitCount: quiz.submitCount,
+        totalCount: 0,
+        state: 'temporary',
+      }));
+    },
   });
 };

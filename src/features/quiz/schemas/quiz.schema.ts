@@ -97,14 +97,6 @@ export const QuizDraftRequestSchema = z.object({
     .min(1),
 });
 
-// 퀴즈 api 응답 관련 스키마
-// export const ProblemResponseSchema = z.object({
-//   context: z.string().min(1),
-//   description: z.string().optional(),
-//   type: z.enum(['CHOICE', 'ESSAY']),
-//   item: z.array(z.object({ id: z.string(), text: z.string() })).optional(),
-// });
-
 export const QuizResponseSchema = z.object({
   id: z.string().min(1),
   quizName: z.string().min(1),
@@ -118,6 +110,8 @@ export const QuizListResponseSchema = z.object({
   openQuizzes: z.array(QuizResponseSchema),
   closedQuizzes: z.array(QuizResponseSchema),
 });
+
+export const DraftQuizListResponseSchema = z.array(QuizResponseSchema);
 
 export const QuizSchema = z.object({
   id: z.string().min(1),
