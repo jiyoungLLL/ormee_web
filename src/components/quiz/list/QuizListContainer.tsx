@@ -5,7 +5,7 @@ import Dropdown from '@/components/ui/dropdown/Dropdown';
 import { useGetQuizList } from '@/features/quiz/hooks/useGetQuizList';
 import { MenuItem, useDropdown } from '@/hooks/ui/useDropdown';
 import Link from 'next/link';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import OpenQuizList from '@/components/quiz/list/OpenQuizList';
 import CloseQuizList from '@/components/quiz/list/CloseQuizList';
 import { useLectureId } from '@/hooks/queries/useLectureId';
