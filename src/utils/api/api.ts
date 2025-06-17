@@ -74,6 +74,7 @@ export async function fetcher<T>({
     const err = await res.json().catch(() => {});
     if (process.env.NODE_ENV === 'development') console.error('----- API 요청 실패 ------');
     if (process.env.NODE_ENV === 'development') console.error('상태코드: ', res.status);
+    if (process.env.NODE_ENV === 'development') console.error('에러: ', res);
     if (process.env.NODE_ENV === 'development') console.error(err);
 
     return { status: 'fail', code: res.status, data: errorMessage || err.message || 'API 요청 실패' };
