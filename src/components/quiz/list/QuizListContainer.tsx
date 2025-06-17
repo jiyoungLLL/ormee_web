@@ -5,23 +5,39 @@ import Dropdown from '@/components/ui/dropdown/Dropdown';
 import { useGetQuizList } from '@/features/quiz/hooks/useGetQuizList';
 import { MenuItem, useDropdown } from '@/hooks/ui/useDropdown';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import OpenQuizList from '@/components/quiz/list/OpenQuizList';
 import CloseQuizList from '@/components/quiz/list/CloseQuizList';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import TemporaryQuizList from '@/components/quiz/list/TemporaryQuizList';
 
-const QUIZ_DROPDOWN_LIST: MenuItem[] = [
-  { id: 'quiz-list-total', label: '전체' },
-  { id: 'quiz-list-tempotaty', label: '임시저장' },
-];
-
 export default function QuizListContainer() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const currentQuizCategory = searchParams.get('category') ?? '전체';
+
+  const handleQuizCategoryChange = (newCategory: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (newCategory === '전체') {
+      params.delete('category');
+    } else {
+      params.set('category', newCategory);
+    }
+
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  const QUIZ_DROPDOWN_LIST: MenuItem[] = [
+    { id: 'quiz-list-total', label: '전체', onClick: () => handleQuizCategoryChange('전체') },
+    { id: 'quiz-list-tempotaty', label: '임시저장', onClick: () => handleQuizCategoryChange('임시저장') },
+  ];
 
   const { selectedItem: selectedQuizCategory, menuListForDropdown: quizCategoryList } = useDropdown({
     menuList: QUIZ_DROPDOWN_LIST,
-    initialSelectedItem: QUIZ_DROPDOWN_LIST[0].label,
+    initialSelectedItem: currentQuizCategory,
   });
 
   const lectureId = useLectureId();
