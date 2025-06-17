@@ -3,9 +3,17 @@
 import { ApiResponse } from '@/types/response.types';
 import { fetcher } from '@/utils/api/api';
 
-export const postQuizAttachment = async (file: File): Promise<number> => {
+export const postQuizAttachment = async (attachedFile: File): Promise<number> => {
+  const extension = attachedFile.name.split('.').pop() || '';
+  const safeFileName = `${crypto.randomUUID()}.${extension}`;
+
+  const renamedFile = new File([attachedFile], safeFileName, {
+    type: attachedFile.type,
+    lastModified: attachedFile.lastModified,
+  });
+
   const formData = new FormData();
-  formData.append('file', file);
+  formData.append('file', renamedFile);
 
   const response = await fetcher<ApiResponse<number>>({
     method: 'POST',
