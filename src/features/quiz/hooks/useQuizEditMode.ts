@@ -35,8 +35,11 @@ export const useQuizEditMode = (): UseQuizEditModeReturn => {
           type: problem.type,
           content: problem.content,
           item: problem.items.map((item, itemIndex) => ({ id: `problem-${problemIndex}-${itemIndex}`, text: item })),
-          answerItemId: crypto.randomUUID(),
           answer: problem.answer,
+          answerItemId:
+            problem.items.findIndex((item) => item === problem.answer) >= 0
+              ? `problem-${problemIndex}-${problem.items.findIndex((item) => item === problem.answer)}`
+              : '',
           files: problem.filePaths.map((filePath, fileIndex) => ({
             id: `problem-${problemIndex}-${fileIndex}`,
             previewUrl: filePath ?? '',
