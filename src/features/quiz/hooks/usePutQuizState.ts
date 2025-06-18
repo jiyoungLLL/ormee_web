@@ -1,6 +1,6 @@
 'use client';
 
-import { QuizState } from '@/features/quiz/types/quiz.types';
+import { QuizCreateRequest, QuizState } from '@/features/quiz/types/quiz.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../../../hooks/queries/queryKeys';
 import { useToastStore } from '@/stores/toastStore';
@@ -45,6 +45,28 @@ export const usePutQuizState = ({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.quizList(lectureId) });
       addToast({ message: SUCCESS_MESSAGE[prevState], type: 'success' });
+    },
+    onError: (error) => {
+      addToast({ message: error.message, type: 'error' });
+    },
+  });
+};
+
+export const usePutQuizDetail = ({ quizId, lectureId }: { quizId: string; lectureId: string }) => {
+  const { addToast } = useToastStore();
+  const router = useRouter();
+
+  return useApiMutation<ApiResponse, QuizCreateRequest>({
+    method: 'PUT',
+    endpoint: `/teachers/quizzes/${quizId}`,
+    fetchOptions: {
+      errorMessage: '퀴즈 수정이 완료되지 않았어요. 다시 시도해주세요.',
+      authorization: true,
+    },
+    invalidateKey: [QUERY_KEYS.quizDetail(quizId), QUERY_KEYS.quizList(lectureId)],
+    onSuccess: () => {
+      addToast({ message: '수정이 완료되었어요.', type: 'success' });
+      router.push(`/lectures/${lectureId}/quiz`);
     },
     onError: (error) => {
       addToast({ message: error.message, type: 'error' });
