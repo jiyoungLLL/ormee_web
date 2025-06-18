@@ -14,7 +14,7 @@ import {
   QUIZ_LIMIT_TIME_OPTIONS,
 } from '@/features/quiz/quiz.constants';
 import Toolbar from '../ui/Toolbar';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
 import QuizCreateHeader from '@/components/quiz/QuizCreateHeader';
 import { QuizCreateRequest, QuizDraftRequest, QuizFormValues } from '@/features/quiz/types/quiz.types';
@@ -45,7 +45,7 @@ export default function QuizCreateForm() {
       const { id, ...rest } = quizDetail;
       methods.reset(rest);
     }
-  }, [isEditMode, quizDetail]);
+  }, [isEditMode, quizDetail, methods.reset]);
 
   const { control, setValue, getValues } = methods;
 
@@ -53,10 +53,10 @@ export default function QuizCreateForm() {
   const [editor, setEditor] = useState<Editor | null>(null);
   const [currentFileName, setCurrentFileName] = useState<Path<QuizFormValues> | null>(null);
 
-  const handleSetEditor = (editor: Editor | null, fileName: Path<QuizFormValues> | null) => {
+  const handleSetEditor = useCallback((editor: Editor | null, fileName: Path<QuizFormValues> | null) => {
     setEditor(editor);
     setCurrentFileName(fileName);
-  };
+  }, []);
 
   const lectureId = useLectureId();
   const { mutate: createQuiz } = usePostQuizCreate({ lectureId });
