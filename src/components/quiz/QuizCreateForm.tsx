@@ -40,16 +40,17 @@ export default function QuizCreateForm() {
     resolver: zodResolver(QuizFormSchema),
   });
 
+  const { control, setValue, getValues } = methods;
+  const { fields: problems, append, replace } = useFieldArray({ control, name: 'problems' });
+
   useEffect(() => {
     if (isEditMode && quizDetail) {
       const { id, ...rest } = quizDetail;
       methods.reset(rest);
+      replace(quizDetail.problems);
     }
-  }, [isEditMode, quizDetail, methods.reset]);
+  }, [isEditMode, quizDetail, quizDetail.problems.length, methods.reset, replace]);
 
-  const { control, setValue, getValues } = methods;
-
-  const { fields: problems, append } = useFieldArray({ control, name: 'problems' });
   const [editor, setEditor] = useState<Editor | null>(null);
   const [currentFileName, setCurrentFileName] = useState<Path<QuizFormValues> | null>(null);
 
