@@ -197,6 +197,7 @@ export default function QuizCreateForm() {
         onConfirm={handleModalConfirm}
         title='퀴즈를 수정하시겠어요?'
         description='이전 상태로 되돌릴 수 없어요.'
+        iconSrc='/assets/icons/checked.png'
       />
     </>
   );
