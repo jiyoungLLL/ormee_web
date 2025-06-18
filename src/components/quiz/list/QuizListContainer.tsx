@@ -32,7 +32,7 @@ export default function QuizListContainer() {
   const { openQuizzes, closedQuizzes } = quizList ?? { openQuizzes: [], closedQuizzes: [] };
 
   return (
-    <div className='flex flex-col gap-[20px] w-full h-[721px] px-[30px] py-[20px] rounded-[20px] box-border bg-white overflow-y-auto'>
+    <div className='flex flex-col gap-[20px] w-full px-[30px] py-[20px] rounded-[20px] box-border bg-white'>
       <div className='flex justify-between items-center'>
         <Dropdown
           showTrigger
