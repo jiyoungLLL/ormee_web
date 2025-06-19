@@ -1,8 +1,14 @@
 export type ApiResponse<T = void> = T extends void
-  ? {
-      status: 'success';
-      code: number;
-    }
+  ?
+      | {
+          status: 'success';
+          code: number;
+        }
+      | {
+          status: 'fail';
+          code: number;
+          data: string;
+        }
   :
       | {
           status: 'success';

@@ -1,20 +1,15 @@
 'use server';
 
 import { SigninFormValues, SignupFormValues } from '@/features/auth/auth.schema';
+import { ApiResponse } from '@/types/response.types';
 import { cookies } from 'next/headers';
 
-export type AuthResponse = {
-  status: string;
-  code: number;
-  message?: string;
-};
-
-export const signupAction = async (formData: SignupFormValues): Promise<AuthResponse> => {
+export const signupAction = async (formData: SignupFormValues): Promise<ApiResponse> => {
   if (!process.env.API_BASE_URL) {
     return {
-      status: 'error',
+      status: 'fail',
       code: 500,
-      message: '잘못된 API 접근입니다.',
+      data: '잘못된 API 접근입니다.',
     };
   }
 
@@ -41,9 +36,9 @@ export const signupAction = async (formData: SignupFormValues): Promise<AuthResp
     if (process.env.NODE_ENV === 'development') console.error('회원가입 실패: ', json);
 
     return {
-      status: 'error',
+      status: 'fail',
       code: response.status,
-      message: json.message || '회원가입에 실패했어요.',
+      data: json.data || '회원가입에 실패했어요.',
     };
   }
 
@@ -53,12 +48,12 @@ export const signupAction = async (formData: SignupFormValues): Promise<AuthResp
   };
 };
 
-export const signinAction = async (formData: SigninFormValues): Promise<AuthResponse> => {
+export const signinAction = async (formData: SigninFormValues): Promise<ApiResponse> => {
   if (!process.env.API_BASE_URL) {
     return {
-      status: 'error',
+      status: 'fail',
       code: 500,
-      message: '잘못된 API 접근입니다.',
+      data: '잘못된 API 접근입니다.',
     };
   }
 
@@ -82,9 +77,9 @@ export const signinAction = async (formData: SigninFormValues): Promise<AuthResp
     if (process.env.NODE_ENV === 'development') console.error('로그인 실패: ', json);
 
     return {
-      status: 'error',
+      status: 'fail',
       code: response.status,
-      message: json.message || '로그인에 실패했어요.',
+      data: json.data || '로그인에 실패했어요.',
     };
   }
 
