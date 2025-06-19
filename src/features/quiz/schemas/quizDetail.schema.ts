@@ -6,7 +6,7 @@ export const ChoiceProblemResponseSchema = z.object({
   type: z.literal('CHOICE'),
   answer: z.string(),
   items: z.array(z.string()).min(1),
-  fileIds: z.null(),
+  fileIds: z.array(z.number()),
   filePaths: z.array(z.string().optional()),
   submission: z.null(),
   isCorrect: z.null(),
@@ -18,7 +18,7 @@ export const EssayProblemResponseSchema = z.object({
   type: z.literal('ESSAY'),
   answer: z.string(),
   items: z.array(z.never()),
-  fileIds: z.null(),
+  fileIds: z.array(z.number()),
   filePaths: z.array(z.string().optional()),
 });
 

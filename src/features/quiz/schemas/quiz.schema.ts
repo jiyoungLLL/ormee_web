@@ -43,7 +43,7 @@ export const ProblemChoiceRequestSchema = z.object({
   type: z.literal('CHOICE'),
   answer: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ANSWER }),
   items: z.array(z.string()).min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ITEM }).min(1),
-  fileIds: z.array(z.string()),
+  fileIds: z.array(z.number()),
 });
 
 export const ProblemEssayRequestSchema = z.object({
@@ -51,7 +51,7 @@ export const ProblemEssayRequestSchema = z.object({
   type: z.literal('ESSAY'),
   answer: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ANSWER }),
   items: z.null(),
-  fileIds: z.array(z.string()),
+  fileIds: z.array(z.number()),
 });
 
 export const QuizCreateRequestSchema = z.object({
@@ -74,7 +74,7 @@ export const ProblemChoiceDraftRequestSchema = z.object({
   type: z.literal('CHOICE'),
   answer: z.string(),
   items: z.array(z.string()).min(1),
-  fileIds: z.array(z.string()),
+  fileIds: z.array(z.number()),
 });
 
 export const ProblemEssayDraftRequestSchema = z.object({
@@ -82,7 +82,7 @@ export const ProblemEssayDraftRequestSchema = z.object({
   type: z.literal('ESSAY'),
   answer: z.string(),
   items: z.null(),
-  fileIds: z.array(z.string()),
+  fileIds: z.array(z.number()),
 });
 
 export const QuizDraftRequestSchema = z.object({
