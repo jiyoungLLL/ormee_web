@@ -6,7 +6,7 @@ import {
   QuizDraftRequest,
   QuizFormValues,
   QuizListResponse,
-} from '@/features/quiz/quiz.types';
+} from '@/features/quiz/types/quiz.types';
 
 // export const QUIZ_LIST_RESPONSE_MIXED: QuizListResponse = [
 //   {

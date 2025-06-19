@@ -1,4 +1,4 @@
-import { Quiz } from '@/features/quiz/quiz.types';
+import { Quiz } from '@/features/quiz/types/quiz.types';
 import OpenQuizItem from '@/components/quiz/list/OpenQuizItem';
 
 type OpenQuizListProps = {

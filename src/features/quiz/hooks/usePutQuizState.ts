@@ -1,9 +1,12 @@
 'use client';
 
-import { QuizState } from '@/features/quiz/quiz.types';
+import { QuizState } from '@/features/quiz/types/quiz.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../../../hooks/queries/queryKeys';
 import { useToastStore } from '@/stores/toastStore';
+import { useApiMutation } from '@/hooks/useApi';
+import { ApiResponse } from '@/types/response.types';
+import { useRouter } from 'next/navigation';
 
 const SUCCESS_MESSAGE: Record<Exclude<QuizState, 'closed' | 'temporary'>, string> = {
   ongoing: '퀴즈가 마감되었습니다.',
@@ -42,6 +45,28 @@ export const usePutQuizState = ({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.quizList(lectureId) });
       addToast({ message: SUCCESS_MESSAGE[prevState], type: 'success' });
+    },
+    onError: (error) => {
+      addToast({ message: error.message, type: 'error' });
+    },
+  });
+};
+
+export const useDeleteQuiz = ({ lectureId, quizId }: { lectureId: string; quizId: string }) => {
+  const { addToast } = useToastStore();
+  const router = useRouter();
+
+  return useApiMutation<ApiResponse>({
+    method: 'DELETE',
+    endpoint: `/teachers/quizzes/${quizId}`,
+    fetchOptions: {
+      errorMessage: '퀴즈 삭제에 실패했어요.',
+      authorization: true,
+    },
+    invalidateKey: [QUERY_KEYS.quizList(lectureId), QUERY_KEYS.quizDetail(quizId)],
+    onSuccess: () => {
+      router.push(`/lectures/${lectureId}/quiz`);
+      addToast({ message: '삭제가 완료되었어요.', type: 'success' });
     },
     onError: (error) => {
       addToast({ message: error.message, type: 'error' });

@@ -1,5 +1,5 @@
 import { QUIZ_LIMIT_TIME_OPTIONS, QUIZ_LIMIT_TIME_REQUEST_OPTIONS } from '@/features/quiz/quiz.constants';
-import { QuizState } from '@/features/quiz/quiz.types';
+import { QuizState } from '@/features/quiz/types/quiz.types';
 import { z } from 'zod';
 
 // 퀴즈 생성 폼 관련 스키마
@@ -98,12 +98,12 @@ export const QuizDraftRequestSchema = z.object({
 });
 
 // 퀴즈 api 응답 관련 스키마
-export const ProblemResponseSchema = z.object({
-  context: z.string().min(1),
-  description: z.string().optional(),
-  type: z.enum(['CHOICE', 'ESSAY']),
-  item: z.array(z.object({ id: z.string(), text: z.string() })).optional(),
-});
+// export const ProblemResponseSchema = z.object({
+//   context: z.string().min(1),
+//   description: z.string().optional(),
+//   type: z.enum(['CHOICE', 'ESSAY']),
+//   item: z.array(z.object({ id: z.string(), text: z.string() })).optional(),
+// });
 
 export const QuizResponseSchema = z.object({
   id: z.string().min(1),

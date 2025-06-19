@@ -1,4 +1,4 @@
-import { QuizFormValues } from '@/features/quiz/quiz.types';
+import { QuizFormValues } from '@/features/quiz/types/quiz.types';
 import { useActiveProblemStore } from '@/features/quiz/activeProblemStore';
 import { FieldArrayWithId, Path, useFormContext } from 'react-hook-form';
 import ProblemTypeDropdown from '@/components/quiz/problem/ProblemTypeDropdown';

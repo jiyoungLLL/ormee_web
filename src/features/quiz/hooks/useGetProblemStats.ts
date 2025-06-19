@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
-import { ProblemStatsResponseSchema } from '@/features/quiz/quiz.schema';
+import { ProblemStatsResponseSchema } from '@/features/quiz/schemas/quiz.schema';
 import { transformProblemStatsToCamelCase } from '@/utils/transforms/quiz.transform';
 
 const getProblemStats = async (problemId: string) => {

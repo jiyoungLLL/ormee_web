@@ -1,7 +1,7 @@
-import { QuizList, QuizListResponse } from '@/features/quiz/quiz.types';
+import { QuizList, QuizListResponse } from '@/features/quiz/types/quiz.types';
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { useApiQuery } from '@/hooks/useApi';
-import { QuizListResponseSchema } from '@/features/quiz/quiz.schema';
+import { QuizListResponseSchema } from '@/features/quiz/schemas/quiz.schema';
 import { QUIZ_LIMIT_TIME_MAP_TO_RENDER } from '@/features/quiz/quiz.constants';
 
 export const useGetQuizList = (lectureId: string) => {
@@ -10,6 +10,7 @@ export const useGetQuizList = (lectureId: string) => {
     fetchOptions: {
       endpoint: `/teachers/${lectureId}/quizzes`,
       authorization: true,
+      errorMessage: '퀴즈 목록을 불러오는데 실패했어요.',
     },
     queryOptions: {
       staleTime: 0,
@@ -19,7 +20,6 @@ export const useGetQuizList = (lectureId: string) => {
       refetchOnReconnect: false,
     },
     schema: QuizListResponseSchema,
-    fetchErrorMessage: '퀴즈 목록을 불러오는데 실패했어요.',
     validateErrorMessage: '퀴즈 목록 형식이 올바르지 않아요.',
     transform: (data) => {
       const totalCount = 20; // TODO: API 수정 후 응답 데이터로 변경

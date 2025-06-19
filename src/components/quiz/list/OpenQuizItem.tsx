@@ -2,12 +2,13 @@
 
 import Button from '@/components/ui/Button';
 import Image from 'next/image';
-import { Quiz, QuizState } from '@/features/quiz/quiz.types';
+import { Quiz, QuizState } from '@/features/quiz/types/quiz.types';
 import { useModal } from '@/hooks/ui/useModal';
 import Modal from '@/components/ui/Modal';
 import { usePutQuizState } from '@/features/quiz/hooks/usePutQuizState';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { getPlainText } from '@/utils/getPlainText';
+import { useRouter } from 'next/navigation';
 
 type OpenQuizItemProps = {
   quiz: Quiz;
@@ -49,9 +50,20 @@ export default function OpenQuizItem({ quiz, isLastQuiz }: OpenQuizItemProps) {
     closeUploadModal();
   };
 
+  const router = useRouter();
+  const handleRouteToDetailPage = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('button')) return;
+
+    router.push(`/lectures/${lectureId}/quiz/${quizId}?state=${state}`);
+  };
+
   return (
     <div className='flex flex-col w-full gap-[5px]'>
-      <div className='flex justify-between items-center px-[10px] py-[20px]'>
+      <div
+        className='flex justify-between items-center px-[10px] py-[20px] cursor-pointer'
+        onClick={handleRouteToDetailPage}
+      >
         <div className='flex items-center gap-[10px]'>
           <div className='flex justify-center items-center w-[49px] h-[49px] bg-accent-redOrange-5 rounded-[15px]'>
             <Image
