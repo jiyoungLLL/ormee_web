@@ -97,13 +97,18 @@ export default function QuizCreateForm() {
     };
   };
 
-  const { isOpen, showConfirm, handleConfirm, handleCancel } = useConfirmModal();
+  const {
+    isOpen: isEditConfirmModalOpen,
+    showConfirm: showEditConfirm,
+    handleConfirm: handleEditConfirm,
+    handleCancel: handleEditCancel,
+  } = useConfirmModal();
 
   const handleRegister = async () => {
     const submitValues = createSubmitValues(false) as QuizCreateRequest;
 
     if (isEditMode) {
-      const confirmed = await showConfirm();
+      const confirmed = await showEditConfirm();
 
       if (confirmed) {
         editQuiz(submitValues);
@@ -166,9 +171,9 @@ export default function QuizCreateForm() {
         </div>
       </div>
       <Modal
-        isOpen={isOpen}
-        onCancel={handleCancel}
-        onConfirm={handleConfirm}
+        isOpen={isEditConfirmModalOpen}
+        onCancel={handleEditCancel}
+        onConfirm={handleEditConfirm}
         title='퀴즈를 수정하시겠어요?'
         description='이전 상태로 되돌릴 수 없어요.'
         iconSrc='/assets/icons/checked.png'
