@@ -25,6 +25,7 @@ import { useToastStore } from '@/stores/toastStore';
 import { usePutQuizDetail } from '@/features/quiz/hooks/usePutQuizState';
 import Modal from '@/components/ui/Modal';
 import { useConfirmModal } from '@/hooks/ui/useConfirmModal';
+import { formatToUTCString } from '@/utils/date/formatDate';
 
 export default function QuizCreateForm() {
   const { isEditMode, quizDetail } = useQuizEditMode();
@@ -49,6 +50,7 @@ export default function QuizCreateForm() {
   useEffect(() => {
     if (isEditMode && quizDetail) {
       const { id, ...rest } = quizDetail;
+
       methods.reset(rest);
       replace(quizDetail.problems);
     }
@@ -70,12 +72,12 @@ export default function QuizCreateForm() {
   const createSubmitValues = (isDraft: boolean): QuizCreateRequest | QuizDraftRequest => {
     const formValues = getValues();
 
-    return {
+    const submitValues = {
       isDraft,
       title: formValues.title,
       description: formValues.description || '',
-      openTime: formValues.startTime ? new Date(formValues.startTime).toISOString() : '',
-      dueTime: formValues.dueTime ? new Date(formValues.dueTime).toISOString() : '',
+      openTime: formValues.startTime ? formatToUTCString(formValues.startTime) : '',
+      dueTime: formValues.dueTime ? formatToUTCString(formValues.dueTime) : '',
       timeLimit: QUIZ_LIMIT_TIME_MAP[formValues.limitTime as (typeof QUIZ_LIMIT_TIME_OPTIONS)[number]] || '',
       problems: formValues.problems.map((problem) =>
         problem.type === 'CHOICE'
@@ -101,6 +103,8 @@ export default function QuizCreateForm() {
             },
       ),
     };
+
+    return submitValues;
   };
 
   const {
