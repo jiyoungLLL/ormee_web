@@ -14,7 +14,7 @@ import {
   QUIZ_LIMIT_TIME_OPTIONS,
 } from '@/features/quiz/quiz.constants';
 import Toolbar from '../ui/Toolbar';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
 import QuizCreateHeader from '@/components/quiz/QuizCreateHeader';
 import { QuizCreateRequest, QuizDraftRequest, QuizFormValues } from '@/features/quiz/types/quiz.types';
@@ -24,7 +24,7 @@ import { useLectureId } from '@/hooks/queries/useLectureId';
 import { useToastStore } from '@/stores/toastStore';
 import { usePutQuizDetail } from '@/features/quiz/hooks/usePutQuizState';
 import Modal from '@/components/ui/Modal';
-import { useModal } from '@/hooks/ui/useModal';
+import { useConfirmModal } from '@/hooks/ui/useConfirmModal';
 
 export default function QuizCreateForm() {
   const { isEditMode, quizDetail } = useQuizEditMode();
@@ -97,39 +97,13 @@ export default function QuizCreateForm() {
     };
   };
 
-  const { isOpen, openModal, closeModal } = useModal({ defaultOpen: false });
-  const modalResolveRef = useRef<((confirmed: boolean) => void) | null>(null);
-
-  const showConfirmModal = (): Promise<boolean> => {
-    return new Promise((resolve) => {
-      modalResolveRef.current = resolve;
-      openModal();
-    });
-  };
-
-  const handleModalConfirm = () => {
-    if (modalResolveRef.current) {
-      modalResolveRef.current(true);
-      modalResolveRef.current = null;
-    }
-
-    closeModal();
-  };
-
-  const handleModalCancel = () => {
-    if (modalResolveRef.current) {
-      modalResolveRef.current(false);
-      modalResolveRef.current = null;
-    }
-
-    closeModal();
-  };
+  const { isOpen, showConfirm, handleConfirm, handleCancel } = useConfirmModal();
 
   const handleRegister = async () => {
     const submitValues = createSubmitValues(false) as QuizCreateRequest;
 
     if (isEditMode) {
-      const confirmed = await showConfirmModal();
+      const confirmed = await showConfirm();
 
       if (confirmed) {
         editQuiz(submitValues);
@@ -193,8 +167,8 @@ export default function QuizCreateForm() {
       </div>
       <Modal
         isOpen={isOpen}
-        onCancel={handleModalCancel}
-        onConfirm={handleModalConfirm}
+        onCancel={handleCancel}
+        onConfirm={handleConfirm}
         title='퀴즈를 수정하시겠어요?'
         description='이전 상태로 되돌릴 수 없어요.'
         iconSrc='/assets/icons/checked.png'
