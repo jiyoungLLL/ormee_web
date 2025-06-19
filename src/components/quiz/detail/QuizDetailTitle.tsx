@@ -9,9 +9,8 @@ type QuizDetailTitleProps = {
 };
 
 export default function QuizDetailTitle({ quizDetail }: QuizDetailTitleProps) {
-  const { title, description, dueTime, timeLimit } = quizDetail;
-  const openDate = '2025-06-11T15:00:00'; // TODO: api 수정 후 교체
-  const formattedOpenDate = formatDatetimeToYYMMDD(openDate);
+  const { title, description, openTime, dueTime, timeLimit } = quizDetail;
+  const formattedOpenDate = formatDatetimeToYYMMDD(openTime);
   const formattedDueDate = formatDatetimeToYYMMDD(dueTime);
   const formattedLimitTime = QUIZ_LIMIT_TIME_MAP_TO_RENDER[timeLimit as keyof typeof QUIZ_LIMIT_TIME_MAP_TO_RENDER];
   const isDescriptionEmpty = !description || getPlainText(description).trim() === '';

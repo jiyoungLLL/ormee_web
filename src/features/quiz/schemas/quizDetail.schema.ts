@@ -30,6 +30,7 @@ export const ProblemResponseSchema = z.discriminatedUnion('type', [
 export const QuizDetailResponseSchema = z.object({
   title: z.string(),
   description: z.string(),
+  openTime: z.string(),
   dueTime: z.string(),
   timeLimit: z.number(),
   problems: z.array(ProblemResponseSchema),
