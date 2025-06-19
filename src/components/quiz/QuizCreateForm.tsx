@@ -84,14 +84,20 @@ export default function QuizCreateForm() {
               content: problem.content,
               answer: problem.answer,
               items: problem.item.map((item) => item.text),
-              fileIds: problem.files.map((file) => file.id),
+              fileIds: problem.files.map((file) => {
+                const fileIdMatch = file.id.match(/^files-\d+-(\d+)$/);
+                return fileIdMatch ? Number(fileIdMatch[1]) : Number(file.id);
+              }),
             }
           : {
               type: 'ESSAY' as const,
               content: problem.content,
               answer: problem.answer,
               items: null,
-              fileIds: problem.files.map((file) => file.id),
+              fileIds: problem.files.map((file) => {
+                const fileIdMatch = file.id.match(/^files-\d+-(\d+)$/);
+                return fileIdMatch ? Number(fileIdMatch[1]) : Number(file.id);
+              }),
             },
       ),
     };
