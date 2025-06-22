@@ -31,7 +31,7 @@ export default function CloseQuizStats({ quizId }: CloseQuizStatsProps) {
       <table className='w-full'>
         <thead>
           <tr className='grid grid-cols-[40px_89px_89px_89px] justify-items-center gap-x-[40px]'>
-            <th className='text-label font-semibold text-gray-70 text-center'>순위</th>
+            <th className='text-label font-semibold text-gray-70 text-center'>순번</th>
             <th className='text-label font-semibold text-gray-70 text-center'>문항</th>
             <th className='text-label font-semibold text-gray-70 text-center'>오답 비율</th>
             <th className='text-label font-semibold text-gray-70 text-center'>오답 인원</th>
