@@ -4,6 +4,7 @@ import { useGetClosedQuizStats } from '@/features/quiz/hooks/useGetClosedQuizSta
 import { useModal } from '@/hooks/ui/useModal';
 import ProblemStatsModal from '@/components/quiz/list/ProblemStatsModal';
 import { useState } from 'react';
+
 type CloseQuizStatsProps = {
   quizId: string;
 };
@@ -11,9 +12,9 @@ type CloseQuizStatsProps = {
 export default function CloseQuizStats({ quizId }: CloseQuizStatsProps) {
   const { data: closedQuizStats, error } = useGetClosedQuizStats(quizId);
   const { isOpen, openModal, closeModal } = useModal({ defaultOpen: false });
-  const [openProblemId, setOpenProblemId] = useState<string>('');
+  const [openProblemId, setOpenProblemId] = useState<number | null>(null);
 
-  const handleProblemStatsModal = (problemId: string) => {
+  const handleProblemStatsModal = (problemId: number) => {
     setOpenProblemId(problemId);
     openModal();
   };
@@ -49,13 +50,13 @@ export default function CloseQuizStats({ quizId }: CloseQuizStatsProps) {
               >
                 {stat.problemLabel}
               </td>
-              <td className='text-headline2 font-normal text-gray-90 text-center'>{stat.incorrectRate * 100}%</td>
-              <td className='text-headline2 font-normal text-gray-90 text-center'>{stat.incorrectStudents}</td>
+              <td className='text-headline2 font-normal text-gray-90 text-center'>{stat.incorrectRate}%</td>
+              <td className='text-headline2 font-normal text-gray-90 text-center'>{stat.incorrectCount}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      {isOpen && (
+      {isOpen && openProblemId && (
         <ProblemStatsModal
           isOpen={isOpen}
           onCancel={closeModal}

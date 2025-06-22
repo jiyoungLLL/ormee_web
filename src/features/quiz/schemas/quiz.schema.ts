@@ -139,66 +139,34 @@ export const QuizListSchema = z.object({
 });
 
 // 마감 퀴즈 관련 스키마
-export const ClosedQuizStatsResponseSchema = z
-  .array(
-    z.object({
-      rank: z.number(),
-      problem_id: z.string().min(1),
-      problem_label: z.string().min(1),
-      incorrect_rate: z.number(),
-      incorrect_students: z.number(),
-    }),
-  )
-  .max(4);
-
 export const ClosedQuizStatsSchema = z
   .array(
     z.object({
       rank: z.number(),
-      problemId: z.string().min(1),
+      problemId: z.number(),
+      problemNum: z.number(),
       problemLabel: z.string().min(1),
       incorrectRate: z.number(),
-      incorrectStudents: z.number(),
+      incorrectCount: z.number(),
     }),
   )
   .max(4);
 
-export const ProblemStatsResponseSchema = z
-  .object({
-    problem_label: z.string().min(1),
-    description: z.string().min(1),
-    type: z.enum(['CHOICE', 'ESSAY']),
-  })
-  .and(
-    z.discriminatedUnion('type', [
-      z.object({
-        type: z.literal('CHOICE'),
-        items: z.array(
-          z.object({
-            is_answer: z.boolean(),
-            text: z.string().min(1),
-            selected_students: z.number(),
-          }),
-        ),
-      }),
-      z.object({
-        type: z.literal('ESSAY'),
-        answer: z.string().min(1),
-        incorrect_submit: z.array(
-          z.object({
-            rank: z.number(),
-            answer: z.string(),
-            incorrect_students: z.number(),
-          }),
-        ),
-      }),
-    ]),
-  );
+export const ProblemStatsResponseSchema = z.object({
+  content: z.string().min(1),
+  type: z.enum(['CHOICE', 'ESSAY']),
+  answer: z.string().min(1),
+  results: z.array(
+    z.object({
+      count: z.number(),
+      option: z.string(),
+    }),
+  ),
+});
 
 export const ProblemStatsSchema = z
   .object({
-    problemLabel: z.string().min(1),
-    description: z.string().min(1),
+    content: z.string().min(1),
     type: z.enum(['CHOICE', 'ESSAY']),
   })
   .and(

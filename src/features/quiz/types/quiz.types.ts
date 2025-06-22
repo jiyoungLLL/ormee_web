@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import {
-  ClosedQuizStatsResponseSchema,
   ClosedQuizStatsSchema,
   QuizListSchema,
   QuizListResponseSchema,
@@ -52,7 +51,6 @@ export type QuizListResponse = z.infer<typeof QuizListResponseSchema>;
 export type Quiz = z.infer<typeof QuizSchema>;
 export type QuizList = z.infer<typeof QuizListSchema>;
 export type DraftQuizListResponse = z.infer<typeof DraftQuizListResponseSchema>;
-export type ClosedQuizStatsResponse = z.infer<typeof ClosedQuizStatsResponseSchema>;
 export type ClosedQuizStats = z.infer<typeof ClosedQuizStatsSchema>;
 export type ProblemStatsResponse = z.infer<typeof ProblemStatsResponseSchema>;
 export type ProblemStats = z.infer<typeof ProblemStatsSchema>;
