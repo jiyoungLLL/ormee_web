@@ -2,7 +2,7 @@
 export type PostHomeWork = {
   title: string;
   description: string;
-  files: string | string[];
+  files: FileList | File[];
   isDraft: boolean;
   openTime: string;
   dueTime: string;
