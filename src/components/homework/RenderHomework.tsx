@@ -15,8 +15,8 @@ export default function RenderHomework() {
 
   const filterMap = {
     전체: '',
-    진행중: 'ongoing',
-    마감: 'done',
+    진행중: 'openedHomeworks',
+    마감: 'closedHomeworks',
   };
 
   const reverseFilterMap = {
