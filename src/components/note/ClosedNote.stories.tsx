@@ -14,7 +14,7 @@ export default meta;
 type Story = StoryObj<typeof ClosedNote>;
 
 const handleClick = () => {
-  alert('드롭다운');
+  console.log('드롭다운');
 };
 
 export const Default: Story = {
