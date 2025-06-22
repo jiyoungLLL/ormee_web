@@ -82,7 +82,7 @@ export async function fetcher<T>({
       console.error('요청 데이터: ', fetchOptions.body);
     }
 
-    return { status: 'fail', code: res.status, data: err.message || errorMessage || 'API 요청 실패' };
+    return { status: 'fail', code: res.status, data: err.data || errorMessage || 'API 요청 실패' };
   }
 
   const data = await res.json();
