@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ClosedNote from './ClosedNote';
+
+const queryClient = new QueryClient();
 
 const meta = {
   title: 'Components/Note/ClosedNote',
@@ -8,6 +11,13 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
+  decorators: [
+    (Story) => (
+      <QueryClientProvider client={queryClient}>
+        <Story />
+      </QueryClientProvider>
+    ),
+  ],
 } satisfies Meta<typeof ClosedNote>;
 
 export default meta;
@@ -25,6 +35,6 @@ export const Default: Story = {
     totalCount: 30,
     submitCount: 12,
     isOpen: false,
-    onClick: () => handleClick(),
+    onClick: handleClick,
   },
 };
