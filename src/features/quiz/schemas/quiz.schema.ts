@@ -111,7 +111,16 @@ export const QuizListResponseSchema = z.object({
   closedQuizzes: z.array(QuizResponseSchema),
 });
 
-export const DraftQuizListResponseSchema = z.array(QuizResponseSchema);
+export const DraftQuizResponseSchema = z.object({
+  id: z.string().min(1),
+  quizName: z.string(),
+  quizDate: z.union([z.string(), z.null()]),
+  timeLimit: z.union([z.number(), z.null()]),
+  quizAvailable: z.boolean(),
+  submitCount: z.number(),
+});
+
+export const DraftQuizListResponseSchema = z.array(DraftQuizResponseSchema);
 
 export const QuizSchema = z.object({
   id: z.string().min(1),
