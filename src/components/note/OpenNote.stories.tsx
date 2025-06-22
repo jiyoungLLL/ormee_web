@@ -13,16 +13,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof OpenNote>;
 
-const handleEvent = () => {
-  alert('쪽지 마감!!!');
-};
-
 export const Default: Story = {
   args: {
     noteId: 1,
     title: '10/29 쪽지',
     date: '2024.10.29 15:00',
-    onClick: handleEvent,
   },
 };
 

@@ -13,9 +13,9 @@ type ClosedNoteType = {
   /** 제출 인원  */
   submitCount?: number;
   /** 드롭다운 열림 여부 */
-  isOpen: boolean;
+  isOpen?: boolean;
   /** 드롭다운 이벤트 함수 */
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 export default function ClosedNote({ noteId, title, date, totalCount, submitCount, isOpen, onClick }: ClosedNoteType) {
