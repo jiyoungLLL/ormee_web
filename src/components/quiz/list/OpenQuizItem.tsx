@@ -41,12 +41,12 @@ export default function OpenQuizItem({ quiz, isLastQuiz }: OpenQuizItemProps) {
   // TODO: 로딩상태 추가
 
   const handleCloseQuiz = async () => {
-    mutateQuizState('closed');
+    mutateQuizState(undefined);
     closeCloseModal();
   };
 
   const handleUploadQuiz = async () => {
-    mutateQuizState('ongoing');
+    mutateQuizState(undefined);
     closeUploadModal();
   };
 

@@ -12,19 +12,16 @@ const SUCCESS_MESSAGE: Record<Exclude<QuizState, 'closed' | 'temporary'>, string
   ready: '퀴즈가 게시됐어요.',
 };
 
-const putQuizState = async (quizId: string, state: Exclude<QuizState, 'ready'>) => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_MOCK_BASE_URL}/api/teachers/quizzes/${quizId}/${state}`, {
-    method: 'PUT',
-  });
+const ERROR_MESSAGE: Record<Exclude<QuizState, 'closed' | 'temporary'>, string> = {
+  ongoing: '퀴즈 마감에 실패했어요.',
+  ready: '퀴즈 게시에 실패했어요.',
+};
 
-  if (!response.ok) {
-    if (process.env.NODE_ENV === 'development') console.error(response.statusText);
+const getEndpoint = (quizId: string, state: Exclude<QuizState, 'closed' | 'temporary'>): string => {
+  if (state === 'ongoing') return `/teachers/quizzes/${quizId}/close`;
+  if (state === 'ready') return `/teachers/quizzes/${quizId}/open`;
 
-    if (state === 'ongoing') throw new Error('퀴즈 게시에 실패했습니다.');
-    if (state === 'closed') throw new Error('퀴즈 마감에 실패했습니다.');
-  }
-
-  return response.json();
+  throw new Error('현재 퀴즈의 상태가 올바르지 않아요. 다시 시도해주세요.');
 };
 
 export const usePutQuizState = ({
@@ -38,41 +35,21 @@ export const usePutQuizState = ({
 }) => {
   const { addToast } = useToastStore();
 
-  if (prevState === 'ongoing') {
-    return useApiMutation<ApiResponse>({
-      method: 'PUT',
-      endpoint: `/teachers/quizzes/${quizId}/close`,
-      fetchOptions: {
-        errorMessage: '퀴즈 마감에 실패했어요.',
-        authorization: true,
-      },
-      invalidateKey: [QUERY_KEYS.quizList(lectureId), QUERY_KEYS.quizDetail(quizId)],
-      onSuccess: () => {
-        addToast({ message: SUCCESS_MESSAGE[prevState], type: 'success' });
-      },
-      onError: (error) => {
-        addToast({ message: error.message, type: 'error' });
-      },
-    });
-  }
-
-  if (prevState === 'ready') {
-    return useApiMutation<ApiResponse>({
-      method: 'PUT',
-      endpoint: `/teachers/quizzes/${quizId}/open`,
-      fetchOptions: {
-        errorMessage: '퀴즈 게시에 실패했어요.',
-        authorization: true,
-      },
-      invalidateKey: [QUERY_KEYS.quizList(lectureId), QUERY_KEYS.quizDetail(quizId)],
-      onSuccess: () => {
-        addToast({ message: SUCCESS_MESSAGE[prevState], type: 'success' });
-      },
-      onError: (error) => {
-        addToast({ message: error.message, type: 'error' });
-      },
-    });
-  }
+  return useApiMutation<ApiResponse>({
+    method: 'PUT',
+    endpoint: getEndpoint(quizId, prevState),
+    fetchOptions: {
+      errorMessage: ERROR_MESSAGE[prevState],
+      authorization: true,
+    },
+    invalidateKey: [QUERY_KEYS.quizList(lectureId), QUERY_KEYS.quizDetail(quizId)],
+    onSuccess: () => {
+      addToast({ message: SUCCESS_MESSAGE[prevState], type: 'success' });
+    },
+    onError: (error) => {
+      addToast({ message: error.message, type: 'error' });
+    },
+  });
 };
 
 export const usePutQuizDetail = ({ quizId, lectureId }: { quizId: string; lectureId: string }) => {
