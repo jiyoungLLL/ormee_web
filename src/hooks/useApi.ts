@@ -4,7 +4,7 @@ import { fetcher, FetchOptions, Method } from '@/utils/api/api';
 import { MutationOptions, useMutation, useQuery, useQueryClient, UseQueryOptions } from '@tanstack/react-query';
 import { z } from 'zod';
 
-export function validateResponse<T>(schema: z.ZodSchema<T>, data: unknown): T {
+export function validateResponse<T>(schema: z.ZodSchema<T>, data: unknown, errorMessage?: string): T {
   const result = schema.safeParse(data);
 
   if (!result.success) {
@@ -14,7 +14,7 @@ export function validateResponse<T>(schema: z.ZodSchema<T>, data: unknown): T {
       console.error('에러 메시지: ', result.error.message);
     }
 
-    throw new Error(`잘못된 형식의 응답입니다. ${result.error.message}`);
+    throw new Error(errorMessage || `${result.error.issues[0].message}`);
   }
 
   return result.data;
@@ -31,6 +31,8 @@ type UseApiQueryOptions<T, R = T> = {
   schema?: z.ZodSchema<T>;
   /** API 응답 데이터를 변환하는 함수 */
   transform?: (data: T) => R;
+  /** API 응답 데이터 검증 실패 시 표시할 에러 메시지 */
+  validateErrorMessage?: string;
 };
 
 /**
@@ -44,6 +46,7 @@ type UseApiQueryOptions<T, R = T> = {
  * @param {Omit<UseQueryOptions<R, Error>, 'queryKey' | 'queryFn'>} [options.queryOptions] - Tanstack Query의 추가 옵션
  * @param {z.ZodSchema<T>} [options.schema] - API 응답 데이터 검증을 위한 Zod 스키마
  * @param {(data: T) => R} [options.transform] - API 응답 데이터를 변환하는 함수
+ * @param {string} [options.validateErrorMessage] - API 응답 데이터 검증 실패 시 표시할 에러 메시지
  * @returns Tanstack Query의 쿼리 결과
  * @example
  * ```ts
@@ -68,6 +71,7 @@ export function useApiQuery<T, R = T>({
   queryOptions,
   schema,
   transform,
+  validateErrorMessage,
 }: UseApiQueryOptions<T, R>) {
   return useQuery<R, Error>({
     queryKey,
@@ -78,15 +82,19 @@ export function useApiQuery<T, R = T>({
         throw new Error(response.data);
       }
 
+      let validatedData = response.data;
+
+      // 스키마 검증
       if (schema) {
-        return validateResponse(schema, response.data) as unknown as R;
+        validatedData = validateResponse(schema, response.data, validateErrorMessage) as unknown as T;
       }
 
+      // 데이터 변환
       if (transform) {
-        return transform(response.data) as R;
+        return transform(validatedData) as R;
       }
 
-      return response.data as unknown as R;
+      return validatedData as unknown as R;
     },
     ...queryOptions,
   });
@@ -138,6 +146,10 @@ type UseApiMutationOptions<T, V, R = T> = {
   onError?: (err: Error) => void;
   /** Tanstack Query의 mutation 옵션 (mutationFn, onSuccess, onError 제외) */
   mutationOptions?: Omit<MutationOptions<R, Error, V>, 'mutationFn' | 'onSuccess' | 'onError'>;
+  /** API 요청 데이터 검증 실패 시 표시할 에러 메시지 */
+  requestValidateErrorMessage?: string;
+  /** API 응답 데이터 검증 실패 시 표시할 에러 메시지 */
+  responseValidateErrorMessage?: string;
 };
 
 /**
@@ -159,6 +171,8 @@ type UseApiMutationOptions<T, V, R = T> = {
  * @param {readonly unknown[] | readonly unknown[][]} [options.invalidateKey] - 무효화할 쿼리 키
  * @param {(err: Error) => void} [options.onError] - 실패 시 콜백 함수
  * @param {Omit<MutationOptions<R, Error, V>, 'mutationFn' | 'onSuccess' | 'onError'>} [options.mutationOptions] - Tanstack Query mutation 옵션
+ * @param {string} [options.requestValidateErrorMessage] - API 요청 데이터 검증 실패 시 표시할 에러 메시지
+ * @param {string} [options.responseValidateErrorMessage] - API 응답 데이터 검증 실패 시 표시할 에러 메시지
  *
  * @returns Tanstack Query의 mutation 결과
  *
@@ -188,7 +202,7 @@ type UseApiMutationOptions<T, V, R = T> = {
  * });
  * ```
  */
-export function useApiMutation<T, V, R = T>({
+export function useApiMutation<T, V = undefined, R = T>({
   method,
   endpoint,
   fetchOptions,
@@ -200,6 +214,8 @@ export function useApiMutation<T, V, R = T>({
   invalidateKey,
   onError,
   mutationOptions,
+  requestValidateErrorMessage,
+  responseValidateErrorMessage,
 }: UseApiMutationOptions<T, V, R>) {
   const queryClient = useQueryClient();
 
@@ -217,7 +233,7 @@ export function useApiMutation<T, V, R = T>({
   };
 
   return useMutation<R, Error, V>({
-    mutationFn: async (body: V) => {
+    mutationFn: async (body?: V) => {
       // 요청 데이터 검증
       if (requestSchema) {
         const result = requestSchema.safeParse(body);
@@ -227,12 +243,12 @@ export function useApiMutation<T, V, R = T>({
             console.error('요청 데이터: ', body);
             console.error('에러 메시지: ', result.error.message);
           }
-          throw new Error(`잘못된 형식의 요청 데이터입니다. ${result.error.message}`);
+          throw new Error(requestValidateErrorMessage || `${result.error.issues[0].message}`);
         }
       }
 
       // 요청 데이터 변환
-      const transformedBody = requestTransform ? requestTransform(body) : body;
+      const transformedBody = requestTransform ? requestTransform(body as V) : body;
 
       const resolvedEndpoint = typeof endpoint === 'function' ? endpoint(body) : endpoint;
 
@@ -247,11 +263,19 @@ export function useApiMutation<T, V, R = T>({
         throw new Error(response.data);
       }
 
+      let validatedData = response.data;
+
       // 응답 데이터 검증
-      const validatedData = responseSchema ? validateResponse(responseSchema, response.data) : response.data;
+      if (responseSchema) {
+        validatedData = validateResponse(responseSchema, response.data, responseValidateErrorMessage) as unknown as T;
+      }
 
       // 응답 데이터 변환
-      return responseTransform ? (responseTransform(validatedData) as R) : (validatedData as unknown as R);
+      if (responseTransform) {
+        return responseTransform(validatedData) as R;
+      }
+
+      return validatedData as unknown as R;
     },
     onSuccess: handleSuccess,
     onError,

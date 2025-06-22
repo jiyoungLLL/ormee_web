@@ -7,7 +7,7 @@ export default function ToastContainer() {
   const { toasts } = useToastStore();
 
   return (
-    <div className='fixed top-[70px] w-screen flex flex-col-reverse justify-center items-center gap-[10px] pointer-events-none'>
+    <div className='fixed top-[70px] w-screen flex flex-col-reverse justify-center items-center gap-[10px] pointer-events-none z-[999]'>
       {toasts.map(({ id, message, type, duration }) => (
         <Toast
           key={`toast-${id}`}

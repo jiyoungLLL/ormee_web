@@ -1,10 +1,12 @@
 'use client';
 
-import { Quiz } from '@/features/quiz/quiz.types';
-import { formatDatetimeWithTime } from '@/utils/date/formatDate';
+import { Quiz } from '@/features/quiz/types/quiz.types';
 import Image from 'next/image';
 import { useState } from 'react';
 import CloseQuizStats from '@/components/quiz/list/CloseQuizStats';
+import { getPlainText } from '@/utils/getPlainText';
+import { useRouter } from 'next/navigation';
+import { useLectureId } from '@/hooks/queries/useLectureId';
 
 type CloseQuizItemProps = {
   quiz: Quiz;
@@ -12,8 +14,8 @@ type CloseQuizItemProps = {
 };
 
 export default function CloseQuizItem({ quiz, isLastQuiz }: CloseQuizItemProps) {
-  const { id, title, dueTime, limitTime, submitStudents, totalStudents } = quiz;
-  const formattedDueTime = formatDatetimeWithTime(dueTime);
+  const { id, title, dueTime, limitTime, submitCount, totalCount, state } = quiz;
+  const plainTitle = getPlainText(title);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -21,14 +23,27 @@ export default function CloseQuizItem({ quiz, isLastQuiz }: CloseQuizItemProps) 
     setIsOpen(!isOpen);
   };
 
+  const router = useRouter();
+  const lectureId = useLectureId();
+
+  const handleRouteToDetailPage = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('button')) return;
+
+    router.push(`/lectures/${lectureId}/quiz/${id}?state=${state}`);
+  };
+
   const showSeparator = !isOpen && !isLastQuiz;
 
   return (
     <div className='flex flex-col w-full gap-[5px]'>
-      <div className='flex justify-between items-center px-[10px] py-[20px] rounded-[15px]'>
+      <div
+        className='flex justify-between items-center px-[10px] py-[20px] rounded-[15px] cursor-pointer'
+        onClick={handleRouteToDetailPage}
+      >
         <div className='flex flex-col gap-[5px]'>
-          <span className='text-headline1 font-semibold text-gray-60'>{title}</span>
-          <span className='text-label font-semibold text-gray-50'>{formattedDueTime}</span>
+          <span className='text-headline1 font-semibold text-gray-60'>{plainTitle}</span>
+          <span className='text-label font-semibold text-gray-50'>{dueTime}</span>
         </div>
         <div className='flex items-center gap-[29px]'>
           <div className='flex items-center gap-[5px]'>
@@ -50,9 +65,9 @@ export default function CloseQuizItem({ quiz, isLastQuiz }: CloseQuizItemProps) 
               draggable={false}
             />
             <p className='flex items-center gap-[2px]'>
-              <span className='text-headline1 font-semibold text-gray-60'>{submitStudents}</span>
+              <span className='text-headline1 font-semibold text-gray-60'>{submitCount}</span>
               <span className='text-headline1 font-normal text-gray-50'>/</span>
-              <span className='text-headline1 font-normal text-gray-50'>{totalStudents}</span>
+              <span className='text-headline1 font-normal text-gray-50'>{totalCount}</span>
             </p>
           </div>
           <button

@@ -1,4 +1,4 @@
-import { QuizFormValues } from '@/features/quiz/quiz.types';
+import { QuizFormValues } from '@/features/quiz/types/quiz.types';
 import Image from 'next/image';
 import { Path, useFormContext } from 'react-hook-form';
 

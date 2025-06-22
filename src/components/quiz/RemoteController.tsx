@@ -2,7 +2,7 @@
 
 import { FieldArrayWithId } from 'react-hook-form';
 import RemoteButton from '@/components/quiz/RemoteButton';
-import { QuizFormValues } from '@/features/quiz/quiz.types';
+import { QuizFormValues } from '@/features/quiz/types/quiz.types';
 
 type RemoteControllerProps = {
   problemFields: FieldArrayWithId<QuizFormValues, 'problems', 'id'>[];

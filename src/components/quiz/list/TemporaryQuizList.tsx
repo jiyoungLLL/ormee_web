@@ -6,7 +6,8 @@ import TemporaryQuizItem from '@/components/quiz/list/TemporaryQuizItem';
 
 export default function TemporaryQuizList() {
   const lectureId = useLectureId();
-  const { data: temporaryQuizList = [] } = useGetTemporaryQuizList(lectureId);
+  const { data } = useGetTemporaryQuizList(lectureId);
+  const temporaryQuizList = data?.openQuizzes.filter((quiz) => quiz.state === 'temporary') ?? [];
 
   const isLastQuiz = (index: number) => index === temporaryQuizList.length - 1;
 

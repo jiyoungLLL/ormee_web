@@ -14,3 +14,13 @@ export async function POST(req: NextRequest, { params }: { params: { lectureId: 
 
   return response;
 }
+
+export async function GET(req: NextRequest, { params }: { params: { lectureId: string } }) {
+  const lectureId = params.lectureId;
+  const headers = await getHeaders();
+  const response = await fetch(`${process.env.API_BASE_URL}/teachers/${lectureId}/quizzes`, {
+    headers,
+  });
+
+  return response;
+}

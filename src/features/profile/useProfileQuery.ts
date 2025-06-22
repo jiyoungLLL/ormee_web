@@ -20,8 +20,9 @@ export const useGetProfileData = () => {
       bio: data.introduction,
     }),
     queryOptions: {
-      staleTime: 1000 * 60 * 60 * 1,
-      gcTime: 1000 * 60 * 60 * 3,
+      staleTime: 1000 * 60 * 60 * 3,
+      gcTime: 1000 * 60 * 60 * 5,
+      retry: false,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
