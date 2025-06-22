@@ -1,11 +1,10 @@
 import {
-  ClosedQuizStatsResponse,
+  ClosedQuizStats,
   ProblemStatsResponse,
   Quiz,
   QuizCreateRequest,
   QuizDraftRequest,
   QuizFormValues,
-  QuizListResponse,
 } from '@/features/quiz/types/quiz.types';
 
 // export const QUIZ_LIST_RESPONSE_MIXED: QuizListResponse = [
@@ -99,121 +98,40 @@ export const QUIZ_CLOSED_ERROR: Quiz = {
   totalCount: 20,
 };
 
-export const CLOSED_QUIZ_STATS_FULL: ClosedQuizStatsResponse = [
+export const CLOSED_QUIZ_STATS_FULL: ClosedQuizStats = [
   {
     rank: 1,
-    problem_id: 'mock-problem-choice',
-    problem_label: '문항 1',
-    incorrect_rate: 0.5,
-    incorrect_students: 10,
+    problemId: 1,
+    problemNum: 1,
+    problemLabel: '문항 1',
+    incorrectRate: 0.5,
+    incorrectCount: 10,
   },
   {
     rank: 2,
-    problem_id: 'mock-problem-choice',
-    problem_label: '문항 2',
-    incorrect_rate: 0.3,
-    incorrect_students: 5,
+    problemId: 2,
+    problemNum: 2,
+    problemLabel: '문항 2',
+    incorrectRate: 0.3,
+    incorrectCount: 5,
   },
   {
     rank: 3,
-    problem_id: 'mock-problem-essay',
-    problem_label: '문항 3',
-    incorrect_rate: 0.2,
-    incorrect_students: 3,
+    problemId: 3,
+    problemNum: 3,
+    problemLabel: '문항 3',
+    incorrectRate: 0.2,
+    incorrectCount: 3,
   },
   {
     rank: 4,
-    problem_id: 'mock-problem-essay',
-    problem_label: '문항 4',
-    incorrect_rate: 0.1,
-    incorrect_students: 2,
+    problemId: 4,
+    problemNum: 4,
+    problemLabel: '문항 4',
+    incorrectRate: 0.1,
+    incorrectCount: 2,
   },
 ];
-
-export const CLOSED_QUIZ_STATS_PARTIAL: ClosedQuizStatsResponse = [
-  {
-    rank: 1,
-    problem_id: 'mock-problem-choice',
-    problem_label: '문항 1',
-    incorrect_rate: 0.5,
-    incorrect_students: 10,
-  },
-  {
-    rank: 2,
-    problem_id: 'mock-problem-essay',
-    problem_label: '문항 2',
-    incorrect_rate: 0.3,
-    incorrect_students: 5,
-  },
-];
-
-export const CLOSED_QUIZ_STATS_MAP: Record<string, ClosedQuizStatsResponse> = {
-  'mock-quiz-3': CLOSED_QUIZ_STATS_FULL,
-  'mock-quiz-4': CLOSED_QUIZ_STATS_PARTIAL,
-  'mock-closed-quiz-1': CLOSED_QUIZ_STATS_FULL,
-};
-
-export const PROBLEM_STATS_CHOICE: ProblemStatsResponse = {
-  problem_label: '문항 1',
-  description: 'Four football matches will be broadcast live on three major stations _______ this weekend.',
-  type: 'CHOICE',
-  items: [
-    {
-      is_answer: false,
-      text: 'a.nation',
-      selected_students: 10,
-    },
-    {
-      is_answer: false,
-      text: 'b.national',
-      selected_students: 5,
-    },
-    {
-      is_answer: false,
-      text: 'c.nationality',
-      selected_students: 3,
-    },
-    {
-      is_answer: true,
-      text: 'd.nationally',
-      selected_students: 2,
-    },
-  ],
-};
-
-export const PROBLEM_STATS_ESSAY: ProblemStatsResponse = {
-  problem_label: '문항 1',
-  description: 'Four football matches will be broadcast live on three major stations _______ this weekend.',
-  type: 'ESSAY',
-  answer: 'nationally',
-  incorrect_submit: [
-    {
-      rank: 1,
-      answer: 'nation',
-      incorrect_students: 10,
-    },
-    {
-      rank: 2,
-      answer: 'national',
-      incorrect_students: 5,
-    },
-    {
-      rank: 3,
-      answer: 'nationality',
-      incorrect_students: 3,
-    },
-    {
-      rank: 4,
-      answer: 'nationaly',
-      incorrect_students: 2,
-    },
-  ],
-};
-
-export const PROBLEM_STATS_MAP: Record<string, ProblemStatsResponse> = {
-  'mock-problem-choice': PROBLEM_STATS_CHOICE,
-  'mock-problem-essay': PROBLEM_STATS_ESSAY,
-};
 
 // export const TEMPORARY_QUIZ_LIST: QuizListResponse = [
 //   {
