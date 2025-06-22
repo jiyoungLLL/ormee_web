@@ -18,6 +18,14 @@ export default function TemporaryQuizList() {
     );
   }
 
+  if (temporaryQuizList.length === 0) {
+    return (
+      <div className='flex justify-center items-center w-full h-full text-headline1 font-semibold text-gray-40'>
+        임시저장 목록이 없어요.
+      </div>
+    );
+  }
+
   return (
     <div className='flex flex-col gap-[5px] w-full'>
       {temporaryQuizList.map((quiz, index) => (

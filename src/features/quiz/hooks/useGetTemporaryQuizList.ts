@@ -17,19 +17,18 @@ export const useGetTemporaryQuizList = (lectureId: string) => {
       gcTime: 1000 * 60 * 60 * 24,
       retry: 1,
       refetchOnWindowFocus: false,
-      refetchOnMount: false,
+      refetchOnMount: true,
       refetchOnReconnect: false,
-      enabled: false, // TODO: api 에러 확인 후 enabled 설정 제거
     },
     schema: DraftQuizListResponseSchema,
     validateErrorMessage: '임시저장 목록 형식이 올바르지 않아요. 잠시 후 다시 시도해주세요.',
     transform: (data) => {
       return data.map((quiz) => ({
         id: quiz.id.toString(),
-        title: quiz.quizName,
-        dueTime: quiz.quizDate,
+        title: quiz.quizName || '제목 없음',
+        dueTime: quiz.quizDate || '',
         isAvailable: quiz.quizAvailable,
-        limitTime: QUIZ_LIMIT_TIME_MAP_TO_RENDER[quiz.timeLimit as keyof typeof QUIZ_LIMIT_TIME_MAP_TO_RENDER],
+        limitTime: QUIZ_LIMIT_TIME_MAP_TO_RENDER[(quiz.timeLimit || 0) as keyof typeof QUIZ_LIMIT_TIME_MAP_TO_RENDER],
         submitCount: quiz.submitCount,
         totalCount: 0,
         state: 'temporary',
