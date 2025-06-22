@@ -25,5 +25,6 @@ export const QUERY_KEYS = {
   answer: (questionId: string) => ['answer', questionId],
   homeworkList: (lectureId: string) => ['homeworkList', lectureId],
   homeworkDetail: (homeworkId: string) => ['homeworkDetail', homeworkId],
+  homeworkDraft: (lectureId: string) => ['homeworkDraft', lectureId],
   classList: () => ['classList'],
 } as const;
