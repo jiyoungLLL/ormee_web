@@ -6,6 +6,7 @@ import Button from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
 import { useConfirmModal } from '@/hooks/ui/useConfirmModal';
 import Modal from '@/components/ui/Modal';
+import { useQuizEditMode } from '@/features/quiz/hooks/useQuizEditMode';
 
 type QuizCreateHeaderProps = {
   onTemporarySave: () => void;
@@ -15,6 +16,7 @@ type QuizCreateHeaderProps = {
 export default function QuizCreateHeader({ onTemporarySave, onRegister }: QuizCreateHeaderProps) {
   const router = useRouter();
   const lectureId = useLectureId();
+  const { isEditMode } = useQuizEditMode();
 
   const {
     isOpen: isRouteModalOpen,
@@ -61,7 +63,7 @@ export default function QuizCreateHeader({ onTemporarySave, onRegister }: QuizCr
             isPurple
             isfilled
             font='text-headline1 font-semibold text-white'
-            title='등록하기'
+            title={isEditMode ? '수정하기' : '등록하기'}
             onClick={onRegister}
           />
         </div>
