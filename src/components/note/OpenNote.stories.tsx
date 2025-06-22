@@ -19,7 +19,7 @@ const handleEvent = () => {
 
 export const Default: Story = {
   args: {
-    noteKey: '10/29',
+    noteId: 1,
     title: '10/29 쪽지',
     date: '2024.10.29 15:00',
     onClick: handleEvent,
@@ -28,7 +28,7 @@ export const Default: Story = {
 
 export const NoContents: Story = {
   args: {
-    noteKey: 'nothing',
+    noteId: 1,
     title: '',
     date: '',
   },

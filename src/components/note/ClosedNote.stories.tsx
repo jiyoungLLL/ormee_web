@@ -15,7 +15,7 @@ type Story = StoryObj<typeof ClosedNote>;
 
 export const Default: Story = {
   args: {
-    noteKey: '10/29',
+    noteId: 1,
     title: '10/29 쪽지',
     date: '2024.10.29 15:00',
   },
