@@ -90,7 +90,10 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
     }
   }, [data, methods]);
 
-  const mutation = filter && lectureId ? useUpdateClass(lectureId) : useCreateClass();
+  const updateMutation = useUpdateClass(lectureId || '');
+  const createMutation = useCreateClass();
+
+  const mutation = filter && lectureId ? updateMutation : createMutation;
 
   const onSubmit = (data: ClassModalValues) => {
     mutation.mutate(data);

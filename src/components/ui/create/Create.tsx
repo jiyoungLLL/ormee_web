@@ -64,7 +64,10 @@ export default function Create({ type, params }: CreateProps) {
 
   const { control, handleSubmit, setValue, watch } = methods;
 
-  const mutation = homeworkId ? useUpdateHomework(homeworkId) : useCreateHomework(lectureNum);
+  const updateMutation = useUpdateHomework(homeworkId || '');
+  const createMutation = useCreateHomework(lectureNum);
+
+  const mutation = isModify ? updateMutation : createMutation;
 
   const handleDraftSubmit = () => {
     methods.setValue('isDraft', true);
@@ -89,7 +92,7 @@ export default function Create({ type, params }: CreateProps) {
       }
     }
 
-    mutation.mutate(formData);
+    mutation?.mutate(formData);
   };
 
   return (
