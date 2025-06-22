@@ -50,7 +50,7 @@ export default function RenderHomework() {
   ];
 
   return (
-    <div className='bg-white rounded-[25px] px-[30px] py-[20px] flex flex-col gap-[20px]'>
+    <div className='bg-white rounded-[25px] px-[30px] py-[20px] flex flex-col gap-[20px] min-h-[730px]'>
       {/* 과제 드롭다운 & 과제 생성 */}
       <div className='w-full flex justify-between'>
         <Dropdown

@@ -16,7 +16,7 @@ type HomeworkProps = {
 
 export default function HomeworkTap({ type }: HomeworkProps) {
   const lectureNum = useLectureId();
-  const { data, refetch } = useGetHomeworks(lectureNum);
+  const { data } = useGetHomeworks(lectureNum);
 
   const [isOpen, setIsOpen] = useState<{ [key in '진행중' | '마감']?: number[] }>({});
   const [selected, setSelected] = useState<Record<number, '전체' | '미제출' | '미확인'>>({});
@@ -59,12 +59,9 @@ export default function HomeworkTap({ type }: HomeworkProps) {
       >
         <div className='text-heading2 font-semibold'>{name === '마감' ? name : '진행'} 숙제</div>
         <div>
-          {data?.openedHomeworks?.length === 0 && data?.closedHomeworks?.length === 0 && (
-            <div className='text-center text-heading2 font-semibold text-[#B5B6BC]'>생성한 숙제가 없어요.</div>
-          )}
           {validData?.length === 0 && (
             <div className='text-center text-heading2 font-semibold text-[#B5B6BC]'>
-              {name === '마감' ? name : '진행'} 숙제가 없어요.
+              {name === '마감' ? `아직 ${name}된` : '진행'} 숙제가 없어요.
             </div>
           )}
           {validData?.map((data, index) => (
@@ -149,10 +146,16 @@ export default function HomeworkTap({ type }: HomeworkProps) {
   return (
     <div className='flex flex-col gap-[40px]'>
       {type === '전체' ? (
-        <>
-          {renderTap('진행중')}
-          {renderTap('마감')}
-        </>
+        data?.openedHomeworks?.length === 0 && data?.closedHomeworks?.length === 0 ? (
+          <div className='text-center text-heading2 font-semibold text-[#B5B6BC] h-[621px] flex justify-center items-center'>
+            생성한 숙제가 없어요.
+          </div>
+        ) : (
+          <>
+            {renderTap('진행중')}
+            {renderTap('마감')}
+          </>
+        )
       ) : (
         renderTap(type)
       )}

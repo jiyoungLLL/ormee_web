@@ -83,11 +83,13 @@ export const useUpdateHomework = (homeworkId: string) => {
   });
 };
 
-export const useDeleteHomework = (homeworkId: string, lectureId: string) => {
+export const useDeleteHomework = (lectureId: string) => {
   const { addToast } = useToastStore();
+  const router = useRouter();
+
   return useApiMutation<void, string>({
     method: 'DELETE',
-    endpoint: (homeworkId) => `/teachers/lectures/${homeworkId}`,
+    endpoint: (homeworkId) => `/teachers/homeworks/${homeworkId}`,
     fetchOptions: {
       authorization: true,
     },
@@ -97,6 +99,7 @@ export const useDeleteHomework = (homeworkId: string, lectureId: string) => {
         type: 'success',
         duration: 2500,
       });
+      router.push(`/lectures/${lectureId}/homework`);
     },
     onError: (err) => {
       addToast({
