@@ -2,7 +2,7 @@ import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { useApiMutation, useApiQuery } from '@/hooks/useApi';
 import { useToastStore } from '@/stores/toastStore';
 import { useRouter } from 'next/navigation';
-import { HomeworkData, HomeworkItems } from './homework.types';
+import { HomeworkData, HomeworkItems } from '../../homework.types';
 
 export const useGetHomeworks = (lectureId: string) => {
   return useApiQuery<HomeworkData>({
@@ -33,6 +33,7 @@ export const useCreateHomework = (lectureId: string) => {
     endpoint: `/teachers/${lectureId}/homeworks`,
     fetchOptions: {
       authorization: true,
+      contentType: 'multipart/form-data',
     },
     onSuccess: () => {
       addToast({
@@ -61,6 +62,7 @@ export const useUpdateHomework = (homeworkId: string) => {
     endpoint: `teachers/homeworks/${homeworkId}`,
     fetchOptions: {
       authorization: true,
+      contentType: 'multipart/form-data',
     },
     onSuccess: () => {
       addToast({

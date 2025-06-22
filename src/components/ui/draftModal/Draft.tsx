@@ -1,5 +1,5 @@
 import XIcon from '@/components/icon/XIcon';
-import { useGetDraftHomeworks } from '@/features/homework/useHomeworkApi';
+import { useGetDraftHomeworks } from '@/features/homework/hooks/queries/useHomeworkApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { format } from 'date-fns';
 import { usePathname } from 'next/navigation';

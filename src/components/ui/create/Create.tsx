@@ -3,7 +3,7 @@
 import Button from '@/components/ui/Button';
 import CreateContents from '@/components/ui/create/CreateContents';
 import type { HomeworkItems } from '@/features/homework/homework.types';
-import { useCreateHomework, useUpdateHomework } from '@/features/homework/useHomeworkApi';
+import { useCreateHomework, useUpdateHomework } from '@/features/homework/hooks/queries/useHomeworkApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { useModal } from '@/hooks/ui/useModal';
 import { MOCK_HOMEWORK } from '@/mock/homework';
@@ -38,17 +38,11 @@ export default function Create({ type, params }: CreateProps) {
     ? MOCK_HOMEWORK.data[dataFilter].find((item) => item.id === Number(homeworkId))
     : undefined;
 
-  const normalizedFiles = preData?.filePaths
-    ? typeof preData.filePaths === 'string'
-      ? [preData.filePaths]
-      : preData.filePaths
-    : [];
-
   const defaultValues = useMemo(
     () => ({
       title: preData?.title || '',
       description: preData?.description || '',
-      files: normalizedFiles,
+      files: [],
       isDraft: false,
       openTime: new Date().toString(),
       dueTime: preData?.dueTime || '',
@@ -82,14 +76,12 @@ export default function Create({ type, params }: CreateProps) {
     formData.append('openTime', new Date(data.openTime).toISOString().slice(0, 19));
     formData.append('dueTime', data.dueTime ? new Date(data.dueTime).toISOString().slice(0, 19) : '');
 
-    if (data.files) {
-      if (Array.isArray(data.files)) {
-        data.files.forEach((file) => {
-          formData.append('files', file);
-        });
-      } else {
-        formData.append('files', data.files);
-      }
+    if (data.files && Array.isArray(data.files)) {
+      data.files.forEach((file) => {
+        formData.append('files', file);
+      });
+    } else {
+      formData.append('files', '');
     }
 
     mutation?.mutate(formData);
