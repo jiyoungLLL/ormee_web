@@ -2,8 +2,7 @@
 
 import ClassModal from '@/components/class/ClassModal';
 import Button from '@/components/ui/Button';
-import { useDeleteClass } from '@/features/class/hooks/queries/useClassApi';
-import { MOCK_CLASSES } from '@/mock/class';
+import { useDeleteClass, useGetClass } from '@/features/class/hooks/queries/useClassApi';
 import { useToastStore } from '@/stores/toastStore';
 import { format } from 'date-fns';
 import Image from 'next/image';
@@ -13,10 +12,12 @@ import { useEffect, useRef, useState } from 'react';
 export default function ClassContainer() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  // 데이터 받아오기
+  const { data, refetch } = useGetClass();
+
   const { mutateAsync: deleteClass } = useDeleteClass();
 
   const { addToast } = useToastStore();
-  const [classes, setClasses] = useState(MOCK_CLASSES.data);
   const [tab, setTab] = useState<'openLectures' | 'closedLectures'>('openLectures');
   const [openMenu, setOpenMenu] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -49,7 +50,7 @@ export default function ClassContainer() {
 
     if (openMenu !== null) {
       params.set('id', openMenu.toString());
-    } else {
+    } else if (!isOpen) {
       params.delete('id');
     }
 
@@ -73,30 +74,26 @@ export default function ClassContainer() {
     };
   }, [openMenu]);
 
-  const handleDeleteClass = async (classState: 'openLectures' | 'closedLectures', id: string) => {
+  const handleDeleteClass = async (lectureId: string) => {
     setOpenMenu(null);
     try {
-      await deleteClass();
-
-      const updatedClassList = classes[classState].filter((data) => `${data.id}-${data.code}` !== id);
-
-      setClasses({
-        ...classes,
-        [classState]: updatedClassList,
-      });
+      await deleteClass(lectureId);
+      await refetch();
     } catch (error) {
       console.error(error);
     }
   };
 
   const renderClass = (classState: 'openLectures' | 'closedLectures') => {
-    if (classes[classState] && classes[classState].length !== 0) {
+    const classList = data?.[classState];
+
+    if (classList && classList.length !== 0) {
       const commonStyle = 'flex gap-[10px] text-headline2 h-[22px] items-center';
       const IconSrc = classState === 'openLectures' ? 'home-ui.png' : 'pre-lecture.png';
 
       return (
         <div className={`${basicStyle} px-[30px] py-[20px] flex gap-[15px] flex-wrap`}>
-          {classes[classState].map((data, index) => (
+          {classList.map((data, index) => (
             <div
               id={`${index}-${data.title}`}
               key={`${data.id}-${data.code}`}
@@ -151,7 +148,7 @@ export default function ClassContainer() {
                   </button>
                   <button
                     type='button'
-                    onClick={() => handleCopy(data.code)}
+                    // onClick={() => handleCopy(data?.password)}
                   >
                     <Image
                       src={'/assets/icons/dark-copy.png'}
@@ -178,7 +175,7 @@ export default function ClassContainer() {
                   <button
                     type='button'
                     className='h-[40px] px-[10px] py-[5px] rounded-[5px]'
-                    onClick={() => handleDeleteClass(classState, `${data.id}-${data.code}`)}
+                    onClick={() => handleDeleteClass(data.id)}
                   >
                     강의 삭제
                   </button>
@@ -215,7 +212,7 @@ export default function ClassContainer() {
                 onClick={() => setTab('openLectures')}
               >
                 진행 중 강의
-                <div>{tab === 'openLectures' && classes['openLectures'].length}</div>
+                <div>{tab === 'openLectures' && data?.openLectures?.length}</div>
               </button>
 
               {tab === 'openLectures' && (
@@ -248,7 +245,7 @@ export default function ClassContainer() {
                 onClick={() => setTab('closedLectures')}
               >
                 이전 강의
-                <div>{tab === 'closedLectures' && classes['closedLectures'].length}</div>
+                <div>{tab === 'closedLectures' && data?.closedLectures?.length}</div>
               </button>
               {tab === 'closedLectures' && (
                 <Image

@@ -6,6 +6,7 @@ const ClassContainer = dynamic(() => import('@/components/class/ClassContainer')
 });
 
 export default function ClassPage() {
+  console.log('뭐야 ');
   return (
     <Suspense fallback={null}>
       <ClassContainer />
