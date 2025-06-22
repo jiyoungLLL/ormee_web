@@ -1,7 +1,6 @@
 'use client';
 
 import { QuizCreateRequest, QuizState } from '@/features/quiz/types/quiz.types';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../../../hooks/queries/queryKeys';
 import { useToastStore } from '@/stores/toastStore';
 import { useApiMutation } from '@/hooks/useApi';
@@ -9,8 +8,8 @@ import { ApiResponse } from '@/types/response.types';
 import { useRouter } from 'next/navigation';
 
 const SUCCESS_MESSAGE: Record<Exclude<QuizState, 'closed' | 'temporary'>, string> = {
-  ongoing: '퀴즈가 마감되었습니다.',
-  ready: '퀴즈가 게시되었습니다.',
+  ongoing: '퀴즈가 마감됐어요.',
+  ready: '퀴즈가 게시됐어요.',
 };
 
 const putQuizState = async (quizId: string, state: Exclude<QuizState, 'ready'>) => {
@@ -37,19 +36,43 @@ export const usePutQuizState = ({
   lectureId: string;
   prevState: Exclude<QuizState, 'closed' | 'temporary'>;
 }) => {
-  const queryClient = useQueryClient();
   const { addToast } = useToastStore();
 
-  return useMutation({
-    mutationFn: (state: Exclude<QuizState, 'ready'>) => putQuizState(quizId, state),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.quizList(lectureId) });
-      addToast({ message: SUCCESS_MESSAGE[prevState], type: 'success' });
-    },
-    onError: (error) => {
-      addToast({ message: error.message, type: 'error' });
-    },
-  });
+  if (prevState === 'ongoing') {
+    return useApiMutation<ApiResponse>({
+      method: 'PUT',
+      endpoint: `/teachers/quizzes/${quizId}/close`,
+      fetchOptions: {
+        errorMessage: '퀴즈 마감에 실패했어요.',
+        authorization: true,
+      },
+      invalidateKey: [QUERY_KEYS.quizList(lectureId), QUERY_KEYS.quizDetail(quizId)],
+      onSuccess: () => {
+        addToast({ message: SUCCESS_MESSAGE[prevState], type: 'success' });
+      },
+      onError: (error) => {
+        addToast({ message: error.message, type: 'error' });
+      },
+    });
+  }
+
+  if (prevState === 'ready') {
+    return useApiMutation<ApiResponse>({
+      method: 'PUT',
+      endpoint: `/teachers/quizzes/${quizId}/open`,
+      fetchOptions: {
+        errorMessage: '퀴즈 게시에 실패했어요.',
+        authorization: true,
+      },
+      invalidateKey: [QUERY_KEYS.quizList(lectureId), QUERY_KEYS.quizDetail(quizId)],
+      onSuccess: () => {
+        addToast({ message: SUCCESS_MESSAGE[prevState], type: 'success' });
+      },
+      onError: (error) => {
+        addToast({ message: error.message, type: 'error' });
+      },
+    });
+  }
 };
 
 export const usePutQuizDetail = ({ quizId, lectureId }: { quizId: string; lectureId: string }) => {
