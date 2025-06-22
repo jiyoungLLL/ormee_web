@@ -250,7 +250,7 @@ export function useApiMutation<T, V = undefined, R = T>({
       // 요청 데이터 변환
       const transformedBody = requestTransform ? requestTransform(body as V) : body;
 
-      const resolvedEndpoint = typeof endpoint === 'function' ? endpoint(body) : endpoint;
+      const resolvedEndpoint = typeof endpoint === 'function' ? endpoint(body as V) : endpoint;
 
       const response = await fetcher<T>({
         method,
