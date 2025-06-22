@@ -127,7 +127,7 @@ export default function WriteBox({ type, files }: WriteBoxProps) {
               ))}
             </div>
           ) : (
-            <p className='text-body text-gray-50 font-[18px]'>파일을 마우스로 끌어 놓으세요.</p>
+            <p className='text-body text-gray-50 font-[18px]'>파일을 마우스로 끌어 오세요.</p>
           )}
         </div>
       </div>

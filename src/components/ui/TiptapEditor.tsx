@@ -78,7 +78,7 @@ export default function TiptapEditor({ type, contents, onChange, value }: TipTap
 
     if (isVisuallyEmpty(html)) {
       editorDOM.setAttribute('data-placeholder-visible', 'true');
-      editorDOM.setAttribute('data-placeholder', `${type} 내용을 입력하세요`);
+      editorDOM.setAttribute('data-placeholder', `${type} 내용을 입력해 주세요.`);
     } else {
       editorDOM.removeAttribute('data-placeholder-visible');
       editorDOM.removeAttribute('data-placeholder');
