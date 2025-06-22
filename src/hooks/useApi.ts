@@ -1,7 +1,7 @@
 'use client';
 
 import { fetcher, FetchOptions, Method } from '@/utils/api/api';
-import { MutationOptions, UseQueryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { MutationOptions, useMutation, useQuery, useQueryClient, UseQueryOptions } from '@tanstack/react-query';
 import { z } from 'zod';
 
 export function validateResponse<T>(schema: z.ZodSchema<T>, data: unknown): T {
@@ -102,7 +102,7 @@ type UseApiMutationOptions<T, V, R = T> = {
   /** HTTP 메서드 (GET 제외) */
   method: Exclude<Method, 'GET'>;
   /** API 엔드포인트 */
-  endpoint: string;
+  endpoint: string | ((variables: V) => string);
   /** API 요청을 위한 옵션 (method와 endpoint 제외) */
   fetchOptions: Omit<FetchOptions, 'method' | 'endpoint'>;
   /** 요청 데이터 검증을 위한 Zod 스키마 */
@@ -234,9 +234,11 @@ export function useApiMutation<T, V, R = T>({
       // 요청 데이터 변환
       const transformedBody = requestTransform ? requestTransform(body) : body;
 
+      const resolvedEndpoint = typeof endpoint === 'function' ? endpoint(body) : endpoint;
+
       const response = await fetcher<T>({
         method,
-        endpoint,
+        endpoint: resolvedEndpoint,
         body: transformedBody,
         ...fetchOptions,
       });
