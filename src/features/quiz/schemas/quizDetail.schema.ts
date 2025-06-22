@@ -28,11 +28,11 @@ export const ProblemResponseSchema = z.discriminatedUnion('type', [
 ]);
 
 export const QuizDetailResponseSchema = z.object({
-  title: z.string(),
-  description: z.string(),
-  openTime: z.string(),
-  dueTime: z.string(),
-  timeLimit: z.number(),
+  title: z.string().nullable(),
+  description: z.string().nullable(),
+  openTime: z.string().nullable(),
+  dueTime: z.string().nullable(),
+  timeLimit: z.number().nullable(),
   problems: z.array(ProblemResponseSchema),
   opened: z.boolean(),
 });
