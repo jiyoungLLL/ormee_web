@@ -41,13 +41,13 @@ export default function SignUpPage() {
   const handleSingnUp = async (data: SignupFormValues) => {
     try {
       setIsSubmitting(true);
-      const { status, message } = await signupAction(data);
+      const response = await signupAction(data);
 
-      if (status === 'success') {
+      if (response.status === 'success') {
         addToast({ message: '회원가입에 성공했어요.', type: 'success' });
         router.push('/signin');
       } else {
-        addToast({ message: message || '회원가입에 실패했어요.', type: 'error' });
+        addToast({ message: response.data || '회원가입에 실패했어요.', type: 'error' });
       }
     } catch (error) {
       addToast({ message: '회원가입 중 오류가 발생했어요.', type: 'error' });

@@ -41,12 +41,12 @@ export default function OpenQuizItem({ quiz, isLastQuiz }: OpenQuizItemProps) {
   // TODO: 로딩상태 추가
 
   const handleCloseQuiz = async () => {
-    mutateQuizState('closed');
+    mutateQuizState(undefined);
     closeCloseModal();
   };
 
   const handleUploadQuiz = async () => {
-    mutateQuizState('ongoing');
+    mutateQuizState(undefined);
     closeUploadModal();
   };
 
@@ -119,15 +119,15 @@ export default function OpenQuizItem({ quiz, isLastQuiz }: OpenQuizItemProps) {
                 font='text-headline2 font-semibold'
                 isPurple
                 isfilled
-                title='게시하기'
+                title='공개하기'
                 onClick={openUploadModal}
               />
               <Modal
                 isOpen={isUploadModalOpen}
                 onCancel={closeUploadModal}
                 onConfirm={handleUploadQuiz}
-                title='퀴즈를 게시하시겠어요?'
-                description='퀴즈를 게시하면 학생들이 바로 응시할 수 있어요.'
+                title='퀴즈를 공개하시겠어요?'
+                description='공개하면 학생들이 바로 응시할 수 있어요.'
                 iconSrc='/assets/icons/sidenav/quiz_selected.png'
               />
             </>

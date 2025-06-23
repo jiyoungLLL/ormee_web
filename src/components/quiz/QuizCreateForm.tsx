@@ -14,16 +14,22 @@ import {
   QUIZ_LIMIT_TIME_OPTIONS,
 } from '@/features/quiz/quiz.constants';
 import Toolbar from '../ui/Toolbar';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
 import QuizCreateHeader from '@/components/quiz/QuizCreateHeader';
 import { QuizCreateRequest, QuizDraftRequest, QuizFormValues } from '@/features/quiz/types/quiz.types';
 import { useQuizEditMode } from '@/features/quiz/hooks/useQuizEditMode';
-import { usePostQuizCreate, usePostQuizDraft } from '@/features/quiz/hooks/useQuizApi';
+import { usePostQuizCreate, usePostQuizDraft } from '@/features/quiz/hooks/usePostQuiz';
 import { useLectureId } from '@/hooks/queries/useLectureId';
+import { useToastStore } from '@/stores/toastStore';
+import { usePutQuizDetail } from '@/features/quiz/hooks/usePutQuizState';
+import Modal from '@/components/ui/Modal';
+import { useConfirmModal } from '@/hooks/ui/useConfirmModal';
+import { formatToUTCString } from '@/utils/date/formatDate';
 
 export default function QuizCreateForm() {
   const { isEditMode, quizDetail } = useQuizEditMode();
+  const { addToast } = useToastStore();
 
   const methods = useForm<QuizFormValues>({
     mode: 'onSubmit',
@@ -38,37 +44,40 @@ export default function QuizCreateForm() {
     resolver: zodResolver(QuizFormSchema),
   });
 
+  const { control, setValue, getValues } = methods;
+  const { fields: problems, append, replace } = useFieldArray({ control, name: 'problems' });
+
   useEffect(() => {
     if (isEditMode && quizDetail) {
       const { id, ...rest } = quizDetail;
+
       methods.reset(rest);
+      replace(quizDetail.problems);
     }
-  }, [isEditMode, quizDetail]);
+  }, [isEditMode, quizDetail, quizDetail.problems.length, methods.reset, replace]);
 
-  const { control, setValue, getValues } = methods;
-
-  const { fields: problems, append } = useFieldArray({ control, name: 'problems' });
   const [editor, setEditor] = useState<Editor | null>(null);
   const [currentFileName, setCurrentFileName] = useState<Path<QuizFormValues> | null>(null);
 
-  const handleSetEditor = (editor: Editor | null, fileName: Path<QuizFormValues> | null) => {
+  const handleSetEditor = useCallback((editor: Editor | null, fileName: Path<QuizFormValues> | null) => {
     setEditor(editor);
     setCurrentFileName(fileName);
-  };
+  }, []);
 
   const lectureId = useLectureId();
   const { mutate: createQuiz } = usePostQuizCreate({ lectureId });
   const { mutate: draftQuiz } = usePostQuizDraft({ lectureId });
+  const { mutate: editQuiz } = usePutQuizDetail({ lectureId, quizId: quizDetail?.id });
 
   const createSubmitValues = (isDraft: boolean): QuizCreateRequest | QuizDraftRequest => {
     const formValues = getValues();
 
-    return {
+    const submitValues = {
       isDraft,
       title: formValues.title,
       description: formValues.description || '',
-      openTime: formValues.startTime ? new Date(formValues.startTime).toISOString() : '',
-      dueTime: formValues.dueTime ? new Date(formValues.dueTime).toISOString() : '',
+      openTime: formValues.startTime ? formatToUTCString(formValues.startTime) : '',
+      dueTime: formValues.dueTime ? formatToUTCString(formValues.dueTime) : '',
       timeLimit: QUIZ_LIMIT_TIME_MAP[formValues.limitTime as (typeof QUIZ_LIMIT_TIME_OPTIONS)[number]] || '',
       problems: formValues.problems.map((problem) =>
         problem.type === 'CHOICE'
@@ -77,22 +86,46 @@ export default function QuizCreateForm() {
               content: problem.content,
               answer: problem.answer,
               items: problem.item.map((item) => item.text),
-              fileIds: problem.files.map((file) => file.id),
+              fileIds: problem.files.map((file) => {
+                const fileIdMatch = file.id.match(/^files-\d+-(\d+)$/);
+                return fileIdMatch ? Number(fileIdMatch[1]) : Number(file.id);
+              }),
             }
           : {
               type: 'ESSAY' as const,
               content: problem.content,
               answer: problem.answer,
               items: null,
-              fileIds: problem.files.map((file) => file.id),
+              fileIds: problem.files.map((file) => {
+                const fileIdMatch = file.id.match(/^files-\d+-(\d+)$/);
+                return fileIdMatch ? Number(fileIdMatch[1]) : Number(file.id);
+              }),
             },
       ),
     };
+
+    return submitValues;
   };
 
-  const handleRegister = () => {
+  const {
+    isOpen: isEditConfirmModalOpen,
+    showConfirm: showEditConfirm,
+    handleConfirm: handleEditConfirm,
+    handleCancel: handleEditCancel,
+  } = useConfirmModal();
+
+  const handleRegister = async () => {
     const submitValues = createSubmitValues(false) as QuizCreateRequest;
-    createQuiz(submitValues);
+
+    if (isEditMode) {
+      const confirmed = await showEditConfirm();
+
+      if (confirmed) {
+        editQuiz(submitValues);
+      }
+    } else {
+      createQuiz(submitValues);
+    }
   };
 
   const handleTemporarySave = () => {
@@ -118,6 +151,12 @@ export default function QuizCreateForm() {
 
                 setValue(currentFileName, [...((getValues(currentFileName) as any[]) || []), { id, previewUrl }]);
               },
+              onImageUploadError: (error) => {
+                addToast({
+                  type: 'error',
+                  message: `${error.message}`,
+                });
+              },
             }}
             enableList={false}
             containerStyle='flex justify-between items-center gap-[10px] w-full px-[30px] py-[10px] rounded-[20px] bg-white'
@@ -141,6 +180,14 @@ export default function QuizCreateForm() {
           <AddProblemButton append={append} />
         </div>
       </div>
+      <Modal
+        isOpen={isEditConfirmModalOpen}
+        onCancel={handleEditCancel}
+        onConfirm={handleEditConfirm}
+        title='퀴즈를 수정하시겠어요?'
+        description='이전 상태로 되돌릴 수 없어요.'
+        iconSrc='/assets/icons/checked.png'
+      />
     </>
   );
 }

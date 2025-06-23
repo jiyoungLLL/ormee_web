@@ -1,7 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { MOCK_NOTIFICATION_LIST_BULK } from './notification';
-import { CLOSED_QUIZ_STATS_MAP, PROBLEM_STATS_MAP, QUIZ_ATTACHMENT_MAP, QUIZ_DB, QUIZ_DETAIL_MAP } from './quiz';
-import { QuizState } from '@/features/quiz/types/quiz.types';
+import { QUIZ_ATTACHMENT_MAP, QUIZ_DB, QUIZ_DETAIL_MAP } from './quiz';
 import { MOCK_ANSWER, MOCK_PAGINATED_QUESTION_RESPONSE } from './question';
 import { QuizCreateRequestSchema, QuizDraftRequestSchema } from '@/features/quiz/schemas/quiz.schema';
 
@@ -61,21 +60,6 @@ export const handlers = [
     //   },
     // );
   }),
-  http.get('/api/teachers/quizzes/:quizId/stats', ({ params }) => {
-    const { quizId } = params;
-    const stats = CLOSED_QUIZ_STATS_MAP[quizId as string] ?? [];
-
-    if (stats.length === 0) {
-      return new HttpResponse(null, { status: 404 });
-    }
-
-    return HttpResponse.json(stats, {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  }),
   http.get('/api/teachers/:lectureId/quizzes/temporary', () => {
     // return HttpResponse.json(TEMPORARY_QUIZ_LIST, {
     //   status: 200,
@@ -93,21 +77,6 @@ export const handlers = [
     }
 
     return HttpResponse.json(quiz, {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  }),
-  http.get('/api/teachers/quizzes/problems/:problemId/stats', ({ params }) => {
-    const { problemId } = params;
-    const stats = PROBLEM_STATS_MAP[problemId as string] ?? {};
-
-    if (Object.keys(stats).length === 0) {
-      return new HttpResponse(null, { status: 404 });
-    }
-
-    return HttpResponse.json(stats, {
       status: 200,
       headers: {
         'Content-Type': 'application/json',

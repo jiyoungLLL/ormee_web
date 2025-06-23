@@ -72,11 +72,17 @@ export async function fetcher<T>({
 
   if (!res.ok) {
     const err = await res.json().catch(() => {});
-    if (process.env.NODE_ENV === 'development') console.error('----- API 요청 실패 ------');
-    if (process.env.NODE_ENV === 'development') console.error('상태코드: ', res.status);
-    if (process.env.NODE_ENV === 'development') console.error(err);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('----- API 요청 실패 ------');
+      console.error('상태코드: ', res.status);
+      console.error('에러: ', res);
+      console.error(err);
 
-    return { status: 'fail', code: res.status, data: errorMessage || err.message || 'API 요청 실패' };
+      console.error('----- API 요청 데이터 ------');
+      console.error('요청 데이터: ', fetchOptions.body);
+    }
+
+    return { status: 'fail', code: res.status, data: err.data || errorMessage || 'API 요청 실패' };
   }
 
   const data = await res.json();

@@ -10,18 +10,20 @@ import OpenQuizList from '@/components/quiz/list/OpenQuizList';
 import CloseQuizList from '@/components/quiz/list/CloseQuizList';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import TemporaryQuizList from '@/components/quiz/list/TemporaryQuizList';
-
-const QUIZ_DROPDOWN_LIST: MenuItem[] = [
-  { id: 'quiz-list-total', label: '전체' },
-  { id: 'quiz-list-tempotaty', label: '임시저장' },
-];
+import { useQuizCategory } from '@/features/quiz/hooks/useQuizCategory';
 
 export default function QuizListContainer() {
   const pathname = usePathname();
+  const { currentQuizCategory, changeQuizCategory } = useQuizCategory();
+
+  const QUIZ_DROPDOWN_LIST: MenuItem[] = [
+    { id: 'quiz-list-total', label: '전체', onClick: () => changeQuizCategory('전체') },
+    { id: 'quiz-list-tempotaty', label: '임시저장', onClick: () => changeQuizCategory('임시저장') },
+  ];
 
   const { selectedItem: selectedQuizCategory, menuListForDropdown: quizCategoryList } = useDropdown({
     menuList: QUIZ_DROPDOWN_LIST,
-    initialSelectedItem: QUIZ_DROPDOWN_LIST[0].label,
+    initialSelectedItem: currentQuizCategory,
   });
 
   const lectureId = useLectureId();
@@ -30,7 +32,7 @@ export default function QuizListContainer() {
   const { openQuizzes, closedQuizzes } = quizList ?? { openQuizzes: [], closedQuizzes: [] };
 
   return (
-    <div className='flex flex-col gap-[20px] w-full h-[721px] px-[30px] py-[20px] rounded-[20px] box-border bg-white overflow-y-auto'>
+    <div className='flex flex-col gap-[20px] w-full px-[30px] py-[20px] rounded-[20px] box-border bg-white'>
       <div className='flex justify-between items-center'>
         <Dropdown
           showTrigger
