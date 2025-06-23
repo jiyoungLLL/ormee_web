@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import { expect } from '@storybook/jest';
+import type { Meta, StoryObj } from '@storybook/react';
 import { within } from '@storybook/testing-library';
 import DateTimePicker from './DateTimePicker';
 
@@ -60,7 +60,7 @@ export const PeriodCalendarWithDefaultValue: Story = {
     type: 'CALENDAR',
     calendar: 'PERIOD_TYPE',
     placeholder: '선택하기',
-    defaultValue: '25.06.05 - 25.06.08',
+    defaultValue: '25.06.05-25.06.08',
   },
 };
 
@@ -93,12 +93,12 @@ export const PeriodCalendarWithDefaultValueTest: Story = {
     type: 'CALENDAR',
     calendar: 'PERIOD_TYPE',
     placeholder: '선택하기',
-    defaultValue: '2025.06.05 - 2025.06.08',
+    defaultValue: '2025.06.05-2025.06.08',
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    const valueElement = await canvas.findByText('2025.06.05 - 2025.06.08');
+    const valueElement = await canvas.findByText('2025.06.05-2025.06.08');
     expect(valueElement).toBeInTheDocument();
   },
 };

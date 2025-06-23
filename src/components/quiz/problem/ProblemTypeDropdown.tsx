@@ -2,7 +2,7 @@
 
 import Dropdown from '@/components/ui/dropdown/Dropdown';
 import { useDropdown } from '@/hooks/ui/useDropdown';
-import { ProblemType, QuizFormValues } from '@/features/quiz/quiz.types';
+import { ProblemType, QuizFormValues } from '@/features/quiz/types/quiz.types';
 import { useFormContext } from 'react-hook-form';
 import { QUIZ_LABEL_MAP } from '@/features/quiz/quiz.constants';
 

@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { QuizListResponseSchema } from '@/features/quiz/quiz.schema';
-import { transformQuizListToCamelCase } from '@/utils/transforms/quiz.transform';
+import { QuizListResponseSchema } from '@/features/quiz/schemas/quiz.schema';
 import { QUERY_KEYS } from '../../../hooks/queries/queryKeys';
-import { QuizList } from '@/features/quiz/quiz.types';
+import { QuizList } from '@/features/quiz/types/quiz.types';
 
 const getTemporaryQuizList = async (lectureId: string) => {
   const response = await fetch(`/api/teachers/${lectureId}/quizzes/temporary`, { method: 'GET' });
@@ -20,13 +19,13 @@ const getTemporaryQuizList = async (lectureId: string) => {
     throw new Error('잘못된 퀴즈 목록 형식입니다.');
   }
 
-  return transformQuizListToCamelCase(parsedJson.data);
+  return parsedJson.data;
 };
 
 export const useGetTemporaryQuizList = (lectureId: string) => {
   return useQuery<QuizList>({
     queryKey: QUERY_KEYS.temporaryQuizList(lectureId),
-    queryFn: () => getTemporaryQuizList(lectureId),
+    // queryFn: () => getTemporaryQuizList(lectureId),
     staleTime: 1 * 60 * 60 * 1000,
     retry: 2,
     refetchOnWindowFocus: false,

@@ -1,6 +1,6 @@
 'use client';
 
-import { QuizFormSchema } from '@/features/quiz/quiz.schema';
+import { QuizFormSchema } from '@/features/quiz/schemas/quiz.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, Path, useFieldArray, useForm } from 'react-hook-form';
 import QuizCreateTitleInput from '@/components/quiz/QuizCreateTitleInput';
@@ -17,9 +17,9 @@ import Toolbar from '../ui/Toolbar';
 import { useEffect, useState } from 'react';
 import { Editor } from '@tiptap/react';
 import QuizCreateHeader from '@/components/quiz/QuizCreateHeader';
-import { QuizCreateRequest, QuizFormValues } from '@/features/quiz/quiz.types';
+import { QuizCreateRequest, QuizDraftRequest, QuizFormValues } from '@/features/quiz/types/quiz.types';
 import { useQuizEditMode } from '@/features/quiz/hooks/useQuizEditMode';
-import { usePostQuiz } from '@/features/quiz/hooks/useQuiz';
+import { usePostQuizCreate, usePostQuizDraft } from '@/features/quiz/hooks/useQuizApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 
 export default function QuizCreateForm() {
@@ -57,12 +57,14 @@ export default function QuizCreateForm() {
   };
 
   const lectureId = useLectureId();
-  const { mutate: postQuiz } = usePostQuiz({ lectureId });
+  const { mutate: createQuiz } = usePostQuizCreate({ lectureId });
+  const { mutate: draftQuiz } = usePostQuizDraft({ lectureId });
 
-  const handleRegister = () => {
+  const createSubmitValues = (isDraft: boolean): QuizCreateRequest | QuizDraftRequest => {
     const formValues = getValues();
-    const submitValues: QuizCreateRequest = {
-      isDraft: false,
+
+    return {
+      isDraft,
       title: formValues.title,
       description: formValues.description || '',
       openTime: formValues.startTime ? new Date(formValues.startTime).toISOString() : '',
@@ -86,12 +88,16 @@ export default function QuizCreateForm() {
             },
       ),
     };
+  };
 
-    postQuiz(submitValues);
+  const handleRegister = () => {
+    const submitValues = createSubmitValues(false) as QuizCreateRequest;
+    createQuiz(submitValues);
   };
 
   const handleTemporarySave = () => {
-    alert('퀴즈가 임시저장 되었습니다.');
+    const submitValues = createSubmitValues(true) as QuizDraftRequest;
+    draftQuiz(submitValues);
   };
 
   return (

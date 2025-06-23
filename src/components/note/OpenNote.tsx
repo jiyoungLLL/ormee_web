@@ -3,7 +3,7 @@ import Button from '../ui/Button';
 
 type OpenNoteProps = {
   /** 쪽지 구분 키 */
-  noteKey: string;
+  noteId: number;
   /** 쪽지 이름 */
   title: string;
   /** 쪽지 날짜 */
@@ -12,7 +12,7 @@ type OpenNoteProps = {
   onClick?: () => void;
 };
 
-export default function OpenNote({ noteKey, title, date, onClick }: OpenNoteProps) {
+export default function OpenNote({ noteId, title, date, onClick }: OpenNoteProps) {
   return (
     <div className='w-full rounded-[15px] flex justify-between px-[10px] py-[20px]'>
       <div className='w-[509px] flex gap-[20px]'>

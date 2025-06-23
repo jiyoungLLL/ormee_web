@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
-import PhoneNumberInput from './PhoneNumberInput';
 import { useForm } from 'react-hook-form';
-import { PHONE_NUMBER_PREFIX } from '@/schemas/auth.schema';
+import PhoneNumberInput from './PhoneNumberInput';
+import { Control, FieldValues, Path } from 'react-hook-form';
 
 const meta: Meta<typeof PhoneNumberInput> = {
   title: 'Components/Inputs/PhoneNumberInput',
@@ -15,26 +15,38 @@ const meta: Meta<typeof PhoneNumberInput> = {
 export default meta;
 type Story = StoryObj<typeof PhoneNumberInput>;
 
-const PhoneNumberInputWrapper = (args: any) => {
-  const { control, setValue } = useForm({
+type PhoneFormValues = {
+  phoneNumber: string;
+  verification: boolean;
+};
+
+type PhoneNumberInputProps<T extends FieldValues> = {
+  control: Control<T>;
+  name: Path<T>;
+  verificationName: Path<T>;
+  setValue?: (name: keyof T, value: any) => void;
+  inputSize?: string;
+  testId?: string;
+  number?: string;
+  isVerified?: boolean;
+};
+
+const PhoneNumberInputWrapper = (props: Partial<PhoneNumberInputProps<PhoneFormValues>>) => {
+  const { control, setValue } = useForm<PhoneFormValues>({
     defaultValues: {
-      prefix: PHONE_NUMBER_PREFIX.MOBILE_010,
-      number: args.number || '',
-      verification: args.isVerified || false,
+      phoneNumber: props.number || '',
+      verification: props.isVerified || false,
     },
   });
 
   return (
     <div className='w-[550px]'>
-      <PhoneNumberInput
+      <PhoneNumberInput<PhoneFormValues>
         control={control}
-        prefixName='prefix'
-        numberName='number'
-        verificationName={args.verificationName}
+        name='phoneNumber'
+        verificationName='verification'
         setValue={setValue}
-        prefixInputSize={args.prefixInputSize}
-        numberInputSize={args.numberInputSize}
-        numberTestId={args.numberTestId}
+        {...props}
       />
     </div>
   );
@@ -42,10 +54,9 @@ const PhoneNumberInputWrapper = (args: any) => {
 
 // 인증번호 발송 상태를 확인하기 위한 컴포넌트
 const PhoneNumberInputWithSendState = () => {
-  const { control, setValue } = useForm({
+  const { control, setValue } = useForm<PhoneFormValues>({
     defaultValues: {
-      prefix: PHONE_NUMBER_PREFIX.MOBILE_010,
-      number: '12345678',
+      phoneNumber: '',
       verification: false,
     },
   });
@@ -60,12 +71,12 @@ const PhoneNumberInputWithSendState = () => {
 
   return (
     <div className='w-[550px]'>
-      <PhoneNumberInput
+      <PhoneNumberInput<PhoneFormValues>
         control={control}
-        prefixName='prefix'
-        numberName='number'
+        name='phoneNumber'
         verificationName='verification'
         setValue={setValue}
+        testId='phone-number-input'
       />
     </div>
   );
@@ -99,10 +110,5 @@ export const VerifiedState: Story = {
 
 /** 커스텀 사이즈 */
 export const CustomSizes: Story = {
-  render: () => (
-    <PhoneNumberInputWrapper
-      prefixInputSize='w-[100px] h-[40px]'
-      numberInputSize='w-[200px] h-[40px]'
-    />
-  ),
+  render: () => <PhoneNumberInputWrapper inputSize='w-[200px] h-[40px]' />,
 };

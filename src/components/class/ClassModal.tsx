@@ -1,10 +1,8 @@
 'use client';
 
 import { ClassModalValues, classSchema } from '@/features/class/class.schema';
-import { ClassTypes } from '@/features/class/class.types';
-import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
-import { useApiMutation } from '@/hooks/useApi';
-import { MOCK_CLASSES } from '@/mock/class';
+import { ClassItems } from '@/features/class/class.types';
+import { useCreateClass, useGetClass, useUpdateClass } from '@/features/class/hooks/queries/useClassApi';
 import { useToastStore } from '@/stores/toastStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format, parse } from 'date-fns';
@@ -23,24 +21,33 @@ type ClassModalProps = {
 
 type ModalContents = {
   inputTitle: string;
-  name: 'description' | 'title' | 'code';
+  name: 'description' | 'title' | 'password';
+};
+
+type FilterType = 'openLectures' | 'closedLectures';
+
+const dayMapEngToKor: Record<string, string> = {
+  MON: '월',
+  TUE: '화',
+  WED: '수',
+  THU: '목',
+  FRI: '금',
+  SAT: '토',
+  SUN: '일',
 };
 
 export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps) {
   const searchParams = useSearchParams();
   const filter = searchParams.get('filter') as 'openLectures' | 'closedLectures';
   const lectureId = searchParams.get('id');
-
   const { addToast } = useToastStore();
 
-  // 캐시된 데이터 받아오기 (MOCK -> classList)
-  // const classList = useClassFromCache();
-
-  const [data, setData] = useState<ClassTypes>();
+  const { data: classList } = useGetClass();
+  const [data, setData] = useState<ClassItems>();
 
   useEffect(() => {
     if (filter && lectureId) {
-      const lectureData = MOCK_CLASSES?.data?.[filter]?.find((item) => item.id === lectureId);
+      const lectureData = classList?.[filter]?.find((item) => item.id === lectureId);
       if (lectureData) {
         setData(lectureData);
       }
@@ -48,10 +55,6 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
   }, [filter, lectureId]);
 
   const title = type === 'ongoing' ? '강의 설정' : '신규 강의 개설';
-
-  // 유효성 검사 및 제출
-  const method = filter && lectureId ? 'PUT' : 'POST';
-  const endpoint = filter && lectureId ? `/teachers/lectures/${lectureId}` : '/teachers/lectures';
 
   const methods = useForm<ClassModalValues>({
     resolver: zodResolver(classSchema),
@@ -67,39 +70,28 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
   } = methods;
 
   useEffect(() => {
+    const koreanDays = data?.lectureDays?.map((eng) => dayMapEngToKor[eng]) || [];
+
     if (data) {
       methods.reset({
         title: data.title || '',
-        code: data.code?.toString() || '',
+        password: data.password || '',
         description: data.description || '',
         startTime: data.startTime || '',
         endTime: data.endTime || '',
         startDate: data.startDate || '',
         dueDate: data.dueDate || '',
-        days: data.lectureDays || [],
+        lectureDays: koreanDays || [],
       });
     }
   }, [data, methods]);
 
-  const mutation = useApiMutation<unknown, any>(
-    method,
-    endpoint,
-    () => {
-      addToast({ message: `강의가 ${method === 'POST' ? '생성' : '수정'}되었어요.`, type: 'success', duration: 2500 });
-    },
-    QUERY_KEYS.classList(),
-    (err) => {
-      addToast({
-        message: `강의가 ${method === 'POST' ? '생성' : '수정'}되지 않았어요. 다시 시도해주세요.`,
-        type: 'error',
-        duration: 2500,
-      });
-      if (process.env.NODE_ENV === 'development') console.error(err);
-    },
-  );
+  const updateMutation = useUpdateClass(lectureId || '');
+  const createMutation = useCreateClass();
+
+  const mutation = filter && lectureId ? updateMutation : createMutation;
 
   const onSubmit = (data: ClassModalValues) => {
-    alert(JSON.stringify(data));
     mutation.mutate(data);
     closeModal();
   };
@@ -133,11 +125,11 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
 
   // 수업 요일
   const days: string[] = ['월', '화', '수', '목', '금', '토', '일'];
-  const selectedDays = watch('days') || [];
+  const selectedDays = watch('lectureDays') || [];
 
   const handleDayClick = (day: string) => {
     const updatedDays = selectedDays.includes(day) ? selectedDays.filter((d) => d !== day) : [...selectedDays, day];
-    setValue('days', updatedDays);
+    setValue('lectureDays', updatedDays);
   };
 
   // 수업 시간 포맷팅
@@ -158,7 +150,7 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
         >
           <div className='w-full h-fit flex flex-col gap-[20px]'>
             {renderModalContents({ inputTitle: '강의명', name: 'title' })}
-            {renderModalContents({ inputTitle: '비밀번호', name: 'code' })}
+            {renderModalContents({ inputTitle: '비밀번호', name: 'password' })}
 
             <div className='flex gap-[20px]'>
               <div className={commonModalStyle}>

@@ -2,14 +2,14 @@
 export type PostHomeWork = {
   title: string;
   description: string;
-  files: string | string[];
+  files: FileList | File[];
   isDraft: boolean;
   openTime: string;
   dueTime: string;
 };
 
 // 과제 리스트 (GET)
-export type Assignment = {
+export type HomeworkItems = {
   id: number;
   title: string | null;
   description: string | null;
@@ -18,13 +18,13 @@ export type Assignment = {
   dueTime: string | null;
 };
 
-export type AssignmentsData = {
-  openedAssignments: Assignment[];
-  closedAssignments: Assignment[];
+export type HomeworkData = {
+  openedHomeworks: HomeworkItems[];
+  closedHomeworks: HomeworkItems[];
 };
 
 export type AssignmentsResponse = {
   status: string;
   code: number;
-  data: AssignmentsData;
+  data: HomeworkData;
 };

@@ -2,38 +2,27 @@
 
 import Button from '@/components/ui/Button';
 import DateTimePicker from '@/components/ui/DateTimePicker';
-import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
+import { HomeworkItems } from '@/features/homework/homework.types';
+import { useDeleteHomework, useGetHomeworks } from '@/features/homework/hooks/queries/useHomeworkApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
-import { useApiMutation } from '@/hooks/useApi';
-import { MOCK_HOMEWORK } from '@/mock/homework';
-import { useToastStore } from '@/stores/toastStore';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
 export default function HomeworkDetail() {
-  const { addToast } = useToastStore();
   const lectureNum = useLectureId();
   const searchParams = useSearchParams();
-  const filter = searchParams.get('filter') === 'ongoing' ? 'openedAssignments' : 'closedAssignments';
-  const id = searchParams.get('id');
-  // GET : 과제 목록 (진행중, 마감) 에서 받아온 데이터로 변경하기
-  const detailData = MOCK_HOMEWORK.data[filter].find((item) => item.id === Number(id));
+  const filter = searchParams.get('filter') === 'ongoing' ? 'openedHomeworks' : ('closedHomeworks' as const);
+  const id = searchParams.get('id') as string;
 
-  const deleteMutation = useApiMutation<unknown, any>(
-    'DELETE',
-    `/teachers/assignments/${id}`,
-    () => addToast({ message: '과제가 삭제되었어요', type: 'success', duration: 2500 }),
-    [QUERY_KEYS.homeworkList(lectureNum)],
-    (err) => {
-      addToast({ message: '과제가 삭제되지 않았어요. 다시 시도해주세요.', type: 'error', duration: 2500 });
-      console.log(err);
-    },
-  );
+  const { data: homeworkList } = useGetHomeworks(lectureNum);
+  const detailData = homeworkList?.[filter].find((item: HomeworkItems) => item.id === Number(id));
+
+  const deleteMutation = useDeleteHomework(lectureNum);
 
   const handleDelete = () => {
-    deleteMutation.mutate(undefined);
+    deleteMutation.mutate(id);
   };
 
   return (
@@ -72,7 +61,7 @@ export default function HomeworkDetail() {
         </div>
         {detailData?.filePaths && (
           <a
-            href={detailData.filePaths}
+            // href={detailData.filePaths}
             download
             target='_blank'
             rel='noopener noreferrer'
@@ -84,7 +73,7 @@ export default function HomeworkDetail() {
               height={24}
               alt='파일 아이콘'
             />
-            <span>{detailData.filePaths.split('/').pop()}</span>
+            {/* <span>{detailData.filePaths.split('/').pop()}</span> */}
           </a>
         )}
 

@@ -1,6 +1,7 @@
 import { QuestionListFilterType, QuestionSearchByType } from '../../features/question/hooks/useQuestionSearchParams';
 
 export const QUERY_KEYS = {
+  profile: () => ['profile'],
   notification: () => ['notification'],
   quizDetail: (quizId: string) => ['quizDetail', quizId],
   quizList: (lectureId: string) => ['quizList', lectureId],
@@ -23,6 +24,8 @@ export const QUERY_KEYS = {
   questionDetail: (questionId: string) => ['questionDetail', questionId],
   answer: (questionId: string) => ['answer', questionId],
   homeworkList: (lectureId: string) => ['homeworkList', lectureId],
-  homeworkDetail: (homeworkId: string) => ['homeworkDetail', homeworkId],
+  homeworkDraft: (lectureId: string) => ['homeworkDraft', lectureId],
   classList: () => ['classList'],
+  noteList: (lectureId: string) => ['noteList', lectureId],
+  noteStats: (noteId: string) => ['noteStats', noteId],
 } as const;

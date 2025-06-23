@@ -12,28 +12,41 @@ type WriteBoxProps = {
 export default function WriteBox({ type, files }: WriteBoxProps) {
   const { watch, setValue } = useFormContext();
   const selectedFiles = useRef<HTMLInputElement>(null);
-  const [fileNames, setFileNames] = useState<string[]>([]);
+  const [fileList, setFileList] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
 
-  useEffect(() => {
-    if (files) {
-      setFileNames(files);
-    }
-  }, [files]);
+  // useEffect(() => {
+  //   if (files) {
+  //     setFileNames(files);
+  //   }
+  // }, [files]);
 
   useEffect(() => {
-    setValue('files', fileNames);
-  }, [fileNames, setValue]);
+    setValue('files', fileList);
+  }, [fileList, setValue]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.files;
+    if (!selected || selected.length === 0) return;
+
+    const newFiles = Array.from(selected).filter((file) => !fileList.some((f) => f.name === file.name));
+
+    if (newFiles.length > 0) {
+      setFileList((prev) => [...prev, ...newFiles]);
+    }
+  };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
-    const files = e.dataTransfer.files;
-    if (files && files.length > 0) {
-      const newNames = Array.from(files)
-        .map((file) => file.name)
-        .filter((name) => !fileNames.includes(name));
-      if (newNames.length > 0) setFileNames((prev) => [...prev, ...newNames]);
+
+    const droppedFiles = e.dataTransfer.files;
+    if (!droppedFiles || droppedFiles.length === 0) return;
+
+    const newFiles = Array.from(droppedFiles).filter((file) => !fileList.some((f) => f.name === file.name));
+
+    if (newFiles.length > 0) {
+      setFileList((prev) => [...prev, ...newFiles]);
     }
   };
 
@@ -47,18 +60,8 @@ export default function WriteBox({ type, files }: WriteBoxProps) {
     setIsDragging(false);
   };
 
-  const handleFileNames = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      const newNames = Array.from(files)
-        .map((file) => file.name)
-        .filter((name) => !fileNames.includes(name));
-      if (newNames.length > 0) setFileNames((prev) => [...prev, ...newNames]);
-    }
-  };
-
   const handleDelete = (deletedName: string) => {
-    setFileNames((prev) => prev.filter((name) => name !== deletedName));
+    setFileList((prev) => prev.filter((file) => file.name !== deletedName));
   };
 
   return (
@@ -89,7 +92,7 @@ export default function WriteBox({ type, files }: WriteBoxProps) {
             type='file'
             className='hidden'
             multiple
-            onChange={handleFileNames}
+            onChange={handleFileChange}
           />
         </div>
 
@@ -101,17 +104,17 @@ export default function WriteBox({ type, files }: WriteBoxProps) {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
         >
-          {fileNames.length > 0 ? (
+          {fileList.length > 0 ? (
             <div className='flex gap-2 flex-wrap'>
-              {fileNames.map((name, index) => (
+              {fileList.map((file, index) => (
                 <div
-                  key={`${name}-${index}`}
+                  key={`${file.name}-${index}`}
                   className='w-fit h-[36px] rounded-[18px] border border-gray-20 py-[4px] px-[16px] bg-gray-10 flex items-center gap-[5px] text-body-reading'
                 >
-                  <span className='truncate max-w-[200px]'>{name}</span>
+                  <span className='truncate max-w-[200px]'>{file.name}</span>
                   <button
                     type='button'
-                    onClick={() => handleDelete(name)}
+                    onClick={() => handleDelete(file.name)}
                   >
                     <Image
                       src='/assets/icons/tiptapTools/delete.png'
@@ -124,7 +127,7 @@ export default function WriteBox({ type, files }: WriteBoxProps) {
               ))}
             </div>
           ) : (
-            <p className='text-body text-gray-50 font-[18px]'>파일을 마우스로 끌어 놓으세요.</p>
+            <p className='text-body text-gray-50 font-[18px]'>파일을 마우스로 끌어 오세요.</p>
           )}
         </div>
       </div>

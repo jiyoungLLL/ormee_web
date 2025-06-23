@@ -1,19 +1,40 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
-import ProfilePanel from './ProfilePanel';
-import { UserProfileData } from '@/types/user.types';
+import { useState, useEffect } from 'react';
+import ProfilePanel from '@/components/profiles/ProfilePanel';
+import { useGetProfileData } from '@/features/profile/useProfileQuery';
+import { ERROR_TYPES, getErrorType } from '@/constants/error.constant';
+import { useRouter } from 'next/navigation';
+import { useToastStore } from '@/stores/toastStore';
 
-type HeaderProfileProps = {
-  /** 프로필 패널에 보여질 데이터 */
-  userProfileData: UserProfileData;
-};
-
-export default function HeaderProfile({ userProfileData }: HeaderProfileProps) {
+export default function HeaderProfile() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const { addToast } = useToastStore();
+  const router = useRouter();
 
-  const { name, image } = userProfileData;
+  const { data: profileData, isLoading, error } = useGetProfileData();
+
+  useEffect(() => {
+    if (error) {
+      addToast({ message: error.message, type: 'error' });
+
+      const isAuthError = getErrorType(error.message) === ERROR_TYPES.UNAUTHORIZED;
+      if (isAuthError) {
+        router.push('/signin');
+      }
+    }
+  }, [error, addToast, router]);
+
+  if (error) {
+    return <div className='w-[24px] h-[24px] rounded-full bg-gray-50' />;
+  }
+
+  if (isLoading) {
+    return <div className='w-[24px] h-[24px] rounded-full bg-gray-50 animate-pulse' />;
+  }
+
+  const { name, image } = profileData || {};
 
   const handlePanelToggle = () => {
     setIsPanelOpen((prev) => !prev);
@@ -48,9 +69,9 @@ export default function HeaderProfile({ userProfileData }: HeaderProfileProps) {
           <span className='font-normal ml-[3px]'>선생님</span>
         </p>
       </div>
-      {isPanelOpen && (
+      {isPanelOpen && profileData && (
         <ProfilePanel
-          profileData={userProfileData}
+          profileData={profileData}
           onClose={handlePanelClose}
         />
       )}
