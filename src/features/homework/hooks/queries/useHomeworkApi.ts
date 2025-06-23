@@ -49,7 +49,6 @@ export const useCreateHomework = (lectureId: string) => {
         type: 'error',
         duration: 2500,
       });
-      if (process.env.NODE_ENV === 'development') console.error(err);
     },
     invalidateKey: [QUERY_KEYS.homeworkList(lectureId)],
   });
@@ -77,7 +76,6 @@ export const useUpdateHomework = (homeworkId: string) => {
         type: 'error',
         duration: 2500,
       });
-      if (process.env.NODE_ENV === 'development') console.error(err);
     },
     invalidateKey: [QUERY_KEYS.homeworkList(homeworkId)],
   });
@@ -107,7 +105,6 @@ export const useDeleteHomework = (lectureId: string) => {
         type: 'error',
         duration: 2500,
       });
-      if (process.env.NODE_ENV === 'development') console.error(err);
     },
     invalidateKey: [QUERY_KEYS.homeworkList(lectureId)],
   });

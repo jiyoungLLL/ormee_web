@@ -38,7 +38,6 @@ export const useCreateClass = () => {
         type: 'error',
         duration: 2500,
       });
-      if (process.env.NODE_ENV === 'development') console.error(err);
     },
     invalidateKey: [QUERY_KEYS.classList()],
   });
@@ -66,7 +65,6 @@ export const useUpdateClass = (lectureId: string) => {
         type: 'error',
         duration: 2500,
       });
-      if (process.env.NODE_ENV === 'development') console.error(err);
     },
     invalidateKey: [QUERY_KEYS.classList()],
   });
@@ -95,7 +93,6 @@ export const useDeleteClass = () => {
         type: 'error',
         duration: 2500,
       });
-      if (process.env.NODE_ENV === 'development') console.error(err);
     },
   });
 };
