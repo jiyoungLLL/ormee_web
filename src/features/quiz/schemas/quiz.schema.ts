@@ -145,7 +145,6 @@ export const ClosedQuizStatsSchema = z
       rank: z.number(),
       problemId: z.number(),
       problemNum: z.number(),
-      problemLabel: z.string().min(1),
       incorrectRate: z.number(),
       incorrectCount: z.number(),
     }),
