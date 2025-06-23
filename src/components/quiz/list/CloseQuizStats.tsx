@@ -13,9 +13,11 @@ export default function CloseQuizStats({ quizId }: CloseQuizStatsProps) {
   const { data: closedQuizStats, error } = useGetClosedQuizStats(quizId);
   const { isOpen, openModal, closeModal } = useModal({ defaultOpen: false });
   const [openProblemId, setOpenProblemId] = useState<number | null>(null);
+  const [openProblemNumber, setOpenProblemNumber] = useState<number | null>(null);
 
-  const handleProblemStatsModal = (problemId: number) => {
+  const handleProblemStatsModal = (problemId: number, problemNumber: number) => {
     setOpenProblemId(problemId);
+    setOpenProblemNumber(problemNumber);
     openModal();
   };
 
@@ -46,9 +48,9 @@ export default function CloseQuizStats({ quizId }: CloseQuizStatsProps) {
               <td className='text-headline2 font-normal text-gray-70 text-center'>{stat.rank}</td>
               <td
                 className='text-headline2 font-semibold text-purple-40 text-center underline decoration-solid decoration-auto underline-offset-[2px] cursor-pointer'
-                onClick={() => handleProblemStatsModal(stat.problemId)}
+                onClick={() => handleProblemStatsModal(stat.problemId, stat.problemNum)}
               >
-                {stat.problemLabel}
+                문항 {stat.problemNum}
               </td>
               <td className='text-headline2 font-normal text-gray-90 text-center'>{stat.incorrectRate}%</td>
               <td className='text-headline2 font-normal text-gray-90 text-center'>{stat.incorrectCount}</td>
@@ -56,12 +58,13 @@ export default function CloseQuizStats({ quizId }: CloseQuizStatsProps) {
           ))}
         </tbody>
       </table>
-      {isOpen && openProblemId && (
+      {isOpen && openProblemId && openProblemNumber && (
         <ProblemStatsModal
           isOpen={isOpen}
           onCancel={closeModal}
           onConfirm={closeModal}
           problemId={openProblemId}
+          problemNumber={openProblemNumber}
         />
       )}
     </div>

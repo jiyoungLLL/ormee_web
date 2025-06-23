@@ -8,12 +8,19 @@ import Image from 'next/image';
 
 type ProblemStatsModalProps = {
   problemId: number;
+  problemNumber: number;
   isOpen: boolean;
   onCancel: () => void;
   onConfirm: () => void;
 };
 
-export default function ProblemStatsModal({ problemId, isOpen, onCancel, onConfirm }: ProblemStatsModalProps) {
+export default function ProblemStatsModal({
+  problemId,
+  problemNumber,
+  isOpen,
+  onCancel,
+  onConfirm,
+}: ProblemStatsModalProps) {
   const { data: problemStats, error } = useGetProblemStats(problemId);
 
   if (error) {
@@ -42,8 +49,7 @@ export default function ProblemStatsModal({ problemId, isOpen, onCancel, onConfi
       containerStyle='w-[680px] h-fit p-[20px] rounded-[15px] box-border bg-white shadow-[3px_3px_14px_0px_rgba(0,0,0,0.1)]'
     >
       <div className='flex flex-col gap-[10px] w-full h-full'>
-        {/* TODO: 몇번 문항인지 받아올 수 있도록 api 수정되면 문항 번호로 변경 */}
-        <span className='text-headline1 font-bold text-purple-50 h-[25px]'>{'문항1'}</span>
+        <span className='text-headline1 font-bold text-purple-50 h-[25px]'>{`문항 ${problemNumber}`}</span>
         <p className='w-full px-[10px] text-body1-reading font-normal text-gray-90'>{problemStats?.content}</p>
         {problemStats?.type === 'ESSAY' && (
           <div className='flex gap-[5px]'>
