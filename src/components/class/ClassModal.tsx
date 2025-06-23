@@ -2,8 +2,7 @@
 
 import { ClassModalValues, classSchema } from '@/features/class/class.schema';
 import { ClassItems } from '@/features/class/class.types';
-import { useCreateClass, useUpdateClass } from '@/features/class/hooks/queries/useClassApi';
-import { useClassFromCache } from '@/features/class/hooks/useClassFromCache';
+import { useCreateClass, useGetClass, useUpdateClass } from '@/features/class/hooks/queries/useClassApi';
 import { useToastStore } from '@/stores/toastStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format, parse } from 'date-fns';
@@ -41,12 +40,9 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
   const searchParams = useSearchParams();
   const filter = searchParams.get('filter') as 'openLectures' | 'closedLectures';
   const lectureId = searchParams.get('id');
-
   const { addToast } = useToastStore();
 
-  // 캐시된 데이터 받아오기 (MOCK -> classList)
-  const classList = useClassFromCache() as Record<FilterType, ClassItems[]>;
-
+  const { data: classList } = useGetClass();
   const [data, setData] = useState<ClassItems>();
 
   useEffect(() => {

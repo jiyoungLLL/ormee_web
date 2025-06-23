@@ -2,9 +2,8 @@
 
 import Button from '@/components/ui/Button';
 import DateTimePicker from '@/components/ui/DateTimePicker';
-import { HomeworkData, HomeworkItems } from '@/features/homework/homework.types';
-import { useDeleteHomework } from '@/features/homework/hooks/queries/useHomeworkApi';
-import { useHomeworkFromCache } from '@/features/homework/hooks/useHomeworkFromCache';
+import { HomeworkItems } from '@/features/homework/homework.types';
+import { useDeleteHomework, useGetHomeworks } from '@/features/homework/hooks/queries/useHomeworkApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { format } from 'date-fns';
 import Image from 'next/image';
@@ -17,7 +16,7 @@ export default function HomeworkDetail() {
   const filter = searchParams.get('filter') === 'ongoing' ? 'openedHomeworks' : ('closedHomeworks' as const);
   const id = searchParams.get('id') as string;
 
-  const homeworkList = useHomeworkFromCache() as HomeworkData;
+  const { data: homeworkList } = useGetHomeworks(lectureNum);
   const detailData = homeworkList?.[filter].find((item: HomeworkItems) => item.id === Number(id));
 
   const deleteMutation = useDeleteHomework(lectureNum);
