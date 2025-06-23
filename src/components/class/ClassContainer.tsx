@@ -80,7 +80,7 @@ export default function ClassContainer() {
       await deleteClass(lectureId);
       await refetch();
     } catch (error) {
-      console.error(error);
+      if (process.env.NODE_ENV === 'development') console.error(error);
     }
   };
 
@@ -146,9 +146,10 @@ export default function ClassContainer() {
                       alt='더보기'
                     />
                   </button>
-                  <button
+                  {/* TODO: 디자인 및 기능 변경 후 반영 필요 */}
+                  {/* <button
                     type='button'
-                    // onClick={() => handleCopy(data?.password)}
+                    onClick={() => handleCopy(data?.password)}
                   >
                     <Image
                       src={'/assets/icons/dark-copy.png'}
@@ -156,7 +157,7 @@ export default function ClassContainer() {
                       height={24}
                       alt='복사하기'
                     />
-                  </button>
+                  </button> */}
                 </div>
               )}
               {openMenu?.toString() === data.id && (
