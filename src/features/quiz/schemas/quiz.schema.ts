@@ -43,7 +43,7 @@ export const ProblemChoiceRequestSchema = z.object({
   type: z.literal('CHOICE'),
   answer: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ANSWER }),
   items: z.array(z.string()).min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ITEM }).min(1),
-  fileIds: z.array(z.string()),
+  fileIds: z.array(z.number()),
 });
 
 export const ProblemEssayRequestSchema = z.object({
@@ -51,7 +51,7 @@ export const ProblemEssayRequestSchema = z.object({
   type: z.literal('ESSAY'),
   answer: z.string().min(1, { message: QUIZ_FORM_ERROR_MESSAGE.EMPTY_ANSWER }),
   items: z.null(),
-  fileIds: z.array(z.string()),
+  fileIds: z.array(z.number()),
 });
 
 export const QuizCreateRequestSchema = z.object({
@@ -74,7 +74,7 @@ export const ProblemChoiceDraftRequestSchema = z.object({
   type: z.literal('CHOICE'),
   answer: z.string(),
   items: z.array(z.string()).min(1),
-  fileIds: z.array(z.string()),
+  fileIds: z.array(z.number()),
 });
 
 export const ProblemEssayDraftRequestSchema = z.object({
@@ -82,7 +82,7 @@ export const ProblemEssayDraftRequestSchema = z.object({
   type: z.literal('ESSAY'),
   answer: z.string(),
   items: z.null(),
-  fileIds: z.array(z.string()),
+  fileIds: z.array(z.number()),
 });
 
 export const QuizDraftRequestSchema = z.object({
@@ -97,14 +97,6 @@ export const QuizDraftRequestSchema = z.object({
     .min(1),
 });
 
-// 퀴즈 api 응답 관련 스키마
-// export const ProblemResponseSchema = z.object({
-//   context: z.string().min(1),
-//   description: z.string().optional(),
-//   type: z.enum(['CHOICE', 'ESSAY']),
-//   item: z.array(z.object({ id: z.string(), text: z.string() })).optional(),
-// });
-
 export const QuizResponseSchema = z.object({
   id: z.string().min(1),
   quizName: z.string().min(1),
@@ -118,6 +110,17 @@ export const QuizListResponseSchema = z.object({
   openQuizzes: z.array(QuizResponseSchema),
   closedQuizzes: z.array(QuizResponseSchema),
 });
+
+export const DraftQuizResponseSchema = z.object({
+  id: z.string().min(1),
+  quizName: z.string(),
+  quizDate: z.union([z.string(), z.null()]),
+  timeLimit: z.union([z.number(), z.null()]),
+  quizAvailable: z.boolean(),
+  submitCount: z.number(),
+});
+
+export const DraftQuizListResponseSchema = z.array(DraftQuizResponseSchema);
 
 export const QuizSchema = z.object({
   id: z.string().min(1),
@@ -136,66 +139,33 @@ export const QuizListSchema = z.object({
 });
 
 // 마감 퀴즈 관련 스키마
-export const ClosedQuizStatsResponseSchema = z
-  .array(
-    z.object({
-      rank: z.number(),
-      problem_id: z.string().min(1),
-      problem_label: z.string().min(1),
-      incorrect_rate: z.number(),
-      incorrect_students: z.number(),
-    }),
-  )
-  .max(4);
-
 export const ClosedQuizStatsSchema = z
   .array(
     z.object({
       rank: z.number(),
-      problemId: z.string().min(1),
-      problemLabel: z.string().min(1),
+      problemId: z.number(),
+      problemNum: z.number(),
       incorrectRate: z.number(),
-      incorrectStudents: z.number(),
+      incorrectCount: z.number(),
     }),
   )
   .max(4);
 
-export const ProblemStatsResponseSchema = z
-  .object({
-    problem_label: z.string().min(1),
-    description: z.string().min(1),
-    type: z.enum(['CHOICE', 'ESSAY']),
-  })
-  .and(
-    z.discriminatedUnion('type', [
-      z.object({
-        type: z.literal('CHOICE'),
-        items: z.array(
-          z.object({
-            is_answer: z.boolean(),
-            text: z.string().min(1),
-            selected_students: z.number(),
-          }),
-        ),
-      }),
-      z.object({
-        type: z.literal('ESSAY'),
-        answer: z.string().min(1),
-        incorrect_submit: z.array(
-          z.object({
-            rank: z.number(),
-            answer: z.string(),
-            incorrect_students: z.number(),
-          }),
-        ),
-      }),
-    ]),
-  );
+export const ProblemStatsResponseSchema = z.object({
+  content: z.string().min(1),
+  type: z.enum(['CHOICE', 'ESSAY']),
+  answer: z.string().min(1),
+  results: z.array(
+    z.object({
+      count: z.number(),
+      option: z.string(),
+    }),
+  ),
+});
 
 export const ProblemStatsSchema = z
   .object({
-    problemLabel: z.string().min(1),
-    description: z.string().min(1),
+    content: z.string().min(1),
     type: z.enum(['CHOICE', 'ESSAY']),
   })
   .and(

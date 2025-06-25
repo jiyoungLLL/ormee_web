@@ -53,7 +53,7 @@ export const usePostQuizDraft = ({ lectureId }: { lectureId: string }) => {
     },
     invalidateKey: QUERY_KEYS.temporaryQuizList(lectureId),
     onSuccess: () => {
-      router.push(`/lectures/${lectureId}/quiz`);
+      router.push(`/lectures/${lectureId}/quiz?category=임시저장`);
 
       addToast({
         message: '퀴즈가 임시저장되었어요.',

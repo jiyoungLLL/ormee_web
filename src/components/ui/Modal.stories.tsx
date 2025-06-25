@@ -88,6 +88,17 @@ export const WithIcon: Story = {
   },
 };
 
+export const WithTitleStyle: Story = {
+  ...ModalTemplateWithButton,
+  args: {
+    title: 'Title 영역 스타일 적용 모달',
+    description: '모달 설명 텍스트',
+    titleContainerStyle: 'mb-[10px]',
+    titleTextStyle: 'text-heading2 text-purple-50',
+    descriptionTextStyle: 'text-body1-reading text-gray-90',
+  },
+};
+
 /** 확인버튼 상호작용 테스트 (onConfirm 호출) */
 export const ConfirmInteraction: Story = {
   ...ModalTemplateWithButton,

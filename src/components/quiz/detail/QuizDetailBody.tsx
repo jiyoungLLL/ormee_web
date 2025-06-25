@@ -9,7 +9,7 @@ type QuizDetailBodyProps = {
 };
 
 export default function QuizDetailBody({ quizId }: QuizDetailBodyProps) {
-  const { data: quizDetail, isPending, error } = useGetQuizDetail(quizId);
+  const { data: quizDetail, isPending, error } = useGetQuizDetail({ quizId });
   console.log('quizDetail: ', quizDetail);
 
   if (isPending) return <div>로딩중...</div>;

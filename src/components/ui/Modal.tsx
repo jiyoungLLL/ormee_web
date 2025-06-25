@@ -15,6 +15,12 @@ type ModalProps = {
   onConfirm: () => void;
   /** 모달 컨테이너에 적용할 추가 스타일 클래스 */
   containerStyle?: string;
+  /** 모달 제목, 설명 컨테이너에 적용할 스타일 클래스 */
+  titleContainerStyle?: string;
+  /** 모달 제목 텍스트에 적용할 스타일 클래스 */
+  titleTextStyle?: string;
+  /** 모달 설명 텍스트에 적용할 스타일 클래스 */
+  descriptionTextStyle?: string;
   /** 모달의 제목 */
   title?: string;
   /** 모달의 설명 텍스트 */
@@ -32,6 +38,9 @@ type ModalProps = {
 };
 
 const BASIC_CONTAINER_STYLE = 'bg-white rounded-[15px] px-[30px] py-[20px] select-none';
+const BASIC_TITLE_STYLE = 'flex flex-col w-full gap-[13px] mb-[35px]';
+const BASIC_TITLE_TEXT_STYLE = 'text-heading1 font-semibold text-gray-90 text-center';
+const BASIC_DESCRIPTION_TEXT_STYLE = 'text-headline2 font-normal text-gray-90 text-center';
 
 export default function Modal({
   children,
@@ -39,6 +48,9 @@ export default function Modal({
   onCancel,
   onConfirm,
   containerStyle,
+  titleContainerStyle,
+  titleTextStyle,
+  descriptionTextStyle,
   title,
   description,
   iconSrc,
@@ -89,9 +101,9 @@ export default function Modal({
           />
         )}
         {isTitleEnabled && (
-          <div className='flex flex-col w-full gap-[13px] mb-[35px]'>
-            {title && <h2 className='text-heading1 font-semibold text-gray-90 text-center'>{title}</h2>}
-            {description && <p className='text-headline2 font-normal text-gray-90 text-center'>{description}</p>}
+          <div className={`${titleContainerStyle || BASIC_TITLE_STYLE}`}>
+            {title && <h2 className={`${titleTextStyle || BASIC_TITLE_TEXT_STYLE}`}>{title}</h2>}
+            {description && <p className={`${descriptionTextStyle || BASIC_DESCRIPTION_TEXT_STYLE}`}>{description}</p>}
           </div>
         )}
         {children}
