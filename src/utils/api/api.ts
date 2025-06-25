@@ -3,6 +3,7 @@
 import { ERROR_MESSAGES } from '@/constants/error.constant';
 import { ActionResponse } from '@/types/response.types';
 import { cookies } from 'next/headers';
+import { refreshAccessToken } from './refreshToken';
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export type ContentType = 'application/json' | 'multipart/form-data';
@@ -26,26 +27,24 @@ export type FetchOptions = {
   errorMessage?: string;
 };
 
-export async function fetcher<T>({
-  method,
-  endpoint,
-  body,
-  contentType = 'application/json',
-  authorization = true,
-  errorMessage,
-}: FetchOptions): Promise<ActionResponse<T>> {
-  let accessToken = null;
+/**
+ * 토큰 갱신 실패 시 쿠키를 정리하는 함수
+ */
+const clearAuthCookies = () => {
+  cookies().delete('accessToken');
+  cookies().delete('refreshToken');
+};
 
-  if (authorization) {
-    const accessTokenCookie = cookies().get('accessToken');
-
-    if (!accessTokenCookie) {
-      return { status: 'fail', code: 401, data: ERROR_MESSAGES.ACCESS_TOKEN_NOT_FOUND };
-    }
-
-    accessToken = accessTokenCookie?.value;
-  }
-
+/**
+ * API 요청을 실행하는 함수
+ */
+const executeRequest = async (
+  endpoint: string,
+  method: Method,
+  body: any,
+  contentType: ContentType,
+  accessToken?: string,
+): Promise<Response> => {
   const headers: HeadersInit = {
     ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
   };
@@ -68,21 +67,83 @@ export async function fetcher<T>({
     }
   }
 
-  const res = await fetch(`${process.env.API_BASE_URL}${endpoint}`, fetchOptions);
+  return fetch(`${process.env.API_BASE_URL}${endpoint}`, fetchOptions);
+};
+
+export async function fetcher<T>({
+  method,
+  endpoint,
+  body,
+  contentType = 'application/json',
+  authorization = true,
+  errorMessage,
+}: FetchOptions): Promise<ActionResponse<T>> {
+  let accessToken = null;
+
+  if (authorization) {
+    const accessTokenCookie = cookies().get('accessToken');
+
+    if (!accessTokenCookie) {
+      const refreshResult = await refreshAccessToken();
+
+      if (refreshResult.status === 'fail') {
+        clearAuthCookies();
+        return { status: 'fail', code: 401, data: refreshResult.data };
+      }
+
+      const newAccessTokenCookie = cookies().get('accessToken');
+      if (!newAccessTokenCookie) {
+        clearAuthCookies();
+        return { status: 'fail', code: 401, data: ERROR_MESSAGES.ACCESS_TOKEN_NOT_FOUND };
+      }
+
+      accessToken = newAccessTokenCookie.value;
+    } else {
+      accessToken = accessTokenCookie.value;
+    }
+  }
+
+  // 첫 번째 API 요청
+  let res = await executeRequest(endpoint, method, body, contentType, accessToken || undefined);
+
+  if (res.status === 401 && authorization) {
+    if (process.env.NODE_ENV === 'development') console.log('AccessToken 만료, 토큰 갱신 요청');
+
+    const refreshResult = await refreshAccessToken();
+
+    if (refreshResult.status === 'fail') {
+      if (process.env.NODE_ENV === 'development') console.error('토큰 갱신 실패:', refreshResult.data);
+
+      clearAuthCookies();
+      return { status: 'fail', code: 401, data: refreshResult.data };
+    }
+
+    if (process.env.NODE_ENV === 'development') console.log('토큰 갱신 성공, 요청 재시도');
+
+    const newAccessTokenCookie = cookies().get('accessToken');
+    if (!newAccessTokenCookie) {
+      clearAuthCookies();
+      return { status: 'fail', code: 401, data: ERROR_MESSAGES.ACCESS_TOKEN_NOT_FOUND };
+    }
+
+    res = await executeRequest(endpoint, method, body, contentType, newAccessTokenCookie.value);
+  }
 
   if (!res.ok) {
-    const err = await res.json().catch(() => {});
+    const err = await res.json().catch(() => ({}));
+
     if (process.env.NODE_ENV === 'development') {
       console.error('----- API 요청 실패 ------');
       console.error('상태코드: ', res.status);
-      console.error('에러: ', res);
-      console.error(err);
-
-      console.error('----- API 요청 데이터 ------');
-      console.error('요청 데이터: ', fetchOptions.body);
+      console.error('에러: ', err);
+      console.error('요청 데이터: ', body);
     }
 
-    return { status: 'fail', code: res.status, data: err.data || errorMessage || 'API 요청 실패' };
+    return {
+      status: 'fail',
+      code: res.status,
+      data: err.data || errorMessage || 'API 요청 실패',
+    };
   }
 
   const data = await res.json();

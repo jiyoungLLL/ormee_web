@@ -90,14 +90,14 @@ export const signinAction = async (formData: SigninFormValues): Promise<ApiRespo
     secure: true,
     sameSite: 'none',
     path: '/',
-    maxAge: 60 * 60 * 24,
+    maxAge: 60 * 60 * 1,
   });
 
   cookies().set('refreshToken', refreshToken, {
     httpOnly: true,
     secure: true,
     sameSite: 'none',
-    path: '/nonexistent', // TODO: 임시로 존재하지 않는 경로로 설정하여 접근 차단, 토큰 갱신 api 확인 후 변경
+    path: '/',
     maxAge: 60 * 60 * 24 * 7,
   });
 
