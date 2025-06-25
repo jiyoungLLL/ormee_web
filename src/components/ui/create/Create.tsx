@@ -2,11 +2,13 @@
 
 import Button from '@/components/ui/Button';
 import CreateContents from '@/components/ui/create/CreateContents';
-import type { HomeworkItems } from '@/features/homework/homework.types';
-import { useCreateHomework, useUpdateHomework } from '@/features/homework/hooks/queries/useHomeworkApi';
+import {
+  useCreateHomework,
+  useGetHomeworksDetail,
+  useUpdateHomework,
+} from '@/features/homework/hooks/queries/useHomeworkApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { useModal } from '@/hooks/ui/useModal';
-import { MOCK_HOMEWORK } from '@/mock/homework';
 import { WriteBoxFormValues, writeBoxSchema } from '@/schemas/writeBox.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
@@ -34,9 +36,7 @@ export default function Create({ type, params }: CreateProps) {
 
   const dataFilter = filter === 'ongoing' ? 'openedAssignments' : 'closedAssignments';
 
-  const preData: HomeworkItems | undefined = homeworkId
-    ? MOCK_HOMEWORK.data[dataFilter].find((item) => item.id === Number(homeworkId))
-    : undefined;
+  const { data: preData } = useGetHomeworksDetail(homeworkId || '');
 
   const defaultValues = useMemo(
     () => ({

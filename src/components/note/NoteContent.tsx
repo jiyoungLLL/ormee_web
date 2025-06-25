@@ -95,53 +95,60 @@ export default function NoteContent() {
           htmlType='button'
         />
       </div>
-      <div className='flex flex-col gap-[45px]'>
-        <div className={commonStyle}>
-          <div>진행 쪽지</div>
-          {openNotes.length > 0 ? (
-            openNotes.map((note, key) => (
-              <OpenNote
-                key={key}
-                title={note.title}
-                date={formatDate(new Date(note.dueTime))}
-                totalCount={note.totalCount}
-                submitCount={note.submitCount}
-                onClick={() => handleClosingNote(note.id)}
-              />
-            ))
-          ) : (
-            <div className='w-full rounded-[15px] flex justify-center px-[10px] py-[20px]'>
-              <div className='text-heading2 font-semibold text-label-assistive'>진행 중인 쪽지가 없어요</div>
+      {openNotes.length === 0 && closedNotes.length === 0 ? (
+        <div className='h-[621px] flex justify-center items-center text-heading2 font-semibold text-[#B5B6BC]'>
+          <span>생성한 쪽지가 없어요.</span>
+        </div>
+      ) : (
+        <div className='flex flex-col gap-[45px]'>
+          <div className={commonStyle}>
+            <div>진행 쪽지</div>
+            {openNotes.length > 0 ? (
+              openNotes.map((note, key) => (
+                <OpenNote
+                  key={key}
+                  title={note.title}
+                  date={formatDate(new Date(note.dueTime))}
+                  totalCount={note.totalCount}
+                  submitCount={note.submitCount}
+                  onClick={() => handleClosingNote(note.id)}
+                />
+              ))
+            ) : (
+              <div className='w-full rounded-[15px] flex justify-center px-[10px] py-[20px]'>
+                <div className='text-heading2 font-semibold text-label-assistive'>진행 중인 쪽지가 없어요</div>
+              </div>
+            )}
+          </div>
+          {closedNotes.length > 0 && (
+            <div className={commonStyle}>
+              <div>마감 쪽지</div>
+              <div className='flex flex-col gap-[5px]'>
+                {closedNotes.map((note, index) => {
+                  const isLast = index === closedNotes.length - 1;
+                  const isOpen = openClosedNoteId === note.id;
+
+                  return (
+                    <div key={`${note.id}-${index}`}>
+                      <ClosedNote
+                        noteId={note.id}
+                        title={note.title}
+                        date={formatDate(new Date(note.dueTime))}
+                        totalCount={note.totalCount}
+                        submitCount={note.submitCount}
+                        isOpen={isOpen}
+                        onClick={() => setOpenClosedNoteId((prev) => (prev === note.id ? null : note.id))}
+                      />
+                      {!isLast && <div className='h-[1px] bg-gray-30 w-full'></div>}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
-        {closedNotes.length > 0 && (
-          <div className={commonStyle}>
-            <div>마감 쪽지</div>
-            <div className='flex flex-col gap-[5px]'>
-              {closedNotes.map((note, index) => {
-                const isLast = index === closedNotes.length - 1;
-                const isOpen = openClosedNoteId === note.id;
+      )}
 
-                return (
-                  <div key={`${note.id}-${index}`}>
-                    <ClosedNote
-                      noteId={note.id}
-                      title={note.title}
-                      date={formatDate(new Date(note.dueTime))}
-                      totalCount={note.totalCount}
-                      submitCount={note.submitCount}
-                      isOpen={isOpen}
-                      onClick={() => setOpenClosedNoteId((prev) => (prev === note.id ? null : note.id))}
-                    />
-                    {!isLast && <div className='h-[1px] bg-gray-30 w-full'></div>}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </div>
       {newNoteModal && (
         <Modal
           isOpen={newNoteModal}
