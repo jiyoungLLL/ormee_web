@@ -7,6 +7,7 @@ export const ERROR_MESSAGES = {
   ACCESS_TOKEN_EXPIRED: '로그인 유효기간이 만료되었습니다. 다시 로그인해주세요.',
   ACCESS_TOKEN_INVALID: '로그인 후 이용해주세요.',
   UNAUTHORIZED: '로그인 후 이용해주세요.',
+  REFRESH_TOKEN_NOT_FOUND: '로그인 유효기간이 만료되었습니다. 다시 로그인해주세요.',
 };
 
 export const getErrorType = (message: string) => {
