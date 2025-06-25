@@ -15,10 +15,10 @@ export const useGetHomeworks = (lectureId: string) => {
 };
 
 export const useGetHomeworksDetail = (homeworkId: string) => {
-  return useApiQuery<HomeworkData>({
+  return useApiQuery<HomeworkItems>({
     queryKey: QUERY_KEYS.homeworkDetail(homeworkId),
     fetchOptions: {
-      endpoint: `/homeworks/${homeworkId}`,
+      endpoint: `/teachers/homeworks/${homeworkId}`,
       authorization: true,
     },
   });

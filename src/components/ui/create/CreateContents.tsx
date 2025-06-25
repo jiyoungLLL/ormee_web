@@ -23,7 +23,7 @@ export default function CreateContents({ type, files }: CreateTitleProps) {
           control={control}
           size='w-[958px] h-[48px]'
           inputStyle='border-none focus:outline-none'
-          placeholder={`${type} 제목을 입력헤 주세요.`}
+          placeholder={`${type} 제목을 입력해 주세요.`}
         />
         <DateTimePicker
           type='CALENDAR'

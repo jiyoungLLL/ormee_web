@@ -1,8 +1,8 @@
 'use client';
 
+import RenderingDetails from '@/components/homework/RenderingDetails';
 import Button from '@/components/ui/Button';
 import DateTimePicker from '@/components/ui/DateTimePicker';
-import { HomeworkItems } from '@/features/homework/homework.types';
 import { useDeleteHomework, useGetHomeworksDetail } from '@/features/homework/hooks/queries/useHomeworkApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { format } from 'date-fns';
@@ -13,11 +13,9 @@ import { useSearchParams } from 'next/navigation';
 export default function HomeworkDetail() {
   const lectureNum = useLectureId();
   const searchParams = useSearchParams();
-  const filter = searchParams.get('filter') === 'ongoing' ? 'openedHomeworks' : ('closedHomeworks' as const);
   const id = searchParams.get('id') as string;
 
-  const { data: homeworkList } = useGetHomeworksDetail(id);
-  const detailData = homeworkList?.[filter].find((item: HomeworkItems) => item.id === Number(id));
+  const { data: detailData } = useGetHomeworksDetail(id);
 
   const deleteMutation = useDeleteHomework(lectureNum);
 
@@ -78,7 +76,7 @@ export default function HomeworkDetail() {
         )}
 
         <div className='h-[1px] bg-gray-30'></div>
-        <div className='text-body1-reading min-h-[422px] overflow-auto'>{detailData?.description}</div>
+        {detailData?.description && RenderingDetails(detailData?.description)}
       </div>
     </div>
   );
