@@ -3,11 +3,13 @@
 import { useRef } from 'react';
 import { Editor } from '@tiptap/react';
 import Image from 'next/image';
+import { postQuizAttachment } from '@/features/quiz/quiz.api';
 
 type ImmediateUploadConfig = {
   strategy: 'IMMEDIATE_UPLOAD';
   uploadUrl?: string;
   onImageUpload: (file: File, id: string, previewUrl: string) => void;
+  onImageUploadError: (error: Error) => void;
 };
 
 type DeferredUploadConfig = {
@@ -82,18 +84,12 @@ export default function Toolbar({
     const previewUrl = URL.createObjectURL(file);
 
     if (imageUploadConfig.strategy === 'IMMEDIATE_UPLOAD') {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const response = await fetch(imageUploadConfig.uploadUrl || '/api/attachment', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const data = await response.json();
-      const imageId = data.data;
-
-      imageUploadConfig.onImageUpload(file, imageId, previewUrl);
+      try {
+        const imageId = await postQuizAttachment(file);
+        imageUploadConfig.onImageUpload(file, imageId.toString(), previewUrl);
+      } catch (error) {
+        imageUploadConfig.onImageUploadError(error as Error);
+      }
     } else {
       imageUploadConfig.onImageUpload(file, previewUrl);
     }

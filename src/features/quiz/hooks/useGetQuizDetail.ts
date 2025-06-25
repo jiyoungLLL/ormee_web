@@ -32,7 +32,7 @@ export const useGetQuizDetailTemp = (quizId: string) => {
   });
 };
 
-export const useGetQuizDetail = (quizId: string) => {
+export const useGetQuizDetail = ({ quizId, enabled }: { quizId: string; enabled?: boolean }) => {
   return useApiQuery<QuizDetailResponse>({
     queryKey: QUERY_KEYS.quizDetail(quizId),
     fetchOptions: {
@@ -47,6 +47,7 @@ export const useGetQuizDetail = (quizId: string) => {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
+      enabled,
     },
     schema: QuizDetailResponseSchema,
     validateErrorMessage: '잘못된 형식의 퀴즈 정보입니다.',

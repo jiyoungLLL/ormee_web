@@ -1,3 +1,4 @@
+import DangerouslySetInnerHTMLDiv from '@/components/commons/DangerouslySetInnerHTMLDiv';
 import Button from '@/components/ui/Button';
 import { Quiz } from '@/features/quiz/types/quiz.types';
 import { formatDatetimeWithTime } from '@/utils/date/formatDate';
@@ -12,7 +13,6 @@ type TemporaryQuizItemProps = {
 
 export default function TemporaryQuizItem({ quiz, isLastQuiz }: TemporaryQuizItemProps) {
   const { id: quizId, title, limitTime, dueTime } = quiz;
-  const formattedDueTime = formatDatetimeWithTime(dueTime);
 
   const pathname = usePathname();
 
@@ -20,8 +20,11 @@ export default function TemporaryQuizItem({ quiz, isLastQuiz }: TemporaryQuizIte
     <div className='flex flex-col w-full gap-[5px]'>
       <div className='flex justify-between items-center px-[10px] py-[20px]'>
         <div className='flex flex-col gap-[5px]'>
-          <h3 className='text-headline1 font-semibold'>{title}</h3>
-          <p className='text-label font-semibold text-gray-50'>{formattedDueTime}</p>
+          <DangerouslySetInnerHTMLDiv
+            html={title}
+            className='text-headline1 font-semibold'
+          />
+          <p className='text-label font-semibold text-gray-50'>{dueTime}</p>
         </div>
 
         <div className='flex items-center gap-[29px]'>

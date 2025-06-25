@@ -38,7 +38,7 @@ export default function SignInPage() {
         router.push(directPath);
       } else {
         // TODO: 비밀번호 오류 카운트 처리
-        addToast({ message: response.message || '로그인에 실패했어요.', type: 'error' });
+        addToast({ message: response.data || '로그인에 실패했어요.', type: 'error' });
       }
     } catch (error: any) {
       if (process.env.NODE_ENV === 'development') console.error(error);
