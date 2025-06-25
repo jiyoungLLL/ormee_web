@@ -14,6 +14,7 @@ export type HomeworkItems = {
   title: string | null;
   description: string | null;
   filePaths: string | string[] | null;
+  feedbackCompleted: boolean;
   openTime: string | null;
   dueTime: string | null;
 };
