@@ -83,7 +83,7 @@ export default function NoteContent() {
   };
 
   return (
-    <div className='absolute top-[125px] w-[1018px] bg-white rounded-[20px] px-[30px] py-[20px] flex flex-col'>
+    <div className='absolute top-[125px] w-[1018px] h-[730px] bg-white rounded-[20px] px-[30px] py-[20px] flex flex-col'>
       <div className='w-full flex justify-end'>
         <Button
           type='BUTTON_CREATE_TYPE'
@@ -102,25 +102,25 @@ export default function NoteContent() {
             openNotes.map((note, key) => (
               <OpenNote
                 key={key}
-                noteId={note.id}
                 title={note.title}
                 date={formatDate(new Date(note.dueTime))}
+                totalCount={note.totalCount}
+                submitCount={note.submitCount}
                 onClick={() => handleClosingNote(note.id)}
               />
             ))
           ) : (
             <div className='w-full rounded-[15px] flex justify-center px-[10px] py-[20px]'>
-              <div className='text-heading2 font-semibold text-label-assistive'>현재 진행 중인 쪽지가 없어요</div>
+              <div className='text-heading2 font-semibold text-label-assistive'>진행 중인 쪽지가 없어요</div>
             </div>
           )}
         </div>
-
-        <div className={commonStyle}>
-          <div>마감 쪽지</div>
-          <div className='flex flex-col gap-[5px]'>
-            {closedNotes.length > 0 ? (
-              closedNotes.map((note, index) => {
-                const lastNote = closedNotes.length - 1;
+        {closedNotes.length > 0 && (
+          <div className={commonStyle}>
+            <div>마감 쪽지</div>
+            <div className='flex flex-col gap-[5px]'>
+              {closedNotes.map((note, index) => {
+                const isLast = index === closedNotes.length - 1;
                 const isOpen = openClosedNoteId === note.id;
 
                 return (
@@ -134,17 +134,13 @@ export default function NoteContent() {
                       isOpen={isOpen}
                       onClick={() => setOpenClosedNoteId((prev) => (prev === note.id ? null : note.id))}
                     />
-                    {index !== lastNote && <div className='h-[1px] bg-gray-30 w-full'></div>}
+                    {!isLast && <div className='h-[1px] bg-gray-30 w-full'></div>}
                   </div>
                 );
-              })
-            ) : (
-              <div className='w-full rounded-[15px] flex justify-center px-[10px] py-[20px]'>
-                <div className='text-heading2 font-semibold text-label-assistive'>마감된 쪽지가 없어요</div>
-              </div>
-            )}
+              })}
+            </div>
           </div>
-        </div>
+        )}
       </div>
       {newNoteModal && (
         <Modal
@@ -159,11 +155,12 @@ export default function NoteContent() {
             <Input
               name='title'
               control={control}
-              size='w-full h-[74px]'
+              size='w-full h-[50px]'
               placeholder='제목을 입력해 주세요'
               maxLength={20}
               showCharacterCount={true}
-              inputStyle='rounded-[10px] border border-gray-20 bg-gray-10 px-[20px] py-[15px] focus:border-[1px] focus:border-purple-50 focus:outline-none disabled:bg-gray-10'
+              textStyle='text-headline1 font-semibold'
+              inputStyle='rounded-[10px] border border-gray-20 px-[20px] py-[15px] focus:border-[1px] focus:border-purple-50 focus:outline-none'
             />
           </div>
         </Modal>
