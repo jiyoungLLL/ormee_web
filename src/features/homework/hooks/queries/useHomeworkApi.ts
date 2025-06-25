@@ -14,6 +14,16 @@ export const useGetHomeworks = (lectureId: string) => {
   });
 };
 
+export const useGetHomeworksDetail = (homeworkId: string) => {
+  return useApiQuery<HomeworkData>({
+    queryKey: QUERY_KEYS.homeworkDetail(homeworkId),
+    fetchOptions: {
+      endpoint: `/homeworks/${homeworkId}`,
+      authorization: true,
+    },
+  });
+};
+
 export const useGetDraftHomeworks = (lectureId: string) => {
   return useApiQuery<HomeworkItems[]>({
     queryKey: QUERY_KEYS.homeworkDraft(lectureId),
