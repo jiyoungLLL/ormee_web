@@ -30,6 +30,8 @@ export default function OpenNote({ title, date, totalCount, submitCount, onClick
           <div className='text-headline1 font-semibold'>{title}</div>
           <div className='text-label text-gray-50'>{date}</div>
         </div>
+      </div>
+      <div className='flex gap-[20px]'>
         <div className='flex gap-[5px] items-center'>
           <Image
             src={'/assets/icons/homeSlide_student.png'}
@@ -44,17 +46,17 @@ export default function OpenNote({ title, date, totalCount, submitCount, onClick
             <p className='text-headline1  text-gray-50'>{totalCount}</p>
           </div>
         </div>
+        <Button
+          type='BUTTON_BASE_TYPE'
+          size='h-[46px]'
+          font='text-headline2 font-semibold'
+          title='마감하기'
+          isPurple={true}
+          isfilled={false}
+          htmlType='button'
+          onClick={onClick}
+        />
       </div>
-      <Button
-        type='BUTTON_BASE_TYPE'
-        size='h-[46px]'
-        font='text-headline2 font-semibold'
-        title='마감하기'
-        isPurple={true}
-        isfilled={false}
-        htmlType='button'
-        onClick={onClick}
-      />
     </div>
   );
 }
