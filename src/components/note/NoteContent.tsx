@@ -149,6 +149,7 @@ export default function NoteContent() {
           onConfirm={onConfirm}
           title='쪽지 생성'
           containerStyle='w-[491px] bg-white rounded-[15px] px-[30px] py-[20px] flex flex-col'
+          titleContainerStyle='flex flex-col w-full gap-[13px] mb-[10px]'
         >
           <div className='flex flex-col gap-[10px] pt-[10px] pb-[35px]'>
             <div className='text-headline2 font-semibold'>쪽지 제목</div>
