@@ -9,17 +9,16 @@ type QuizDetailTitleProps = {
 };
 
 export default function QuizDetailTitle({ quizDetail }: QuizDetailTitleProps) {
-  const { title, description, dueTime, timeLimit } = quizDetail;
-  const openDate = '2025-06-11T15:00:00'; // TODO: api 수정 후 교체
-  const formattedOpenDate = formatDatetimeToYYMMDD(openDate);
-  const formattedDueDate = formatDatetimeToYYMMDD(dueTime);
+  const { title, description, openTime, dueTime, timeLimit } = quizDetail;
+  const formattedOpenDate = openTime ? formatDatetimeToYYMMDD(openTime) : '';
+  const formattedDueDate = dueTime ? formatDatetimeToYYMMDD(dueTime) : '';
   const formattedLimitTime = QUIZ_LIMIT_TIME_MAP_TO_RENDER[timeLimit as keyof typeof QUIZ_LIMIT_TIME_MAP_TO_RENDER];
   const isDescriptionEmpty = !description || getPlainText(description).trim() === '';
 
   return (
     <div className='flex flex-col gap-[10px] rounded-[10px] w-full px-[30px] py-[20px] bg-white'>
       <DangerouslySetInnerHTMLDiv
-        html={title}
+        html={title || ''}
         className='p-[10px] text-heading2 font-semibold'
       />
       {/* 시간 표시 영역 */}

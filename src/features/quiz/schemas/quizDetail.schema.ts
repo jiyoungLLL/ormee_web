@@ -6,7 +6,7 @@ export const ChoiceProblemResponseSchema = z.object({
   type: z.literal('CHOICE'),
   answer: z.string(),
   items: z.array(z.string()).min(1),
-  fileIds: z.null(),
+  fileIds: z.array(z.number()),
   filePaths: z.array(z.string().optional()),
   submission: z.null(),
   isCorrect: z.null(),
@@ -18,7 +18,7 @@ export const EssayProblemResponseSchema = z.object({
   type: z.literal('ESSAY'),
   answer: z.string(),
   items: z.array(z.never()),
-  fileIds: z.null(),
+  fileIds: z.array(z.number()),
   filePaths: z.array(z.string().optional()),
 });
 
@@ -28,10 +28,11 @@ export const ProblemResponseSchema = z.discriminatedUnion('type', [
 ]);
 
 export const QuizDetailResponseSchema = z.object({
-  title: z.string(),
-  description: z.string(),
-  dueTime: z.string(),
-  timeLimit: z.number(),
+  title: z.string().nullable(),
+  description: z.string().nullable(),
+  openTime: z.string().nullable(),
+  dueTime: z.string().nullable(),
+  timeLimit: z.number().nullable(),
   problems: z.array(ProblemResponseSchema),
   opened: z.boolean(),
 });

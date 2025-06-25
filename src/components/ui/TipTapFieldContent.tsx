@@ -47,6 +47,7 @@ export default function TipTapFieldContent<T extends FieldValues>({
   };
 
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit.configure({}),
       BulletList,
@@ -119,10 +120,8 @@ export default function TipTapFieldContent<T extends FieldValues>({
       setEditor(editor, fileName || null);
     }
 
-    return () => {
-      setEditor(null, null);
-    };
-  }, []);
+    return () => {};
+  }, [editor, setEditor, fileName]);
 
   const handleFocus = () => {
     onFocus?.();

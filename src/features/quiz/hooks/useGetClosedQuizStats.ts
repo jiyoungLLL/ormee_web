@@ -1,34 +1,21 @@
-import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../../../hooks/queries/queryKeys';
-import { ClosedQuizStatsResponseSchema } from '@/features/quiz/schemas/quiz.schema';
-import { transformClosedQuizStatsToCamelCase } from '@/utils/transforms/quiz.transform';
 import { ClosedQuizStats } from '@/features/quiz/types/quiz.types';
-
-const getClosedQuizStats = async (quizId: string) => {
-  const response = await fetch(`/api/teachers/quizzes/${quizId}/stats`);
-
-  if (!response.ok) {
-    if (process.env.NODE_ENV === 'development') console.error(response.statusText);
-    throw new Error('퀴즈 통계 조회에 실패했습니다.');
-  }
-
-  const json = await response.json();
-
-  const parsedJson = ClosedQuizStatsResponseSchema.safeParse(json);
-  if (!parsedJson.success) {
-    if (process.env.NODE_ENV === 'development') console.error(parsedJson.error);
-    throw new Error('잘못된 퀴즈 통계 형식입니다.');
-  }
-
-  return transformClosedQuizStatsToCamelCase(parsedJson.data);
-};
+import { useApiQuery } from '@/hooks/useApi';
 
 export const useGetClosedQuizStats = (quizId: string) => {
-  return useQuery<ClosedQuizStats>({
+  return useApiQuery<ClosedQuizStats>({
     queryKey: QUERY_KEYS.closedQuizStats(quizId),
-    queryFn: () => getClosedQuizStats(quizId),
-    staleTime: 24 * 60 * 60 * 1000,
-    refetchOnWindowFocus: false,
-    enabled: !!quizId,
+    fetchOptions: {
+      endpoint: `/teachers/quizzes/${quizId}/stats`,
+      errorMessage: '퀴즈 통계 조회에 실패했어요.',
+      authorization: true,
+    },
+    queryOptions: {
+      staleTime: 1000 * 60 * 60 * 24,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      enabled: !!quizId,
+    },
   });
 };
