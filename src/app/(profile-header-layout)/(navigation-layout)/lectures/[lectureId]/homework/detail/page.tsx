@@ -16,7 +16,8 @@ export default function HomeworkDetail() {
   const id = searchParams.get('id') as string;
 
   const { data: detailData } = useGetHomeworksDetail(id);
-
+  // 전달 후 지우기
+  console.log(detailData);
   const deleteMutation = useDeleteHomework(lectureNum);
 
   const handleDelete = () => {
@@ -57,22 +58,29 @@ export default function HomeworkDetail() {
             customTextStyle='text-[16px] text-headline2 font-semibold'
           />
         </div>
-        {detailData?.filePaths && (
-          <a
-            // href={detailData.filePaths}
-            download
-            target='_blank'
-            rel='noopener noreferrer'
-            className='flex w-fit h-fit rounded-[18px] border border-gray-30 px-[16px] py-[4px] gap-[5px] bg-gray-10 text-body-reading text-purple-50 items-center'
-          >
-            <Image
-              src='/assets/icons/file.png'
-              width={24}
-              height={24}
-              alt='파일 아이콘'
-            />
-            {/* <span>{detailData.filePaths.split('/').pop()}</span> */}
-          </a>
+        {detailData?.filePaths?.length !== 0 && detailData?.fileNames?.length !== 0 && (
+          <div>
+            {detailData?.filePaths?.map((files, index) => (
+              <a
+                key={files}
+                href={files}
+                download
+                target='_blank'
+                rel='noopener noreferrer'
+                className='flex w-fit h-fit rounded-[18px] border border-gray-30 px-[16px] py-[4px] gap-[5px] bg-gray-10 text-body-reading text-purple-50 items-center'
+              >
+                <Image
+                  src='/assets/icons/file.png'
+                  width={24}
+                  height={24}
+                  alt='파일 아이콘'
+                />
+                <span>
+                  {detailData?.fileNames?.[index].match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}(.*)/)?.[1]}
+                </span>
+              </a>
+            ))}
+          </div>
         )}
 
         <div className='h-[1px] bg-gray-30'></div>
