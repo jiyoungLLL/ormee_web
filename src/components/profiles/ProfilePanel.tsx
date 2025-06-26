@@ -58,7 +58,7 @@ export default function ProfilePanel({ profileData, onClose }: ProfilePanelProps
           </div>
           <p className='flex flex-row gap-[5px] justify-start items-center mb-[5px]'>
             <span className='text-gray-90 text-heading2 font-semibold'>{nickname}</span>
-            <span className='text-gray-60 text-heading2 font-semibold'>선생님</span>
+            <span className='text-gray-60 text-headline2 font-semibold'>선생님</span>
           </p>
           <div className='flex flex-row gap-[5px] justify-start items-start self-stretch'>
             <img
@@ -66,7 +66,7 @@ export default function ProfilePanel({ profileData, onClose }: ProfilePanelProps
               alt='한줄 소개'
               className='w-[24px] h-[24px]'
             />
-            <p className='text-gray-90 text-label2-normal'>{bio || '한줄 소개를 입력해보세요.'}</p>
+            <p className='text-gray-90 text-body2-normal'>{bio || '한줄 소개를 입력해보세요.'}</p>
           </div>
         </section>
         <section
