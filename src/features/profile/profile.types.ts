@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { profileSchema } from '@/features/profile/profile.schema';
 
 export type UserProfileData = {
-  name: string;
+  nickname: string;
   image: string | null;
   bio: string | null;
 };
