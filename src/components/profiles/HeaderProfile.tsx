@@ -34,7 +34,7 @@ export default function HeaderProfile() {
     return <div className='w-[24px] h-[24px] rounded-full bg-gray-50 animate-pulse' />;
   }
 
-  const { name, image } = profileData || {};
+  const { nickname, image } = profileData || {};
 
   const handlePanelToggle = () => {
     setIsPanelOpen((prev) => !prev);
@@ -65,7 +65,7 @@ export default function HeaderProfile() {
           <div className='w-[24px] h-[24px] rounded-full bg-gray-50' />
         )}
         <p className='text-headline2 text-gray-70'>
-          <span className='font-semibold'>{name}</span>
+          <span className='font-semibold'>{nickname}</span>
           <span className='font-normal ml-[3px]'>선생님</span>
         </p>
       </div>

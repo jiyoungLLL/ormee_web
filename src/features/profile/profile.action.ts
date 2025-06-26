@@ -6,7 +6,7 @@ import { fetcher } from '@/utils/api/api';
 export const getProfileServer = async (): Promise<UserProfileData> => {
   const response = await fetcher<ProfileResponse>({
     method: 'GET',
-    endpoint: '/teachers/profile',
+    endpoint: '/teachers/info',
     authorization: true,
     errorMessage: '프로필 정보를 가져오는데 실패했어요.',
   });
@@ -15,5 +15,5 @@ export const getProfileServer = async (): Promise<UserProfileData> => {
     return Promise.reject(response.data);
   }
 
-  return { name: response.data.name, image: response.data.image, bio: response.data.introduction };
+  return { nickname: response.data.nickname || '', image: response.data.image, bio: response.data.introduction };
 };

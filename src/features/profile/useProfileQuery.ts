@@ -9,13 +9,13 @@ export const useGetProfileData = () => {
   return useApiQuery<ProfileResponse, UserProfileData>({
     queryKey: QUERY_KEYS.profile(),
     fetchOptions: {
-      endpoint: '/teachers/profile',
+      endpoint: '/teachers/info',
       authorization: true,
       errorMessage: '프로필 정보를 가져오는데 실패했어요.',
     },
     schema: profileSchema,
     transform: (data) => ({
-      name: data.name,
+      nickname: data.nickname || '',
       image: data.image,
       bio: data.introduction,
     }),

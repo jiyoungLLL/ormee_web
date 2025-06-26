@@ -4,7 +4,7 @@ import { z } from 'zod';
 export const profileSchema = z.object({
   username: z.string().nullable(),
   name: z.string(),
-  nameEng: z.string().nullable(),
+  nickname: z.string().nullable(),
   email: z.string().nullable(),
   phoneNumber: z.string().nullable(),
   introduction: z.string().nullable(),

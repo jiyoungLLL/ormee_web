@@ -21,7 +21,7 @@ export default function ProfilePanel({ profileData, onClose }: ProfilePanelProps
 
   if (!isMounted || !profileRoot) return null;
 
-  const { name, image, bio } = profileData;
+  const { nickname, image, bio } = profileData;
 
   const handleSignOut = () => {
     signoutAction();
@@ -60,7 +60,7 @@ export default function ProfilePanel({ profileData, onClose }: ProfilePanelProps
             </button>
           </div>
           <p className='flex flex-row gap-[5px] justify-start items-center mb-[5px]'>
-            <span className='text-gray-90 text-heading2 font-semibold'>{name}</span>
+            <span className='text-gray-90 text-heading2 font-semibold'>{nickname}</span>
             <span className='text-gray-60 text-heading2 font-semibold'>선생님</span>
           </p>
           <div className='flex flex-row gap-[5px] justify-start items-start self-stretch'>
