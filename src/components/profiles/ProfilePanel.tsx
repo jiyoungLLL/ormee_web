@@ -40,18 +40,15 @@ export default function ProfilePanel({ profileData, onClose }: ProfilePanelProps
           aria-label='사용자 프로필 정보'
         >
           <div className='flex flex-row justify-between items-start self-stretch mb-[10px]'>
-            {image ? (
-              <Image
-                src={image}
-                width={40}
-                height={40}
-                alt='프로필 이미지'
-                className='rounded-full object-cover'
-                draggable={false}
-              />
-            ) : (
-              <div className='w-[40px] h-[40px] rounded-full bg-gray-50' />
-            )}
+            <Image
+              src={image ?? '/assets/images/profile/default_profile.png'}
+              width={40}
+              height={40}
+              alt='프로필 이미지'
+              className='rounded-full object-cover'
+              draggable={false}
+            />
+
             <button
               onClick={handleSignOut}
               className='w-[71px] px-[10px] py-[5px] rounded-[5px] bg-white border-[1px] border-gray-20 text-[14px] text-body2 font-normal text-gray-90'
