@@ -5,6 +5,8 @@ import { useGetProfileData } from '@/features/profile/useProfileQuery';
 import Image from 'next/image';
 import Textarea from '../ui/Textarea';
 import { useForm } from 'react-hook-form';
+import { useState } from 'react';
+import { ProfileEditForm } from '@/features/profile/profile.types';
 
 type ProfileEditModalProps = {
   isOpen: boolean;
@@ -16,11 +18,13 @@ type ProfileEditModalProps = {
 export default function ProfileEditModal({ isOpen, onConfirm, onClose, onCancel }: ProfileEditModalProps) {
   const { data: currentProfile } = useGetProfileData();
   const { nickname, image, bio } = currentProfile || {};
+  const [thumbnailURL, setThumbnailURL] = useState<string | null>(null);
 
-  const methods = useForm({
+  const methods = useForm<ProfileEditForm>({
     mode: 'onSubmit',
     defaultValues: {
-      description: bio,
+      introduction: bio,
+      file: null,
     },
   });
 
@@ -73,7 +77,7 @@ export default function ProfileEditModal({ isOpen, onConfirm, onClose, onCancel 
           </div>
         </div>
         <Textarea
-          name='description'
+          name='introduction'
           control={methods.control}
           placeholder='한줄소개'
           maxLength={20}

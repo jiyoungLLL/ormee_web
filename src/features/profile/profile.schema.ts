@@ -10,3 +10,8 @@ export const profileSchema = z.object({
   introduction: z.string().nullable(),
   image: z.string().nullable(),
 });
+
+export const profileEditFormSchema = z.object({
+  introduction: z.string().nullable(),
+  file: z.instanceof(File).nullable(),
+});
