@@ -7,6 +7,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
+import { useState } from 'react';
+import ProfileEditModal from '@/components/profiles/ProfileEditModal';
 
 type ProfilePanelProps = {
   profileData: UserProfileData;
@@ -17,6 +19,8 @@ export default function ProfilePanel({ profileData, onClose }: ProfilePanelProps
   const isMounted = useMounted();
   const router = useRouter();
 
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   const profileRoot = document.getElementById('profile-root');
 
   if (!isMounted || !profileRoot) return null;
@@ -26,6 +30,10 @@ export default function ProfilePanel({ profileData, onClose }: ProfilePanelProps
   const handleSignOut = () => {
     signoutAction();
     router.push('/signin');
+  };
+
+  const handleEditProfile = () => {
+    setIsEditModalOpen(true);
   };
 
   return createPortal(
@@ -73,7 +81,10 @@ export default function ProfilePanel({ profileData, onClose }: ProfilePanelProps
           className='flex flex-row gap-[10px] justify-between items-center'
           aria-label='프로필 설정 및 마이페이지 이동 버튼'
         >
-          <button className='flex justify-center items-center h-[40px] px-[20px] py-[12px] rounded-[10px] bg-white border-[1px] border-purple-50 text-purple-50 text-headline2 font-semibold'>
+          <button
+            className='flex justify-center items-center h-[40px] px-[20px] py-[12px] rounded-[10px] bg-white border-[1px] border-purple-50 text-purple-50 text-headline2 font-semibold'
+            onClick={handleEditProfile}
+          >
             프로필 설정
           </button>
           <Link href='/mypage/personal'>
@@ -83,6 +94,12 @@ export default function ProfilePanel({ profileData, onClose }: ProfilePanelProps
           </Link>
         </section>
       </div>
+      <ProfileEditModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onConfirm={() => {}}
+        onCancel={() => {}}
+      />
     </div>,
     profileRoot,
   );
