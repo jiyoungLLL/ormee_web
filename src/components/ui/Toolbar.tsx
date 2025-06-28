@@ -1,9 +1,9 @@
 'use client';
 
-import { useRef } from 'react';
+import { postQuizAttachment } from '@/features/quiz/quiz.api';
 import { Editor } from '@tiptap/react';
 import Image from 'next/image';
-import { postQuizAttachment } from '@/features/quiz/quiz.api';
+import { useRef } from 'react';
 
 type ImmediateUploadConfig = {
   strategy: 'IMMEDIATE_UPLOAD';

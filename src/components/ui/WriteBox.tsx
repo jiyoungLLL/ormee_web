@@ -1,4 +1,6 @@
+import { useGetHomeworksDetail } from '@/features/homework/hooks/queries/useHomeworkApi';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import Button from './Button';
@@ -6,20 +8,44 @@ import TiptapEditor from './TiptapEditor';
 
 type WriteBoxProps = {
   type: '공지' | '숙제';
-  files?: string[];
 };
 
-export default function WriteBox({ type, files }: WriteBoxProps) {
+export default function WriteBox({ type }: WriteBoxProps) {
+  const searchParams = useSearchParams();
+  const homeworkId = searchParams.get('id') as string;
+  const { data } = useGetHomeworksDetail(homeworkId);
   const { watch, setValue } = useFormContext();
+
   const selectedFiles = useRef<HTMLInputElement>(null);
   const [fileList, setFileList] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
 
-  // useEffect(() => {
-  //   if (files) {
-  //     setFileNames(files);
-  //   }
-  // }, [files]);
+  useEffect(() => {
+    const fetchAndConvertFiles = async () => {
+      if (!data?.filePaths?.length) return;
+
+      const files = await Promise.all(
+        data.filePaths.map(async (url: string, i: number) => {
+          if (!data?.fileNames?.length) return undefined;
+
+          const res = await fetch(url);
+          const blob = await res.blob();
+
+          const originalNames = data.fileNames[i];
+          const validNames =
+            originalNames.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}(.*)/)?.[1] || originalNames;
+          const file = new File([blob], validNames, { type: blob.type });
+          return file;
+        }),
+      );
+
+      const validFiles = files.filter((file): file is File => file !== undefined);
+
+      setFileList(validFiles);
+    };
+
+    fetchAndConvertFiles();
+  }, [data]);
 
   useEffect(() => {
     setValue('files', fileList);
@@ -67,11 +93,19 @@ export default function WriteBox({ type, files }: WriteBoxProps) {
   return (
     <div className='h-auto bg-white p-[30px] rounded-[10px] flex flex-col gap-[20px]'>
       <div className='h-[482px] flex flex-col gap-[12px]'>
-        <TiptapEditor
-          type={type}
-          contents={watch('description')}
-          onChange={(html) => setValue('description', html)}
-        />
+        {watch('description') !== '' ? (
+          <TiptapEditor
+            type={type}
+            contents={watch('description') ?? ''}
+            onChange={(html) => setValue('description', html)}
+          />
+        ) : (
+          <TiptapEditor
+            type={type}
+            contents={''}
+            onChange={(html) => setValue('description', html)}
+          />
+        )}
       </div>
 
       <div className='h-[191px] flex flex-col gap-[10px]'>
@@ -94,6 +128,7 @@ export default function WriteBox({ type, files }: WriteBoxProps) {
             multiple
             onChange={handleFileChange}
           />
+          <span className='text-body text-gray-50 font-[18px]'> &#40;파일당 최대 10MB, 총 최대 50MB&#41;</span>
         </div>
 
         <div
@@ -127,7 +162,7 @@ export default function WriteBox({ type, files }: WriteBoxProps) {
               ))}
             </div>
           ) : (
-            <p className='text-body text-gray-50 font-[18px]'>파일을 마우스로 끌어 오세요.</p>
+            <p className='text-body text-gray-50 font-[18px]'>파일을 마우스로 끌어 오거나 업로드해 주세요.</p>
           )}
         </div>
       </div>

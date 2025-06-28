@@ -7,10 +7,9 @@ import WriteBox from '../WriteBox';
 
 type CreateTitleProps = {
   type: '공지' | '숙제';
-  files?: string[];
 };
 
-export default function CreateContents({ type, files }: CreateTitleProps) {
+export default function CreateContents({ type }: CreateTitleProps) {
   const { setValue, control, watch } = useFormContext();
 
   const dueTime = watch('dueTime');
@@ -34,10 +33,7 @@ export default function CreateContents({ type, files }: CreateTitleProps) {
         />
       </div>
 
-      <WriteBox
-        type={type}
-        files={files}
-      />
+      <WriteBox type={type} />
     </div>
   );
 }

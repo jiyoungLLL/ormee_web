@@ -5,28 +5,40 @@ import Button from '@/components/ui/Button';
 import DateTimePicker from '@/components/ui/DateTimePicker';
 import { useDeleteHomework, useGetHomeworksDetail } from '@/features/homework/hooks/queries/useHomeworkApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
+import { useBackRedirect } from '@/hooks/useBackRedirect';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function HomeworkDetail() {
+  const router = useRouter();
+
   const lectureNum = useLectureId();
   const searchParams = useSearchParams();
   const id = searchParams.get('id') as string;
 
   const { data: detailData } = useGetHomeworksDetail(id);
-  // 전달 후 지우기
-  console.log(detailData);
+
   const deleteMutation = useDeleteHomework(lectureNum);
 
   const handleDelete = () => {
     deleteMutation.mutate(id);
   };
 
+  useBackRedirect(`/lectures/${lectureNum}/homework`);
+
   return (
     <div className='flex flex-col gap-[20px]'>
       <div className='flex gap-[10px] justify-end'>
+        <Button
+          type='BUTTON_BASE_TYPE'
+          size='h-[50px]'
+          font='text-healine1 font-semibold'
+          title='삭제하기'
+          isPurple={false}
+          onClick={handleDelete}
+        />
         <Link href={`/lectures/${lectureNum}/homework/create?filter=${searchParams.get('filter')}&id=${id}`}>
           <Button
             type='BUTTON_BASE_TYPE'
@@ -37,14 +49,6 @@ export default function HomeworkDetail() {
             isfilled={false}
           />
         </Link>
-        <Button
-          type='BUTTON_BASE_TYPE'
-          size='h-[50px]'
-          font='text-healine1 font-semibold'
-          title='삭제하기'
-          isPurple={false}
-          onClick={handleDelete}
-        />
       </div>
       <div className='bg-white p-[30px] flex flex-col gap-[20px] rounded-[20px]'>
         <div className='flex justify-between items-center'>
@@ -75,9 +79,7 @@ export default function HomeworkDetail() {
                   height={24}
                   alt='파일 아이콘'
                 />
-                <span>
-                  {detailData?.fileNames?.[index].match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}(.*)/)?.[1]}
-                </span>
+                <span>{detailData?.fileNames?.[index].replace(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+/, '')}</span>
               </a>
             ))}
           </div>
