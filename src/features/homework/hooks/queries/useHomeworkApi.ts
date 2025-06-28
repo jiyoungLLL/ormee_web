@@ -14,6 +14,16 @@ export const useGetHomeworks = (lectureId: string) => {
   });
 };
 
+export const useGetHomeworksDetail = (homeworkId: string) => {
+  return useApiQuery<HomeworkItems>({
+    queryKey: QUERY_KEYS.homeworkDetail(homeworkId),
+    fetchOptions: {
+      endpoint: `/teachers/homeworks/${homeworkId}`,
+      authorization: true,
+    },
+  });
+};
+
 export const useGetDraftHomeworks = (lectureId: string) => {
   return useApiQuery<HomeworkItems[]>({
     queryKey: QUERY_KEYS.homeworkDraft(lectureId),
@@ -43,7 +53,7 @@ export const useCreateHomework = (lectureId: string) => {
       });
       router.push(`/lectures/${lectureId}/homework`);
     },
-    onError: (err) => {
+    onError: () => {
       addToast({
         message: '숙제 생성에 실패했어요. 다시 시도해주세요.',
         type: 'error',
@@ -54,11 +64,21 @@ export const useCreateHomework = (lectureId: string) => {
   });
 };
 
-export const useUpdateHomework = (homeworkId: string) => {
+type updateProps = {
+  homeworkId: string | undefined;
+  lectureId: string | undefined;
+  filter: string | undefined;
+};
+
+export const useUpdateHomework = ({ homeworkId, lectureId, filter }: updateProps) => {
+  const router = useRouter();
   const { addToast } = useToastStore();
+
+  if (!homeworkId || !lectureId || !filter) return null;
+
   return useApiMutation<void, FormData>({
     method: 'PUT',
-    endpoint: `teachers/homeworks/${homeworkId}`,
+    endpoint: `/teachers/homeworks/${homeworkId}`,
     fetchOptions: {
       authorization: true,
       contentType: 'multipart/form-data',
@@ -69,15 +89,16 @@ export const useUpdateHomework = (homeworkId: string) => {
         type: 'success',
         duration: 2500,
       });
+      router.push(`/lectures/${lectureId}/homework/detail?filter=${filter}&id=${homeworkId}`);
     },
-    onError: (err) => {
+    onError: () => {
       addToast({
         message: '숙제 수정에 실패했어요. 다시 시도해주세요.',
         type: 'error',
         duration: 2500,
       });
     },
-    invalidateKey: [QUERY_KEYS.homeworkList(homeworkId)],
+    invalidateKey: [QUERY_KEYS.homeworkList(lectureId), QUERY_KEYS.homeworkDetail(homeworkId)],
   });
 };
 

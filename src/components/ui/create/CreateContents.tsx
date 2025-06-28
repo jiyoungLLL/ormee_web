@@ -7,10 +7,9 @@ import WriteBox from '../WriteBox';
 
 type CreateTitleProps = {
   type: '공지' | '숙제';
-  files?: string[];
 };
 
-export default function CreateContents({ type, files }: CreateTitleProps) {
+export default function CreateContents({ type }: CreateTitleProps) {
   const { setValue, control, watch } = useFormContext();
 
   const dueTime = watch('dueTime');
@@ -23,7 +22,7 @@ export default function CreateContents({ type, files }: CreateTitleProps) {
           control={control}
           size='w-[958px] h-[48px]'
           inputStyle='border-none focus:outline-none'
-          placeholder={`${type} 제목을 입력헤 주세요.`}
+          placeholder={`${type} 제목을 입력해 주세요.`}
         />
         <DateTimePicker
           type='CALENDAR'
@@ -34,10 +33,7 @@ export default function CreateContents({ type, files }: CreateTitleProps) {
         />
       </div>
 
-      <WriteBox
-        type={type}
-        files={files}
-      />
+      <WriteBox type={type} />
     </div>
   );
 }

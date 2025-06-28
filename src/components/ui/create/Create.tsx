@@ -1,18 +1,19 @@
 'use client';
-
 import Button from '@/components/ui/Button';
 import CreateContents from '@/components/ui/create/CreateContents';
-import type { HomeworkItems } from '@/features/homework/homework.types';
-import { useCreateHomework, useUpdateHomework } from '@/features/homework/hooks/queries/useHomeworkApi';
+import {
+  useCreateHomework,
+  useGetHomeworksDetail,
+  useUpdateHomework,
+} from '@/features/homework/hooks/queries/useHomeworkApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { useModal } from '@/hooks/ui/useModal';
-import { MOCK_HOMEWORK } from '@/mock/homework';
 import { WriteBoxFormValues, writeBoxSchema } from '@/schemas/writeBox.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useMemo } from 'react';
+import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import Draft from '../draftModal/Draft';
 
@@ -26,41 +27,44 @@ export default function Create({ type, params }: CreateProps) {
 
   const lectureNum = useLectureId();
   const searchParams = useSearchParams();
-  const homeworkId = type === 'homework' && searchParams.get('id');
-  const filter = searchParams.get('filter');
-  const isModify = !!filter;
+  const rawHomeworkId = type === 'homework' ? searchParams.get('id') : null;
+  const homeworkId = rawHomeworkId && typeof rawHomeworkId === 'string' ? rawHomeworkId : undefined;
 
+  const rawFilter = searchParams.get('filter');
+  const filter = rawFilter && typeof rawFilter === 'string' ? rawFilter : undefined;
+
+  const lectureId = lectureNum ?? undefined;
+
+  const isModify = !!homeworkId;
   const title = type === 'notice' ? '공지' : '숙제';
 
-  const dataFilter = filter === 'ongoing' ? 'openedAssignments' : 'closedAssignments';
-
-  const preData: HomeworkItems | undefined = homeworkId
-    ? MOCK_HOMEWORK.data[dataFilter].find((item) => item.id === Number(homeworkId))
-    : undefined;
-
-  const defaultValues = useMemo(
-    () => ({
-      title: preData?.title || '',
-      description: preData?.description || '',
-      files: [],
-      isDraft: false,
-      openTime: new Date().toString(),
-      dueTime: preData?.dueTime || '',
-    }),
-    [preData],
-  );
+  const { data: preData } = useGetHomeworksDetail(homeworkId || '');
 
   const methods = useForm<WriteBoxFormValues>({
     resolver: zodResolver(writeBoxSchema),
     mode: 'onSubmit',
-    defaultValues,
+    defaultValues: {
+      title: '',
+      description: '',
+      dueTime: '',
+      files: [],
+      isDraft: false,
+    },
   });
 
-  const { control, handleSubmit, setValue, watch } = methods;
+  const { setValue } = methods;
 
-  const updateMutation = useUpdateHomework(homeworkId || '');
-  const createMutation = useCreateHomework(lectureNum);
+  useEffect(() => {
+    if (preData) {
+      setValue('title', preData.title || '');
+      setValue('description', preData.description || '');
+      setValue('isDraft', false);
+      setValue('dueTime', preData.dueTime ? new Date(preData.dueTime).toISOString().slice(0, 16) : '');
+    }
+  }, [preData, setValue]);
 
+  const updateMutation = useUpdateHomework({ homeworkId, lectureId, filter });
+  const createMutation = useCreateHomework(lectureId);
   const mutation = isModify ? updateMutation : createMutation;
 
   const handleDraftSubmit = () => {
@@ -73,15 +77,13 @@ export default function Create({ type, params }: CreateProps) {
     formData.append('title', data.title);
     formData.append('description', data.description);
     formData.append('isDraft', data.isDraft.toString());
-    formData.append('openTime', new Date(data.openTime).toISOString().slice(0, 19));
+    formData.append('openTime', new Date().toISOString().slice(0, 19));
     formData.append('dueTime', data.dueTime ? new Date(data.dueTime).toISOString().slice(0, 19) : '');
 
     if (data.files && Array.isArray(data.files)) {
       data.files.forEach((file) => {
         formData.append('files', file);
       });
-    } else {
-      formData.append('files', '');
     }
 
     mutation?.mutate(formData);
@@ -126,10 +128,7 @@ export default function Create({ type, params }: CreateProps) {
             />
           </div>
         </div>
-        <CreateContents
-          type={title}
-          files={defaultValues.files}
-        />
+        <CreateContents type={title} />
       </form>
       <Draft
         isOpen={isOpen}

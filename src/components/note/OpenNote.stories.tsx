@@ -15,16 +15,18 @@ type Story = StoryObj<typeof OpenNote>;
 
 export const Default: Story = {
   args: {
-    noteId: 1,
     title: '10/29 쪽지',
     date: '2024.10.29 15:00',
+    totalCount: 20,
+    submitCount: 10,
   },
 };
 
 export const NoContents: Story = {
   args: {
-    noteId: 1,
     title: '',
     date: '',
+    totalCount: 20,
+    submitCount: 10,
   },
 };

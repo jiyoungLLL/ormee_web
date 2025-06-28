@@ -13,7 +13,9 @@ export type HomeworkItems = {
   id: number;
   title: string | null;
   description: string | null;
-  filePaths: string | string[] | null;
+  filePaths?: string[] | null;
+  fileNames?: string[] | null;
+  feedbackCompleted: boolean;
   openTime: string | null;
   dueTime: string | null;
 };
