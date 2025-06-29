@@ -3,7 +3,7 @@ import { z } from 'zod';
 // TODO: api 완성 후 스키마 수정
 export const profileSchema = z.object({
   username: z.string().nullable(),
-  name: z.string(),
+  name: z.string().nullable(),
   nickname: z.string().nullable(),
   email: z.string().nullable(),
   phoneNumber: z.string().nullable(),
@@ -12,6 +12,11 @@ export const profileSchema = z.object({
 });
 
 export const profileEditFormSchema = z.object({
-  introduction: z.string().nullable(),
-  file: z.instanceof(File).nullable(),
+  introduction: z.string().nullable().optional(),
+  fileId: z.number().nullable(),
+});
+
+export const profileEditRequestSchema = z.object({
+  introduction: z.string().optional(),
+  fileId: z.number().optional(),
 });
