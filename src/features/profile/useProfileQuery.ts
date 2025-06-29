@@ -9,7 +9,7 @@ export const useGetProfileData = () => {
   return useApiQuery<ProfileResponse, UserProfileData>({
     queryKey: QUERY_KEYS.profile(),
     fetchOptions: {
-      endpoint: '/teachers/info',
+      endpoint: '/teachers/profile',
       authorization: true,
       errorMessage: '프로필 정보를 가져오는데 실패했어요.',
     },
@@ -24,7 +24,7 @@ export const useGetProfileData = () => {
       gcTime: 1000 * 60 * 60 * 5,
       retry: false,
       refetchOnWindowFocus: false,
-      refetchOnMount: false,
+      refetchOnMount: true,
       refetchOnReconnect: false,
     },
   });
