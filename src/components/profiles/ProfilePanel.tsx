@@ -96,9 +96,7 @@ export default function ProfilePanel({ profileData, onClose }: ProfilePanelProps
       </div>
       <ProfileEditModal
         isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        onConfirm={() => {}}
-        onCancel={() => {}}
+        setIsOpen={setIsEditModalOpen}
       />
     </div>,
     profileRoot,
