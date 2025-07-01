@@ -2,8 +2,8 @@ import { NotificationFilterType } from '@/features/notification/notification.typ
 
 export const NOTIFICATION_TYPE_LABEL: Record<NotificationFilterType, string> = {
   total: '전체',
-  assignment: '숙제',
   quiz: '퀴즈',
-  question: '질문',
   memo: '쪽지',
+  assignment: '숙제',
+  question: '질문',
 } as const;
