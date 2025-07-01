@@ -4,7 +4,7 @@ import {
   notificationResponseSchema,
 } from '@/features/notification/notification.schema';
 
-export type NotificationType = 'assignment' | 'question' | 'quiz' | 'memo';
+export type NotificationType = 'homework' | 'question' | 'quiz' | 'note';
 
 export type Notification = {
   notificationId: number;
