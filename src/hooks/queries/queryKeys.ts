@@ -1,8 +1,9 @@
+import { NotificationFilterType } from '@/features/notification/notification.types';
 import { QuestionListFilterType, QuestionSearchByType } from '../../features/question/hooks/useQuestionSearchParams';
 
 export const QUERY_KEYS = {
   profile: () => ['profile'],
-  notification: () => ['notification'],
+  notification: (lectureId: string, filter: NotificationFilterType | 'total') => ['notification', lectureId, filter],
   quizDetail: (quizId: string) => ['quizDetail', quizId],
   quizList: (lectureId: string) => ['quizList', lectureId],
   closedQuizStats: (quizId: string) => ['closedQuizStats', quizId],
