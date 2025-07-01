@@ -1,6 +1,6 @@
 import useMounted from '@/hooks/useMounted';
 import { createPortal } from 'react-dom';
-import Button from '@/components/ui/Button';
+import Button, { ButtonType } from '@/components/ui/Button';
 import Image from 'next/image';
 import XIcon from '@/components/icon/XIcon';
 
@@ -21,6 +21,26 @@ type ModalProps = {
   titleTextStyle?: string;
   /** 모달 설명 텍스트에 적용할 스타일 클래스 */
   descriptionTextStyle?: string;
+  /** 모달 버튼 컨테이너에 적용할 스타일 클래스 */
+  buttonContainerStyle?: string;
+  /** 취소 버튼 스타일 (Button 컴포넌트에 전달할 타입, 크기, 폰트, 색상, 텍스트)*/
+  cancelButtonType?: {
+    type?: ButtonType;
+    size?: string;
+    font?: string;
+    isPurple?: boolean;
+    isfilled?: boolean;
+    title?: string;
+  };
+  /** 확인 버튼 스타일 */
+  confirmButtonType?: {
+    type?: ButtonType;
+    size?: string;
+    font?: string;
+    isPurple?: boolean;
+    isfilled?: boolean;
+    title?: string;
+  };
   /** 모달의 제목 */
   title?: string;
   /** 모달의 설명 텍스트 */
@@ -42,6 +62,9 @@ const BASIC_TITLE_STYLE = 'flex flex-col w-full gap-[13px] mb-[35px]';
 const BASIC_TITLE_TEXT_STYLE = 'text-heading1 font-semibold text-gray-90 text-center';
 const BASIC_DESCRIPTION_TEXT_STYLE = 'text-headline2 font-normal text-gray-90 text-center';
 
+const BASIC_BUTTON_CONTAINER_STYLE = 'grid grid-cols-2 items-center w-[350px] h-[55px] gap-[14px] mx-auto';
+const BASIC_BUTTON_STYLE = 'w-full h-[50px]';
+
 export default function Modal({
   children,
   isOpen,
@@ -51,6 +74,9 @@ export default function Modal({
   titleContainerStyle,
   titleTextStyle,
   descriptionTextStyle,
+  buttonContainerStyle,
+  cancelButtonType,
+  confirmButtonType,
   title,
   description,
   iconSrc,
@@ -108,24 +134,26 @@ export default function Modal({
         )}
         {children}
         {isButtonEnabled && (
-          <div className='grid grid-cols-2 items-center w-[350px] h-[55px] gap-[14px] mx-auto'>
+          <div className={`${buttonContainerStyle || BASIC_BUTTON_CONTAINER_STYLE}`}>
             {enableCancelButton && (
               <Button
-                type='BUTTON_MODAL_TYPE'
-                size='w-full h-[50px]'
-                font='text-headline1 font-bold'
-                isPurple={false}
-                title='취소'
+                type={cancelButtonType?.type || 'BUTTON_MODAL_TYPE'}
+                size={`${cancelButtonType?.size || BASIC_BUTTON_STYLE}`}
+                font={cancelButtonType?.font || 'text-headline1 font-bold'}
+                isPurple={cancelButtonType?.isPurple || false}
+                isfilled={cancelButtonType?.isfilled}
+                title={cancelButtonType?.title || '취소'}
                 onClick={onCancel}
               />
             )}
             {enableConfirmButton && (
               <Button
-                type='BUTTON_MODAL_TYPE'
-                size='w-full h-[50px]'
-                font='text-headline1 font-bold'
-                isPurple
-                title='확인'
+                type={confirmButtonType?.type || 'BUTTON_MODAL_TYPE'}
+                size={`${confirmButtonType?.size || BASIC_BUTTON_STYLE}`}
+                font={confirmButtonType?.font || 'text-headline1 font-bold'}
+                isPurple={confirmButtonType?.isPurple || false}
+                isfilled={confirmButtonType?.isfilled}
+                title={confirmButtonType?.title || '확인'}
                 onClick={onConfirm}
               />
             )}

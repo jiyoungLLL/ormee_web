@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { profileSchema } from '@/features/profile/profile.schema';
+import { profileEditFormSchema, profileEditRequestSchema, profileSchema } from '@/features/profile/profile.schema';
 
 export type UserProfileData = {
   nickname: string;
@@ -8,3 +8,5 @@ export type UserProfileData = {
 };
 
 export type ProfileResponse = z.infer<typeof profileSchema>;
+export type ProfileEditForm = z.infer<typeof profileEditFormSchema>;
+export type ProfileEditRequest = z.infer<typeof profileEditRequestSchema>;
