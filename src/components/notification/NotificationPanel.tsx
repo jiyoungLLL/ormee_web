@@ -9,6 +9,7 @@ import Button from '@/components/ui/Button';
 import { NOTIFICATION_TYPE_LABEL } from '@/features/notification/notification.constants';
 import NotificationFilterButton from '@/components/notification/NotificationFilterButton';
 import { useGetNotifications } from '@/features/notification/hooks/useGetNotifications';
+import { useLectureId } from '@/hooks/queries/useLectureId';
 
 type NotificationPanelProps = {
   /** 알림 패널 열림 여부 */
@@ -24,7 +25,9 @@ const NOTIFICATION_FILTER_TYPE_LIST: NotificationFilterType[] = [
 export default function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
   const isMounted = useMounted();
   const [currentType, setCurrentType] = useState<NotificationFilterType>('total');
-  const { data: notifications = [] } = useGetNotifications();
+
+  const lectureId = useLectureId();
+  const { data: notifications = [] } = useGetNotifications({ lectureId, filter: currentType });
 
   if (!isOpen || !isMounted) return null;
 
@@ -102,7 +105,7 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
             )}
             {filteredNotificationList.map((notification) => (
               <NotificationItem
-                key={`notification-${notification.id}`}
+                key={`notification-${notification.notificationId}`}
                 notification={notification}
               />
             ))}
