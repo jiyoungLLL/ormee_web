@@ -15,5 +15,5 @@ export const getProfileServer = async (): Promise<UserProfileData> => {
     return Promise.reject(response.data);
   }
 
-  return { name: response.data.name, image: response.data.image, bio: response.data.introduction };
+  return { nickname: response.data.nickname || '', image: response.data.image, bio: response.data.introduction };
 };

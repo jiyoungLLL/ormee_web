@@ -19,6 +19,7 @@ export const signupAction = async (formData: SignupFormValues): Promise<ApiRespo
     phoneNumber: formData.phoneNumber,
     email: formData.emailId + '@' + formData.emailDomain,
     name: formData.name,
+    nickname: formData.teacherName,
   };
 
   const response = await fetch(`${process.env.API_BASE_URL}/teachers/signup`, {
@@ -100,6 +101,24 @@ export const signinAction = async (formData: SigninFormValues): Promise<ApiRespo
     path: '/',
     maxAge: 60 * 60 * 24 * 7,
   });
+
+  // // NOTE: DB 초기화됐을 때 강의 생성용
+  // const testLecture = await fetch(`${process.env.API_BASE_URL}/teachers/lectures`, {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     Authorization: `Bearer ${accessToken}`,
+  //   },
+  //   body: JSON.stringify({
+  //     password: 'secureLecture0',
+  //     title: '영어 듣기',
+  //     lectureDays: ['월', '수'],
+  //     startTime: '15:30:00',
+  //     endTime: '17:00:00',
+  //     startDate: '2024-06-03T00:00:00',
+  //     dueDate: '2024-08-29T23:59:59',
+  //   }),
+  // });
 
   return {
     status: json.status,
