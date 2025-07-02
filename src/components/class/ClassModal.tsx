@@ -9,6 +9,7 @@ import { format, parse } from 'date-fns';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import Button from '../ui/Button';
 import DateTimePicker from '../ui/DateTimePicker';
 import Input from '../ui/Input';
 import Modal from '../ui/Modal';
@@ -21,10 +22,8 @@ type ClassModalProps = {
 
 type ModalContents = {
   inputTitle: string;
-  name: 'description' | 'title' | 'password';
+  name: 'description' | 'title' | 'coworker';
 };
-
-type FilterType = 'openLectures' | 'closedLectures';
 
 const dayMapEngToKor: Record<string, string> = {
   MON: '월',
@@ -75,13 +74,13 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
     if (data) {
       methods.reset({
         title: data.title || '',
-        password: data.password || '',
         description: data.description || '',
         startTime: data.startTime || '',
         endTime: data.endTime || '',
         startDate: data.startDate || '',
         dueDate: data.dueDate || '',
         lectureDays: koreanDays || [],
+        password: 'defaultPassword',
       });
     }
   }, [data, methods]);
@@ -92,7 +91,6 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
   const mutation = filter && lectureId ? updateMutation : createMutation;
 
   const onSubmit = (data: ClassModalValues) => {
-    console.log(data);
     mutation.mutate(data);
     closeModal();
   };
@@ -107,21 +105,49 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
   // 모달 내부 input 컴포넌트 렌더링
   const commonModalStyle = 'flex flex-col gap-[10px] text-headline2 font-semibold';
   const renderModalContents = ({ inputTitle, name }: ModalContents) => {
-    return (
-      <div className={commonModalStyle}>
-        {inputTitle}
-        <Input
-          name={name}
-          control={control}
-          size='w-full h-[50px]'
-          placeholder={inputTitle}
-          maxLength={20}
-          showCharacterCount={true}
-          showPasswordToggle={name === 'description' ? false : true}
-          type='text'
-        />
-      </div>
-    );
+    if (name === 'description' || name === 'title') {
+      return (
+        <div className={commonModalStyle}>
+          {inputTitle}
+          <Input
+            name={name}
+            control={control}
+            size='w-full h-[50px]'
+            placeholder={inputTitle}
+            maxLength={20}
+            showCharacterCount={true}
+            showPasswordToggle={name === 'description' ? false : true}
+            type='text'
+          />
+        </div>
+      );
+    }
+
+    if (name === 'coworker') {
+      return (
+        <div className={commonModalStyle}>
+          {inputTitle}
+          <div className='flex gap-[10px]'>
+            <Input
+              name={name}
+              control={control}
+              size='w-full h-[50px]'
+              placeholder='아이디 입력'
+              type='text'
+            />
+            <Button
+              type='BUTTON_BASE_TYPE'
+              size='h-[50px]'
+              font='text-healine1 font-bold text-purple-50 text-[18px]'
+              title='추가'
+              isPurple={true}
+              isfilled={false}
+              htmlType='button'
+            />
+          </div>
+        </div>
+      );
+    }
   };
 
   // 수업 요일
@@ -151,7 +177,6 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
         >
           <div className='w-full h-fit flex flex-col gap-[20px]'>
             {renderModalContents({ inputTitle: '강의명', name: 'title' })}
-            {renderModalContents({ inputTitle: '비밀번호', name: 'password' })}
 
             <div className='flex gap-[20px]'>
               <div className={commonModalStyle}>
@@ -217,6 +242,7 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
               </div>
             </div>
             {renderModalContents({ inputTitle: '한 줄 소개', name: 'description' })}
+            {renderModalContents({ inputTitle: '공동작업자 관리', name: 'coworker' })}
           </div>
         </Modal>
       </form>

@@ -23,6 +23,7 @@ export const classSchema = z.object({
   startTime: z.string().min(1, { message: CLASS_ERROR_MESSAGES.EMPTY_TIME }),
   endTime: z.string().min(1, { message: CLASS_ERROR_MESSAGES.EMPTY_TIME }),
   lectureDays: z.array(z.string()).min(1, { message: CLASS_ERROR_MESSAGES.EMPTY_DAY }),
+  coworker: z.string().optional(),
 });
 
 export type ClassModalValues = z.infer<typeof classSchema>;
