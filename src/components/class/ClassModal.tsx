@@ -9,7 +9,6 @@ import { format, parse } from 'date-fns';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import Button from '../ui/Button';
 import DateTimePicker from '../ui/DateTimePicker';
 import Input from '../ui/Input';
 import Modal from '../ui/Modal';
@@ -122,32 +121,6 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
         </div>
       );
     }
-
-    if (name === 'coworker') {
-      return (
-        <div className={commonModalStyle}>
-          {inputTitle}
-          <div className='flex gap-[10px]'>
-            <Input
-              name={name}
-              control={control}
-              size='w-full h-[50px]'
-              placeholder='아이디 입력'
-              type='text'
-            />
-            <Button
-              type='BUTTON_BASE_TYPE'
-              size='h-[50px]'
-              font='text-healine1 font-bold text-purple-50 text-[18px]'
-              title='추가'
-              isPurple={true}
-              isfilled={false}
-              htmlType='button'
-            />
-          </div>
-        </div>
-      );
-    }
   };
 
   // 수업 요일
@@ -242,7 +215,6 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
               </div>
             </div>
             {renderModalContents({ inputTitle: '한 줄 소개', name: 'description' })}
-            {renderModalContents({ inputTitle: '공동작업자 관리', name: 'coworker' })}
           </div>
         </Modal>
       </form>
