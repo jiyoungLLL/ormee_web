@@ -28,6 +28,7 @@ export default function ClassContainer() {
   const openModal = (type: 'new' | 'ongoing') => setModalType(type);
   const closeModal = () => setModalType(null);
 
+  // QR로 변경됨
   const handleCopy = (code: number) => {
     navigator.clipboard
       .writeText(code.toString())

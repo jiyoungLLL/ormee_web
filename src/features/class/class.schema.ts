@@ -2,7 +2,6 @@ import { z } from 'zod';
 
 export const CLASS_ERROR_MESSAGES = {
   EMPTY_TITLE: '강의명을 입력해주세요.',
-  EMPTY_PASSWORD: '비밀번호를 입력해주세요.',
   EMPTY_PERIOD: '수강 기간을 설정해주세요.',
   EMPTY_TIME: '수업 시간을 설정해주세요.',
   EMPTY_DAY: '수업 요일을 선택해주세요.',
@@ -14,7 +13,7 @@ export const classSchema = z.object({
     .string()
     .min(1, { message: CLASS_ERROR_MESSAGES.EMPTY_TITLE })
     .max(20, { message: '강의명은 최대 20자까지 입력 가능해요.' }),
-  password: z.string().min(1, { message: CLASS_ERROR_MESSAGES.EMPTY_PASSWORD }),
+  password: z.string().optional(),
   description: z
     .string()
     .min(1, { message: CLASS_ERROR_MESSAGES.EMPTY_DESCRIPTION })
@@ -24,6 +23,7 @@ export const classSchema = z.object({
   startTime: z.string().min(1, { message: CLASS_ERROR_MESSAGES.EMPTY_TIME }),
   endTime: z.string().min(1, { message: CLASS_ERROR_MESSAGES.EMPTY_TIME }),
   lectureDays: z.array(z.string()).min(1, { message: CLASS_ERROR_MESSAGES.EMPTY_DAY }),
+  coworker: z.string().optional(),
 });
 
 export type ClassModalValues = z.infer<typeof classSchema>;

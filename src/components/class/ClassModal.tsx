@@ -21,10 +21,8 @@ type ClassModalProps = {
 
 type ModalContents = {
   inputTitle: string;
-  name: 'description' | 'title' | 'password';
+  name: 'description' | 'title' | 'coworker';
 };
-
-type FilterType = 'openLectures' | 'closedLectures';
 
 const dayMapEngToKor: Record<string, string> = {
   MON: '월',
@@ -75,13 +73,13 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
     if (data) {
       methods.reset({
         title: data.title || '',
-        password: data.password || '',
         description: data.description || '',
         startTime: data.startTime || '',
         endTime: data.endTime || '',
         startDate: data.startDate || '',
         dueDate: data.dueDate || '',
         lectureDays: koreanDays || [],
+        password: 'defaultPassword',
       });
     }
   }, [data, methods]);
@@ -106,21 +104,23 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
   // 모달 내부 input 컴포넌트 렌더링
   const commonModalStyle = 'flex flex-col gap-[10px] text-headline2 font-semibold';
   const renderModalContents = ({ inputTitle, name }: ModalContents) => {
-    return (
-      <div className={commonModalStyle}>
-        {inputTitle}
-        <Input
-          name={name}
-          control={control}
-          size='w-full h-[50px]'
-          placeholder={inputTitle}
-          maxLength={20}
-          showCharacterCount={true}
-          showPasswordToggle={name === 'description' ? false : true}
-          type='text'
-        />
-      </div>
-    );
+    if (name === 'description' || name === 'title') {
+      return (
+        <div className={commonModalStyle}>
+          {inputTitle}
+          <Input
+            name={name}
+            control={control}
+            size='w-full h-[50px]'
+            placeholder={inputTitle}
+            maxLength={20}
+            showCharacterCount={true}
+            showPasswordToggle={name === 'description' ? false : true}
+            type='text'
+          />
+        </div>
+      );
+    }
   };
 
   // 수업 요일
@@ -150,7 +150,6 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
         >
           <div className='w-full h-fit flex flex-col gap-[20px]'>
             {renderModalContents({ inputTitle: '강의명', name: 'title' })}
-            {renderModalContents({ inputTitle: '비밀번호', name: 'password' })}
 
             <div className='flex gap-[20px]'>
               <div className={commonModalStyle}>

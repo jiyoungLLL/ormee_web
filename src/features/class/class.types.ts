@@ -1,7 +1,7 @@
 export type ClassItems = {
   id: string;
   code?: number;
-  password: string;
+  password: 'defaultPassword';
   profileImage: string;
   name: string;
   title: string;
