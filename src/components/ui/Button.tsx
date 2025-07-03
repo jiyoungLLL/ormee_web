@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-type ButtonType = 'BUTTON_BASE_TYPE' | 'BUTTON_MODAL_TYPE' | 'BUTTON_CREATE_TYPE';
+export type ButtonType = 'BUTTON_BASE_TYPE' | 'BUTTON_MODAL_TYPE' | 'BUTTON_CREATE_TYPE';
 type HTMLButtonType = 'button' | 'submit';
 
 type ButtonProps = {
