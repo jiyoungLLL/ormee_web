@@ -93,10 +93,10 @@ export default function WriteBox({ type }: WriteBoxProps) {
   return (
     <div className='h-auto bg-white p-[30px] rounded-[10px] flex flex-col gap-[20px]'>
       <div className='h-[482px] flex flex-col gap-[12px]'>
-        {watch('description') !== '' ? (
+        {data?.description !== '' ? (
           <TiptapEditor
             type={type}
-            contents={watch('description') ?? ''}
+            contents={data?.description ?? ''}
             onChange={(html) => setValue('description', html)}
           />
         ) : (

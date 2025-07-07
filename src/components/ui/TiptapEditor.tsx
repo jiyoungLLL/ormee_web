@@ -87,7 +87,17 @@ export default function TiptapEditor({ type, contents, onChange, value }: TipTap
 
   return (
     <div className='flex flex-col gap-[12px]'>
-      <Toolbar editor={editor} />
+      <Toolbar
+        editor={editor}
+        enableList={false}
+        enableImage={true}
+        imageUploadConfig={{
+          strategy: 'UPLOAD_AT_SUBMIT',
+          onImageUpload: (file, previewUrl) => {
+            editor?.chain().focus().setImage({ src: previewUrl }).run();
+          },
+        }}
+      />
       <div className='rounded-[10px]'>
         <EditorContent
           editor={editor}
