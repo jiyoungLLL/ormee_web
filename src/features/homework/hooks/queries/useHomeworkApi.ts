@@ -2,7 +2,7 @@ import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { useApiMutation, useApiQuery } from '@/hooks/useApi';
 import { useToastStore } from '@/stores/toastStore';
 import { useRouter } from 'next/navigation';
-import { HomeworkData, HomeworkItems } from '../../homework.types';
+import { HomeworkData, HomeworkItems, PostHomeWork } from '../../homework.types';
 
 export const useGetHomeworks = (lectureId: string) => {
   return useApiQuery<HomeworkData>({
@@ -25,7 +25,7 @@ export const useGetHomeworksDetail = (homeworkId: string) => {
 };
 
 export const useGetDraftHomeworks = (lectureId: string) => {
-  return useApiQuery<HomeworkItems[]>({
+  return useApiQuery<HomeworkItems>({
     queryKey: QUERY_KEYS.homeworkDraft(lectureId),
     fetchOptions: {
       endpoint: `/teachers/${lectureId}/homeworks/drafts`,
@@ -34,24 +34,21 @@ export const useGetDraftHomeworks = (lectureId: string) => {
   });
 };
 
-export const useCreateHomework = (lectureId: string) => {
-  const router = useRouter();
+export const useCreateHomework = (lectureId: string, successMessage: string) => {
   const { addToast } = useToastStore();
 
-  return useApiMutation<void, FormData>({
+  return useApiMutation<void, PostHomeWork>({
     method: 'POST',
     endpoint: `/teachers/${lectureId}/homeworks`,
     fetchOptions: {
       authorization: true,
-      contentType: 'multipart/form-data',
     },
     onSuccess: () => {
       addToast({
-        message: '숙제가 생성되었어요.',
+        message: successMessage,
         type: 'success',
         duration: 2500,
       });
-      router.push(`/lectures/${lectureId}/homework`);
     },
     onError: () => {
       addToast({
@@ -60,28 +57,24 @@ export const useCreateHomework = (lectureId: string) => {
         duration: 2500,
       });
     },
-    invalidateKey: [QUERY_KEYS.homeworkList(lectureId)],
+    invalidateKey: [QUERY_KEYS.homeworkList(lectureId), QUERY_KEYS.homeworkDraft(lectureId)],
   });
 };
 
 type updateProps = {
   homeworkId: string | undefined;
   lectureId: string | undefined;
-  filter: string | undefined;
 };
 
-export const useUpdateHomework = ({ homeworkId, lectureId, filter }: updateProps) => {
+export const useUpdateHomework = ({ homeworkId, lectureId }: updateProps) => {
   const router = useRouter();
   const { addToast } = useToastStore();
 
-  if (!homeworkId || !lectureId || !filter) return null;
-
-  return useApiMutation<void, FormData>({
+  return useApiMutation<void, PostHomeWork>({
     method: 'PUT',
-    endpoint: `/teachers/homeworks/${homeworkId}`,
+    endpoint: homeworkId ? `/teachers/homeworks/${homeworkId}` : '',
     fetchOptions: {
       authorization: true,
-      contentType: 'multipart/form-data',
     },
     onSuccess: () => {
       addToast({
@@ -89,7 +82,7 @@ export const useUpdateHomework = ({ homeworkId, lectureId, filter }: updateProps
         type: 'success',
         duration: 2500,
       });
-      router.push(`/lectures/${lectureId}/homework/detail?filter=${filter}&id=${homeworkId}`);
+      router.push(`/lectures/${lectureId}/homework/detail?id=${homeworkId}`);
     },
     onError: () => {
       addToast({
@@ -98,13 +91,13 @@ export const useUpdateHomework = ({ homeworkId, lectureId, filter }: updateProps
         duration: 2500,
       });
     },
-    invalidateKey: [QUERY_KEYS.homeworkList(lectureId), QUERY_KEYS.homeworkDetail(homeworkId)],
+    invalidateKey:
+      homeworkId && lectureId ? [QUERY_KEYS.homeworkList(lectureId), QUERY_KEYS.homeworkDetail(homeworkId)] : [],
   });
 };
 
-export const useDeleteHomework = (lectureId: string) => {
+export const useDeleteHomework = (lectureId: string, successMessage: string) => {
   const { addToast } = useToastStore();
-  const router = useRouter();
 
   return useApiMutation<void, string>({
     method: 'DELETE',
@@ -114,11 +107,10 @@ export const useDeleteHomework = (lectureId: string) => {
     },
     onSuccess: () => {
       addToast({
-        message: '숙제가 삭제되었어요.',
+        message: successMessage,
         type: 'success',
         duration: 2500,
       });
-      router.push(`/lectures/${lectureId}/homework`);
     },
     onError: (err) => {
       addToast({
@@ -127,6 +119,6 @@ export const useDeleteHomework = (lectureId: string) => {
         duration: 2500,
       });
     },
-    invalidateKey: [QUERY_KEYS.homeworkList(lectureId)],
+    invalidateKey: [QUERY_KEYS.homeworkList(lectureId), QUERY_KEYS.homeworkDraft(lectureId)],
   });
 };
