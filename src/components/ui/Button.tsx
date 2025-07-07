@@ -16,6 +16,8 @@ type ButtonProps = {
   isPurple: boolean;
   /** bg 있/없 */
   isfilled?: boolean;
+  /** shadow 있/없 */
+  isShadow?: boolean;
   /** 배경 및 border 커스텀 */
   customStyle?: string;
   /** 임시저장 3 처럼 추가 텍스트 필요할 때*/
@@ -33,8 +35,7 @@ type ButtonProps = {
 const whatBaseType = {
   BUTTON_BASE_TYPE: 'py-[12px] px-[20px] rounded-[10px] gap-[4px]',
   BUTTON_MODAL_TYPE: 'py-[12px] px-[20px] rounded-[10px] gap-[4px]',
-  BUTTON_CREATE_TYPE:
-    'py-[12px] px-[20px] rounded-[10px] gap-1 shadow-[2px_4px_12.5px_rgba(114,96,248,0.4)] flex gap-[4px]',
+  BUTTON_CREATE_TYPE: 'py-[12px] px-[20px] rounded-[10px] flex justify-center gap-[4px]',
 } as const;
 
 export default function Button({
@@ -44,6 +45,7 @@ export default function Button({
   title,
   isPurple,
   isfilled,
+  isShadow = true,
   customStyle,
   added,
   description,
@@ -72,12 +74,18 @@ export default function Button({
     BUTTON_CREATE_TYPE: '',
   };
   const borderStyle = disabled ? '' : customStyle ? customStyle : whatBorderStyle[type];
+  const shadowstyle =
+    type === 'BUTTON_CREATE_TYPE' && isShadow === true
+      ? 'shadow-[2px_4px_12.5px_rgba(114,96,248,0.4)] '
+      : type === 'BUTTON_CREATE_TYPE' && isShadow === false
+        ? 'border border-purple-50'
+        : '';
 
   return (
     <button
       type={htmlType}
       onClick={onClick}
-      className={`whitespace-nowrap ${size} ${baseStyle} ${disabled ? 'text-label-assistive text-headline1 font-bold' : font} ${backgroundStyle} ${borderStyle}`}
+      className={`whitespace-nowrap ${size} ${baseStyle} ${disabled ? 'text-label-assistive text-headline1 font-bold' : font} ${backgroundStyle} ${borderStyle} ${shadowstyle}`}
       title={description}
     >
       {type === 'BUTTON_CREATE_TYPE' ? (
