@@ -17,13 +17,15 @@ export default function HomeworkDetail() {
   const lectureNum = useLectureId();
   const searchParams = useSearchParams();
   const id = searchParams.get('id') as string;
+  const homeworkFilter = searchParams.get('filter');
 
   const { data: detailData } = useGetHomeworksDetail(id);
 
-  const deleteMutation = useDeleteHomework(lectureNum);
+  const deleteMutation = useDeleteHomework(lectureNum, '숙제가 삭제되었어요.');
 
   const handleDelete = () => {
     deleteMutation.mutate(id);
+    router.push(`/lectures/${lectureNum}/homework`);
   };
 
   useBackRedirect(`/lectures/${lectureNum}/homework`);
@@ -39,16 +41,18 @@ export default function HomeworkDetail() {
           isPurple={false}
           onClick={handleDelete}
         />
-        <Link href={`/lectures/${lectureNum}/homework/create?filter=${searchParams.get('filter')}&id=${id}`}>
-          <Button
-            type='BUTTON_BASE_TYPE'
-            size='h-[50px]'
-            font='text-healine1 font-semibold'
-            title='수정하기'
-            isPurple={true}
-            isfilled={false}
-          />
-        </Link>
+        {homeworkFilter !== 'done' && (
+          <Link href={`/lectures/${lectureNum}/homework/create?id=${id}`}>
+            <Button
+              type='BUTTON_BASE_TYPE'
+              size='h-[50px]'
+              font='text-healine1 font-semibold'
+              title='수정하기'
+              isPurple={true}
+              isfilled={false}
+            />
+          </Link>
+        )}
       </div>
       <div className='bg-white p-[30px] flex flex-col gap-[20px] rounded-[20px]'>
         <div className='flex justify-between items-center'>

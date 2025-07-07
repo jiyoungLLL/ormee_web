@@ -19,7 +19,7 @@ export default function HomeworkCreate() {
   return (
     <div>
       <Create
-        type='homework'
+        type='HOMEWORK'
         params={lectureNum}
         {...(filter ? { filter } : {})}
         {...(id ? { id } : {})}
