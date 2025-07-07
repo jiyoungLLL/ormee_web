@@ -2,7 +2,7 @@
 
 import { fetcher } from '@/utils/api/api';
 
-type AttachmentType = 'QUIZ' | 'NOTICE' | 'HOMEWORK' | 'HOMEWOKR_SUBMIT' | 'QUESTION' | 'ANSWER' | 'TEACHER_IMAGE';
+type AttachmentType = 'QUIZ' | 'NOTICE' | 'HOMEWORK' | 'HOMEWORK_SUBMIT' | 'QUESTION' | 'ANSWER' | 'TEACHER_IMAGE';
 type AttachmentId = number;
 
 /**
