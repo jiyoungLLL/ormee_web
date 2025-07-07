@@ -7,27 +7,36 @@ import {
   useUpdateHomework,
 } from '@/features/homework/hooks/queries/useHomeworkApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
-import { useModal } from '@/hooks/ui/useModal';
 import { WriteBoxFormValues, writeBoxSchema } from '@/schemas/writeBox.schema';
+import { postAttachment } from '@/utils/api/postAttachment';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import Draft from '../draftModal/Draft';
 
 type CreateProps = {
-  type: 'notice' | 'homework';
+  type: 'NOTICE' | 'HOMEWORK';
   params: string;
 };
 
+type ModalType = 'LOAD' | 'DRAFT' | null;
+
 export default function Create({ type, params }: CreateProps) {
-  const { isOpen, openModal, closeModal } = useModal({ defaultOpen: false });
+  const router = useRouter();
+
+  const paramsType = type === 'HOMEWORK' ? 'homework' : 'notice';
+  const [modalType, setModalType] = useState<ModalType>(null);
+
+  const openLoadModal = () => setModalType('LOAD');
+  const openDraftModal = () => setModalType('DRAFT');
+  const closeModal = () => setModalType(null);
 
   const lectureNum = useLectureId();
   const searchParams = useSearchParams();
-  const rawHomeworkId = type === 'homework' ? searchParams.get('id') : null;
+  const rawHomeworkId = type === 'HOMEWORK' ? searchParams.get('id') : null;
   const homeworkId = rawHomeworkId && typeof rawHomeworkId === 'string' ? rawHomeworkId : undefined;
 
   const rawFilter = searchParams.get('filter');
@@ -36,7 +45,7 @@ export default function Create({ type, params }: CreateProps) {
   const lectureId = lectureNum ?? undefined;
 
   const isModify = !!homeworkId;
-  const title = type === 'notice' ? '공지' : '숙제';
+  const title = type === 'NOTICE' ? '공지' : '숙제';
 
   const { data: preData } = useGetHomeworksDetail(homeworkId || '');
 
@@ -52,7 +61,7 @@ export default function Create({ type, params }: CreateProps) {
     },
   });
 
-  const { setValue } = methods;
+  const { setValue, watch } = methods;
 
   useEffect(() => {
     if (preData) {
@@ -60,33 +69,43 @@ export default function Create({ type, params }: CreateProps) {
       setValue('description', preData.description || '');
       setValue('isDraft', false);
       setValue('dueTime', preData.dueTime ? new Date(preData.dueTime).toISOString().slice(0, 16) : '');
+
+      console.log(watch('isDraft'));
     }
   }, [preData, setValue]);
 
-  const updateMutation = useUpdateHomework({ homeworkId, lectureId, filter });
-  const createMutation = useCreateHomework(lectureId);
+  const updateMutation = useUpdateHomework({ homeworkId, lectureId });
+  const successMessage = watch('isDraft') ? '임시저장이 완료 되었어요.' : '숙제가 생성되었어요.';
+  const createMutation = useCreateHomework(lectureId, successMessage);
   const mutation = isModify ? updateMutation : createMutation;
 
   const handleDraftSubmit = () => {
-    methods.setValue('isDraft', true);
+    setValue('isDraft', true);
     methods.handleSubmit(onSubmit)();
   };
 
-  const onSubmit = (data: WriteBoxFormValues) => {
-    const formData = new FormData();
-    formData.append('title', data.title);
-    formData.append('description', data.description);
-    formData.append('isDraft', data.isDraft.toString());
-    formData.append('openTime', new Date().toISOString().slice(0, 19));
-    formData.append('dueTime', data.dueTime ? new Date(data.dueTime).toISOString().slice(0, 19) : '');
+  const onSubmit = async (data: WriteBoxFormValues) => {
+    console.log(data);
+    try {
+      const fileIds = [];
+      for (const file of data.files || []) {
+        const id = await postAttachment({ file, type: type });
+        fileIds.push(id);
+      }
 
-    if (data.files && Array.isArray(data.files)) {
-      data.files.forEach((file) => {
-        formData.append('files', file);
+      mutation?.mutate({
+        title: data.title,
+        description: data.description,
+        isDraft: data.isDraft,
+        openTime: new Date().toISOString(),
+        dueTime: data.dueTime ? new Date(data.dueTime).toISOString() : '',
+        fileIds,
       });
-    }
 
-    mutation?.mutate(formData);
+      if (!data.isDraft) router.push(`/lectures/${lectureId}/homework`);
+    } catch (err) {
+      if (process.env.NODE_ENV === 'development') console.error(err);
+    }
   };
 
   return (
@@ -95,9 +114,9 @@ export default function Create({ type, params }: CreateProps) {
         <div className='w-full h-[50px] flex justify-between items-center'>
           <Link
             href={
-              isModify && type === 'homework'
-                ? `/lectures/${params}/${type}/detail?filter=${filter}&id=${homeworkId}`
-                : `/lectures/${params}/${type}`
+              isModify && type === 'HOMEWORK'
+                ? `/lectures/${params}/${paramsType}/detail?filter=${filter}&id=${homeworkId}`
+                : `/lectures/${params}/${paramsType}`
             }
             className='w-[136px] px-[5px] text-title3 font-bold flex items-center gap-[15px]'
           >
@@ -107,17 +126,30 @@ export default function Create({ type, params }: CreateProps) {
               height={24}
               alt='이전으로'
             />
-            {title} {isModify ? '수정' : '작성'}
+            {title} 생성
           </Link>
           <div className='flex gap-[10px]'>
-            <Button
-              type='BUTTON_BASE_TYPE'
-              size='w-[117px] h-[50px]'
-              font='text-headline1 font-semibold'
-              title='임시저장'
-              isPurple={false}
-              onClick={openModal}
-            />
+            {!rawHomeworkId && (
+              <>
+                <Button
+                  type='BUTTON_BASE_TYPE'
+                  size='w-[117px] h-[50px]'
+                  font='text-headline1 font-semibold'
+                  title='불러오기'
+                  isPurple={false}
+                  onClick={openLoadModal}
+                />
+                <Button
+                  type='BUTTON_BASE_TYPE'
+                  size='w-[117px] h-[50px]'
+                  font='text-headline1 font-semibold'
+                  title='임시저장'
+                  isPurple={false}
+                  onClick={openDraftModal}
+                  htmlType='button'
+                />
+              </>
+            )}
             <Button
               type='BUTTON_BASE_TYPE'
               size='w-[102px] h-[50px]'
@@ -130,12 +162,22 @@ export default function Create({ type, params }: CreateProps) {
         </div>
         <CreateContents type={title} />
       </form>
-      <Draft
-        isOpen={isOpen}
-        openModal={openModal}
-        closeModal={closeModal}
-        onConfirm={handleDraftSubmit}
-      />
+      {/* {modalType === 'LOAD' && (
+        <Draft
+          isOpen={true}
+          openModal={openDraftModal}
+          closeModal={closeModal}
+          onConfirm={handleLOADSubmit}
+        />
+      )} */}
+      {modalType === 'DRAFT' && (
+        <Draft
+          type='HOMEWORK'
+          isOpen={true}
+          closeModal={closeModal}
+          onSaveDraft={handleDraftSubmit}
+        />
+      )}
     </FormProvider>
   );
 }

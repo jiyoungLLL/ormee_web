@@ -96,7 +96,6 @@ export default function HomeworkTap({ type }: HomeworkProps) {
                     href={`/lectures/${lectureNum}/homework/feedback?id=${data.id}&title=${data.title}`}
                     className={`h-[40px] rounded-[10px] px-[20px] py-[12px] text-headline2 flex items-center ${data.feedbackCompleted ? 'bg-purple-15 text-purple-50' : 'border border-gray-30'}`}
                   >
-                    {/* 피드백 완료/미완료 get 수정 필요 */}
                     <span className='font-semibold'>피드백&nbsp;</span>
                     <span> {data.feedbackCompleted ? ' (완료)' : ' (미완료)'}</span>
                   </Link>

@@ -2,10 +2,20 @@
 export type PostHomeWork = {
   title: string;
   description: string;
-  files: FileList | File[];
+  fileIds: number[];
   isDraft: boolean;
   openTime: string;
   dueTime: string;
+};
+
+// 과제 임시저장
+export type DraftHomework = {
+  title: string;
+  description?: string;
+  fileIds?: number[];
+  isDraft: boolean;
+  openTime: string;
+  dueTime?: string;
 };
 
 // 과제 리스트 (GET)
