@@ -20,7 +20,7 @@ export const useGetNotifications = ({
   return useApiQuery<NotificationListResponse, Notification[]>({
     queryKey: QUERY_KEYS.notification(lectureId, filter ?? 'total'),
     queryOptions: {
-      staleTime: 1000 * 60 * 5,
+      staleTime: 1000 * 60,
       refetchOnMount: true,
     },
     fetchOptions: {

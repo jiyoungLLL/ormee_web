@@ -36,7 +36,7 @@ export default function NotificationItem({ notification, onClose, currentFilter 
 
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    deleteNotification({ notificationId, lectureId, currentFilter });
+    deleteNotification({ notificationId, lectureId, currentFilter, notificationType: type });
   };
 
   const router = useRouter();
@@ -48,7 +48,7 @@ export default function NotificationItem({ notification, onClose, currentFilter 
 
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     if (!isRead) {
-      markAsRead({ notificationId, lectureId, currentFilter });
+      markAsRead({ notificationId, lectureId, currentFilter, notificationType: type });
     }
 
     const routingPath = type === 'note' ? getManagePath() : getDetailPath();
