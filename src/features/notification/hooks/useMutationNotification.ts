@@ -1,5 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteNotification, putNotificationAsRead } from '@/features/notification/api/notification.api';
+import {
+  deleteAllNotifications,
+  deleteNotification,
+  putAllNotificationsAsRead,
+  putNotificationAsRead,
+} from '@/features/notification/api/notification.api';
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { Notification, NotificationFilterType, NotificationType } from '@/features/notification/notification.types';
 
@@ -86,6 +91,76 @@ export const useDeleteNotification = () => {
         queryClient.invalidateQueries({ queryKey: context.queryKey });
         queryClient.invalidateQueries({ queryKey: pairQueryKey });
       }
+    },
+  });
+};
+
+export const useMarkAllNotificationsAsRead = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ lectureId }: { lectureId: string }) => putAllNotificationsAsRead(lectureId),
+    onMutate: async ({ lectureId, currentFilter }: { lectureId: string; currentFilter: NotificationFilterType }) => {
+      const queryKey = QUERY_KEYS.notification(lectureId, currentFilter);
+      await queryClient.cancelQueries({ queryKey });
+
+      const previousNotifications = queryClient.getQueryData<Notification[]>(queryKey);
+
+      queryClient.setQueryData(queryKey, (previousNotifications: Notification[]) => {
+        if (!previousNotifications) return previousNotifications;
+
+        return previousNotifications.map((notification) => ({ ...notification, isRead: true }));
+      });
+
+      return { previousNotifications, queryKey };
+    },
+    onError: (error, _, context) => {
+      if (context?.previousNotifications) {
+        queryClient.setQueryData(context.queryKey, context.previousNotifications);
+      }
+    },
+    onSettled: (data, error, variables, context) => {
+      const queryKeyList: NotificationFilterType[] = ['total', 'homework', 'quiz', 'question', 'note'];
+
+      queryKeyList.forEach((filter) => {
+        const queryKey = QUERY_KEYS.notification(variables.lectureId, filter);
+        queryClient.invalidateQueries({ queryKey });
+      });
+    },
+  });
+};
+
+export const useDeleteAllNotifications = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ lectureId }: { lectureId: string }) => deleteAllNotifications(lectureId),
+    onMutate: async ({ lectureId, currentFilter }: { lectureId: string; currentFilter: NotificationFilterType }) => {
+      const queryKey = QUERY_KEYS.notification(lectureId, currentFilter);
+      await queryClient.cancelQueries({ queryKey });
+
+      const previousNotifications = queryClient.getQueryData<Notification[]>(queryKey);
+
+      queryClient.setQueryData(queryKey, (previousNotifications: Notification[]) => {
+        if (!previousNotifications) return previousNotifications;
+
+        return [];
+      });
+
+      return { previousNotifications, queryKey };
+    },
+    onError: (error, _, context) => {
+      if (context?.previousNotifications) {
+        queryClient.setQueryData(context.queryKey, context.previousNotifications);
+      }
+    },
+    onSettled: (data, error, variables, context) => {
+      const queryKeyList: NotificationFilterType[] = ['total', 'homework', 'quiz', 'question', 'note'];
+
+      queryKeyList.forEach((filter) => {
+        const queryKey = QUERY_KEYS.notification(variables.lectureId, filter);
+        queryClient.invalidateQueries({ queryKey });
+      });
     },
   });
 };
