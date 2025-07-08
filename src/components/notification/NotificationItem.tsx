@@ -1,7 +1,10 @@
 'use client';
 
 import NotificationBadge from '@/components/notification/NotificationBadge';
-import { useMarkNotificationAsRead } from '@/features/notification/hooks/useMutationNotification';
+import {
+  useDeleteNotification,
+  useMarkNotificationAsRead,
+} from '@/features/notification/hooks/useMutationNotification';
 import { Notification, NotificationFilterType } from '@/features/notification/notification.types';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { useRouter } from 'next/navigation';
@@ -28,12 +31,13 @@ export default function NotificationItem({ notification, onClose, currentFilter 
       .replace(/(\d+)$/, '$1분');
   }, [createdAt]);
 
+  const { mutate: markAsRead } = useMarkNotificationAsRead();
+  const { mutate: deleteNotification } = useDeleteNotification();
+
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    alert('알림 삭제');
+    deleteNotification({ notificationId, lectureId, currentFilter });
   };
-
-  const { mutate: markAsRead } = useMarkNotificationAsRead();
 
   const router = useRouter();
   const lectureId = useLectureId();
