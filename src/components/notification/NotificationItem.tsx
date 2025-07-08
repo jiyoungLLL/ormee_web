@@ -1,7 +1,8 @@
 'use client';
 
 import NotificationBadge from '@/components/notification/NotificationBadge';
-import { Notification } from '@/features/notification/notification.types';
+import { useMarkNotificationAsRead } from '@/features/notification/hooks/useMutationNotification';
+import { Notification, NotificationFilterType } from '@/features/notification/notification.types';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
@@ -10,10 +11,11 @@ type NotificationItemProps = {
   /** 표시할 알림 데이터 */
   notification: Notification;
   onClose: () => void;
+  currentFilter: NotificationFilterType;
 };
 
-export default function NotificationItem({ notification, onClose }: NotificationItemProps) {
-  const { type, title, description, createdAt, isRead, parentId } = notification;
+export default function NotificationItem({ notification, onClose, currentFilter }: NotificationItemProps) {
+  const { notificationId, type, title, description, createdAt, isRead, parentId } = notification;
 
   const formattedCreatedAt = useMemo(() => {
     return new Date(createdAt)
@@ -31,6 +33,8 @@ export default function NotificationItem({ notification, onClose }: Notification
     alert('알림 삭제');
   };
 
+  const { mutate: markAsRead } = useMarkNotificationAsRead();
+
   const router = useRouter();
   const lectureId = useLectureId();
 
@@ -39,6 +43,10 @@ export default function NotificationItem({ notification, onClose }: Notification
   const getManagePath = () => `/lectures/${lectureId}/${type}?id=${parentId}`;
 
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
+    if (!isRead) {
+      markAsRead({ notificationId, lectureId, currentFilter });
+    }
+
     const routingPath = type === 'note' ? getManagePath() : getDetailPath();
     if (!routingPath) return;
 

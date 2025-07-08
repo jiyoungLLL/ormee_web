@@ -108,6 +108,7 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
                 key={`notification-${notification.notificationId}`}
                 notification={notification}
                 onClose={onClose}
+                currentFilter={currentType}
               />
             ))}
           </div>
