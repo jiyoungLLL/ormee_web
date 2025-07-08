@@ -107,6 +107,7 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
               <NotificationItem
                 key={`notification-${notification.notificationId}`}
                 notification={notification}
+                onClose={onClose}
               />
             ))}
           </div>
