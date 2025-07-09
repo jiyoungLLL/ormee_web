@@ -2,7 +2,7 @@ export type BadgeProps = {
   /** 배지 크기 */
   size: 'small' | 'medium';
   /** 배지 색상 */
-  color: 'purple' | 'green' | 'blue' | 'orange' | 'gray';
+  color: 'purple' | 'green' | 'blue' | 'orange' | 'gray' | 'lightGray';
   /** 배지에 표시될 텍스트 (라벨) */
   label: string | React.ReactNode;
 };
@@ -17,7 +17,8 @@ const BADGE_COLOR: Record<BadgeProps['color'], string> = {
   green: 'text-accent-yellowGreen-20 bg-accent-yellowGreen-5',
   blue: 'text-accent-blue-20 bg-accent-blue-5',
   orange: 'text-accent-redOrange-20 bg-accent-redOrange-5',
-  gray: 'text-gray-50 bg-gray-30',
+  gray: 'text-label-assistive bg-interaction-disable',
+  lightGray: 'text-gray-60 bg-gray-10',
 } as const;
 
 export default function Badge({ size, color, label }: BadgeProps) {
