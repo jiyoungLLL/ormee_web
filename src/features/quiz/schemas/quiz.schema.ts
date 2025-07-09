@@ -98,7 +98,7 @@ export const QuizDraftRequestSchema = z.object({
 });
 
 export const QuizResponseSchema = z.object({
-  id: z.string().min(1),
+  id: z.number(),
   quizName: z.string().min(1),
   quizDate: z.string().min(1),
   timeLimit: z.number(),
