@@ -126,6 +126,7 @@ export const DraftQuizListResponseSchema = z.array(DraftQuizResponseSchema);
 
 export const QuizSchema = z.object({
   id: z.string().min(1),
+  author: z.string(),
   state: z.enum(['ready', 'ongoing', 'closed', 'temporary'] as const satisfies readonly QuizState[]),
   title: z.string().min(1),
   dueTime: z.string().datetime().min(1),

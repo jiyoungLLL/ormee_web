@@ -9,6 +9,8 @@ import { usePutQuizState } from '@/features/quiz/hooks/usePutQuizState';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { getPlainText } from '@/utils/getPlainText';
 import { useRouter } from 'next/navigation';
+import TeacherLabel from '@/components/ui/label/TeacherLabel';
+import { getAuthorRole } from '@/utils/getAuthorRole';
 
 type OpenQuizItemProps = {
   quiz: Quiz;
@@ -28,8 +30,9 @@ export default function OpenQuizItem({ quiz, isLastQuiz }: OpenQuizItemProps) {
     closeModal: closeCloseModal,
   } = useModal({ defaultOpen: false });
 
-  const { id: quizId, title, limitTime, dueTime, state } = quiz;
+  const { id: quizId, title, limitTime, dueTime, state, author } = quiz;
   const plainTitle = getPlainText(title);
+  const authorRole = getAuthorRole(author);
 
   const lectureId = useLectureId();
   const { mutate: mutateQuizState } = usePutQuizState({
@@ -77,7 +80,13 @@ export default function OpenQuizItem({ quiz, isLastQuiz }: OpenQuizItemProps) {
           </div>
           <div className='flex flex-col gap-[5px]'>
             <h3 className='text-headline1 font-semibold'>{plainTitle}</h3>
-            <p className='text-label font-semibold text-gray-50'>{dueTime}</p>
+            <div className='flex items-center gap-[10px]'>
+              <TeacherLabel
+                name={author}
+                role={authorRole}
+              />
+              <p className='text-label font-semibold text-gray-50'>{dueTime}</p>
+            </div>
           </div>
         </div>
         <div className='flex items-center gap-[29px]'>

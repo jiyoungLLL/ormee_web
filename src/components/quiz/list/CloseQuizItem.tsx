@@ -7,6 +7,8 @@ import CloseQuizStats from '@/components/quiz/list/CloseQuizStats';
 import { getPlainText } from '@/utils/getPlainText';
 import { useRouter } from 'next/navigation';
 import { useLectureId } from '@/hooks/queries/useLectureId';
+import TeacherLabel from '@/components/ui/label/TeacherLabel';
+import { getAuthorRole } from '@/utils/getAuthorRole';
 
 type CloseQuizItemProps = {
   quiz: Quiz;
@@ -14,8 +16,9 @@ type CloseQuizItemProps = {
 };
 
 export default function CloseQuizItem({ quiz, isLastQuiz }: CloseQuizItemProps) {
-  const { id, title, dueTime, limitTime, submitCount, totalCount, state } = quiz;
+  const { id, title, dueTime, limitTime, submitCount, totalCount, state, author } = quiz;
   const plainTitle = getPlainText(title);
+  const authorRole = getAuthorRole(author);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -43,7 +46,13 @@ export default function CloseQuizItem({ quiz, isLastQuiz }: CloseQuizItemProps) 
       >
         <div className='flex flex-col gap-[5px]'>
           <span className='text-headline1 font-semibold text-gray-60'>{plainTitle}</span>
-          <span className='text-label font-semibold text-gray-50'>{dueTime}</span>
+          <div className='flex items-center gap-[10px]'>
+            <TeacherLabel
+              name={author}
+              role={authorRole}
+            />
+            <span className='text-label font-semibold text-gray-50'>{dueTime}</span>
+          </div>
         </div>
         <div className='flex items-center gap-[29px]'>
           <div className='flex items-center gap-[5px]'>
