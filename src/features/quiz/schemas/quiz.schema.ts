@@ -99,11 +99,13 @@ export const QuizDraftRequestSchema = z.object({
 
 export const QuizResponseSchema = z.object({
   id: z.number(),
+  author: z.string(),
   quizName: z.string().min(1),
   quizDate: z.string().min(1),
   timeLimit: z.number(),
   quizAvailable: z.boolean(),
   submitCount: z.number(),
+  totalCount: z.number(),
 });
 
 export const QuizListResponseSchema = z.object({
