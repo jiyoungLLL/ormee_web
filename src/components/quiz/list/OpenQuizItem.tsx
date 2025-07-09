@@ -117,6 +117,11 @@ export default function OpenQuizItem({ quiz, isLastQuiz }: OpenQuizItemProps) {
                 title='퀴즈를 마감하시겠어요?'
                 description='퀴즈를 마감하면 학생들이 더 이상 응시할 수 없어요.'
                 iconSrc='/assets/icons/sidenav/quiz_selected.png'
+                confirmButtonType={{
+                  type: 'BUTTON_BASE_TYPE',
+                  isPurple: true,
+                  isfilled: true,
+                }}
               />
             </>
           )}
@@ -138,6 +143,11 @@ export default function OpenQuizItem({ quiz, isLastQuiz }: OpenQuizItemProps) {
                 title='퀴즈를 공개하시겠어요?'
                 description='공개하면 학생들이 바로 응시할 수 있어요.'
                 iconSrc='/assets/icons/sidenav/quiz_selected.png'
+                confirmButtonType={{
+                  type: 'BUTTON_BASE_TYPE',
+                  isPurple: true,
+                  isfilled: true,
+                }}
               />
             </>
           )}
