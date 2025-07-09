@@ -31,8 +31,10 @@ export default function QuizListContainer() {
 
   const { openQuizzes, closedQuizzes } = quizList ?? { openQuizzes: [], closedQuizzes: [] };
 
+  const isEmptyQuizList = openQuizzes.length === 0 && closedQuizzes.length === 0;
+
   return (
-    <div className='flex flex-col gap-[20px] w-full px-[30px] py-[20px] rounded-[20px] box-border bg-white'>
+    <div className='flex flex-col gap-[20px] w-full min-h-[730px] px-[30px] py-[20px] rounded-[20px] box-border bg-white'>
       <div className='flex justify-between items-center'>
         <Dropdown
           showTrigger
@@ -52,16 +54,22 @@ export default function QuizListContainer() {
       </div>
       {selectedQuizCategory === '전체' && (
         <>
-          <div className='flex flex-col justify-start items-start gap-[45px]'>
-            <OpenQuizList
-              openQuizzes={openQuizzes}
-              error={error}
-            />
-            <CloseQuizList
-              closedQuizzes={closedQuizzes}
-              error={error}
-            />
-          </div>
+          {isEmptyQuizList ? (
+            <div className='flex justify-center items-center w-full h-full text-heading2 font-semibold text-[#B5B6BC]'>
+              생성한 퀴즈가 없어요.
+            </div>
+          ) : (
+            <div className='flex flex-col justify-start items-start gap-[45px]'>
+              <OpenQuizList
+                openQuizzes={openQuizzes}
+                error={error}
+              />
+              <CloseQuizList
+                closedQuizzes={closedQuizzes}
+                error={error}
+              />
+            </div>
+          )}
         </>
       )}
       {selectedQuizCategory === '임시저장' && <TemporaryQuizList />}
