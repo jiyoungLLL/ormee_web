@@ -9,7 +9,7 @@ export type BadgeProps = {
 
 const BADGE_STYLE: Record<BadgeProps['size'], string> = {
   small: 'h-[24px] px-[10px] py-[3px] text-label1',
-  medium: 'h-[28px] px-[6px] py-[2px] text-headline1',
+  medium: 'px-[6px] py-[2px] text-headline1',
 } as const;
 
 const BADGE_COLOR: Record<BadgeProps['color'], string> = {
