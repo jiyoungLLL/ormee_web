@@ -1,61 +1,14 @@
 import {
   ClosedQuizStats,
-  ProblemStatsResponse,
   Quiz,
   QuizCreateRequest,
   QuizDraftRequest,
   QuizFormValues,
 } from '@/features/quiz/types/quiz.types';
 
-// export const QUIZ_LIST_RESPONSE_MIXED: QuizListResponse = [
-//   {
-//     id: 'mock-quiz-1',
-//     title: '미친토익 기본반 RC 퀴즈 1',
-//     description: '기본 문법과 어휘를 테스트하는 퀴즈입니다.',
-//     state: 'ready',
-//     due_time: '2025-03-20T14:00:00.000Z',
-//     limit_time: '30분',
-//     updated_at: '2025-03-19T10:00:00.000Z',
-//     submit_students: 10,
-//     total_students: 20,
-//   },
-//   {
-//     id: 'mock-quiz-2',
-//     title: '미친토익 기본반 LC 퀴즈 2',
-//     description: '청취력 향상을 위한 퀴즈입니다.',
-//     state: 'ongoing',
-//     due_time: '2025-03-20T15:00:00.000Z',
-//     limit_time: '45분',
-//     updated_at: '2025-03-19T11:00:00.000Z',
-//     submit_students: 12,
-//     total_students: 20,
-//   },
-//   {
-//     id: 'mock-quiz-3',
-//     title: '미친토익 기본반 RC 퀴즈 3',
-//     description: '독해 실력을 테스트하는 퀴즈입니다.',
-//     state: 'closed',
-//     due_time: '2025-03-18T14:00:00.000Z',
-//     limit_time: '40분',
-//     updated_at: '2025-03-18T14:00:00.000Z',
-//     submit_students: 13,
-//     total_students: 20,
-//   },
-//   {
-//     id: 'mock-quiz-4',
-//     title: '미친토익 기본반 LC 퀴즈 4',
-//     description: '청취력 종합 평가 퀴즈입니다.',
-//     state: 'closed',
-//     due_time: '2025-03-17T15:00:00.000Z',
-//     limit_time: '50분',
-//     updated_at: '2025-03-17T15:00:00.000Z',
-//     submit_students: 10,
-//     total_students: 20,
-//   },
-// ];
-
 export const QUIZ_ONGOING: Quiz = {
   id: 'mock-ongoing-quiz-1',
+  author: '송이쌤',
   title: '미친토익 기본반 LC 퀴즈 2',
   state: 'ongoing',
   dueTime: '2025-03-20T15:00:00.000Z',
@@ -67,6 +20,7 @@ export const QUIZ_ONGOING: Quiz = {
 
 export const QUIZ_READY: Quiz = {
   id: 'mock-ready-quiz-1',
+  author: '송이쌤',
   title: '미친토익 기본반 RC 퀴즈 1',
   state: 'ready',
   dueTime: '2025-03-20T14:00:00.000Z',
@@ -78,6 +32,7 @@ export const QUIZ_READY: Quiz = {
 
 export const QUIZ_CLOSED: Quiz = {
   id: 'mock-closed-quiz-1',
+  author: '송이쌤',
   title: '미친토익 기본반 RC 퀴즈 3',
   state: 'closed',
   dueTime: '2025-03-18T14:00:00.000Z',
@@ -89,6 +44,7 @@ export const QUIZ_CLOSED: Quiz = {
 
 export const QUIZ_CLOSED_ERROR: Quiz = {
   id: 'mock-closed-quiz-error',
+  author: '송이쌤',
   title: '미친토익 기본반 RC 퀴즈 3',
   state: 'closed',
   dueTime: '2025-03-18T14:00:00.000Z',
@@ -128,42 +84,6 @@ export const CLOSED_QUIZ_STATS_FULL: ClosedQuizStats = [
     incorrectCount: 2,
   },
 ];
-
-// export const TEMPORARY_QUIZ_LIST: QuizListResponse = [
-//   {
-//     id: 'mock-temporary-quiz-1',
-//     title: '미친토익 기본반 RC 퀴즈 1 (수정중)',
-//     description: '기본 문법과 어휘를 테스트하는 퀴즈입니다.',
-//     state: 'temporary',
-//     due_time: '2025-06-20T14:00:00.000Z',
-//     limit_time: '30분',
-//     updated_at: '2025-05-19T10:00:00.000Z',
-//     submit_students: 0,
-//     total_students: 20,
-//   },
-//   {
-//     id: 'mock-temporary-quiz-2',
-//     title: '미친토익 기본반 RC 퀴즈 2 (수정중)',
-//     description: '기본 문법과 어휘를 테스트하는 퀴즈입니다.',
-//     state: 'temporary',
-//     due_time: '2025-06-20T14:00:00.000Z',
-//     limit_time: '10분',
-//     updated_at: '2025-05-19T10:00:00.000Z',
-//     submit_students: 0,
-//     total_students: 20,
-//   },
-//   {
-//     id: 'mock-temporary-quiz-3',
-//     title: '미친토익 기본반 RC 퀴즈 3 (수정중)',
-//     description: '기본 문법과 어휘를 테스트하는 퀴즈입니다.',
-//     state: 'temporary',
-//     due_time: '2025-06-20T14:00:00.000Z',
-//     limit_time: '20분',
-//     updated_at: '2025-05-19T10:00:00.000Z',
-//     submit_students: 0,
-//     total_students: 20,
-//   },
-// ];
 
 export const QUIZ_TEMPORARY_1_EDIT: QuizFormValues & { id: string } = {
   id: 'mock-temporary-quiz-1',
