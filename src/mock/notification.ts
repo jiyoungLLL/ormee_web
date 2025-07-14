@@ -3,7 +3,7 @@ import { Notification, NotificationListResponse } from '@/features/notification/
 export const MOCK_NOTIFICATION_LIST_ONE_UNREAD: Notification[] = [
   {
     notificationId: 1,
-    type: 'assignment',
+    type: 'homework',
     title: '미친토익 기본반 rc',
     description: '과제 마감까지 하루 남았습니다.',
     createdAt: '2025-06-12T12:34:50.211426',
@@ -15,7 +15,7 @@ export const MOCK_NOTIFICATION_LIST_ONE_UNREAD: Notification[] = [
 export const MOCK_NOTIFICATION_LIST_ONE_READ: Notification[] = [
   {
     notificationId: 1,
-    type: 'assignment',
+    type: 'homework',
     title: '미친토익 기본반 rc',
     description: '과제 마감까지 하루 남았습니다.',
     createdAt: '2025-06-12T12:34:50.211426',
