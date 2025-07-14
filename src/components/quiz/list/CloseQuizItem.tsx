@@ -8,7 +8,7 @@ import { getPlainText } from '@/utils/getPlainText';
 import { useRouter } from 'next/navigation';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import TeacherLabel from '@/components/ui/label/TeacherLabel';
-import { getAuthorRole } from '@/utils/getAuthorRole';
+import { useGetAuthorRole } from '@/hooks/useGetAuthorRole';
 
 type CloseQuizItemProps = {
   quiz: Quiz;
@@ -18,7 +18,7 @@ type CloseQuizItemProps = {
 export default function CloseQuizItem({ quiz, isLastQuiz }: CloseQuizItemProps) {
   const { id, title, dueTime, limitTime, submitCount, totalCount, state, author } = quiz;
   const plainTitle = getPlainText(title);
-  const authorRole = getAuthorRole(author);
+  const authorRole = useGetAuthorRole(author);
 
   const [isOpen, setIsOpen] = useState(false);
 

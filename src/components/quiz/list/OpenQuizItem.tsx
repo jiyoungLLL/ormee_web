@@ -10,7 +10,7 @@ import { useLectureId } from '@/hooks/queries/useLectureId';
 import { getPlainText } from '@/utils/getPlainText';
 import { useRouter } from 'next/navigation';
 import TeacherLabel from '@/components/ui/label/TeacherLabel';
-import { getAuthorRole } from '@/utils/getAuthorRole';
+import { useGetAuthorRole } from '@/hooks/useGetAuthorRole';
 
 type OpenQuizItemProps = {
   quiz: Quiz;
@@ -32,7 +32,7 @@ export default function OpenQuizItem({ quiz, isLastQuiz }: OpenQuizItemProps) {
 
   const { id: quizId, title, limitTime, dueTime, state, author } = quiz;
   const plainTitle = getPlainText(title);
-  const authorRole = getAuthorRole(author);
+  const authorRole = useGetAuthorRole(author);
 
   const lectureId = useLectureId();
   const { mutate: mutateQuizState } = usePutQuizState({
