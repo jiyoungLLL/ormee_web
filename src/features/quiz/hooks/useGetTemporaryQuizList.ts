@@ -26,11 +26,12 @@ export const useGetTemporaryQuizList = (lectureId: string) => {
       return data.map((quiz) => ({
         id: quiz.id.toString(),
         title: quiz.quizName || '제목 없음',
+        author: quiz.author,
         dueTime: quiz.quizDate || '',
         isAvailable: quiz.quizAvailable,
         limitTime: QUIZ_LIMIT_TIME_MAP_TO_RENDER[(quiz.timeLimit || 0) as keyof typeof QUIZ_LIMIT_TIME_MAP_TO_RENDER],
         submitCount: quiz.submitCount,
-        totalCount: 0,
+        totalCount: quiz.totalCount,
         state: 'temporary',
       }));
     },
