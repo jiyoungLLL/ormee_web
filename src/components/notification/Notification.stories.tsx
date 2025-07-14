@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import NotificationItem from './NotificationItem';
-import type { Notification } from '@/features/notification/notification.types';
+import type { Notification, NotificationFilterType } from '@/features/notification/notification.types';
 
 const meta = {
   title: 'Components/Notification/NotificationItem',
@@ -14,10 +14,18 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const Template = (args: { notification: Notification }) => {
+const Template = (args: {
+  notification: Notification;
+  onClose?: () => void;
+  currentFilter?: NotificationFilterType;
+}) => {
   return (
     <div className='w-[512px]'>
-      <NotificationItem {...args} />
+      <NotificationItem
+        notification={args.notification}
+        onClose={args.onClose || (() => {})}
+        currentFilter={args.currentFilter || 'total'}
+      />
     </div>
   );
 };
@@ -27,13 +35,16 @@ export const Unread: Story = {
   render: Template,
   args: {
     notification: {
-      id: '1',
+      notificationId: 1,
       type: 'question',
       title: '미친토익 중급반 rc',
       description: '새로운 질문이 등록됐습니다.',
-      createdAt: '오후 4시 35분',
-      read: false,
+      parentId: 123,
+      createdAt: '2024-01-15T16:35:00Z',
+      isRead: false,
     },
+    onClose: () => {},
+    currentFilter: 'total',
   },
 };
 
@@ -42,12 +53,15 @@ export const Read: Story = {
   render: Template,
   args: {
     notification: {
-      id: '2',
-      type: 'assignment',
+      notificationId: 2,
+      type: 'homework',
       title: '오픽 기본반',
       description: '과제 마감까지 3일 남았습니다.',
-      createdAt: '오후 5시 25분',
-      read: true,
+      parentId: 456,
+      createdAt: '2025-06-15T17:25:00Z',
+      isRead: true,
     },
+    onClose: () => {},
+    currentFilter: 'total',
   },
 };
