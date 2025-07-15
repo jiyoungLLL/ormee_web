@@ -1,4 +1,4 @@
-import { SideNavWrapper } from '@/app/(profile-notification-header-layout)/(navigation-layout)/SideNavWrapper';
+import { SideNavWrapper } from './SideNavWrapper';
 
 export default function NavigationLayout({ children }: { children: React.ReactNode }) {
   return (
