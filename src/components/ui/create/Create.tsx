@@ -1,53 +1,35 @@
 'use client';
-import Button from '@/components/ui/Button';
+
 import CreateContents from '@/components/ui/create/CreateContents';
-import {
-  useCreateHomework,
-  useGetHomeworksDetail,
-  useUpdateHomework,
-} from '@/features/homework/hooks/queries/useHomeworkApi';
+import CreateHeader from '@/components/ui/create/CreateHeader';
+import { useCreateLogic } from '@/components/ui/create/useCreateLogic';
+import { useGetDraftHomeworks, useGetHomeworksDetail } from '@/features/homework/hooks/queries/useHomeworkApi';
+import { useGetDraftNotice, useGetNoticeDetails } from '@/features/notice/useNoticeApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { WriteBoxFormValues, writeBoxSchema } from '@/schemas/writeBox.schema';
-import { postAttachment } from '@/utils/api/postAttachment';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import Draft from '../draftModal/Draft';
 
 type CreateProps = {
-  type: 'NOTICE' | 'HOMEWORK';
+  type: 'HOMEWORK' | 'NOTICE';
   params: string;
 };
 
 type ModalType = 'LOAD' | 'DRAFT' | null;
 
 export default function Create({ type, params }: CreateProps) {
-  const router = useRouter();
+  const lectureId = useLectureId() ?? '';
+  const searchParams = useSearchParams();
+  const rawId = type === 'HOMEWORK' || type === 'NOTICE' ? searchParams.get('id') : null;
+  const contentId = rawId && typeof rawId === 'string' ? rawId : undefined;
 
-  const paramsType = type === 'HOMEWORK' ? 'homework' : 'notice';
   const [modalType, setModalType] = useState<ModalType>(null);
-
   const openLoadModal = () => setModalType('LOAD');
   const openDraftModal = () => setModalType('DRAFT');
   const closeModal = () => setModalType(null);
-
-  const lectureNum = useLectureId();
-  const searchParams = useSearchParams();
-  const rawHomeworkId = type === 'HOMEWORK' ? searchParams.get('id') : null;
-  const homeworkId = rawHomeworkId && typeof rawHomeworkId === 'string' ? rawHomeworkId : undefined;
-
-  const rawFilter = searchParams.get('filter');
-  const filter = rawFilter && typeof rawFilter === 'string' ? rawFilter : undefined;
-
-  const lectureId = lectureNum ?? undefined;
-
-  const isModify = !!homeworkId;
-  const title = type === 'NOTICE' ? '공지' : '숙제';
-
-  const { data: preData } = useGetHomeworksDetail(homeworkId || '');
 
   const methods = useForm<WriteBoxFormValues>({
     resolver: zodResolver(writeBoxSchema),
@@ -60,119 +42,62 @@ export default function Create({ type, params }: CreateProps) {
       isDraft: false,
     },
   });
-
   const { setValue, watch } = methods;
 
+  const { isModify, onSubmit } = useCreateLogic({
+    type,
+    lectureId,
+    contentId,
+    getIsDraft: () => watch('isDraft'),
+  });
+
+  // 상세 불러오기
+  const { data: preData } = useGetHomeworksDetail(contentId || '');
+  const { data: noticeData } = useGetNoticeDetails(contentId || '');
+
   useEffect(() => {
-    if (preData) {
+    if (type === 'HOMEWORK' && preData) {
       setValue('title', preData.title || '');
       setValue('description', preData.description || '');
       setValue('isDraft', false);
       setValue('dueTime', preData.dueTime ? new Date(preData.dueTime).toISOString().slice(0, 16) : '');
-
-      console.log(watch('isDraft'));
     }
-  }, [preData, setValue]);
 
-  const updateMutation = useUpdateHomework({ homeworkId, lectureId });
-  const successMessage = watch('isDraft') ? '임시저장이 완료 되었어요.' : '숙제가 생성되었어요.';
-  const createMutation = useCreateHomework(lectureId, successMessage);
-  const mutation = isModify ? updateMutation : createMutation;
+    if (type === 'NOTICE' && noticeData) {
+      setValue('title', noticeData.title || '');
+      setValue('description', noticeData.description || '');
+      setValue('dueTime', noticeData.postDate || '');
+      setValue('isDraft', false);
+    }
+  }, [preData, noticeData, setValue, type]);
+
+  // 임시저장 개수 (숙제/공지 각각 다르게)
+  const { data: draftHomework } = useGetDraftHomeworks(lectureId);
+  const { data: draftNotice } = useGetDraftNotice(lectureId);
+  const draftNum = type === 'HOMEWORK' ? draftHomework?.length.toString() : draftNotice?.length.toString();
 
   const handleDraftSubmit = () => {
     setValue('isDraft', true);
     methods.handleSubmit(onSubmit)();
   };
 
-  const onSubmit = async (data: WriteBoxFormValues) => {
-    console.log(data);
-    try {
-      const fileIds = [];
-      for (const file of data.files || []) {
-        const id = await postAttachment({ file, type: type });
-        fileIds.push(id);
-      }
-
-      mutation?.mutate({
-        title: data.title,
-        description: data.description,
-        isDraft: data.isDraft,
-        openTime: new Date().toISOString(),
-        dueTime: data.dueTime ? new Date(data.dueTime).toISOString() : '',
-        fileIds,
-      });
-
-      if (!data.isDraft) router.push(`/lectures/${lectureId}/homework`);
-    } catch (err) {
-      if (process.env.NODE_ENV === 'development') console.error(err);
-    }
-  };
-
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <div className='w-full h-[50px] flex justify-between items-center'>
-          <Link
-            href={
-              isModify && type === 'HOMEWORK'
-                ? `/lectures/${params}/${paramsType}/detail?filter=${filter}&id=${homeworkId}`
-                : `/lectures/${params}/${paramsType}`
-            }
-            className='w-[136px] px-[5px] text-title3 font-bold flex items-center gap-[15px]'
-          >
-            <Image
-              src='/assets/icons/left_arrow.png'
-              width={24}
-              height={24}
-              alt='이전으로'
-            />
-            {title} 생성
-          </Link>
-          <div className='flex gap-[10px]'>
-            {!rawHomeworkId && (
-              <>
-                <Button
-                  type='BUTTON_BASE_TYPE'
-                  size='w-[117px] h-[50px]'
-                  font='text-headline1 font-semibold'
-                  title='불러오기'
-                  isPurple={false}
-                  onClick={openLoadModal}
-                />
-                <Button
-                  type='BUTTON_BASE_TYPE'
-                  size='w-[117px] h-[50px]'
-                  font='text-headline1 font-semibold'
-                  title='임시저장'
-                  isPurple={false}
-                  onClick={openDraftModal}
-                  htmlType='button'
-                />
-              </>
-            )}
-            <Button
-              type='BUTTON_BASE_TYPE'
-              size='w-[102px] h-[50px]'
-              font='text-headline1 font-semibold'
-              title='등록하기'
-              isPurple={true}
-              isfilled={true}
-            />
-          </div>
-        </div>
-        <CreateContents type={title} />
-      </form>
-      {/* {modalType === 'LOAD' && (
-        <Draft
-          isOpen={true}
-          openModal={openDraftModal}
-          closeModal={closeModal}
-          onConfirm={handleLOADSubmit}
+        <CreateHeader
+          isModify={isModify}
+          type={type}
+          draftNum={draftNum}
+          contentId={contentId}
+          lectureId={params}
+          onClickLoad={openLoadModal}
+          onClickDraft={openDraftModal}
         />
-      )} */}
+        <CreateContents type={type === 'HOMEWORK' ? '숙제' : '공지'} />
+      </form>
       {modalType === 'DRAFT' && (
         <Draft
-          type='HOMEWORK'
+          type={type}
           isOpen={true}
           closeModal={closeModal}
           onSaveDraft={handleDraftSubmit}
