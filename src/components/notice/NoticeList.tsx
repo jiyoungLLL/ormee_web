@@ -84,19 +84,7 @@ export default function NoticeList() {
           </Link>
         ))}
       {unpinnedData?.map((notice, index) => {
-        const pageSize = 15;
-        const currentPage = totalData?.currentPage ?? 1;
-        const totalElements = totalData?.totalElements ?? 0;
-
-        let pinnedCount = 0;
-
-        if (page === 1) {
-          pinnedCount = originalPinnedData?.length ?? 0;
-        } else {
-          pinnedCount = 0;
-        }
-
-        const no = Math.max(totalElements - ((currentPage - 1) * pageSize + index + pinnedCount), 1);
+        const no = (unpinnedData?.length ?? 0) - index;
 
         return (
           <Link
