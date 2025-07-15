@@ -25,7 +25,11 @@ export const usePostNotice = (lectureId: string, successMessage: string) => {
         type: 'error',
       });
     },
-    invalidateKey: [QUERY_KEYS.noticeList({ lectureId }), QUERY_KEYS.noticeDraft(lectureId)],
+    invalidateKey: [
+      QUERY_KEYS.noticeList({ lectureId }),
+      QUERY_KEYS.noticeDraft(lectureId),
+      QUERY_KEYS.noticePinned(lectureId),
+    ],
   });
 };
 
