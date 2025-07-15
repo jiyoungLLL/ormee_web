@@ -15,7 +15,9 @@ export default function NoticeList() {
   const keyword = searchParams.get('search') ?? '';
 
   const lectureId = useLectureId();
-  const { data: totalData } = keyword ? useSearchNotice(lectureId, keyword, page) : useGetNotices(lectureId, page);
+  const searchNoticeResult = useSearchNotice(lectureId, keyword, page);
+  const getNoticesResult = useGetNotices(lectureId, page);
+  const totalData = keyword ? searchNoticeResult.data : getNoticesResult.data;
   const { data: pinnedData } = useGetPinnedNotices(lectureId);
 
   const pinnedIds = pinnedData?.map((notice) => notice.id) ?? [];
