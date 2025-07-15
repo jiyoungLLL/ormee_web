@@ -6,7 +6,7 @@ import { useCreateLogic } from '@/components/ui/create/useCreateLogic';
 import { useGetDraftHomeworks, useGetHomeworksDetail } from '@/features/homework/hooks/queries/useHomeworkApi';
 import { useGetDraftNotice, useGetNoticeDetails } from '@/features/notice/useNoticeApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
-import { WriteBoxFormValues, writeBoxSchema } from '@/schemas/writeBox.schema';
+import { HomeworkFormValues, homeworkSchema, NoticeFormValues, noticeSchema } from '@/schemas/writeBox.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -21,6 +21,7 @@ type CreateProps = {
 type ModalType = 'LOAD' | 'DRAFT' | null;
 
 export default function Create({ type, params }: CreateProps) {
+  const schema = type === 'HOMEWORK' ? homeworkSchema : noticeSchema;
   const lectureId = useLectureId() ?? '';
   const searchParams = useSearchParams();
   const rawId = type === 'HOMEWORK' || type === 'NOTICE' ? searchParams.get('id') : null;
@@ -31,16 +32,24 @@ export default function Create({ type, params }: CreateProps) {
   const openDraftModal = () => setModalType('DRAFT');
   const closeModal = () => setModalType(null);
 
-  const methods = useForm<WriteBoxFormValues>({
-    resolver: zodResolver(writeBoxSchema),
+  const methods = useForm<HomeworkFormValues | NoticeFormValues>({
+    resolver: zodResolver(schema),
     mode: 'onSubmit',
-    defaultValues: {
-      title: '',
-      description: '',
-      dueTime: '',
-      files: [],
-      isDraft: false,
-    },
+    defaultValues:
+      type === 'HOMEWORK'
+        ? {
+            title: '',
+            description: '',
+            dueTime: '',
+            files: [],
+            isDraft: false,
+          }
+        : {
+            title: '',
+            description: '',
+            files: [],
+            isDraft: false,
+          },
   });
   const { setValue, watch } = methods;
 

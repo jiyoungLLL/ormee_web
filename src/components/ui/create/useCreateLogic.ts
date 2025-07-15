@@ -2,7 +2,7 @@ import { PostHomeWork } from '@/features/homework/homework.types';
 import { useCreateHomework, useUpdateHomework } from '@/features/homework/hooks/queries/useHomeworkApi';
 import { PostNotice } from '@/features/notice/notice.types';
 import { usePostNotice, usePutNotice } from '@/features/notice/useNoticeApi';
-import { WriteBoxFormValues } from '@/schemas/writeBox.schema';
+import { HomeworkFormValues, homeworkSchema, NoticeFormValues, noticeSchema } from '@/schemas/writeBox.schema';
 import { postAttachment } from '@/utils/api/postAttachment';
 import { useRouter } from 'next/navigation';
 
@@ -29,28 +29,38 @@ export function useCreateLogic({
   const homeworkUpdateMutation = useUpdateHomework({ homeworkId: contentId, lectureId });
   const noticeUpdateMutation = usePutNotice(lectureId, contentId!);
 
-  const onSubmit = async (data: WriteBoxFormValues) => {
+  const onSubmit = async (data: unknown) => {
+    const schema = type === 'HOMEWORK' ? homeworkSchema : noticeSchema;
+    const result = schema.safeParse(data);
+    if (!result.success) {
+      return;
+    }
+
+    // 검증된 데이터 타입 좁히기
+    const validData = result.data;
+
     try {
       const fileIds: number[] = [];
 
-      for (const file of data.files || []) {
+      for (const file of validData.files || []) {
         const id = await postAttachment({ file, type });
         fileIds.push(id);
       }
 
-      const isDraft = data.isDraft;
+      const isDraft = validData.isDraft;
       const redirectUrl = `/lectures/${lectureId}/${type === 'HOMEWORK' ? 'homework' : 'notice'}`;
 
-      const title = data.title?.trim() === '' ? '제목없음' : data.title;
+      const title = validData.title?.trim() === '' ? '제목없음' : validData.title;
 
       if (type === 'HOMEWORK') {
+        const homeworkData = validData as HomeworkFormValues;
         const homeworkPayload: PostHomeWork = {
           title,
-          description: data.description,
+          description: homeworkData.description,
           isDraft,
           fileIds,
           openTime: new Date().toISOString(),
-          dueTime: data.dueTime ? new Date(data.dueTime).toISOString() : '',
+          dueTime: homeworkData?.dueTime ? new Date(homeworkData.dueTime).toISOString() : '',
         };
 
         if (isModify) {
@@ -61,9 +71,10 @@ export function useCreateLogic({
           router.push(redirectUrl);
         }
       } else if (type === 'NOTICE') {
+        const noticeData = validData as NoticeFormValues;
         const noticePayload: PostNotice = {
           title,
-          description: data.description,
+          description: noticeData.description,
           isDraft,
           fileIds,
         };
