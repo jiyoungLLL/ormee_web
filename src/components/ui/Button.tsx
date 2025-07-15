@@ -18,6 +18,7 @@ type ButtonProps = {
   isfilled?: boolean;
   /** shadow 있/없 */
   isShadow?: boolean;
+
   /** 배경 및 border 커스텀 */
   customStyle?: string;
   /** 임시저장 3 처럼 추가 텍스트 필요할 때*/
@@ -30,10 +31,14 @@ type ButtonProps = {
   htmlType?: HTMLButtonType;
   /** 버튼 비활성화 (기본 스타일 : 'bg-gray-30 text-label-assistive text-headline1 font-bold') */
   disabled?: boolean;
+  /** 고정버튼인지 -> 기본 false */
+  isPinned?: boolean;
+  /** 고정버튼 아이콘 */
+  pinImg?: string;
 };
 
 const whatBaseType = {
-  BUTTON_BASE_TYPE: 'py-[12px] px-[20px] rounded-[10px] gap-[4px]',
+  BUTTON_BASE_TYPE: `py-[12px] px-[20px] rounded-[10px] gap-[4px]`,
   BUTTON_MODAL_TYPE: 'py-[12px] px-[20px] rounded-[10px] gap-[4px]',
   BUTTON_CREATE_TYPE: 'py-[12px] px-[20px] rounded-[10px] flex justify-center gap-[4px]',
 } as const;
@@ -52,6 +57,8 @@ export default function Button({
   onClick,
   htmlType = 'submit',
   disabled,
+  isPinned = false,
+  pinImg,
 }: ButtonProps) {
   const baseStyle = whatBaseType[type] ?? '';
 
@@ -85,9 +92,17 @@ export default function Button({
     <button
       type={htmlType}
       onClick={onClick}
-      className={`whitespace-nowrap ${size} ${baseStyle} ${disabled ? 'text-label-assistive text-headline1 font-bold' : font} ${backgroundStyle} ${borderStyle} ${shadowstyle}`}
+      className={`whitespace-nowrap ${size} ${baseStyle} ${disabled ? 'text-label-assistive text-headline1 font-bold' : font} ${isPinned && 'flex gap-[4px]'} ${backgroundStyle} ${borderStyle} ${shadowstyle}`}
       title={description}
     >
+      {isPinned && (
+        <Image
+          src={`/assets/icons/${pinImg}.png`}
+          alt='고정 아이콘'
+          width={24}
+          height={24}
+        />
+      )}
       {type === 'BUTTON_CREATE_TYPE' ? (
         <Image
           src='/assets/icons/plus.png'

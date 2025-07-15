@@ -17,7 +17,7 @@ export const useGetNoteStats = (noteId: string) => {
   return useApiQuery<NoteStatsResponse>({
     queryKey: QUERY_KEYS.noteStats(noteId),
     fetchOptions: {
-      endpoint: `/teachers/${noteId}/stats`,
+      endpoint: `/teachers/memos/${noteId}/stats`,
       authorization: true,
     },
   });

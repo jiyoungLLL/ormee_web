@@ -29,4 +29,14 @@ export const QUERY_KEYS = {
   classList: () => ['classList'],
   noteList: (lectureId: string) => ['noteList', lectureId],
   noteStats: (noteId: string) => ['noteStats', noteId],
+  noticeList: ({ lectureId, page, keyword }: { lectureId: string; page?: number; keyword?: string }) => [
+    'noticeList',
+    lectureId,
+    page ?? 1,
+    keyword ?? '',
+  ],
+  noticeDraft: (lectureId: string) => ['noticeDraft', lectureId],
+  noticeDetail: (noticeId: string) => ['noticeDetail', noticeId],
+  noticePinned: (lectureId: string) => ['noticePinned', lectureId],
+  noticeLoad: (lectureId: string) => ['noticeLoad', lectureId],
 } as const;

@@ -25,7 +25,7 @@ export const useGetHomeworksDetail = (homeworkId: string) => {
 };
 
 export const useGetDraftHomeworks = (lectureId: string) => {
-  return useApiQuery<HomeworkItems>({
+  return useApiQuery<HomeworkItems[]>({
     queryKey: QUERY_KEYS.homeworkDraft(lectureId),
     fetchOptions: {
       endpoint: `/teachers/${lectureId}/homeworks/drafts`,
