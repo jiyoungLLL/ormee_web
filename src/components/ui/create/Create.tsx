@@ -66,7 +66,6 @@ export default function Create({ type, params }: CreateProps) {
     if (type === 'NOTICE' && noticeData) {
       setValue('title', noticeData.title || '');
       setValue('description', noticeData.description || '');
-      setValue('dueTime', noticeData.postDate || '');
       setValue('isDraft', false);
     }
   }, [preData, noticeData, setValue, type]);
