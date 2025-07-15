@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetNotices } from '@/features/notice/useNoticeApi';
+import { useSearchNotice } from '@/features/notice/useNoticeApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -9,10 +9,12 @@ const MAX_PAGE_COUNT = 10;
 
 export default function NoticePage() {
   const router = useRouter();
+  const lectureId = useLectureId();
   const searchParams = useSearchParams();
   const page = Number(searchParams.get('page') || 1);
+  const keyword = searchParams.get('search') ?? '';
 
-  const { data } = useGetNotices(useLectureId());
+  const { data } = useSearchNotice(lectureId, keyword, page);
 
   if (!data) return null;
 
