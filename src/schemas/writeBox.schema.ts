@@ -10,7 +10,7 @@ const MAX_TOTAL_SIZE = 50 * 1024 * 1024;
 
 export const writeBoxSchema = z
   .object({
-    title: z.string().min(1, { message: WRITE_ERROR_MESSAGES.EMPTY_TITLE }),
+    title: z.string(),
     description: z.string(),
     files: z
       .array(z.instanceof(File))
@@ -26,6 +26,13 @@ export const writeBoxSchema = z
   })
   .superRefine((data, ctx) => {
     if (!data.isDraft) {
+      if (!data.title || data.title.trim() == '') {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['title'],
+          message: WRITE_ERROR_MESSAGES.EMPTY_TITLE,
+        });
+      }
       if (!data.description || data.description.trim() === '') {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
