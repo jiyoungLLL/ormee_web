@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import Button from '../ui/Button';
 import Dropdown from '../ui/dropdown/Dropdown';
+import TeacherLabel from '../ui/label/TeacherLabel';
 import HomeworkDetail from './HomeworkDetail';
 
 type HomeworkProps = {
@@ -84,10 +85,16 @@ export default function HomeworkTap({ type }: HomeworkProps) {
                     <div className={`text-headline1 font-semibold ${name === '마감' && 'text-gray-60'}`}>
                       {data.title}
                     </div>
-                    <div className='text-label text-gray-50'>
-                      {data.openTime && data.dueTime
-                        ? `${format(data.openTime, 'yyyy.MM.dd')} - ${format(data.dueTime, 'yyyy.MM.dd')}`
-                        : ''}
+                    <div className='flex gap-[10px]'>
+                      <TeacherLabel
+                        name={data.author}
+                        role='Owner'
+                      />
+                      <span className='text-label text-gray-50'>
+                        {data.openTime && data.dueTime
+                          ? `${format(data.openTime, 'yyyy.MM.dd')} - ${format(data.dueTime, 'yyyy.MM.dd')}`
+                          : ''}
+                      </span>
                     </div>
                   </Link>
                 </div>
