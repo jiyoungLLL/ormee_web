@@ -1,7 +1,7 @@
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { useApiMutation, useApiQuery } from '@/hooks/useApi';
 import { useToastStore } from '@/stores/toastStore';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { NoticeDetail, NoticeDraft, NoticeItems, NoticeList, PostNotice } from './notice.types';
 
 export const usePostNotice = (lectureId: string, successMessage: string) => {
@@ -116,6 +116,7 @@ export const usePutNotice = (lectureId: string, noticeId: string) => {
 
 export const usePinNotice = (lectureId: string, page: number, noticeId: string) => {
   const { addToast } = useToastStore();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams.toString());
 
@@ -127,6 +128,7 @@ export const usePinNotice = (lectureId: string, page: number, noticeId: string) 
     },
     onSuccess: () => {
       params.set('ispinned', 'true');
+      router.replace(`?${params.toString()}`);
       addToast({
         message: '공지가 고정되었어요.',
         type: 'success',

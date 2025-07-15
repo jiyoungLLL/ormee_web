@@ -15,14 +15,16 @@ export default function NoticeList() {
   const keyword = searchParams.get('search') ?? '';
 
   const lectureId = useLectureId();
-  const searchNoticeResult = useSearchNotice(lectureId, keyword, page);
-  const getNoticesResult = useGetNotices(lectureId, page);
-  const totalData = keyword ? searchNoticeResult.data : getNoticesResult.data;
-  const { data: pinnedData } = useGetPinnedNotices(lectureId);
+  const searchNoticeData = useSearchNotice(lectureId, keyword, page);
+  const getNoticesData = useGetNotices(lectureId, page);
+  const totalData = keyword ? searchNoticeData.data : getNoticesData.data;
+  const { data: originalPinnedData } = useGetPinnedNotices(lectureId);
 
-  const pinnedIds = pinnedData?.map((notice) => notice.id) ?? [];
-  const showPinned = !keyword && page === 1;
+  const pinnedIds = originalPinnedData?.map((notice) => notice.id) ?? [];
 
+  const searchPinnedData = totalData?.content?.filter((notice) => notice.isPinned === true) ?? [];
+
+  const pinnedData = keyword ? searchPinnedData : originalPinnedData;
   const unpinnedData = totalData?.content?.filter((notice) => !pinnedIds.includes(notice.id)) ?? [];
 
   useEffect(() => {
@@ -32,7 +34,7 @@ export default function NoticeList() {
       params.set('page', '1');
       router.replace(`?${params.toString()}`);
     }
-  }, []);
+  }, [searchParams, router]);
 
   // list title
   const titleList: [string, string][] = [
@@ -55,27 +57,26 @@ export default function NoticeList() {
           </div>
         ))}
       </div>
-      {showPinned &&
-        pinnedData?.map((pinned) => (
-          <Link
-            href={`/lectures/${lectureId}/notice/detail?page=${page}&ispinned=true&id=${pinned.id}`}
-            key={pinned.id}
-            className='w-full h-[50px] flex justify-between py-[10px] items-center'
-          >
-            <div className='w-[34px] flex justify-center text-headline2 font-gray-70'>
-              <Image
-                src='/assets/icons/pin.png'
-                width={24}
-                height={24}
-                alt='핀 아이콘'
-              />
-            </div>
-            <div className='w-[394px] text-headline2 font-semibold'>{pinned.title}</div>
-            <div className='w-[68px]'>{pinned.author}</div>
-            <div className='w-[82px]'>{format(pinned.postDate, 'yyyy.MM.dd')}</div>
-            <div className='w-[45px]'>{pinned.likes}</div>
-          </Link>
-        ))}
+      {pinnedData?.map((pinned) => (
+        <Link
+          href={`/lectures/${lectureId}/notice/detail?page=${page}&ispinned=true&id=${pinned.id}`}
+          key={pinned.id}
+          className='w-full h-[50px] flex justify-between py-[10px] items-center'
+        >
+          <div className='w-[34px] flex justify-center text-headline2 font-gray-70'>
+            <Image
+              src='/assets/icons/pin.png'
+              width={24}
+              height={24}
+              alt='핀 아이콘'
+            />
+          </div>
+          <div className='w-[394px] text-headline2 font-semibold'>{pinned.title}</div>
+          <div className='w-[68px]'>{pinned.author}</div>
+          <div className='w-[82px]'>{format(pinned.postDate, 'yyyy.MM.dd')}</div>
+          <div className='w-[45px]'>{pinned.likes}</div>
+        </Link>
+      ))}
       {unpinnedData?.map((notice, index) => {
         const pageSize = 15;
         const currentPage = totalData?.currentPage ?? 1;
@@ -84,12 +85,12 @@ export default function NoticeList() {
         let pinnedCount = 0;
 
         if (page === 1) {
-          pinnedCount = pinnedData?.length ?? 0;
+          pinnedCount = originalPinnedData?.length ?? 0;
         } else {
           pinnedCount = 0;
         }
 
-        const no = totalElements - ((currentPage - 1) * pageSize + index + pinnedCount);
+        const no = Math.max(totalElements - ((currentPage - 1) * pageSize + index + pinnedCount), 1);
 
         return (
           <Link
