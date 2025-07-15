@@ -20,7 +20,7 @@ export type NoticeItems = {
 export type NoticeList = {
   content: NoticeItems[];
   totalPages: number;
-  totalElemets: number;
+  totalElements: number;
   currentPage: number;
 };
 
