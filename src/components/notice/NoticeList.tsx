@@ -25,6 +25,11 @@ export default function NoticeList() {
   const searchPinnedData = totalData?.content?.filter((notice) => notice.isPinned === true) ?? [];
 
   const pinnedData = keyword ? searchPinnedData : originalPinnedData;
+
+  const isSearchMode = !!keyword;
+  const hasPinnedInSearch = isSearchMode && (pinnedData?.length ?? 0) > 0;
+  const showPinned = (!isSearchMode && page === 1) || hasPinnedInSearch;
+
   const unpinnedData = totalData?.content?.filter((notice) => !pinnedIds.includes(notice.id)) ?? [];
 
   useEffect(() => {
@@ -57,26 +62,27 @@ export default function NoticeList() {
           </div>
         ))}
       </div>
-      {pinnedData?.map((pinned) => (
-        <Link
-          href={`/lectures/${lectureId}/notice/detail?page=${page}&ispinned=true&id=${pinned.id}`}
-          key={pinned.id}
-          className='w-full h-[50px] flex justify-between py-[10px] items-center'
-        >
-          <div className='w-[34px] flex justify-center text-headline2 font-gray-70'>
-            <Image
-              src='/assets/icons/pin.png'
-              width={24}
-              height={24}
-              alt='핀 아이콘'
-            />
-          </div>
-          <div className='w-[394px] text-headline2 font-semibold'>{pinned.title}</div>
-          <div className='w-[68px]'>{pinned.author}</div>
-          <div className='w-[82px]'>{format(pinned.postDate, 'yyyy.MM.dd')}</div>
-          <div className='w-[45px]'>{pinned.likes}</div>
-        </Link>
-      ))}
+      {showPinned &&
+        pinnedData?.map((pinned) => (
+          <Link
+            href={`/lectures/${lectureId}/notice/detail?page=${page}&ispinned=true&id=${pinned.id}`}
+            key={pinned.id}
+            className='w-full h-[50px] flex justify-between py-[10px] items-center'
+          >
+            <div className='w-[34px] flex justify-center text-headline2 font-gray-70'>
+              <Image
+                src='/assets/icons/pin.png'
+                width={24}
+                height={24}
+                alt='핀 아이콘'
+              />
+            </div>
+            <div className='w-[394px] text-headline2 font-semibold'>{pinned.title}</div>
+            <div className='w-[68px]'>{pinned.author}</div>
+            <div className='w-[82px]'>{format(pinned.postDate, 'yyyy.MM.dd')}</div>
+            <div className='w-[45px]'>{pinned.likes}</div>
+          </Link>
+        ))}
       {unpinnedData?.map((notice, index) => {
         const pageSize = 15;
         const currentPage = totalData?.currentPage ?? 1;
