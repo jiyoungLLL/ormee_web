@@ -24,32 +24,32 @@ export default function WriteBox({ type }: WriteBoxProps) {
   const [fileList, setFileList] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
 
-  // useEffect(() => {
-  //   const fetchAndConvertFiles = async () => {
-  //     if (!data?.filePaths?.length) return;
+  useEffect(() => {
+    const fetchAndConvertFiles = async () => {
+      if (!data?.filePaths?.length) return;
 
-  //     const files = await Promise.all(
-  //       data.filePaths.map(async (url: string, i: number) => {
-  //         if (!data?.fileNames?.length) return undefined;
+      const files = await Promise.all(
+        data.filePaths.map(async (url: string, i: number) => {
+          if (!data?.fileNames?.length) return undefined;
 
-  //         const res = await fetch(url);
-  //         const blob = await res.blob();
+          const res = await fetch(url);
+          const blob = await res.blob();
 
-  //         const originalNames = data.fileNames[i];
-  //         const validNames =
-  //           originalNames.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}(.*)/)?.[1] || originalNames;
-  //         const file = new File([blob], validNames, { type: blob.type });
-  //         return file;
-  //       }),
-  //     );
+          const originalNames = data.fileNames[i];
+          const validNames =
+            originalNames.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}(.*)/)?.[1] || originalNames;
+          const file = new File([blob], validNames, { type: blob.type });
+          return file;
+        }),
+      );
 
-  //     const validFiles = files.filter((file): file is File => file !== undefined);
+      const validFiles = files.filter((file): file is File => file !== undefined);
 
-  //     setFileList(validFiles);
-  //   };
+      setFileList(validFiles);
+    };
 
-  //   fetchAndConvertFiles();
-  // }, [data]);
+    fetchAndConvertFiles();
+  }, [data]);
 
   useEffect(() => {
     setValue('files', fileList);

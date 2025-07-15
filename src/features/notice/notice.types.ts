@@ -27,6 +27,7 @@ export type NoticeList = {
 export type NoticeDetail = {
   title: string;
   description: string;
+  fileNames: string[] | null;
   filePaths: string[] | null;
   postDate: string;
   isPinned: boolean;

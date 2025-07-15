@@ -21,6 +21,7 @@ export type DraftHomework = {
 // 과제 리스트 (GET)
 export type HomeworkItems = {
   id: number;
+  author: string;
   title: string | null;
   description: string | null;
   filePaths?: string[] | null;

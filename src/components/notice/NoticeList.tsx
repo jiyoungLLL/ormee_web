@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetNotices, useGetPinnedNotices } from '@/features/notice/useNoticeApi';
+import { useGetNotices, useGetPinnedNotices, useSearchNotice } from '@/features/notice/useNoticeApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { format } from 'date-fns';
 import Image from 'next/image';
@@ -12,11 +12,14 @@ export default function NoticeList() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const page = Number(searchParams.get('page') || 1);
+  const keyword = searchParams.get('search') ?? '';
 
   const lectureId = useLectureId();
-  const { data: totalData } = useGetNotices(lectureId, page);
+  const { data: totalData } = keyword ? useSearchNotice(lectureId, keyword, page) : useGetNotices(lectureId, page);
   const { data: pinnedData } = useGetPinnedNotices(lectureId);
+
   const pinnedIds = pinnedData?.map((notice) => notice.id) ?? [];
+  const showPinned = !keyword && page === 1;
 
   const unpinnedData = totalData?.content?.filter((notice) => !pinnedIds.includes(notice.id)) ?? [];
 
@@ -50,7 +53,7 @@ export default function NoticeList() {
           </div>
         ))}
       </div>
-      {page === 1 &&
+      {showPinned &&
         pinnedData?.map((pinned) => (
           <Link
             href={`/lectures/${lectureId}/notice/detail?page=${page}&ispinned=true&id=${pinned.id}`}

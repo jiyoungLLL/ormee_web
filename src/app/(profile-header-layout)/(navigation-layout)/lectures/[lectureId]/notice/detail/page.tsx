@@ -3,15 +3,24 @@
 import RenderingDetails from '@/components/homework/RenderingDetails';
 import Button from '@/components/ui/Button';
 import DateTimePicker from '@/components/ui/DateTimePicker';
-import { useDeleteNotice, useGetNoticeDetails, usePinNotice, useUnpinNotice } from '@/features/notice/useNoticeApi';
+import {
+  useDeleteNotice,
+  useGetNoticeDetails,
+  useGetPinnedNotices,
+  usePinNotice,
+  useUnpinNotice,
+} from '@/features/notice/useNoticeApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { useBackRedirect } from '@/hooks/useBackRedirect';
+import { useToastStore } from '@/stores/toastStore';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function NoticeDetail() {
+  const { addToast } = useToastStore();
+
   const router = useRouter();
   const lectureId = useLectureId();
   const searchParams = useSearchParams();
@@ -21,11 +30,16 @@ export default function NoticeDetail() {
   const params = new URLSearchParams(searchParams.toString());
 
   const { data: detailNoticeData } = useGetNoticeDetails(noticeId);
+  const { data: pinnedData } = useGetPinnedNotices(lectureId);
 
   const pinMutation = usePinNotice(lectureId, page, noticeId);
   const unpinMutation = useUnpinNotice(lectureId, page, noticeId);
 
   const handlePinned = () => {
+    if (pinnedData?.length === 3) {
+      addToast({ message: '공지는 최대 3개까지 고정 가능합니다.', type: 'error' });
+    }
+
     if (paramsPin === 'true') {
       unpinMutation.mutate();
       params.set('ispinned', 'false');
