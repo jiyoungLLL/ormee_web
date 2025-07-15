@@ -16,8 +16,9 @@ export default function NoticeList() {
   const lectureId = useLectureId();
   const { data: totalData } = useGetNotices(lectureId, page);
   const { data: pinnedData } = useGetPinnedNotices(lectureId);
+  const pinnedIds = pinnedData?.map((notice) => notice.id) ?? [];
 
-  const unpinnedData = totalData?.content?.filter((notice) => !notice.isPinned) ?? [];
+  const unpinnedData = totalData?.content?.filter((notice) => !pinnedIds.includes(notice.id)) ?? [];
 
   useEffect(() => {
     const paramPage = searchParams.get('page');
@@ -38,7 +39,7 @@ export default function NoticeList() {
   ];
 
   return (
-    <div className='absolute top-[196px] w-[1018px] min-h-[730px] rounded-[10px] px-[30px] py-[20px] flex flex-col bg-white overflow-auto'>
+    <div className='relative top-[35px] w-[1018px] min-h-[730px] rounded-[10px] px-[30px] py-[20px] flex flex-col bg-white'>
       <div className='w-full h-[50px] flex justify-between items-center py-[10px] border-b border-gray-30'>
         {titleList.map(([text, width], index) => (
           <div
@@ -49,32 +50,41 @@ export default function NoticeList() {
           </div>
         ))}
       </div>
-      {pinnedData?.map((pinned) => (
-        <Link
-          href={`/lectures/${lectureId}/notice/detail?page=${page}&ispinned=true&id=${pinned.id}`}
-          key={pinned.id}
-          className='w-full h-[50px] flex justify-between py-[10px] items-center'
-        >
-          <div className='w-[34px] flex justify-center text-headline2 font-gray-70'>
-            <Image
-              src='/assets/icons/pin.png'
-              width={24}
-              height={24}
-              alt='핀 아이콘'
-            />
-          </div>
-          <div className='w-[394px] text-headline2 font-semibold'>{pinned.title}</div>
-          <div className='w-[68px]'>{pinned.author}</div>
-          <div className='w-[82px]'>{format(pinned.postDate, 'yyyy.MM.dd')}</div>
-          <div className='w-[45px]'>{pinned.likes}</div>
-        </Link>
-      ))}
+      {page === 1 &&
+        pinnedData?.map((pinned) => (
+          <Link
+            href={`/lectures/${lectureId}/notice/detail?page=${page}&ispinned=true&id=${pinned.id}`}
+            key={pinned.id}
+            className='w-full h-[50px] flex justify-between py-[10px] items-center'
+          >
+            <div className='w-[34px] flex justify-center text-headline2 font-gray-70'>
+              <Image
+                src='/assets/icons/pin.png'
+                width={24}
+                height={24}
+                alt='핀 아이콘'
+              />
+            </div>
+            <div className='w-[394px] text-headline2 font-semibold'>{pinned.title}</div>
+            <div className='w-[68px]'>{pinned.author}</div>
+            <div className='w-[82px]'>{format(pinned.postDate, 'yyyy.MM.dd')}</div>
+            <div className='w-[45px]'>{pinned.likes}</div>
+          </Link>
+        ))}
       {unpinnedData?.map((notice, index) => {
-        const totalPages = totalData?.totalPages ?? 1;
+        const pageSize = 15;
         const currentPage = totalData?.currentPage ?? 1;
-        const originalLength = unpinnedData.length;
+        const totalElements = totalData?.totalElements ?? 0;
 
-        const no = 15 * (totalPages - currentPage) + (originalLength - index);
+        let pinnedCount = 0;
+
+        if (page === 1) {
+          pinnedCount = pinnedData?.length ?? 0;
+        } else {
+          pinnedCount = 0;
+        }
+
+        const no = totalElements - ((currentPage - 1) * pageSize + index + pinnedCount);
 
         return (
           <Link
