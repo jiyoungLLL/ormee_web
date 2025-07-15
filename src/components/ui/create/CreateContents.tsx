@@ -24,13 +24,15 @@ export default function CreateContents({ type }: CreateTitleProps) {
           inputStyle='border-none focus:outline-none'
           placeholder={`${type} 제목을 입력해 주세요.`}
         />
-        <DateTimePicker
-          type='CALENDAR'
-          calendar='DATE_TYPE'
-          placeholder={type === '공지' ? '공지 등록일' : '제출기한'}
-          onSelectDate={(value) => setValue('dueTime', value)}
-          defaultValue={dueTime}
-        />
+        {type === '숙제' && (
+          <DateTimePicker
+            type='CALENDAR'
+            calendar='DATE_TYPE'
+            placeholder='제출기한'
+            onSelectDate={(value) => setValue('dueTime', value)}
+            defaultValue={dueTime}
+          />
+        )}
       </div>
 
       <WriteBox type={type} />
