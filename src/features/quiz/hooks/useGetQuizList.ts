@@ -22,11 +22,10 @@ export const useGetQuizList = (lectureId: string) => {
     schema: QuizListResponseSchema,
     validateErrorMessage: '퀴즈 목록 형식이 올바르지 않아요.',
     transform: (data) => {
-      const totalCount = 20; // TODO: API 수정 후 응답 데이터로 변경
-
       return {
         openQuizzes: data.openQuizzes.map((quiz) => ({
-          id: quiz.id,
+          id: quiz.id.toString(),
+          author: quiz.author,
           title: quiz.quizName,
           dueTime: quiz.quizDate,
           isAvailable: quiz.quizAvailable,
@@ -36,10 +35,11 @@ export const useGetQuizList = (lectureId: string) => {
               ? QUIZ_LIMIT_TIME_MAP_TO_RENDER[quiz.timeLimit as keyof typeof QUIZ_LIMIT_TIME_MAP_TO_RENDER]
               : '제한없음',
           submitCount: quiz.submitCount,
-          totalCount: totalCount,
+          totalCount: quiz.totalCount,
         })),
         closedQuizzes: data.closedQuizzes.map((quiz) => ({
-          id: quiz.id,
+          id: quiz.id.toString(),
+          author: quiz.author,
           title: quiz.quizName,
           dueTime: quiz.quizDate,
           isAvailable: quiz.quizAvailable,
@@ -49,7 +49,7 @@ export const useGetQuizList = (lectureId: string) => {
               ? QUIZ_LIMIT_TIME_MAP_TO_RENDER[quiz.timeLimit as keyof typeof QUIZ_LIMIT_TIME_MAP_TO_RENDER]
               : '제한없음',
           submitCount: quiz.submitCount,
-          totalCount: totalCount,
+          totalCount: quiz.totalCount,
         })),
       };
     },

@@ -146,6 +146,7 @@ export default function QuizCreateForm() {
             enableImage={true}
             imageUploadConfig={{
               strategy: 'IMMEDIATE_UPLOAD',
+              uploadType: 'QUIZ',
               onImageUpload: (_, id, previewUrl) => {
                 if (!currentFileName) return;
 

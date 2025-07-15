@@ -69,6 +69,9 @@ const config: Config = {
           neutral: '#7E7F8E',
           normal: '#19191D',
         },
+        interaction: {
+          disable: '#E7E7EA',
+        },
       },
       fontFamily: {
         pretendard: ['var(--font-pretendard)'],

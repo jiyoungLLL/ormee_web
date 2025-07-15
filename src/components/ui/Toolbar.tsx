@@ -1,6 +1,6 @@
 'use client';
 
-import { postQuizAttachment } from '@/features/quiz/quiz.api';
+import { AttachmentType, postAttachment } from '@/utils/api/postAttachment';
 import { Editor } from '@tiptap/react';
 import Image from 'next/image';
 import { useRef } from 'react';
@@ -8,6 +8,8 @@ import { useRef } from 'react';
 type ImmediateUploadConfig = {
   strategy: 'IMMEDIATE_UPLOAD';
   uploadUrl?: string;
+  uploadType: AttachmentType;
+  renameFile?: boolean;
   onImageUpload: (file: File, id: string, previewUrl: string) => void;
   onImageUploadError: (error: Error) => void;
 };
@@ -85,7 +87,12 @@ export default function Toolbar({
 
     if (imageUploadConfig.strategy === 'IMMEDIATE_UPLOAD') {
       try {
-        const imageId = await postQuizAttachment(file);
+        const imageId = await postAttachment({
+          file,
+          type: imageUploadConfig.uploadType,
+          renameFile: imageUploadConfig.renameFile ?? false,
+        });
+
         imageUploadConfig.onImageUpload(file, imageId.toString(), previewUrl);
       } catch (error) {
         imageUploadConfig.onImageUploadError(error as Error);

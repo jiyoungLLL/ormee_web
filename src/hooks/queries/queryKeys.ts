@@ -39,4 +39,5 @@ export const QUERY_KEYS = {
   noticeDetail: (noticeId: string) => ['noticeDetail', noticeId],
   noticePinned: (lectureId: string) => ['noticePinned', lectureId],
   noticeLoad: (lectureId: string) => ['noticeLoad', lectureId],
+  home: (lectureId: string) => ['home', lectureId],
 } as const;

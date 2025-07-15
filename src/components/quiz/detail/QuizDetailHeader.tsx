@@ -84,6 +84,11 @@ export default function QuizDetailHeader({ lectureId, quizId }: QuizDetailHeader
         iconSrc='/assets/icons/trash_purple.png'
         enableCancelButton={true}
         enableConfirmButton={true}
+        confirmButtonType={{
+          type: 'BUTTON_BASE_TYPE',
+          isPurple: true,
+          isfilled: true,
+        }}
       />
     </div>
   );
