@@ -11,14 +11,17 @@ const meta = {
   tags: ['autodocs'],
   decorators: [
     (Story) => {
-      const methods = useForm({
-        defaultValues: { contents: '' },
-      });
-      return (
-        <FormProvider {...methods}>
-          <Story />
-        </FormProvider>
-      );
+      function Wrapper(props: any) {
+        const methods = useForm({
+          defaultValues: { contents: '' },
+        });
+        return (
+          <FormProvider {...methods}>
+            <Story {...props} />
+          </FormProvider>
+        );
+      }
+      return <Wrapper />;
     },
   ],
 } satisfies Meta<typeof WriteBox>;
