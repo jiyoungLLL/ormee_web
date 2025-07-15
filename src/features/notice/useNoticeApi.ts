@@ -1,6 +1,7 @@
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { useApiMutation, useApiQuery } from '@/hooks/useApi';
 import { useToastStore } from '@/stores/toastStore';
+import { useSearchParams } from 'next/navigation';
 import { NoticeDetail, NoticeDraft, NoticeItems, NoticeList, PostNotice } from './notice.types';
 
 export const usePostNotice = (lectureId: string, successMessage: string) => {
@@ -115,6 +116,8 @@ export const usePutNotice = (lectureId: string, noticeId: string) => {
 
 export const usePinNotice = (lectureId: string, page: number, noticeId: string) => {
   const { addToast } = useToastStore();
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams.toString());
 
   return useApiMutation<void, void>({
     method: 'PUT',
@@ -123,14 +126,15 @@ export const usePinNotice = (lectureId: string, page: number, noticeId: string) 
       authorization: true,
     },
     onSuccess: () => {
+      params.set('ispinned', 'true');
       addToast({
         message: '공지가 고정되었어요.',
         type: 'success',
       });
     },
-    onError: () => {
+    onError: (err) => {
       addToast({
-        message: '공지 고정에 실패했어요. 다시 시도해주세요.',
+        message: err.message,
         type: 'error',
       });
     },
