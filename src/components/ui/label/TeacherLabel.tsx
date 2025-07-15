@@ -19,7 +19,7 @@ export default function TeacherLabel({ name, role }: TeacherLabelProps) {
   return (
     <Badge
       size='medium'
-      color='gray'
+      color='lightGray'
       label={
         <div className='flex justify-center items-center gap-[2px]'>
           <img

@@ -25,6 +25,7 @@ export const useGetQuizList = (lectureId: string) => {
       return {
         openQuizzes: data.openQuizzes.map((quiz) => ({
           id: quiz.id.toString(),
+          author: quiz.author,
           title: quiz.quizName,
           dueTime: quiz.quizDate,
           isAvailable: quiz.quizAvailable,
@@ -38,6 +39,7 @@ export const useGetQuizList = (lectureId: string) => {
         })),
         closedQuizzes: data.closedQuizzes.map((quiz) => ({
           id: quiz.id.toString(),
+          author: quiz.author,
           title: quiz.quizName,
           dueTime: quiz.quizDate,
           isAvailable: quiz.quizAvailable,
