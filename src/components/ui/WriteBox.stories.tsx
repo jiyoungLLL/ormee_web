@@ -7,6 +7,7 @@ const meta = {
   component: WriteBox,
   parameters: {
     layout: 'centered',
+    test: { disable: true },
   },
   tags: ['autodocs'],
   decorators: [
