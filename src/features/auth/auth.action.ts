@@ -1,6 +1,6 @@
 'use server';
 
-import { SigninFormValues, SignupFormValues } from '@/features/auth/auth.schema';
+import { SigninFormValues, SignupFormValues } from '@/features/auth/auth.types';
 import { ApiResponse } from '@/types/response.types';
 import { cookies } from 'next/headers';
 

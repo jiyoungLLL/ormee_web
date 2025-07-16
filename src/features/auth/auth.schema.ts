@@ -27,8 +27,6 @@ export const signinSchema = z.object({
   password: z.string().min(1, { message: AUTH_ERROR_MESSAGES.EMPTY_PASSWORD }),
 });
 
-export type SigninFormValues = z.infer<typeof signinSchema>;
-
 export const PHONE_NUMBER_PREFIX = {
   MOBILE_010: '010',
   MOBILE_011: '011',
@@ -101,5 +99,3 @@ export const signupSchema = z
     message: AUTH_ERROR_MESSAGES.NOT_MATCH_PASSWORD,
     path: ['passwordConfirm'],
   });
-
-export type SignupFormValues = z.infer<typeof signupSchema>;

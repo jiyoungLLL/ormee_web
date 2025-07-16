@@ -3,7 +3,8 @@
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { signinAction } from '@/features/auth/auth.action';
-import { SigninFormValues, signinSchema } from '@/features/auth/auth.schema';
+import { signinSchema } from '@/features/auth/auth.schema';
+import { SigninFormValues } from '@/features/auth/auth.types';
 import { useToastStore } from '@/stores/toastStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
