@@ -8,7 +8,7 @@ import {
   emailDomainSchema,
   USER_ERROR_MESSAGES,
   idSchema,
-} from '@/features/user/user.schema';
+} from '@/features/user/schemas/user.schema';
 
 export const signinSchema = z.object({
   id: z.string().min(1, { message: USER_ERROR_MESSAGES.EMPTY_ID }),
