@@ -83,22 +83,25 @@ export const useGetLoadNotice = (lectureId: string) => {
   });
 };
 
-export const useGetNoticeDetails = (noitceId: string) => {
+export const useGetNoticeDetails = (noticeId: string) => {
+  const endNoticeId = Number(noticeId);
+
   return useApiQuery<NoticeDetail>({
-    queryKey: QUERY_KEYS.noticeDetail(noitceId),
+    queryKey: QUERY_KEYS.noticeDetail(noticeId),
     fetchOptions: {
-      endpoint: `/teachers/notices/${noitceId}`,
+      endpoint: `/teachers/notices/${endNoticeId}`,
       authorization: true,
     },
   });
 };
 
 export const usePutNotice = (lectureId: string, noticeId: string) => {
+  const endNoticeId = Number(noticeId);
   const { addToast } = useToastStore();
 
   return useApiMutation<void, PostNotice>({
     method: 'PUT',
-    endpoint: `/teachers/notices/${noticeId}`,
+    endpoint: `/teachers/notices/${endNoticeId}`,
     fetchOptions: {
       authorization: true,
     },
@@ -119,6 +122,7 @@ export const usePutNotice = (lectureId: string, noticeId: string) => {
 };
 
 export const usePinNotice = (lectureId: string, page: number, noticeId: string) => {
+  const endNoticeId = Number(noticeId);
   const { addToast } = useToastStore();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -126,7 +130,7 @@ export const usePinNotice = (lectureId: string, page: number, noticeId: string) 
 
   return useApiMutation<void, void>({
     method: 'PUT',
-    endpoint: `/teachers/notices/${noticeId}/pin`,
+    endpoint: `/teachers/notices/${endNoticeId}/pin`,
     fetchOptions: {
       authorization: true,
     },
@@ -153,11 +157,12 @@ export const usePinNotice = (lectureId: string, page: number, noticeId: string) 
 };
 
 export const useUnpinNotice = (lectureId: string, page: number, noticeId: string) => {
+  const endNoticeId = Number(noticeId);
   const { addToast } = useToastStore();
 
   return useApiMutation<void, void>({
     method: 'PUT',
-    endpoint: `/teachers/notices/${noticeId}/unpin`,
+    endpoint: `/teachers/notices/${endNoticeId}/unpin`,
     fetchOptions: {
       authorization: true,
     },

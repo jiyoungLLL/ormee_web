@@ -15,10 +15,12 @@ export const useGetHomeworks = (lectureId: string) => {
 };
 
 export const useGetHomeworksDetail = (homeworkId: string) => {
+  const endHomeworkId = Number(homeworkId);
+
   return useApiQuery<HomeworkItems>({
     queryKey: QUERY_KEYS.homeworkDetail(homeworkId),
     fetchOptions: {
-      endpoint: `/teachers/homeworks/${homeworkId}`,
+      endpoint: `/teachers/homeworks/${endHomeworkId}`,
       authorization: true,
     },
   });
@@ -67,12 +69,14 @@ type updateProps = {
 };
 
 export const useUpdateHomework = ({ homeworkId, lectureId }: updateProps) => {
+  const endHomeworkId = Number(homeworkId);
+
   const router = useRouter();
   const { addToast } = useToastStore();
 
   return useApiMutation<void, PostHomeWork>({
     method: 'PUT',
-    endpoint: homeworkId ? `/teachers/homeworks/${homeworkId}` : '',
+    endpoint: homeworkId ? `/teachers/homeworks/${endHomeworkId}` : '',
     fetchOptions: {
       authorization: true,
     },
