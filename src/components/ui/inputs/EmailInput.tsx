@@ -20,6 +20,10 @@ type EmailInputProps<T extends FieldValues> = {
   idTextStyle?: string;
   /** 도메인 텍스트 스타일 */
   domainTextStyle?: string;
+  /** 아이디 입력 필드의 비활성화 여부 */
+  idDisabled?: boolean;
+  /** 도메인 입력 필드의 비활성화 여부 */
+  domainDisabled?: boolean;
   /** 아이디 입력 테스트용 아이디 */
   idTestId?: string;
   /** 도메인 입력 테스트용 아이디 */
@@ -38,6 +42,8 @@ export default function EmailInput<T extends FieldValues>({
   domainTextStyle,
   idTestId,
   domainTestId,
+  idDisabled,
+  domainDisabled,
 }: EmailInputProps<T>) {
   return (
     <div className='flex items-center gap-[8px]'>
@@ -48,6 +54,7 @@ export default function EmailInput<T extends FieldValues>({
         inputStyle={idInputStyle}
         textStyle={idTextStyle}
         testId={idTestId}
+        disabled={idDisabled}
       />
       <span className='text-gray-90 text-headline1 font-normal'>@</span>
       <Input
@@ -57,6 +64,7 @@ export default function EmailInput<T extends FieldValues>({
         inputStyle={domainInputStyle}
         textStyle={domainTextStyle}
         testId={domainTestId}
+        disabled={domainDisabled}
       />
     </div>
   );
