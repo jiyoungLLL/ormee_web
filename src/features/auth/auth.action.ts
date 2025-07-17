@@ -1,6 +1,6 @@
 'use server';
 
-import { SigninFormValues, SignupFormValues } from '@/features/auth/auth.types';
+import { PasswordCheckFormValues, SigninFormValues, SignupFormValues } from '@/features/auth/auth.types';
 import { ApiResponse } from '@/types/response.types';
 import { cookies } from 'next/headers';
 
@@ -129,4 +129,41 @@ export const signinAction = async (formData: SigninFormValues): Promise<ApiRespo
 export const signoutAction = () => {
   cookies().delete('accessToken');
   cookies().delete('refreshToken');
+};
+
+export const passwordCheckAction = async (formData: PasswordCheckFormValues): Promise<ApiResponse> => {
+  if (!process.env.API_BASE_URL) {
+    return {
+      status: 'fail',
+      code: 404,
+      data: '잘못된 API 접근입니다.',
+    };
+  }
+
+  const response = await fetch(`${process.env.API_BASE_URL}/teachers/password`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(formData),
+    redirect: 'follow',
+    credentials: 'include',
+  });
+
+  const json = await response.json();
+
+  if (!response.ok) {
+    if (process.env.NODE_ENV === 'development') console.error('비밀번호 확인 실패: ', json);
+
+    return {
+      status: 'fail',
+      code: response.status,
+      data: json.data || '비밀번호 확인에 실패했어요.',
+    };
+  }
+
+  return {
+    status: json.status,
+    code: json.code,
+  };
 };

@@ -33,3 +33,7 @@ export const signupSchema = z
     message: USER_ERROR_MESSAGES.NOT_MATCH_PASSWORD,
     path: ['passwordConfirm'],
   });
+
+export const passwordCheckSchema = z.object({
+  password: z.string().min(1, { message: USER_ERROR_MESSAGES.EMPTY_PASSWORD }),
+});

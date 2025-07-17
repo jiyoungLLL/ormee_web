@@ -101,5 +101,3 @@ export const personalInfoFormSchema = z
     message: USER_ERROR_MESSAGES.NOT_MATCH_PASSWORD,
     path: ['passwordConfirm'],
   });
-
-export const passwordCheckSchema = z.string().min(1, { message: USER_ERROR_MESSAGES.EMPTY_PASSWORD });
