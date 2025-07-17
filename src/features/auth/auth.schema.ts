@@ -37,3 +37,14 @@ export const signupSchema = z
 export const passwordCheckSchema = z.object({
   password: z.string().min(1, { message: USER_ERROR_MESSAGES.EMPTY_PASSWORD }),
 });
+
+export const passwordChangeFormSchema = z
+  .object({
+    password: z.string().min(1, { message: USER_ERROR_MESSAGES.EMPTY_PASSWORD }),
+    newPassword: passwordSchema,
+    newPasswordConfirm: z.string().min(1, { message: USER_ERROR_MESSAGES.NOT_MATCH_PASSWORD }),
+  })
+  .refine((data) => data.newPassword === data.newPasswordConfirm, {
+    message: USER_ERROR_MESSAGES.NOT_MATCH_PASSWORD,
+    path: ['newPasswordConfirm'],
+  });

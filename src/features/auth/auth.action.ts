@@ -1,6 +1,11 @@
 'use server';
 
-import { PasswordCheckFormValues, SigninFormValues, SignupFormValues } from '@/features/auth/auth.types';
+import {
+  PasswordChangeFormValues,
+  PasswordCheckFormValues,
+  SigninFormValues,
+  SignupFormValues,
+} from '@/features/auth/auth.types';
 import { ApiResponse } from '@/types/response.types';
 import { cookies } from 'next/headers';
 
@@ -159,6 +164,48 @@ export const passwordCheckAction = async (formData: PasswordCheckFormValues): Pr
       status: 'fail',
       code: response.status,
       data: json.data || '비밀번호 확인에 실패했어요.',
+    };
+  }
+
+  return {
+    status: json.status,
+    code: json.code,
+  };
+};
+
+export const passwordChangeAction = async (formData: PasswordChangeFormValues): Promise<ApiResponse> => {
+  if (!process.env.API_BASE_URL) {
+    return {
+      status: 'fail',
+      code: 404,
+      data: '잘못된 API 접근입니다.',
+    };
+  }
+
+  const submitData = {
+    password: formData.password,
+    newPassword: formData.newPassword,
+  };
+
+  const response = await fetch(`${process.env.API_BASE_URL}/teachers/password`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(submitData),
+    redirect: 'follow',
+    credentials: 'include',
+  });
+
+  const json = await response.json();
+
+  if (!response.ok) {
+    if (process.env.NODE_ENV === 'development') console.error('비밀번호 변경 실패: ', json);
+
+    return {
+      status: 'fail',
+      code: response.status,
+      data: json.data || '비밀번호 변경에 실패했어요.',
     };
   }
 
