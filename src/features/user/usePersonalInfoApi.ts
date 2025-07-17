@@ -3,6 +3,7 @@ import { useApiMutation, useApiQuery } from '@/hooks/useApi';
 import { UserInfoEditRequest, UserInfoResponse } from '@/features/user/types/userApi.types';
 import { ApiResponse } from '@/types/response.types';
 import { useToastStore } from '@/stores/toastStore';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const useGetPersonalInfo = () => {
   return useApiQuery<UserInfoResponse>({
@@ -23,6 +24,7 @@ export const useGetPersonalInfo = () => {
 
 export const useEditPersonalInfo = () => {
   const { addToast } = useToastStore();
+  const queryClient = useQueryClient();
 
   return useApiMutation<ApiResponse, UserInfoEditRequest>({
     method: 'PUT',
@@ -31,8 +33,9 @@ export const useEditPersonalInfo = () => {
       errorMessage: '개인정보 수정에 실패했습니다.',
       authorization: true,
     },
-    invalidateKey: QUERY_KEYS.personalInfo(),
+    invalidateKey: [QUERY_KEYS.personalInfo(), QUERY_KEYS.profile()],
     onSuccess: () => {
+      queryClient.refetchQueries({ queryKey: QUERY_KEYS.profile() });
       addToast({ type: 'success', message: '개인정보가 수정됐어요.' });
     },
     onError: (error) => {
