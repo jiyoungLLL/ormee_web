@@ -1,4 +1,4 @@
-import { Control, useWatch, Path } from 'react-hook-form';
+import { Control, useWatch, Path, FormState } from 'react-hook-form';
 import Input from '@/components/ui/Input';
 import { phoneNumberSchema } from '@/features/user/schemas/user.schema';
 import { useState } from 'react';
@@ -45,6 +45,7 @@ export default function PhoneNumberInput<T extends FieldValues>({
   });
 
   const isVerified = Boolean(watchedVerificationValue);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const handleVertification = () => {
     if (isVerified) return;
@@ -52,8 +53,12 @@ export default function PhoneNumberInput<T extends FieldValues>({
     const isValid = phoneNumberSchema.safeParse(watchedValue);
 
     if (isValid.error) {
-      alert(isValid.error.errors[0].message);
+      setValidationError(isValid.error.errors[0].message);
       return;
+    }
+
+    if (isValid.success) {
+      setValidationError(null);
     }
 
     // TODO: 인증번호 발송 로직 추가
@@ -65,12 +70,14 @@ export default function PhoneNumberInput<T extends FieldValues>({
     // if(인증 성공하면)
     if (!verificationName || !setValue) return;
 
+    setValidationError(null);
+
     setValue(verificationName, true);
     setIsSendVertification(false);
   };
 
   return (
-    <div>
+    <div className='flex flex-col gap-[4px]'>
       <div className='flex items-center gap-[6px]'>
         <Input
           name={name}
@@ -113,6 +120,7 @@ export default function PhoneNumberInput<T extends FieldValues>({
           />
         </div>
       )}
+      {validationError && <p className='text-label1 font-normal text-system-error'>{validationError}</p>}
     </div>
   );
 }
