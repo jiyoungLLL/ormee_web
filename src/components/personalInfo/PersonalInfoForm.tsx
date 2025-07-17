@@ -9,6 +9,7 @@ import Input from '@/components/ui/Input';
 import { useModal } from '@/hooks/ui/useModal';
 import Button from '@/components/ui/Button';
 import IdentificationModal from '@/components/personalInfo/IdentificationModal';
+import PasswordChangeModal from '@/components/personalInfo/PasswordChangeModal';
 
 type PersonalInfoFormProps = {
   isEdit: boolean;
@@ -40,6 +41,17 @@ export default function PersonalInfoForm({ isEdit }: PersonalInfoFormProps) {
   const confirmIdentification = () => {
     setIsIdentified(true);
     closeIdentificationModal();
+  };
+
+  const {
+    isOpen: isPasswordChangeModalOpen,
+    openModal: openPasswordChangeModal,
+    closeModal: closePasswordChangeModal,
+  } = useModal({ defaultOpen: false });
+
+  const confirmPasswordChange = (newPassword: string) => {
+    setValue('password', newPassword);
+    closePasswordChangeModal();
   };
 
   return (
@@ -85,12 +97,26 @@ export default function PersonalInfoForm({ isEdit }: PersonalInfoFormProps) {
         </div>
         <div className='flex flex-col w-[390px] gap-[8px]'>
           <h3 className='text-headline2 font-semibold text-gray-70'>비밀번호</h3>
-          <Input
-            name='password'
-            control={control}
-            size='w-[390px] h-[55px]'
-            disabled={!isEdit}
-          />
+          <div className='flex justify-start items-end gap-[10px]'>
+            <Input
+              name='password'
+              control={control}
+              size='w-[390px] h-[55px]'
+              disabled={!isEdit}
+            />
+            {isEdit && (
+              <Button
+                type='BUTTON_BASE_TYPE'
+                htmlType='button'
+                size='w-fit h-[40px]'
+                title='수정'
+                onClick={openPasswordChangeModal}
+                font='text-headline2 font-semibold text-purple-50 leading-[16px]'
+                isPurple
+                isfilled={false}
+              />
+            )}
+          </div>
         </div>
         <div className='flex flex-col w-[390px] col-span-2 gap-[8px]'>
           <h3 className='text-headline2 font-semibold text-gray-70'>연락처 1</h3>
@@ -118,6 +144,11 @@ export default function PersonalInfoForm({ isEdit }: PersonalInfoFormProps) {
         isOpen={isIdentificationModalOpen}
         onCancel={closeIdentificationModal}
         onConfirm={confirmIdentification}
+      />
+      <PasswordChangeModal
+        isOpen={isPasswordChangeModalOpen}
+        onCancel={closePasswordChangeModal}
+        onConfirm={confirmPasswordChange}
       />
     </>
   );
