@@ -1,6 +1,8 @@
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
-import { useApiQuery } from '@/hooks/useApi';
-import { UserInfoResponse } from '@/features/user/types/userApi.types';
+import { useApiMutation, useApiQuery } from '@/hooks/useApi';
+import { UserInfoEditRequest, UserInfoResponse } from '@/features/user/types/userApi.types';
+import { ApiResponse } from '@/types/response.types';
+import { useToastStore } from '@/stores/toastStore';
 
 export const useGetPersonalInfo = () => {
   return useApiQuery<UserInfoResponse>({
@@ -15,6 +17,26 @@ export const useGetPersonalInfo = () => {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
+    },
+  });
+};
+
+export const useEditPersonalInfo = () => {
+  const { addToast } = useToastStore();
+
+  return useApiMutation<ApiResponse, UserInfoEditRequest>({
+    method: 'PUT',
+    endpoint: '/teachers/info',
+    fetchOptions: {
+      errorMessage: '개인정보 수정에 실패했습니다.',
+      authorization: true,
+    },
+    invalidateKey: QUERY_KEYS.personalInfo(),
+    onSuccess: () => {
+      addToast({ type: 'success', message: '개인정보가 수정됐어요.' });
+    },
+    onError: (error) => {
+      addToast({ type: 'error', message: error.message || '개인정보 수정에 실패했어요.' });
     },
   });
 };
