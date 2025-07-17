@@ -91,9 +91,10 @@ export const personalInfoFormSchema = z
   .object({
     name: nameSchema,
     nickname: nicknameSchema,
-    password: passwordSchema,
-    passwordConfirm: z.string().min(1, { message: USER_ERROR_MESSAGES.NOT_MATCH_PASSWORD }),
+    password: passwordSchema.optional(),
+    passwordConfirm: z.string().optional(),
     phoneNumber: phoneNumberSchema,
+    isPhoneNumberVerified: z.boolean().optional(),
     emailId: emailIdSchema,
     emailDomain: emailDomainSchema,
   })
