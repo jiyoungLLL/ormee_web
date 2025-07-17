@@ -23,7 +23,7 @@ export default function QuestionStats({ lectureId, searchParams }: QuestionStats
     page: searchParams.page,
   });
 
-  const totalQuestionCount = questionList?.totalCount ?? 0;
+  const totalQuestionCount = questionList?.totalElements ?? 0;
 
   return (
     <div className='flex items-center gap-[33px] text-headline2 font-semibold text-gray-70'>
