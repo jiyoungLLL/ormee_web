@@ -98,12 +98,7 @@ export default function PersonalInfoForm({ isEdit }: PersonalInfoFormProps) {
         <div className='flex flex-col w-[390px] gap-[8px]'>
           <h3 className='text-headline2 font-semibold text-gray-70'>비밀번호</h3>
           <div className='flex justify-start items-end gap-[10px]'>
-            <Input
-              name='password'
-              control={control}
-              size='w-[390px] h-[55px]'
-              disabled={!isEdit}
-            />
+            <div className='flex items-center w-[390px] h-[55px] px-[20px] py-[15px] rounded-[10px] border border-gray-20 bg-gray-10'></div>
             {isEdit && (
               <Button
                 type='BUTTON_BASE_TYPE'
