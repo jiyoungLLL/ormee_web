@@ -27,25 +27,45 @@ export const PHONE_NUMBER_PREFIX = {
   MOBILE_011: '011',
 } as const;
 
-export const phoneNumberSchema = z
+export const phoneNumberPrefixSchema = z
+  .string()
+  .refine((val) => Object.values(PHONE_NUMBER_PREFIX).includes(val as any), {
+    message: USER_ERROR_MESSAGES.INVALID_PHONE_NUMBER,
+  });
+
+export const phoneNumberMiddleSchema = z
   .string()
   .transform((val) => val.trim())
-  .refine((val) => val.length > 0 || val === '', {
+  .refine((val) => val.length > 0, {
     message: USER_ERROR_MESSAGES.EMPTY_PHONE_NUMBER,
   })
-  .refine((val) => val === '' || /^\d+$/.test(val), {
+  .refine((val) => /^\d+$/.test(val), {
     message: USER_ERROR_MESSAGES.INVALID_PHONE_NUMBER_ONLY,
   })
-  .refine((val) => val === '' || val.length === 11, {
-    message: USER_ERROR_MESSAGES.INVALID_PHONE_NUMBER_LENGTH,
+  .refine((val) => val.length === 3 || val.length === 4, {
+    message: '전화번호 가운데 부분은 3자리 또는 4자리로 입력해주세요.',
+  });
+
+export const phoneNumberLastSchema = z
+  .string()
+  .transform((val) => val.trim())
+  .refine((val) => val.length > 0, {
+    message: USER_ERROR_MESSAGES.EMPTY_PHONE_NUMBER,
   })
-  .refine(
-    (val) =>
-      val === '' || val.startsWith(PHONE_NUMBER_PREFIX.MOBILE_010) || val.startsWith(PHONE_NUMBER_PREFIX.MOBILE_011),
-    {
-      message: USER_ERROR_MESSAGES.INVALID_PHONE_NUMBER,
-    },
-  );
+  .refine((val) => /^\d+$/.test(val), {
+    message: USER_ERROR_MESSAGES.INVALID_PHONE_NUMBER_ONLY,
+  })
+  .refine((val) => val.length === 4, {
+    message: '전화번호 마지막 부분은 4자리로 입력해주세요.',
+  });
+
+export const phoneNumberSchema = z
+  .object({
+    prefix: phoneNumberPrefixSchema,
+    middle: phoneNumberMiddleSchema,
+    last: phoneNumberLastSchema,
+  })
+  .transform((data) => `${data.prefix}-${data.middle}-${data.last}`);
 
 export const idSchema = z
   .string()
@@ -96,7 +116,9 @@ export const personalInfoFormSchema = z
     nickname: nicknameSchema,
     password: passwordSchema.optional(),
     passwordConfirm: z.string().optional(),
-    phoneNumber: phoneNumberSchema,
+    phoneNumberPrefix: phoneNumberPrefixSchema,
+    phoneNumberMiddle: phoneNumberMiddleSchema,
+    phoneNumberLast: phoneNumberLastSchema,
     isPhoneNumberVerified: z.boolean().optional(),
     emailId: emailIdSchema,
     emailDomain: emailDomainSchema,

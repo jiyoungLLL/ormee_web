@@ -28,7 +28,9 @@ export default function SignUpPage() {
       id: '',
       password: '',
       passwordConfirm: '',
-      phoneNumber: '',
+      phoneNumberPrefix: '',
+      phoneNumberMiddle: '',
+      phoneNumberLast: '',
       isVerifiedPhoneNumber: false,
       emailId: '',
       emailDomain: '',
@@ -143,7 +145,11 @@ export default function SignUpPage() {
               </div>
               <PhoneNumberInput
                 control={control}
-                name='phoneNumber'
+                name={{
+                  prefixName: 'phoneNumberPrefix',
+                  middleName: 'phoneNumberMiddle',
+                  lastName: 'phoneNumberLast',
+                }}
                 inputSize='w-full h-[50px]'
                 verificationName='isVerifiedPhoneNumber'
                 setValue={setValue}

@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import {
-  phoneNumberSchema,
   passwordSchema,
   nameSchema,
   nicknameSchema,
@@ -8,6 +7,9 @@ import {
   emailDomainSchema,
   USER_ERROR_MESSAGES,
   idSchema,
+  phoneNumberPrefixSchema,
+  phoneNumberMiddleSchema,
+  phoneNumberLastSchema,
 } from '@/features/user/schemas/user.schema';
 
 export const signinSchema = z.object({
@@ -20,7 +22,9 @@ export const signupSchema = z
     id: idSchema,
     password: passwordSchema,
     passwordConfirm: z.string().min(1, { message: USER_ERROR_MESSAGES.NOT_MATCH_PASSWORD }),
-    phoneNumber: phoneNumberSchema,
+    phoneNumberPrefix: phoneNumberPrefixSchema,
+    phoneNumberMiddle: phoneNumberMiddleSchema,
+    phoneNumberLast: phoneNumberLastSchema,
     isVerifiedPhoneNumber: z
       .boolean()
       .refine((val) => val === true, { message: USER_ERROR_MESSAGES.NOT_VERIFIED_PRIMARY_PHONE }),

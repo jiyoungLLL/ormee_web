@@ -22,7 +22,7 @@ export const signupAction = async (formData: SignupFormValues): Promise<ApiRespo
   const submitData = {
     username: formData.id,
     password: formData.password,
-    phoneNumber: formData.phoneNumber,
+    phoneNumber: `${formData.phoneNumberPrefix}-${formData.phoneNumberMiddle}-${formData.phoneNumberLast}`,
     email: formData.emailId + '@' + formData.emailDomain,
     name: formData.name,
     nickname: formData.teacherName,

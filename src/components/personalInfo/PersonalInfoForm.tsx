@@ -104,10 +104,14 @@ export default function PersonalInfoForm({
           </div>
         </div>
         <div className='flex flex-col w-[390px] col-span-2 gap-[8px]'>
-          <h3 className='text-headline2 font-semibold text-gray-70'>연락처 1</h3>
+          <h3 className='text-headline2 font-semibold text-gray-70'>연락처</h3>
           <PhoneNumberInput
             control={control}
-            name='phoneNumber'
+            name={{
+              prefixName: 'phoneNumberPrefix',
+              middleName: 'phoneNumberMiddle',
+              lastName: 'phoneNumberLast',
+            }}
             verificationName='isPhoneNumberVerified'
             setValue={setValue}
             disabled={!isEdit}

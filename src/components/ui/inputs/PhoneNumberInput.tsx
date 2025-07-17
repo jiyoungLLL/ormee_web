@@ -9,7 +9,7 @@ export type PhoneNumberInputProps<T extends FieldValues> = {
   /** useForm에서 사용할 컨트롤러 */
   control: Control<T>;
   /** 전화번호 입력 필드의 이름 */
-  name: Path<T>;
+  name: { prefixName: Path<T>; middleName: Path<T>; lastName: Path<T> };
   /** 인증번호 확인 필드의 이름 */
   verificationName: Path<T>;
   /** 값 세팅을 위한 setValue 함수 */
@@ -36,7 +36,10 @@ export default function PhoneNumberInput<T extends FieldValues>({
 }: PhoneNumberInputProps<T>) {
   const [isSendVertification, setIsSendVertification] = useState(false);
 
-  const watchedValue = useWatch({ control, name });
+  const watchedPrefixValue = useWatch({ control, name: name.prefixName });
+  const watchedMiddleValue = useWatch({ control, name: name.middleName });
+  const watchedLastValue = useWatch({ control, name: name.lastName });
+
   const [verificationCode, setVerificationCode] = useState('');
 
   const watchedVerificationValue = useWatch({
@@ -50,7 +53,11 @@ export default function PhoneNumberInput<T extends FieldValues>({
   const handleVertification = () => {
     if (isVerified) return;
 
-    const isValid = phoneNumberSchema.safeParse(watchedValue);
+    const isValid = phoneNumberSchema.safeParse({
+      prefix: watchedPrefixValue,
+      middle: watchedMiddleValue,
+      last: watchedLastValue,
+    });
 
     if (isValid.error) {
       setValidationError(isValid.error.errors[0].message);
@@ -78,14 +85,32 @@ export default function PhoneNumberInput<T extends FieldValues>({
 
   return (
     <div className='flex flex-col gap-[4px]'>
-      <div className='flex items-center gap-[6px]'>
-        <Input
-          name={name}
-          control={control}
-          size={inputSize || 'w-full h-[50px]'}
-          disabled={disabled || isVerified}
-          testId={testId}
-        />
+      <div className='flex items-center gap-[6px] w-[390px]'>
+        <div className='flex items-center gap-[6px] w-full'>
+          <Input
+            name={name.prefixName}
+            control={control}
+            size={inputSize || 'w-full min-w-[116px] h-[50px]'}
+            disabled={disabled || isVerified}
+            testId={testId}
+          />
+          <span>-</span>
+          <Input
+            name={name.middleName}
+            control={control}
+            size={inputSize || 'w-full min-w-[116px] h-[50px]'}
+            disabled={disabled || isVerified}
+            testId={testId}
+          />
+          <span>-</span>
+          <Input
+            name={name.lastName}
+            control={control}
+            size={inputSize || 'w-full min-w-[116px] h-[50px]'}
+            disabled={disabled || isVerified}
+            testId={testId}
+          />
+        </div>
         {verificationName && (
           <Button
             type='BUTTON_BASE_TYPE'

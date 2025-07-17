@@ -13,12 +13,6 @@ import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 export default function PersonalPage() {
-  const [isEdit, setIsEdit] = useState(false);
-
-  const handleEdit = () => {
-    if (!isEdit) setIsEdit(true);
-  };
-
   const { data: userInfo } = useGetPersonalInfo();
   const methods = useForm<PersonalInfoFormValues>({
     resolver: zodResolver(personalInfoFormSchema),
@@ -34,19 +28,31 @@ export default function PersonalPage() {
     if (!userInfo) return;
 
     const [emailId, emailDomain] = userInfo.email.split('@');
+    const [prefix, middle, last] = userInfo.phoneNumber.split('-');
 
     setValue('name', userInfo.name);
     setValue('nickname', userInfo.nickname);
     setValue('emailId', emailId);
     setValue('emailDomain', emailDomain);
-    setValue('phoneNumber', userInfo.phoneNumber);
+    setValue('phoneNumberPrefix', prefix);
+    setValue('phoneNumberMiddle', middle);
+    setValue('phoneNumberLast', last);
   }, [userInfo, setValue]);
+
+  const [isEdit, setIsEdit] = useState(false);
+
+  const handleEdit = () => {
+    if (!isEdit) {
+      setIsEdit(true);
+      setValue('isPhoneNumberVerified', false);
+    }
+  };
 
   const { mutate: mutatePersonalInfo, isPending: isPendingPersonalInfo } = useEditPersonalInfo();
   const handleSubmitInfo = handleSubmit((data) => {
     mutatePersonalInfo(
       {
-        phoneNumber: data.phoneNumber,
+        phoneNumber: `${data.phoneNumberPrefix}-${data.phoneNumberMiddle}-${data.phoneNumberLast}`,
         email: `${data.emailId}@${data.emailDomain}`,
         name: data.name,
         nickname: data.nickname,
@@ -92,6 +98,7 @@ export default function PersonalPage() {
               isPurple
               isfilled={isEdit}
               onClick={isEdit ? handleSubmitInfo : handleEdit}
+              disabled={isPendingPersonalInfo}
             />
           </div>
           <div className='w-[1018px] h-[706px] px-[30px] py-[20px] rounded-[20px] bg-white'>
