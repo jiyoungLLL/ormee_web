@@ -34,6 +34,7 @@ export default function IdentificationModal({ isOpen, onCancel, onConfirm }: Ide
 
     if (response.status === 'success') {
       onConfirm();
+      reset();
     } else {
       setError('password', { message: response.data });
     }
