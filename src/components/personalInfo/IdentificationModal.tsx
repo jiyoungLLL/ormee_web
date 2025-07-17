@@ -17,7 +17,7 @@ type IdentificationModalProps = {
 export default function IdentificationModal({ isOpen, onCancel, onConfirm }: IdentificationModalProps) {
   const {
     control,
-    getValues,
+    handleSubmit,
     setError,
     formState: { errors },
     reset,
@@ -29,17 +29,15 @@ export default function IdentificationModal({ isOpen, onCancel, onConfirm }: Ide
     },
   });
 
-  const handleConfirm = async () => {
-    const password = getValues('password');
-
-    const response = await passwordCheckAction({ password });
+  const handleConfirm = handleSubmit(async (data) => {
+    const response = await passwordCheckAction(data);
 
     if (response.status === 'success') {
       onConfirm();
     } else {
       setError('password', { message: response.data });
     }
-  };
+  });
 
   const handleCancel = () => {
     reset();
