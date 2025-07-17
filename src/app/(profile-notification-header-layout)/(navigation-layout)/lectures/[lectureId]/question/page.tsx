@@ -1,11 +1,11 @@
 import QuestionContainer from '@/components/question/QuestionContainer';
 import QuestionFilterButton from '@/components/question/QuestionFilterButton';
-import QuestionStats from '@/components/question/QuestionStats';
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { QuestionSearchByType } from '@/features/question/hooks/useQuestionSearchParams';
 import { QuestionListFilterType } from '@/features/question/hooks/useQuestionSearchParams';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { getQuestionListOnServer } from '@/features/question/api/getQuestionListOnServer';
+import QuestionPageButton from '@/components/question/QuestionPageButton';
 
 export default async function QuestionPage({
   params,
@@ -51,12 +51,12 @@ export default async function QuestionPage({
             <QuestionFilterButton type='답변 미등록' />
             <QuestionFilterButton type='답변 등록' />
           </div>
-          <QuestionStats
-            lectureId={lectureId}
-            searchParams={{ filter, page, searchBy, keyword }}
-          />
         </div>
         <QuestionContainer
+          lectureId={lectureId}
+          searchParams={{ filter, page, searchBy, keyword }}
+        />
+        <QuestionPageButton
           lectureId={lectureId}
           searchParams={{ filter, page, searchBy, keyword }}
         />

@@ -15,7 +15,7 @@ type useQuestionSearchParamsReturnType = {
   filter: QuestionListFilterType;
   setFilter: (newFilter: QuestionListFilterType) => void;
   currentPage: number;
-  setCurrentPage: ({ type, maxPage }: { type: QuestionPageButtonType; maxPage: number }) => void;
+  setCurrentPage: (newPage: number) => void;
   setSearchCondition: ({ searchBy, keyword }: { searchBy: QuestionSearchByType; keyword: string }) => void;
 };
 
@@ -57,15 +57,7 @@ export const useQuestionSearchParams = (): useQuestionSearchParamsReturnType => 
     router.push(`?${params.toString()}`);
   };
 
-  const setCurrentPage = ({ type, maxPage }: { type: QuestionPageButtonType; maxPage: number }) => {
-    let newPage = currentPageState;
-
-    if (type === 'prev') {
-      newPage = Math.max(1, newPage - 1);
-    } else {
-      newPage = Math.min(maxPage, newPage + 1);
-    }
-
+  const setCurrentPage = (newPage: number) => {
     setCurrentPageState(newPage);
 
     const params = new URLSearchParams(searchParams.toString());
