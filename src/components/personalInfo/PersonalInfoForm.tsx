@@ -112,7 +112,6 @@ export default function PersonalInfoForm({
             setValue={setValue}
             disabled={!isEdit}
             sendVertificationButtonDisabled={!isEdit}
-            isRequired={false}
           />
         </div>
         <div className='flex flex-col gap-[8px] col-span-2'>
