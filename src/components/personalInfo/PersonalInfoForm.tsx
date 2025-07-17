@@ -22,11 +22,7 @@ export default function PersonalInfoForm({
   openIdentificationModal,
   openPasswordChangeModal,
 }: PersonalInfoFormProps) {
-  const {
-    control,
-    setValue,
-    formState: { errors },
-  } = useFormContext<PersonalInfoFormValues>();
+  const { control, setValue, formState } = useFormContext<PersonalInfoFormValues>();
 
   return (
     <>
@@ -41,7 +37,7 @@ export default function PersonalInfoForm({
                 size='w-[314px] h-[55px]'
                 disabled={!isEdit || !isIdentified}
                 inputStyle={
-                  errors.name
+                  formState.errors.name
                     ? 'bg-white pl-[20px] py-[15px] rounded-[10px] border-[1px] border-system-error focus:outline-none disabled:bg-gray-10'
                     : undefined
                 }
@@ -59,7 +55,9 @@ export default function PersonalInfoForm({
                 />
               )}
             </div>
-            {errors.name && <p className='text-label1 font-normal text-system-error'>{errors.name.message}</p>}
+            {formState.errors.name && (
+              <p className='text-label1 font-normal text-system-error'>{formState.errors.name.message}</p>
+            )}
           </div>
         </div>
         <div className='flex flex-col w-[390px] gap-[8px]'>
@@ -71,12 +69,14 @@ export default function PersonalInfoForm({
               size='w-[390px] h-[55px]'
               disabled={!isEdit}
               inputStyle={
-                errors.nickname
+                formState.errors.nickname
                   ? 'bg-white pl-[20px] py-[15px] rounded-[10px] border-[1px] border-system-error focus:outline-none disabled:bg-gray-10'
                   : undefined
               }
             />
-            {errors.nickname && <p className='text-label1 font-normal text-system-error'>{errors.nickname.message}</p>}
+            {formState.errors.nickname && (
+              <p className='text-label1 font-normal text-system-error'>{formState.errors.nickname.message}</p>
+            )}
           </div>
         </div>
         <div className='flex flex-col w-[390px] gap-[8px]'>
@@ -118,6 +118,7 @@ export default function PersonalInfoForm({
           <h3 className='text-headline2 font-semibold text-gray-70'>이메일</h3>
           <EmailInput
             control={control}
+            formState={formState}
             idName='emailId'
             domainName='emailDomain'
             idDisabled={!isEdit}
