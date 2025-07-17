@@ -60,6 +60,7 @@ export default function IdentificationModal({ isOpen, onCancel, onConfirm }: Ide
         <div className='flex flex-col gap-[4px] mb-[15px]'>
           <Input
             name='password'
+            type='password'
             control={control}
             size='w-full h-[50px]'
             showCharacterCount
