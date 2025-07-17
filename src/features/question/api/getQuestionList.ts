@@ -2,7 +2,8 @@
 
 import { QuestionListFilterType } from '@/features/question/hooks/useQuestionSearchParams';
 import { QuestionSearchByType } from '@/features/question/hooks/useQuestionSearchParams';
-import { validateQuestionListResponse } from './validateQuestionResponse';
+import { fetcher } from '@/utils/api/api';
+import { PaginatedQuestionData } from '@/features/question/types/question.types';
 
 export const getQuestionList = async ({
   lectureId,
@@ -24,14 +25,14 @@ export const getQuestionList = async ({
   if (searchBy) params.append('searchBy', searchBy);
   if (keyword) params.append('keyword', keyword);
 
-  const response = await fetch(`/api/teachers/${lectureId}/questions?${params}`, {
+  const response = await fetcher<PaginatedQuestionData>({
     method: 'GET',
+    endpoint: `/teachers/${lectureId}/questions?${params.toString()}`,
   });
 
-  if (!response.ok) {
-    if (process.env.NODE_ENV === 'development') console.error(response.statusText);
-    throw new Error('질문 목록을 불러오는데 에러가 발생했습니다.');
+  if (response.status === 'fail') {
+    throw new Error(response.data);
   }
 
-  return validateQuestionListResponse(response);
+  return response.data;
 };

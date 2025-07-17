@@ -4,6 +4,7 @@ import { QuestionListFilterType } from '@/features/question/hooks/useQuestionSea
 import { QuestionSearchByType } from '@/features/question/hooks/useQuestionSearchParams';
 import { PaginatedQuestionData } from '@/features/question/types/question.types';
 import { getQuestionList } from '@/features/question/api/getQuestionList';
+import { useApiQuery } from '@/hooks/useApi';
 
 export const useGetQuestionList = ({
   lectureId,
@@ -23,10 +24,10 @@ export const useGetQuestionList = ({
     queryFn: () => getQuestionList({ lectureId, filter, page, searchBy, keyword }),
     enabled: !!lectureId,
     placeholderData: keepPreviousData,
-    staleTime: 1 * 60 * 1000, // 1분
-    gcTime: 5 * 60 * 1000, // 5분,
+    staleTime: 1000 * 60 * 60,
+    gcTime: 1000 * 60 * 60 * 3,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnReconnect: false,
   });
 };
