@@ -1,98 +1,88 @@
 'use client';
 
 import { PersonalInfoFormValues } from '@/features/user/types/user.types';
-import { useGetPersonalInfo } from '@/features/user/usePersonalInfoApi';
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import EmailInput from '@/components/ui/inputs/EmailInput';
 import Input from '@/components/ui/Input';
-import { useModal } from '@/hooks/ui/useModal';
 import Button from '@/components/ui/Button';
-import IdentificationModal from '@/components/personalInfo/IdentificationModal';
-import PasswordChangeModal from '@/components/personalInfo/PasswordChangeModal';
+import PhoneNumberInput from '../ui/inputs/PhoneNumberInput';
 
 type PersonalInfoFormProps = {
   isEdit: boolean;
+  isIdentified: boolean;
+  username: string | undefined;
+  openIdentificationModal: () => void;
+  openPasswordChangeModal: () => void;
 };
 
-export default function PersonalInfoForm({ isEdit }: PersonalInfoFormProps) {
-  const { data: userInfo } = useGetPersonalInfo();
-  const { control, setValue } = useForm<PersonalInfoFormValues>();
-
-  useEffect(() => {
-    if (!userInfo) return;
-
-    const [emailId, emailDomain] = userInfo.email.split('@');
-
-    setValue('name', userInfo.name);
-    setValue('nickname', userInfo.nickname);
-    setValue('emailId', emailId);
-    setValue('emailDomain', emailDomain);
-    setValue('phoneNumber', userInfo.phoneNumber);
-  }, [userInfo]);
-
-  const [isIdentified, setIsIdentified] = useState(false);
+export default function PersonalInfoForm({
+  isEdit,
+  username,
+  isIdentified,
+  openIdentificationModal,
+  openPasswordChangeModal,
+}: PersonalInfoFormProps) {
   const {
-    isOpen: isIdentificationModalOpen,
-    openModal: openIdentificationModal,
-    closeModal: closeIdentificationModal,
-  } = useModal({ defaultOpen: false });
-
-  const confirmIdentification = () => {
-    setIsIdentified(true);
-    closeIdentificationModal();
-  };
-
-  const {
-    isOpen: isPasswordChangeModalOpen,
-    openModal: openPasswordChangeModal,
-    closeModal: closePasswordChangeModal,
-  } = useModal({ defaultOpen: false });
-
-  const confirmPasswordChange = (newPassword: string) => {
-    setValue('password', newPassword);
-    closePasswordChangeModal();
-  };
+    control,
+    setValue,
+    formState: { errors },
+  } = useFormContext<PersonalInfoFormValues>();
 
   return (
     <>
-      <form className='grid grid-cols-2 gap-x-[130px] gap-y-[20px]'>
+      <div className='grid grid-cols-2 gap-x-[130px] gap-y-[20px]'>
         <div className='flex flex-col w-[390px] gap-[8px]'>
           <h3 className='text-headline2 font-semibold text-gray-70'>이름</h3>
-          <div className='flex justify-start items-end gap-[10px]'>
-            <Input
-              name='name'
-              control={control}
-              size='w-[314px] h-[55px]'
-              disabled={!isIdentified}
-            />
-            {isEdit && (
-              <Button
-                type='BUTTON_BASE_TYPE'
-                htmlType='button'
-                size='w-fit h-[40px]'
-                title='수정'
-                onClick={openIdentificationModal}
-                font='text-headline2 font-semibold text-purple-50 leading-[16px]'
-                isPurple
-                isfilled={false}
+          <div className='flex flex-col gap-[4px]'>
+            <div className='flex justify-start items-end gap-[10px]'>
+              <Input
+                name='name'
+                control={control}
+                size='w-[314px] h-[55px]'
+                disabled={!isEdit || !isIdentified}
+                inputStyle={
+                  errors.name
+                    ? 'bg-white pl-[20px] py-[15px] rounded-[10px] border-[1px] border-system-error focus:outline-none disabled:bg-gray-10'
+                    : undefined
+                }
               />
-            )}
+              {isEdit && (
+                <Button
+                  type='BUTTON_BASE_TYPE'
+                  htmlType='button'
+                  size='w-fit h-[40px]'
+                  title='수정'
+                  onClick={openIdentificationModal}
+                  font='text-headline2 font-semibold text-purple-50 leading-[16px]'
+                  isPurple
+                  isfilled={false}
+                />
+              )}
+            </div>
+            {errors.name && <p className='text-label1 font-normal text-system-error'>{errors.name.message}</p>}
           </div>
         </div>
         <div className='flex flex-col w-[390px] gap-[8px]'>
           <h3 className='text-headline2 font-semibold text-gray-70'>강사명</h3>
-          <Input
-            name='nickname'
-            control={control}
-            size='w-[390px] h-[55px]'
-            disabled={!isEdit}
-          />
+          <div className='flex flex-col gap-[4px]'>
+            <Input
+              name='nickname'
+              control={control}
+              size='w-[390px] h-[55px]'
+              disabled={!isEdit}
+              inputStyle={
+                errors.nickname
+                  ? 'bg-white pl-[20px] py-[15px] rounded-[10px] border-[1px] border-system-error focus:outline-none disabled:bg-gray-10'
+                  : undefined
+              }
+            />
+            {errors.nickname && <p className='text-label1 font-normal text-system-error'>{errors.nickname.message}</p>}
+          </div>
         </div>
         <div className='flex flex-col w-[390px] gap-[8px]'>
           <h3 className='text-headline2 font-semibold text-gray-70'>아이디</h3>
           <div className='flex items-center w-[390px] h-[55px] px-[20px] py-[15px] rounded-[10px] border border-gray-20 bg-gray-10'>
-            <p className='text-headline1 font-normal text-label-assistive'>{userInfo?.username}</p>
+            <p className='text-headline1 font-normal text-label-assistive'>{username}</p>
           </div>
         </div>
         <div className='flex flex-col w-[390px] gap-[8px]'>
@@ -115,11 +105,14 @@ export default function PersonalInfoForm({ isEdit }: PersonalInfoFormProps) {
         </div>
         <div className='flex flex-col w-[390px] col-span-2 gap-[8px]'>
           <h3 className='text-headline2 font-semibold text-gray-70'>연락처 1</h3>
-          <Input
-            name='phoneNumber'
+          <PhoneNumberInput
             control={control}
-            size='w-[314px] h-[55px]'
+            name='phoneNumber'
+            verificationName='isPhoneNumberVerified'
+            setValue={setValue}
             disabled={!isEdit}
+            sendVertificationButtonDisabled={!isEdit}
+            isRequired={false}
           />
         </div>
         <div className='flex flex-col gap-[8px] col-span-2'>
@@ -134,17 +127,7 @@ export default function PersonalInfoForm({ isEdit }: PersonalInfoFormProps) {
             domainInputSize='w-[250px] h-[55px]'
           />
         </div>
-      </form>
-      <IdentificationModal
-        isOpen={isIdentificationModalOpen}
-        onCancel={closeIdentificationModal}
-        onConfirm={confirmIdentification}
-      />
-      <PasswordChangeModal
-        isOpen={isPasswordChangeModalOpen}
-        onCancel={closePasswordChangeModal}
-        onConfirm={confirmPasswordChange}
-      />
+      </div>
     </>
   );
 }
