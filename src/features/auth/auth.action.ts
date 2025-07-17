@@ -7,6 +7,7 @@ import {
   SignupFormValues,
 } from '@/features/auth/auth.types';
 import { ApiResponse } from '@/types/response.types';
+import { fetcher } from '@/utils/api/api';
 import { cookies } from 'next/headers';
 
 export const signupAction = async (formData: SignupFormValues): Promise<ApiResponse> => {
@@ -145,31 +146,21 @@ export const passwordCheckAction = async (formData: PasswordCheckFormValues): Pr
     };
   }
 
-  const response = await fetch(`${process.env.API_BASE_URL}/teachers/password`, {
+  const response = await fetcher<string>({
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(formData),
-    redirect: 'follow',
-    credentials: 'include',
+    endpoint: '/teachers/password',
+    body: formData,
+    errorMessage: '비밀번호 확인에 실패했어요.',
+    authorization: true,
+    contentType: 'application/json',
   });
 
-  const json = await response.json();
-
-  if (!response.ok) {
-    if (process.env.NODE_ENV === 'development') console.error('비밀번호 확인 실패: ', json);
-
-    return {
-      status: 'fail',
-      code: response.status,
-      data: json.data || '비밀번호 확인에 실패했어요.',
-    };
-  }
+  const { status, code, data } = response;
 
   return {
-    status: json.status,
-    code: json.code,
+    status,
+    code,
+    data,
   };
 };
 
@@ -187,30 +178,20 @@ export const passwordChangeAction = async (formData: PasswordChangeFormValues): 
     newPassword: formData.newPassword,
   };
 
-  const response = await fetch(`${process.env.API_BASE_URL}/teachers/password`, {
+  const response = await fetcher<string>({
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(submitData),
-    redirect: 'follow',
-    credentials: 'include',
+    endpoint: '/teachers/password',
+    body: submitData,
+    errorMessage: '비밀번호 변경에 실패했어요.',
+    authorization: true,
+    contentType: 'application/json',
   });
 
-  const json = await response.json();
-
-  if (!response.ok) {
-    if (process.env.NODE_ENV === 'development') console.error('비밀번호 변경 실패: ', json);
-
-    return {
-      status: 'fail',
-      code: response.status,
-      data: json.data || '비밀번호 변경에 실패했어요.',
-    };
-  }
+  const { status, code, data } = response;
 
   return {
-    status: json.status,
-    code: json.code,
+    status,
+    code,
+    data,
   };
 };
