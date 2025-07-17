@@ -85,7 +85,10 @@ export const nicknameSchema = z
   });
 
 export const emailIdSchema = z.string().min(1, { message: USER_ERROR_MESSAGES.INVALID_EMAIL });
-export const emailDomainSchema = z.string().min(1, { message: USER_ERROR_MESSAGES.INVALID_EMAIL });
+export const emailDomainSchema = z
+  .string()
+  .min(1, { message: USER_ERROR_MESSAGES.INVALID_EMAIL })
+  .regex(/^([a-zA-Z0-9-]+\.)+(com|net)$/, { message: USER_ERROR_MESSAGES.INVALID_EMAIL });
 
 export const personalInfoFormSchema = z
   .object({
