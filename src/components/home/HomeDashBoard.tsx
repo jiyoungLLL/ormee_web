@@ -1,5 +1,6 @@
 'use client';
 
+import { useGetHome } from '@/features/home/hooks/useGetHome';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -34,6 +35,8 @@ const renderMiniDash = (lectureNum: string) => {
 
 export default function HomeDashBoard() {
   const lectureNum = useLectureId();
+  const { data } = useGetHome(lectureNum);
+  const homeDashData = data?.lecture;
 
   const handleCopy = () => {
     // 강의코드 데이터 변경 필요

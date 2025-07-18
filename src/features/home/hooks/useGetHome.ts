@@ -1,13 +1,10 @@
 'use client';
 
-import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
-import { useLectureId } from '@/hooks/queries/useLectureId';
-import { useApiQuery } from '@/hooks/useApi';
 import { HomeResponse } from '@/features/home/home.types';
+import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
+import { useApiQuery } from '@/hooks/useApi';
 
-export const useGetHome = () => {
-  const lectureId = useLectureId();
-
+export const useGetHome = (lectureId: string) => {
   return useApiQuery<HomeResponse>({
     queryKey: QUERY_KEYS.home(lectureId),
     fetchOptions: {

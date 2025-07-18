@@ -1,3 +1,4 @@
+import { useGetHome } from '@/features/home/hooks/useGetHome';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { MOCK_HOME_CONTENTS } from '@/mock/home';
 import Image from 'next/image';
@@ -9,6 +10,7 @@ export default function RenderContents({ category }: { category: string }) {
   const emptyStyle = isEmpty ? 'justify-center items-center' : '';
   const emptyComment = category === '질문' ? '아직 올라온 질문이 없어요.' : '작성한 공지가 없어요.';
   const lectureNum = useLectureId();
+  const { data: homeData } = useGetHome(lectureNum);
 
   return (
     <div className='w-full flex flex-col gap-[10px]'>
