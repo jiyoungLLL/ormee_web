@@ -34,13 +34,7 @@ export default function NoticeList() {
 
   const unpinnedData = totalData?.content?.filter((notice) => !pinnedIds.includes(notice.id)) ?? [];
 
-  const totalUnpinnedCount = (totalData?.totalElements ?? 0) - (pinnedData?.length ?? 0);
-  const pageSize = 15;
-  const startNo = totalUnpinnedCount - (page - 1) * pageSize;
-
   useEffect(() => {
-    if (!searchParams) return;
-
     const paramPage = searchParams.get('page');
     if (!paramPage) {
       const params = new URLSearchParams(searchParams.toString());
@@ -92,6 +86,10 @@ export default function NoticeList() {
           </Link>
         ))}
       {unpinnedData?.map((notice, index) => {
+        const totalUnpinnedCount = (totalData?.totalElements ?? 0) - (pinnedData?.length ?? 0);
+        const pageSize = 15;
+        const startNo = totalUnpinnedCount - (page - 1) * pageSize;
+
         const no = startNo - index;
 
         return (
