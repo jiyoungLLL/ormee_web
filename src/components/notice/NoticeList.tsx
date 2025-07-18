@@ -20,13 +20,15 @@ export default function NoticeList() {
   const totalData = keyword ? searchNoticeData.data : getNoticesData.data;
   const { data: originalPinnedData, isLoading } = useGetPinnedNotices(lectureId);
 
-  if (!totalData || isLoading) return;
-
   const pinnedIds = originalPinnedData?.map((notice) => notice.id) ?? [];
 
   const searchPinnedData = totalData?.content?.filter((notice) => notice.isPinned === true) ?? [];
 
   const pinnedData = keyword ? searchPinnedData : originalPinnedData;
+
+  const totalUnpinnedCount = (totalData?.totalElements ?? 0) - (pinnedData?.length ?? 0);
+  const pageSize = 15;
+  const startNo = totalUnpinnedCount - (page - 1) * pageSize;
 
   const isSearchMode = !!keyword;
   const hasPinnedInSearch = isSearchMode && (pinnedData?.length ?? 0) > 0;
@@ -42,6 +44,8 @@ export default function NoticeList() {
       router.replace(`?${params.toString()}`);
     }
   }, [searchParams, router]);
+
+  if (!totalData || isLoading) return;
 
   // list title
   const titleList: [string, string][] = [
@@ -86,10 +90,6 @@ export default function NoticeList() {
           </Link>
         ))}
       {unpinnedData?.map((notice, index) => {
-        const totalUnpinnedCount = (totalData?.totalElements ?? 0) - (pinnedData?.length ?? 0);
-        const pageSize = 15;
-        const startNo = totalUnpinnedCount - (page - 1) * pageSize;
-
         const no = startNo - index;
 
         return (
