@@ -50,6 +50,10 @@ export const useGetNotices = (lectureId: string, page?: number) => {
       endpoint: `/teachers/${lectureId}/notices?page=${page}`,
       authorization: true,
     },
+
+    queryOptions: {
+      enabled: !!lectureId,
+    },
   });
 };
 
@@ -59,6 +63,9 @@ export const useGetPinnedNotices = (lectureId: string) => {
     fetchOptions: {
       endpoint: `/teachers/${lectureId}/notices/pinned`,
       authorization: true,
+    },
+    queryOptions: {
+      enabled: !!lectureId,
     },
   });
 };

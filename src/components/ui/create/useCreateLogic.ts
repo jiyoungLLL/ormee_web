@@ -36,7 +36,6 @@ export function useCreateLogic({
       return;
     }
 
-    // 검증된 데이터 타입 좁히기
     const validData = result.data;
 
     try {
@@ -62,7 +61,6 @@ export function useCreateLogic({
           openTime: new Date().toISOString(),
           dueTime: homeworkData?.dueTime ? new Date(homeworkData.dueTime).toISOString() : '',
         };
-
         if (isModify) {
           homeworkUpdateMutation.mutate(homeworkPayload);
           router.push(`${redirectUrl}/detail?id=${contentId}`);
