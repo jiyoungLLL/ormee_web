@@ -25,7 +25,7 @@ export const writeBoxSchemaBase = z.object({
 
 export const homeworkSchema = writeBoxSchemaBase
   .extend({
-    dueTime: z.string().nonempty('마감일을 입력해주세요.'),
+    dueTime: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     if (!data.isDraft) {
@@ -41,6 +41,13 @@ export const homeworkSchema = writeBoxSchemaBase
           code: z.ZodIssueCode.custom,
           path: ['description'],
           message: WRITE_ERROR_MESSAGES.EMPTY_CONTENTS,
+        });
+      }
+      if (!data.dueTime || data.dueTime.trim() === '') {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['dueTime'],
+          message: '마감일을 입력해주세요.',
         });
       }
     }
