@@ -39,6 +39,8 @@ export default function NoticeList() {
   const startNo = totalUnpinnedCount - (page - 1) * pageSize;
 
   useEffect(() => {
+    if (!searchParams) return;
+
     const paramPage = searchParams.get('page');
     if (!paramPage) {
       const params = new URLSearchParams(searchParams.toString());
