@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { classListResponseSchema } from '@/features/class/class.schema';
+
 export type ClassTypes = {
   id: string;
   code: number;
@@ -15,3 +18,5 @@ export type ClassTypes = {
   activeQuizCount: number;
   messageAvailable: boolean;
 };
+
+export type ClassListResponse = z.infer<typeof classListResponseSchema>;

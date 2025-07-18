@@ -27,3 +27,26 @@ export const classSchema = z.object({
 });
 
 export type ClassModalValues = z.infer<typeof classSchema>;
+
+export const classResponseSchema = z.object({
+  id: z.string(),
+  code: z.number(),
+  profileImage: z.string(),
+  name: z.string(),
+  title: z.string(),
+  description: z.string().nullable(),
+  lectureDays: z.array(z.string()),
+  startTime: z.string(),
+  endTime: z.string(),
+  startDate: z.string(),
+  dueDate: z.string(),
+  students: z.number(),
+  quizList: z.array(z.string()),
+  activeQuizCount: z.number(),
+  messageAvailable: z.boolean(),
+});
+
+export const classListResponseSchema = z.object({
+  openLectures: z.array(classResponseSchema),
+  closedLectures: z.array(classResponseSchema),
+});
