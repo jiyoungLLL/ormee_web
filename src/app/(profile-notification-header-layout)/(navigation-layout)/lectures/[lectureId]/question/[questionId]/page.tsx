@@ -34,7 +34,7 @@ export default function QuestionDetailPage({
         />
         <h1 className='text-title3 font-bold'>질문</h1>
       </Link>
-      <div className='flex flex-col gap-[40px] w-full h-full px-[30px] py-[20px] bg-white rounded-[20px]'>
+      <div className='flex flex-col gap-[40px] w-full h-full px-[30px] py-[20px] bg-white rounded-[20px] mb-[250px]'>
         <QuestionDetail />
         <AnswerContainer />
         <AnswerSubmitForm />

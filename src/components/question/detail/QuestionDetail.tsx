@@ -12,7 +12,7 @@ export default function QuestionDetail() {
   if (isLoading)
     return (
       <div className='w-full h-full flex justify-center items-center text-heading2 font-semibold text-gray-70'>
-        Loading...
+        질문을 불러오고 있어요...
       </div>
     );
 
@@ -26,7 +26,7 @@ export default function QuestionDetail() {
   const formattedCreatedAt = data ? formatDatetimeWithAMPM(data.createdAt) : '';
 
   return (
-    <article className='flex flex-col gap-[20px] w-full h-full'>
+    <article className='flex flex-col gap-[20px] w-full h-full]'>
       <div className='flex flex-col gap-[10px]'>
         <div className='flex justify-between items-center'>
           <h2 className='text-heading2 font-semibold'>{data?.title}</h2>
@@ -34,7 +34,6 @@ export default function QuestionDetail() {
         </div>
         <span className='text-headline2 font-semibold text-gray-60 mb-[20px]'>{data?.author}</span>
       </div>
-      <div className='w-full h-[1px] bg-gray-30' />
       <div className='w-full text-body1-reading'>
         <p>{data?.content}</p>
       </div>
