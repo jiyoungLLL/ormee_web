@@ -1,18 +1,9 @@
 import { http, HttpResponse } from 'msw';
-import { MOCK_NOTIFICATION_LIST_BULK } from './notification';
 import { QUIZ_ATTACHMENT_MAP, QUIZ_DB, QUIZ_DETAIL_MAP } from './quiz';
 import { MOCK_ANSWER, MOCK_PAGINATED_QUESTION_RESPONSE } from './question';
 import { QuizCreateRequestSchema, QuizDraftRequestSchema } from '@/features/quiz/schemas/quiz.schema';
 
 export const handlers = [
-  http.get('/api/teacher/notification/', () => {
-    return HttpResponse.json(MOCK_NOTIFICATION_LIST_BULK, {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  }),
   http.get('/api/teachers/:lectureId/quizzes/', () => {
     const quizList = Object.entries(QUIZ_DB)
       .filter(([_, quiz]) => !quiz.isDraft)
