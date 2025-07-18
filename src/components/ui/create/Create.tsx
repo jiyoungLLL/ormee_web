@@ -1,158 +1,116 @@
 'use client';
 
-import Button from '@/components/ui/Button';
 import CreateContents from '@/components/ui/create/CreateContents';
-import type { Assignment } from '@/features/homework/homework.types';
-import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
+import CreateHeader from '@/components/ui/create/CreateHeader';
+import { useCreateLogic } from '@/components/ui/create/useCreateLogic';
+import { useGetDraftHomeworks, useGetHomeworksDetail } from '@/features/homework/hooks/queries/useHomeworkApi';
+import { useGetDraftNotice, useGetNoticeDetails } from '@/features/notice/useNoticeApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
-import { useApiMutation } from '@/hooks/useApi';
-import { MOCK_HOMEWORK } from '@/mock/homework';
-import { WriteBoxFormValues, writeBoxSchema } from '@/schemas/writeBox.schema';
-import { useToastStore } from '@/stores/toastStore';
+import { HomeworkFormValues, homeworkSchema, NoticeFormValues, noticeSchema } from '@/schemas/writeBox.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Image from 'next/image';
-import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import Draft from '../draftModal/Draft';
 
 type CreateProps = {
-  type: 'notice' | 'homework';
+  type: 'HOMEWORK' | 'NOTICE';
   params: string;
 };
 
+type ModalType = 'LOAD' | 'DRAFT' | null;
+
 export default function Create({ type, params }: CreateProps) {
-  const { addToast } = useToastStore();
-  const lectureNum = useLectureId();
+  const schema = type === 'HOMEWORK' ? homeworkSchema : noticeSchema;
+  const lectureId = useLectureId() ?? '';
   const searchParams = useSearchParams();
-  const homeworkId = type === 'homework' && searchParams.get('id');
-  const filter = searchParams.get('filter');
-  const isModify = !!filter;
+  const rawId = type === 'HOMEWORK' || type === 'NOTICE' ? searchParams.get('id') : null;
+  const contentId = rawId && typeof rawId === 'string' ? rawId : undefined;
 
-  const title = type === 'notice' ? '공지' : '숙제';
+  const [modalType, setModalType] = useState<ModalType>(null);
+  const openLoadModal = () => setModalType('LOAD');
+  const openDraftModal = () => setModalType('DRAFT');
+  const closeModal = () => setModalType(null);
 
-  const dataFilter = filter === 'ongoing' ? 'openedAssignments' : 'closedAssignments';
-
-  const preData: Assignment | undefined = homeworkId
-    ? MOCK_HOMEWORK.data[dataFilter].find((item) => item.id === Number(homeworkId))
-    : undefined;
-
-  const normalizedFiles = preData?.filePaths
-    ? typeof preData.filePaths === 'string'
-      ? [preData.filePaths]
-      : preData.filePaths
-    : [];
-
-  const defaultValues = useMemo(
-    () => ({
-      title: preData?.title || '',
-      description: preData?.description || '',
-      files: normalizedFiles,
-      isDraft: false,
-      openTime: new Date().toString(),
-      dueTime: preData?.dueTime || '',
-    }),
-    [preData],
-  );
-
-  const methods = useForm<WriteBoxFormValues>({
-    resolver: zodResolver(writeBoxSchema),
+  const methods = useForm<HomeworkFormValues | NoticeFormValues>({
+    resolver: zodResolver(schema),
     mode: 'onSubmit',
-    defaultValues,
+    defaultValues:
+      type === 'HOMEWORK'
+        ? {
+            title: '',
+            description: '',
+            dueTime: '',
+            files: [],
+            isDraft: false,
+          }
+        : {
+            title: '',
+            description: '',
+            files: [],
+            isDraft: false,
+          },
+  });
+  const { setValue, watch } = methods;
+
+  const { isModify, onSubmit } = useCreateLogic({
+    type,
+    lectureId,
+    contentId,
+    getIsDraft: () => watch('isDraft'),
   });
 
-  const method = homeworkId ? 'PUT' : 'POST';
-  const endpoint = homeworkId ? `/teachers/${lectureNum}/assignments` : `/teachers/assignments/${lectureNum}`;
-  const invalidateKeys = homeworkId
-    ? [QUERY_KEYS.homeworkDetail(homeworkId), QUERY_KEYS.homeworkList(lectureNum)]
-    : [QUERY_KEYS.homeworkList(lectureNum)];
+  // 상세 불러오기
+  const { data: preData } = useGetHomeworksDetail(contentId || '');
+  const { data: noticeData } = useGetNoticeDetails(contentId || '');
 
-  const mutation = useApiMutation<unknown, FormData>({
-    method,
-    endpoint,
-    fetchOptions: {
-      authorization: true,
-      contentType: 'multipart/form-data',
-    },
-    onSuccess: () => {
-      addToast({ message: `${title}가 ${homeworkId ? '수정' : '생성'}되었어요.`, type: 'success', duration: 2500 });
-    },
-    invalidateKey: invalidateKeys,
-    onError: (error: Error) => {
-      addToast({
-        message: `${title}가 ${homeworkId ? '수정' : '생성'}되지 않았어요. 다시 시도해주세요.`,
-        type: 'error',
-        duration: 2500,
-      });
-      if (process.env.NODE_ENV === 'development') console.error(error);
-    },
-  });
-
-  const onSubmit = (data: WriteBoxFormValues) => {
-    const formData = new FormData();
-    formData.append('title', data.title);
-    formData.append('description', data.description);
-    formData.append('isDraft', String(data.isDraft));
-    formData.append('openTime', data.openTime);
-    formData.append('dueTime', data.dueTime);
-
-    if (data.files) {
-      if (Array.isArray(data.files)) {
-        data.files.forEach((file) => {
-          formData.append('files', file);
-        });
-      } else {
-        formData.append('files', data.files);
-      }
+  useEffect(() => {
+    if (type === 'HOMEWORK' && preData) {
+      setValue('title', preData.title || '');
+      setValue('description', preData.description || '');
+      setValue('isDraft', false);
+      setValue('dueTime', preData.dueTime ? new Date(preData.dueTime).toISOString().slice(0, 16) : '');
     }
 
-    mutation.mutate(formData);
+    if (type === 'NOTICE' && noticeData) {
+      setValue('title', noticeData.title || '');
+      setValue('description', noticeData.description || '');
+      setValue('isDraft', false);
+    }
+  }, [preData, noticeData, setValue, type]);
+
+  // 임시저장 개수 (숙제/공지 각각 다르게)
+  const { data: draftHomework } = useGetDraftHomeworks(lectureId);
+  const { data: draftNotice } = useGetDraftNotice(lectureId);
+  const draftNum = type === 'HOMEWORK' ? draftHomework?.length.toString() : draftNotice?.length.toString();
+
+  const handleDraftSubmit = () => {
+    setValue('isDraft', true);
+    methods.handleSubmit(onSubmit)();
   };
 
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <div className='w-full h-[50px] flex justify-between items-center'>
-          <Link
-            href={
-              isModify && type === 'homework'
-                ? `/lectures/${params}/${type}/detail?filter=${filter}&id=${homeworkId}`
-                : `/lectures/${params}/${type}`
-            }
-            className='w-[136px] px-[5px] text-title3 font-bold flex items-center gap-[15px]'
-          >
-            <Image
-              src='/assets/icons/left_arrow.png'
-              width={24}
-              height={24}
-              alt='이전으로'
-            />
-            {title} {isModify ? '수정' : '작성'}
-          </Link>
-          <div className='flex gap-[10px]'>
-            <Button
-              type='BUTTON_BASE_TYPE'
-              size='w-[117px] h-[50px]'
-              font='text-headline1 font-semibold'
-              title='임시저장'
-              isPurple={false}
-              htmlType='button'
-            />
-            <Button
-              type='BUTTON_BASE_TYPE'
-              size='w-[102px] h-[50px]'
-              font='text-headline1 font-semibold'
-              title='등록하기'
-              isPurple={true}
-              isfilled={true}
-            />
-          </div>
-        </div>
-        <CreateContents
-          type={title}
-          files={defaultValues.files}
+        <CreateHeader
+          isModify={isModify}
+          type={type}
+          draftNum={draftNum}
+          contentId={contentId}
+          lectureId={params}
+          onClickLoad={openLoadModal}
+          onClickDraft={openDraftModal}
         />
+        <CreateContents type={type === 'HOMEWORK' ? '숙제' : '공지'} />
       </form>
+      {modalType === 'DRAFT' && (
+        <Draft
+          type={type}
+          isOpen={true}
+          closeModal={closeModal}
+          onSaveDraft={handleDraftSubmit}
+        />
+      )}
     </FormProvider>
   );
 }

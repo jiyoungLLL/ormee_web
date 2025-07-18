@@ -16,13 +16,19 @@ export default meta;
 type Story = StoryObj<typeof PhoneNumberInput>;
 
 type PhoneFormValues = {
-  phoneNumber: string;
+  phoneNumberPrefix: string;
+  phoneNumberMiddle: string;
+  phoneNumberLast: string;
   verification: boolean;
 };
 
 type PhoneNumberInputProps<T extends FieldValues> = {
   control: Control<T>;
-  name: Path<T>;
+  name: {
+    prefixName: Path<T>;
+    middleName: Path<T>;
+    lastName: Path<T>;
+  };
   verificationName: Path<T>;
   setValue?: (name: keyof T, value: any) => void;
   inputSize?: string;
@@ -34,7 +40,9 @@ type PhoneNumberInputProps<T extends FieldValues> = {
 const PhoneNumberInputWrapper = (props: Partial<PhoneNumberInputProps<PhoneFormValues>>) => {
   const { control, setValue } = useForm<PhoneFormValues>({
     defaultValues: {
-      phoneNumber: props.number || '',
+      phoneNumberPrefix: props.number || '',
+      phoneNumberMiddle: props.number || '',
+      phoneNumberLast: props.number || '',
       verification: props.isVerified || false,
     },
   });
@@ -43,7 +51,11 @@ const PhoneNumberInputWrapper = (props: Partial<PhoneNumberInputProps<PhoneFormV
     <div className='w-[550px]'>
       <PhoneNumberInput<PhoneFormValues>
         control={control}
-        name='phoneNumber'
+        name={{
+          prefixName: 'phoneNumberPrefix',
+          middleName: 'phoneNumberMiddle',
+          lastName: 'phoneNumberLast',
+        }}
         verificationName='verification'
         setValue={setValue}
         {...props}
@@ -56,7 +68,9 @@ const PhoneNumberInputWrapper = (props: Partial<PhoneNumberInputProps<PhoneFormV
 const PhoneNumberInputWithSendState = () => {
   const { control, setValue } = useForm<PhoneFormValues>({
     defaultValues: {
-      phoneNumber: '',
+      phoneNumberPrefix: '',
+      phoneNumberMiddle: '',
+      phoneNumberLast: '',
       verification: false,
     },
   });
@@ -73,7 +87,11 @@ const PhoneNumberInputWithSendState = () => {
     <div className='w-[550px]'>
       <PhoneNumberInput<PhoneFormValues>
         control={control}
-        name='phoneNumber'
+        name={{
+          prefixName: 'phoneNumberPrefix',
+          middleName: 'phoneNumberMiddle',
+          lastName: 'phoneNumberLast',
+        }}
         verificationName='verification'
         setValue={setValue}
         testId='phone-number-input'

@@ -4,21 +4,40 @@ import Button from '@/components/ui/Button';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import SearchInput from '../ui/SearchInput';
 
 export default function NoticeTitle() {
-  const { control, handleSubmit } = useForm({
+  const lectureId = useLectureId();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const keyword = searchParams.get('search') ?? '';
+
+  const { control, watch, reset } = useForm({
     defaultValues: {
       search: '',
     },
   });
 
-  const onSubmit = (data: { search: string }) => {
-    // 검색 로직 실행
-  };
+  useEffect(() => {
+    reset({ search: keyword });
+  }, [keyword]);
 
-  const lectureNum = useLectureId();
+  const searchValue = watch('search');
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const newParams = new URLSearchParams();
+      if (searchValue) newParams.set('search', searchValue);
+      newParams.set('page', '1');
+
+      router.replace(`?${newParams.toString()}`);
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [searchValue]);
 
   return (
     <>
@@ -33,19 +52,16 @@ export default function NoticeTitle() {
         공지
       </div>
       <div className='flex justify-between'>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className='relative top-[20px]'
-        >
+        <div className='relative top-[20px]'>
           <SearchInput
             name='search'
             control={control}
             size='w-[350px] h-[43px]'
             placeholder='검색'
           />
-        </form>
+        </div>
         <Link
-          href={`/lectures/${lectureNum}/notice/create`}
+          href={`/lectures/${lectureId}/notice/create`}
           className='relative top-[14px]'
         >
           <Button

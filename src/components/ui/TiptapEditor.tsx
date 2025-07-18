@@ -78,7 +78,7 @@ export default function TiptapEditor({ type, contents, onChange, value }: TipTap
 
     if (isVisuallyEmpty(html)) {
       editorDOM.setAttribute('data-placeholder-visible', 'true');
-      editorDOM.setAttribute('data-placeholder', `${type} 내용을 입력하세요`);
+      editorDOM.setAttribute('data-placeholder', `${type} 내용을 입력해 주세요.`);
     } else {
       editorDOM.removeAttribute('data-placeholder-visible');
       editorDOM.removeAttribute('data-placeholder');
@@ -87,7 +87,17 @@ export default function TiptapEditor({ type, contents, onChange, value }: TipTap
 
   return (
     <div className='flex flex-col gap-[12px]'>
-      <Toolbar editor={editor} />
+      <Toolbar
+        editor={editor}
+        enableList={false}
+        enableImage={true}
+        imageUploadConfig={{
+          strategy: 'UPLOAD_AT_SUBMIT',
+          onImageUpload: (file, previewUrl) => {
+            editor?.chain().focus().setImage({ src: previewUrl }).run();
+          },
+        }}
+      />
       <div className='rounded-[10px]'>
         <EditorContent
           editor={editor}

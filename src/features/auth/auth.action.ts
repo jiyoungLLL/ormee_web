@@ -1,7 +1,13 @@
 'use server';
 
-import { SigninFormValues, SignupFormValues } from '@/features/auth/auth.schema';
+import {
+  PasswordChangeFormValues,
+  PasswordCheckFormValues,
+  SigninFormValues,
+  SignupFormValues,
+} from '@/features/auth/auth.types';
 import { ApiResponse } from '@/types/response.types';
+import { fetcher } from '@/utils/api/api';
 import { cookies } from 'next/headers';
 
 export const signupAction = async (formData: SignupFormValues): Promise<ApiResponse> => {
@@ -16,7 +22,7 @@ export const signupAction = async (formData: SignupFormValues): Promise<ApiRespo
   const submitData = {
     username: formData.id,
     password: formData.password,
-    phoneNumber: formData.phoneNumber,
+    phoneNumber: `${formData.phoneNumberPrefix}-${formData.phoneNumberMiddle}-${formData.phoneNumberLast}`,
     email: formData.emailId + '@' + formData.emailDomain,
     name: formData.name,
     nickname: formData.teacherName,
@@ -155,4 +161,63 @@ export const signinAction = async (formData: SigninFormValues, autoSignin: boole
 export const signoutAction = () => {
   cookies().delete('accessToken');
   cookies().delete('refreshToken');
+};
+
+export const passwordCheckAction = async (formData: PasswordCheckFormValues): Promise<ApiResponse> => {
+  if (!process.env.API_BASE_URL) {
+    return {
+      status: 'fail',
+      code: 404,
+      data: '잘못된 API 접근입니다.',
+    };
+  }
+
+  const response = await fetcher<string>({
+    method: 'POST',
+    endpoint: '/teachers/password',
+    body: formData,
+    errorMessage: '비밀번호 확인에 실패했어요.',
+    authorization: true,
+    contentType: 'application/json',
+  });
+
+  const { status, code, data } = response;
+
+  return {
+    status,
+    code,
+    data,
+  };
+};
+
+export const passwordChangeAction = async (formData: PasswordChangeFormValues): Promise<ApiResponse> => {
+  if (!process.env.API_BASE_URL) {
+    return {
+      status: 'fail',
+      code: 404,
+      data: '잘못된 API 접근입니다.',
+    };
+  }
+
+  const submitData = {
+    password: formData.password,
+    newPassword: formData.newPassword,
+  };
+
+  const response = await fetcher<string>({
+    method: 'PUT',
+    endpoint: '/teachers/password',
+    body: submitData,
+    errorMessage: '비밀번호 변경에 실패했어요.',
+    authorization: true,
+    contentType: 'application/json',
+  });
+
+  const { status, code, data } = response;
+
+  return {
+    status,
+    code,
+    data,
+  };
 };
