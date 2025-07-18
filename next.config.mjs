@@ -8,6 +8,7 @@ const nextConfig = {
       },
       // 피드백 임시 이미지
       { hostname: 'static.cdn.soomgo.com' },
+      { hostname: 'img.freepik.com' },
     ],
   },
   webpack: (config) => {

@@ -10,10 +10,10 @@ type NotificationBadgeProps = {
 };
 
 const NOTIFICATION_BADGE_COLOR: Record<NotificationType, BadgeProps['color']> = {
-  assignment: 'blue',
+  homework: 'blue',
   quiz: 'orange',
   question: 'purple',
-  memo: 'green',
+  note: 'green',
 } as const;
 
 export default function NotificationBadge({ type, read }: NotificationBadgeProps) {

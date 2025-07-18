@@ -3,6 +3,7 @@
 import { useGetNotifications } from '@/features/notification/hooks/useGetNotifications';
 import { NOTIFICATION_TYPE_LABEL } from '@/features/notification/notification.constants';
 import { NotificationFilterType } from '@/features/notification/notification.types';
+import { useLectureId } from '@/hooks/queries/useLectureId';
 
 type NotificationFilterButtonProps = {
   /** 현재 버튼의 필터 타입 */
@@ -14,16 +15,17 @@ type NotificationFilterButtonProps = {
 };
 
 export default function NotificationFilterButton({ type, currentType, onClick }: NotificationFilterButtonProps) {
-  const { data: notifications = [] } = useGetNotifications();
+  const lectureId = useLectureId();
+  const { data: notifications = [] } = useGetNotifications({ lectureId, filter: type });
 
   const isSelected = type === currentType;
 
   const hasNewNotification = notifications.some((notification) => {
     if (type === 'total') {
-      return !notification.read;
+      return !notification.isRead;
     }
 
-    return notification.type === type && !notification.read;
+    return notification.type === type && !notification.isRead;
   });
 
   return (
