@@ -1,6 +1,6 @@
-import { Control, useWatch, Path } from 'react-hook-form';
+import { Control, useWatch, Path, FormState } from 'react-hook-form';
 import Input from '@/components/ui/Input';
-import { phoneNumberSchema } from '@/features/auth/auth.schema';
+import { phoneNumberSchema } from '@/features/user/schemas/user.schema';
 import { useState } from 'react';
 import Button from '../Button';
 import { FieldValues } from 'react-hook-form';
@@ -9,13 +9,17 @@ export type PhoneNumberInputProps<T extends FieldValues> = {
   /** useForm에서 사용할 컨트롤러 */
   control: Control<T>;
   /** 전화번호 입력 필드의 이름 */
-  name: Path<T>;
+  name: { prefixName: Path<T>; middleName: Path<T>; lastName: Path<T> };
   /** 인증번호 확인 필드의 이름 */
   verificationName: Path<T>;
   /** 값 세팅을 위한 setValue 함수 */
   setValue?: (name: keyof T, value: any) => void;
   /** 전화번호 입력 필드의 크기 */
   inputSize?: string;
+  /** 전화번호 입력 필드 비활성화 여부 */
+  disabled?: boolean;
+  /** 인증번호 발송 버튼 비활성화 여부 */
+  sendVertificationButtonDisabled?: boolean;
   /** 전화번호 입력 필드의 테스트용 아이디 */
   testId?: string;
 };
@@ -26,11 +30,16 @@ export default function PhoneNumberInput<T extends FieldValues>({
   inputSize,
   verificationName,
   setValue,
+  disabled,
+  sendVertificationButtonDisabled,
   testId,
 }: PhoneNumberInputProps<T>) {
   const [isSendVertification, setIsSendVertification] = useState(false);
 
-  const watchedValue = useWatch({ control, name });
+  const watchedPrefixValue = useWatch({ control, name: name.prefixName });
+  const watchedMiddleValue = useWatch({ control, name: name.middleName });
+  const watchedLastValue = useWatch({ control, name: name.lastName });
+
   const [verificationCode, setVerificationCode] = useState('');
 
   const watchedVerificationValue = useWatch({
@@ -39,16 +48,24 @@ export default function PhoneNumberInput<T extends FieldValues>({
   });
 
   const isVerified = Boolean(watchedVerificationValue);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const handleVertification = () => {
-    console.log(watchedValue);
     if (isVerified) return;
 
-    const isValid = phoneNumberSchema.safeParse(watchedValue);
+    const isValid = phoneNumberSchema.safeParse({
+      prefix: watchedPrefixValue,
+      middle: watchedMiddleValue,
+      last: watchedLastValue,
+    });
 
     if (isValid.error) {
-      alert(isValid.error.errors[0].message);
+      setValidationError(isValid.error.errors[0].message);
       return;
+    }
+
+    if (isValid.success) {
+      setValidationError(null);
     }
 
     // TODO: 인증번호 발송 로직 추가
@@ -60,20 +77,40 @@ export default function PhoneNumberInput<T extends FieldValues>({
     // if(인증 성공하면)
     if (!verificationName || !setValue) return;
 
+    setValidationError(null);
+
     setValue(verificationName, true);
     setIsSendVertification(false);
   };
 
   return (
-    <div>
-      <div className='flex items-center gap-[6px]'>
-        <Input
-          name={name}
-          control={control}
-          size={inputSize || 'w-full h-[50px]'}
-          disabled={isVerified}
-          testId={testId}
-        />
+    <div className='flex flex-col gap-[4px]'>
+      <div className='flex items-center gap-[6px] w-[390px]'>
+        <div className='flex items-center gap-[6px] w-full'>
+          <Input
+            name={name.prefixName}
+            control={control}
+            size={inputSize || 'w-full min-w-[116px] h-[50px]'}
+            disabled={disabled || isVerified}
+            testId={testId}
+          />
+          <span>-</span>
+          <Input
+            name={name.middleName}
+            control={control}
+            size={inputSize || 'w-full min-w-[116px] h-[50px]'}
+            disabled={disabled || isVerified}
+            testId={testId}
+          />
+          <span>-</span>
+          <Input
+            name={name.lastName}
+            control={control}
+            size={inputSize || 'w-full min-w-[116px] h-[50px]'}
+            disabled={disabled || isVerified}
+            testId={testId}
+          />
+        </div>
         {verificationName && (
           <Button
             type='BUTTON_BASE_TYPE'
@@ -84,7 +121,7 @@ export default function PhoneNumberInput<T extends FieldValues>({
             title={isVerified ? '인증 완료' : '인증번호 받기'}
             htmlType='button'
             onClick={handleVertification}
-            // TODO: isVerified 여부에 따라 disabled 처리
+            disabled={sendVertificationButtonDisabled || isVerified}
           />
         )}
       </div>
@@ -108,6 +145,7 @@ export default function PhoneNumberInput<T extends FieldValues>({
           />
         </div>
       )}
+      {validationError && <p className='text-label1 font-normal text-system-error'>{validationError}</p>}
     </div>
   );
 }

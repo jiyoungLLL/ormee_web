@@ -3,6 +3,7 @@ import { QuestionListFilterType, QuestionSearchByType } from '../../features/que
 
 export const QUERY_KEYS = {
   profile: () => ['profile'],
+  personalInfo: () => ['personalInfo'],
   notification: (lectureId: string, filter: NotificationFilterType) => ['notification', lectureId, filter],
   quizDetail: (quizId: string) => ['quizDetail', quizId],
   quizList: (lectureId: string) => ['quizList', lectureId],
