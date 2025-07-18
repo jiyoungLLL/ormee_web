@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
+import { useState } from 'react';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 
 export type InputProps<T extends FieldValues> = {
@@ -65,7 +65,6 @@ export default function Input<T extends FieldValues>({
 
   const handleInputChange = (field: any, maxLength?: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
-
     if (maxLength && value.length > maxLength) {
       value = value.slice(0, maxLength);
     }
