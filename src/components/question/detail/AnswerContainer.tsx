@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetAnswer } from '@/features/question/hooks/queries/useAnswer';
+import { useGetAnswer } from '@/features/question/hooks/queries/useAnswerApi';
 import { useParams } from 'next/navigation';
 import AnswerItem from '@/components/question/detail/AnswerItem';
 

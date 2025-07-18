@@ -1,7 +1,7 @@
 'use client';
 
 import Dropdown from '@/components/ui/dropdown/Dropdown';
-import { useDeleteAnswer } from '@/features/question/hooks/queries/useAnswer';
+import { useDeleteAnswer } from '@/features/question/hooks/queries/useAnswerApi';
 import { Answer } from '@/features/question/types/answer.types';
 import { useDropdown } from '@/hooks/ui/useDropdown';
 import { formatDatetimeWithoutTime } from '@/utils/date/formatDate';

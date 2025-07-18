@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import AnswerInput from '@/components/question/detail/AnswerInput';
 import AnswerImagePreview from '@/components/question/detail/AnswerImagePreview';
-import { usePostAnswer } from '@/features/question/hooks/queries/useAnswer';
+import { usePostAnswer } from '@/features/question/hooks/queries/useAnswerApi';
 import { useParams } from 'next/navigation';
 
 export default function AnswerSubmitForm() {
