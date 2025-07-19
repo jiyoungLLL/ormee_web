@@ -79,7 +79,7 @@ export const signinAction = async (formData: SigninFormValues, autoSignin: boole
 
     return {
       status: 'fail',
-      code: response.status,
+      code: json.code,
       data: json.data || '로그인에 실패했어요.',
     };
   }
@@ -137,12 +137,12 @@ export const signinAction = async (formData: SigninFormValues, autoSignin: boole
   //   },
   //   body: JSON.stringify({
   //     password: 'secureLecture0',
-  //     title: '영어 듣기',
+  //     title: '테스트 강의',
   //     lectureDays: ['월', '수'],
   //     startTime: '15:30:00',
   //     endTime: '17:00:00',
-  //     startDate: '2024-06-03T00:00:00',
-  //     dueDate: '2024-08-29T23:59:59',
+  //     startDate: '2025-07-19T00:00:00',
+  //     dueDate: '2025-08-29T23:59:59',
   //   }),
   // });
 

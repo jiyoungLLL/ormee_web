@@ -18,6 +18,7 @@ export default function SignInPage() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [autoSignin, setAutoSignin] = useState(false);
+  const [passwordErrorCount, setPasswordErrorCount] = useState(0);
 
   const { addToast } = useToastStore();
   const searchParams = useSearchParams();
@@ -40,8 +41,12 @@ export default function SignInPage() {
       if (response.status === 'success') {
         const directPath = searchParams.get('redirect') || '/';
         router.push(directPath);
+      } else if (response.code === 403) {
+        const currentCount = passwordErrorCount + 1;
+        setPasswordErrorCount(currentCount);
+
+        addToast({ message: `로그인 정보를 다시 확인해 주세요. (잠금까지 ${5 - currentCount}회 남음)`, type: 'error' });
       } else {
-        // TODO: 비밀번호 오류 카운트 처리
         addToast({ message: response.data || '로그인에 실패했어요.', type: 'error' });
       }
     } catch (error: any) {
