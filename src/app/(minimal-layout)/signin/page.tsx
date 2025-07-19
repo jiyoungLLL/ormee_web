@@ -13,12 +13,14 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { FieldErrors, useForm } from 'react-hook-form';
 
+type PasswordError = { id: string; count: number };
+
 export default function SignInPage() {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
   const [autoSignin, setAutoSignin] = useState(false);
-  const [passwordErrorCount, setPasswordErrorCount] = useState(0);
+  const [passwordError, setPasswordError] = useState<PasswordError>({ id: '', count: 0 });
 
   const { addToast } = useToastStore();
   const searchParams = useSearchParams();
@@ -42,8 +44,8 @@ export default function SignInPage() {
         const directPath = searchParams.get('redirect') || '/';
         router.push(directPath);
       } else if (response.code === 403) {
-        const currentCount = passwordErrorCount + 1;
-        setPasswordErrorCount(currentCount);
+        const currentCount = passwordError.id === data.id ? passwordError.count + 1 : 1;
+        setPasswordError({ id: data.id, count: currentCount });
 
         addToast({ message: `로그인 정보를 다시 확인해 주세요. (잠금까지 ${5 - currentCount}회 남음)`, type: 'error' });
       } else {
