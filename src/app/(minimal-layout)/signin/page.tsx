@@ -5,7 +5,8 @@ import Button from '@/components/ui/Button';
 import Checkbox from '@/components/ui/checkbox/Checkbox';
 import Input from '@/components/ui/Input';
 import { signinAction } from '@/features/auth/auth.action';
-import { SigninFormValues, signinSchema } from '@/features/auth/auth.schema';
+import { signinSchema } from '@/features/auth/auth.schema';
+import { SigninFormValues } from '@/features/auth/auth.types';
 import { useModal } from '@/hooks/ui/useModal';
 import { useToastStore } from '@/stores/toastStore';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -75,10 +76,6 @@ export default function SignInPage() {
     }
   };
 
-  const alertPreparingFeature = () => {
-    addToast({ message: '준비중인 기능입니다.', type: 'error' });
-  };
-
   return (
     <>
       <div className='flex flex-col justify-center items-center gap-[50px] w-[400px] mb-[30px] h-fit select-none'>
@@ -145,8 +142,7 @@ export default function SignInPage() {
       </div>
       <AccountRecoveryModal
         isOpen={isOpen}
-        onConfirm={closeModal}
-        onCancel={closeModal}
+        closeModal={closeModal}
       />
     </>
   );
