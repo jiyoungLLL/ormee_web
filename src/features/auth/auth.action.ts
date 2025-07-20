@@ -1,9 +1,10 @@
 'use server';
 
-import { SigninFormValues, SignupFormValues } from '@/features/auth/auth.schema';
+import { AccountRecoveryFormValues, SigninFormValues, SignupFormValues } from '@/features/auth/auth.types';
 import { ApiResponse } from '@/types/response.types';
 import { cookies } from 'next/headers';
 
+// 회원가입
 export const signupAction = async (formData: SignupFormValues): Promise<ApiResponse> => {
   if (!process.env.API_BASE_URL) {
     return {
@@ -49,6 +50,7 @@ export const signupAction = async (formData: SignupFormValues): Promise<ApiRespo
   };
 };
 
+// 로그인
 export const signinAction = async (formData: SigninFormValues, autoSignin: boolean): Promise<ApiResponse> => {
   if (!process.env.API_BASE_URL) {
     return {
@@ -152,7 +154,45 @@ export const signinAction = async (formData: SigninFormValues, autoSignin: boole
   };
 };
 
+// 로그아웃
 export const signoutAction = () => {
   cookies().delete('accessToken');
   cookies().delete('refreshToken');
+};
+
+// 아이디 찾기
+export const recoveryIdAction = async (formData: AccountRecoveryFormValues): Promise<ApiResponse<string>> => {
+  if (!process.env.API_BASE_URL) {
+    return {
+      status: 'fail',
+      code: 404,
+      data: '잘못된 API 접근입니다.',
+    };
+  }
+
+  const response = await fetch(`${process.env.API_BASE_URL}/members/username`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(formData),
+  });
+
+  const json = await response.json();
+
+  if (!response.ok) {
+    if (process.env.NODE_ENV === 'development') console.error('아이디 찾기 실패: ', json);
+
+    return {
+      status: 'fail',
+      code: json.code,
+      data: json.data || '아이디 찾기에 실패했어요.',
+    };
+  }
+
+  return {
+    status: 'success',
+    code: json.code,
+    data: json.data,
+  };
 };
