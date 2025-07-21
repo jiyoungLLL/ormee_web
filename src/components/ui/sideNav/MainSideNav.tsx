@@ -17,7 +17,6 @@ export default function MainSideNav() {
 
   const [isOpen, setIsOpen] = useState(false);
   const { data: lectureRawData } = useGetClass();
-  console.log(lectureRawData);
   const [lectureData, setLectureData] = useState<ClassItems | undefined>(undefined);
 
   useEffect(() => {
@@ -100,12 +99,13 @@ export default function MainSideNav() {
               {isOpen && (
                 <div className='absolute z-10 w-[250px] h-auto top-[38px] left-[30px] py-[6px] px-[4px] gap-[5px] rounded-[5px] bg-white shadow-[0px_0px_7px_0px_rgba(70, 72, 84, 0.1)]'>
                   {lectureRawData?.openLectures.map((lectures) => (
-                    <div
+                    <Link
+                      href={`/lectures/${lectures.id}/home`}
                       key={`${lectures.id}-${lectures.title}`}
                       className='text-headline2 w-[242px] h-[40px] py-[5px] px-[10px] font-gray-90 font-normal flex items-center'
                     >
                       {lectures.title}
-                    </div>
+                    </Link>
                   ))}
                 </div>
               )}
