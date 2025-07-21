@@ -1,15 +1,13 @@
 'use client';
 
-import { HomeSlideProps } from '@/types/home.types';
+import { homeResponseSchema } from '@/features/home/home.schema';
+import { format } from 'date-fns';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
+import { z } from 'zod';
 import ScrollButton from './ScrollButton';
 
-type HomSlideData = {
-  data: HomeSlideProps[];
-};
-
-export default function HomeSlide({ data }: HomSlideData) {
+export default function HomeSlide({ data }: { data: z.infer<typeof homeResponseSchema>['assignments'] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeft, setShowLeft] = useState(false);
   const [showRight, setShowRight] = useState(true);
@@ -43,6 +41,16 @@ export default function HomeSlide({ data }: HomSlideData) {
     };
   }, []);
 
+  const handleTimeFormat = (time: string | undefined) => {
+    if (!time) return;
+
+    return format(new Date(time), 'yyyy.MM.dd');
+  };
+
+  const stripHtmlTags = (title: string) => {
+    return title.replace(/<[^>]*>/g, '').trim();
+  };
+
   return (
     <div className='relative w-full group'>
       <div className='overflow-hidden'>
@@ -52,10 +60,10 @@ export default function HomeSlide({ data }: HomSlideData) {
         >
           {data?.map((item, index) => {
             const boxStyle =
-              item.cate === '퀴즈'
+              item.type === '퀴즈'
                 ? 'bg-accent-redOrange-5 text-accent-redOrange-20'
                 : 'bg-accent-blue-5 text-accent-blue-20';
-            const commonStyle = 'h-[20px] flex gap-[10px] text-body2';
+            const commonStyle = 'h-[20px] flex gap-[10px] text-body2-normal';
 
             return (
               <div
@@ -66,9 +74,9 @@ export default function HomeSlide({ data }: HomSlideData) {
                   <div
                     className={`w-[44px] h-[24px] rounded-[5px] px-[10px] py-[3px] text-label font-semibold ${boxStyle}`}
                   >
-                    {item.cate}
+                    {item.type}
                   </div>
-                  <div className='text-headline1 font-semibold'>{item.title}</div>
+                  <div className='text-headline1 font-semibold'>{stripHtmlTags(item.title)}</div>
                 </div>
                 <div className='flex flex-col gap-[6px]'>
                   <div className={commonStyle}>
@@ -78,7 +86,7 @@ export default function HomeSlide({ data }: HomSlideData) {
                       height={20}
                       alt='학생 아이콘'
                     />
-                    {item.student}
+                    {`${item.submitStudents} / ${item.totalStudents}`}
                   </div>
                   <div className={commonStyle}>
                     <Image
@@ -87,7 +95,7 @@ export default function HomeSlide({ data }: HomSlideData) {
                       height={20}
                       alt='달력 아이콘'
                     />
-                    {item.date}
+                    {`${handleTimeFormat(item.openTime)} - ${handleTimeFormat(item.dueTime)}`}
                   </div>
                 </div>
               </div>
