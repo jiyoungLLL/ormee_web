@@ -13,23 +13,20 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof OpenNote>;
 
-const handleEvent = () => {
-  alert('쪽지 마감!!!');
-};
-
 export const Default: Story = {
   args: {
-    noteKey: '10/29',
     title: '10/29 쪽지',
     date: '2024.10.29 15:00',
-    onClick: handleEvent,
+    totalCount: 20,
+    submitCount: 10,
   },
 };
 
 export const NoContents: Story = {
   args: {
-    noteKey: 'nothing',
     title: '',
     date: '',
+    totalCount: 20,
+    submitCount: 10,
   },
 };

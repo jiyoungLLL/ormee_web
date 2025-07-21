@@ -16,22 +16,28 @@ const MOCK_FEEDBACK = {
   code: 200,
   data: [
     {
-      name: '홍길동',
-      content: '안녕하세요 3주차 과제 제출합니다! 이번주 과제는 좀 어렵네요..',
-      filePaths: [],
-      createdAt: '2025-05-25T01:01:08.045806',
+      homeworkSubmitId: 1,
+      studentName: '김학생',
+      isSubmitted: null,
+      isChecked: null,
+      isFeedback: false,
+      createdAt: '2025-06-12T14:16:36.094638',
     },
     {
-      name: '홍길금',
-      content: null,
-      filePaths: [],
-      createdAt: '2025-05-25T01:01:08.045806',
+      homeworkSubmitId: 2,
+      studentName: '이학생',
+      isSubmitted: null,
+      isChecked: null,
+      isFeedback: true,
+      createdAt: '2025-06-12T14:16:36.094638',
     },
     {
-      name: '홍길은',
-      content: null,
-      filePaths: [],
-      createdAt: '2025-05-25T01:01:08.045806',
+      homeworkSubmitId: 3,
+      studentName: '박학생',
+      isSubmitted: null,
+      isChecked: null,
+      isFeedback: false,
+      createdAt: '2025-06-12T14:16:36.094638',
     },
   ],
 };
@@ -59,6 +65,8 @@ export default function HomeworkFeedback() {
     const params = new URLSearchParams(searchParams.toString());
     params.set('filter', selected);
   }, [selected]);
+
+  const handleStudentClick = () => {};
 
   return (
     <div className=''>
@@ -90,30 +98,33 @@ export default function HomeworkFeedback() {
               iconPosition='right'
             />
           </form>
-          <button className='flex flex-col text-start '>
+          <div className='flex flex-col'>
             {MOCK_FEEDBACK.data.map((data) => {
+              if (data.studentName === '') return;
+
               return (
-                <div
-                  key={`${data.name}-${data.createdAt}`}
-                  className={`text-headline1 px-[12px] py-[10px] rounded-[10px] bg-white`}
+                <button
+                  key={`${data.studentName}-${data.createdAt}`}
+                  className={`text-start text-headline1 px-[12px] py-[10px] rounded-[10px] bg-white`}
+                  onClick={handleStudentClick}
                 >
-                  {data.name}
-                </div>
+                  {data.studentName}
+                </button>
               );
             })}
-          </button>
+          </div>
         </div>
         {/* 우측: 제출 상세 */}
         <div className='w-[715px] h-[726px] rounded-[10px] pt-[30px] pb-[20px] px-[30px] bg-gray-10 flex flex-col gap-[20px]'>
           <div className='flex flex-col gap-[17px] w-fill overflow-y-auto '>
             <div className='flex gap-[17px] items-center'>
-              <span className='text-headline1 font-semibold'>{MOCK_FEEDBACK.data[0].name}</span>
+              <span className='text-headline1 font-semibold'>{MOCK_FEEDBACK.data[0].studentName}</span>
               <div className='flex gap-[5px] text-body2-normal text-gray-70'>
                 <span>{format(MOCK_FEEDBACK.data[0].createdAt, 'yyyy.MM.dd')}</span>
                 <span>{format(MOCK_FEEDBACK.data[0].createdAt, 'a h:mm')}</span>
               </div>
             </div>
-            <div className='text-body1-reading'>{MOCK_FEEDBACK.data[0].content}</div>
+            <div className='text-body1-reading'>content 자리</div>
             <div className='flex justify-center'>
               <Image
                 src='https://static.cdn.soomgo.com/upload/portfolio/3fb583d6-6e4b-4495-893b-af8224ababbd.jpg?webp=1'

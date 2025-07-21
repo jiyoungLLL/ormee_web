@@ -1,6 +1,6 @@
 import type { StorybookConfig } from '@storybook/nextjs';
-import path from 'path';
 import dotenv from 'dotenv';
+import path from 'path';
 
 const storybookEnv = dotenv.config({ path: '.env.storybook' }).parsed || {};
 
@@ -25,7 +25,7 @@ const config: StorybookConfig = {
     if (config.resolve) {
       config.resolve.alias = {
         ...config.resolve.alias,
-        '@': path.resolve(__dirname, '../src'),
+        '@': path.resolve(process.cwd(), 'src'),
       };
     }
     return config;
