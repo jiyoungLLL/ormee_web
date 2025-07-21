@@ -16,14 +16,11 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { FieldErrors, useForm } from 'react-hook-form';
 
-type PasswordError = { id: string; count: number };
-
 export default function SignInPage() {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
   const [autoSignin, setAutoSignin] = useState(false);
-  const [passwordError, setPasswordError] = useState<PasswordError>({ id: '', count: 0 });
 
   const { isOpen, openModal, closeModal } = useModal({ defaultOpen: false });
 
@@ -49,10 +46,7 @@ export default function SignInPage() {
         const directPath = searchParams.get('redirect') || '/';
         router.push(directPath);
       } else if (response.code === 403) {
-        const currentCount = passwordError.id === data.id ? passwordError.count + 1 : 1;
-        setPasswordError({ id: data.id, count: currentCount });
-
-        addToast({ message: `로그인 정보를 다시 확인해 주세요. (잠금까지 ${5 - currentCount}회 남음)`, type: 'error' });
+        addToast({ message: response.data, type: 'error' });
       } else {
         addToast({ message: response.data || '로그인에 실패했어요.', type: 'error' });
       }
