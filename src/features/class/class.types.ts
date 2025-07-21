@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { classListResponseSchema } from '@/features/class/class.schema';
+
 export type ClassItems = {
   id: string;
   code?: number;
@@ -21,3 +24,5 @@ export type GetClassResponse = {
   openLectures: ClassItems[];
   closedLectures: ClassItems[];
 };
+
+export type ClassListResponse = z.infer<typeof classListResponseSchema>;

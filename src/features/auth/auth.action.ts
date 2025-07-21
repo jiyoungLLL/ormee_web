@@ -55,7 +55,7 @@ export const signupAction = async (formData: SignupFormValues): Promise<ApiRespo
   };
 };
 
-export const signinAction = async (formData: SigninFormValues): Promise<ApiResponse> => {
+export const signinAction = async (formData: SigninFormValues, autoSignin: boolean): Promise<ApiResponse> => {
   if (!process.env.API_BASE_URL) {
     return {
       status: 'fail',
@@ -92,20 +92,46 @@ export const signinAction = async (formData: SigninFormValues): Promise<ApiRespo
 
   const { accessToken, refreshToken } = json.data;
 
-  cookies().set('accessToken', accessToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-    path: '/',
-    maxAge: 60 * 60 * 1,
-  });
+  if (autoSignin) {
+    cookies().set('accessToken', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+      maxAge: 60 * 60 * 1,
+    });
 
-  cookies().set('refreshToken', refreshToken, {
+    cookies().set('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 30,
+    });
+  } else {
+    cookies().set('accessToken', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+      maxAge: 60 * 60 * 1,
+    });
+
+    cookies().set('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+      maxAge: 60 * 60 * 24,
+    });
+  }
+
+  cookies().set('autoSignin', autoSignin.toString(), {
     httpOnly: true,
     secure: true,
     sameSite: 'none',
     path: '/',
-    maxAge: 60 * 60 * 24 * 7,
+    maxAge: 60 * 60 * 24 * 30,
   });
 
   // // NOTE: DB 초기화됐을 때 강의 생성용
