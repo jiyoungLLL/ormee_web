@@ -12,6 +12,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import Draft from '../draftModal/Draft';
+import LoadModal from '../loadModal/LoadModal';
 
 type CreateProps = {
   type: 'HOMEWORK' | 'NOTICE';
@@ -103,6 +104,14 @@ export default function Create({ type, params }: CreateProps) {
         />
         <CreateContents type={type === 'HOMEWORK' ? '숙제' : '공지'} />
       </form>
+      {modalType === 'LOAD' && (
+        <LoadModal
+          type={type === 'HOMEWORK' ? '숙제' : '공지'}
+          isOpen={true}
+          onCancel={closeModal}
+          onConfirm={closeModal}
+        />
+      )}
       {modalType === 'DRAFT' && (
         <Draft
           type={type}

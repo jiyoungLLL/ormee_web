@@ -45,7 +45,7 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
 
   useEffect(() => {
     if (filter && lectureId) {
-      const lectureData = classList?.[filter]?.find((item) => item.id === lectureId);
+      const lectureData = classList?.[filter]?.find((item) => item.id.toString() === lectureId);
       if (lectureData) {
         setData(lectureData);
       }
