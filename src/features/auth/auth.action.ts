@@ -1,7 +1,13 @@
 'use server';
 
-import { SigninFormValues, SignupFormValues } from '@/features/auth/auth.schema';
+import {
+  PasswordChangeFormValues,
+  PasswordCheckFormValues,
+  SigninFormValues,
+  SignupFormValues,
+} from '@/features/auth/auth.types';
 import { ApiResponse } from '@/types/response.types';
+import { fetcher } from '@/utils/api/api';
 import { cookies } from 'next/headers';
 
 export const signupAction = async (formData: SignupFormValues): Promise<ApiResponse> => {
@@ -16,7 +22,7 @@ export const signupAction = async (formData: SignupFormValues): Promise<ApiRespo
   const submitData = {
     username: formData.id,
     password: formData.password,
-    phoneNumber: formData.phoneNumber,
+    phoneNumber: `${formData.phoneNumberPrefix}-${formData.phoneNumberMiddle}-${formData.phoneNumberLast}`,
     email: formData.emailId + '@' + formData.emailDomain,
     name: formData.name,
     nickname: formData.teacherName,
@@ -49,7 +55,7 @@ export const signupAction = async (formData: SignupFormValues): Promise<ApiRespo
   };
 };
 
-export const signinAction = async (formData: SigninFormValues): Promise<ApiResponse> => {
+export const signinAction = async (formData: SigninFormValues, autoSignin: boolean): Promise<ApiResponse> => {
   if (!process.env.API_BASE_URL) {
     return {
       status: 'fail',
@@ -86,20 +92,46 @@ export const signinAction = async (formData: SigninFormValues): Promise<ApiRespo
 
   const { accessToken, refreshToken } = json.data;
 
-  cookies().set('accessToken', accessToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-    path: '/',
-    maxAge: 60 * 60 * 1,
-  });
+  if (autoSignin) {
+    cookies().set('accessToken', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+      maxAge: 60 * 60 * 1,
+    });
 
-  cookies().set('refreshToken', refreshToken, {
+    cookies().set('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 30,
+    });
+  } else {
+    cookies().set('accessToken', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+      maxAge: 60 * 60 * 1,
+    });
+
+    cookies().set('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+      maxAge: 60 * 60 * 24,
+    });
+  }
+
+  cookies().set('autoSignin', autoSignin.toString(), {
     httpOnly: true,
     secure: true,
     sameSite: 'none',
     path: '/',
-    maxAge: 60 * 60 * 24 * 7,
+    maxAge: 60 * 60 * 24 * 30,
   });
 
   // // NOTE: DB 초기화됐을 때 강의 생성용
@@ -129,4 +161,63 @@ export const signinAction = async (formData: SigninFormValues): Promise<ApiRespo
 export const signoutAction = () => {
   cookies().delete('accessToken');
   cookies().delete('refreshToken');
+};
+
+export const passwordCheckAction = async (formData: PasswordCheckFormValues): Promise<ApiResponse> => {
+  if (!process.env.API_BASE_URL) {
+    return {
+      status: 'fail',
+      code: 404,
+      data: '잘못된 API 접근입니다.',
+    };
+  }
+
+  const response = await fetcher<string>({
+    method: 'POST',
+    endpoint: '/teachers/password',
+    body: formData,
+    errorMessage: '비밀번호 확인에 실패했어요.',
+    authorization: true,
+    contentType: 'application/json',
+  });
+
+  const { status, code, data } = response;
+
+  return {
+    status,
+    code,
+    data,
+  };
+};
+
+export const passwordChangeAction = async (formData: PasswordChangeFormValues): Promise<ApiResponse> => {
+  if (!process.env.API_BASE_URL) {
+    return {
+      status: 'fail',
+      code: 404,
+      data: '잘못된 API 접근입니다.',
+    };
+  }
+
+  const submitData = {
+    password: formData.password,
+    newPassword: formData.newPassword,
+  };
+
+  const response = await fetcher<string>({
+    method: 'PUT',
+    endpoint: '/teachers/password',
+    body: submitData,
+    errorMessage: '비밀번호 변경에 실패했어요.',
+    authorization: true,
+    contentType: 'application/json',
+  });
+
+  const { status, code, data } = response;
+
+  return {
+    status,
+    code,
+    data,
+  };
 };

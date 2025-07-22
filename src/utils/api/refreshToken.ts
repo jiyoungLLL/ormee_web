@@ -73,21 +73,40 @@ export const refreshAccessToken = async (): Promise<ApiResponse> => {
       };
     }
 
-    cookies().set('accessToken', newAccessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-      path: '/',
-      maxAge: 1000 * 60 * 60, // 1시간
-    });
+    const autoSigninCookie = cookies().get('autoSignin');
+    const isAutoSignin = autoSigninCookie?.value === 'true';
 
-    if (newRefreshToken) {
+    if (isAutoSignin) {
+      cookies().set('accessToken', newAccessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        path: '/',
+        maxAge: 60 * 60 * 1,
+      });
+
       cookies().set('refreshToken', newRefreshToken, {
         httpOnly: true,
         secure: true,
         sameSite: 'none',
         path: '/',
-        maxAge: 60 * 60 * 24 * 30, // 30일
+        maxAge: 60 * 60 * 24 * 30,
+      });
+    } else {
+      cookies().set('accessToken', newAccessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        path: '/',
+        maxAge: 60 * 60 * 1,
+      });
+
+      cookies().set('refreshToken', newRefreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        path: '/',
+        maxAge: 60 * 60 * 24,
       });
     }
 

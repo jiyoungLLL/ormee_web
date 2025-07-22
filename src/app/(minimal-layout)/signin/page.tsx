@@ -1,9 +1,11 @@
 'use client';
 
 import Button from '@/components/ui/Button';
+import Checkbox from '@/components/ui/checkbox/Checkbox';
 import Input from '@/components/ui/Input';
 import { signinAction } from '@/features/auth/auth.action';
-import { SigninFormValues, signinSchema } from '@/features/auth/auth.schema';
+import { signinSchema } from '@/features/auth/auth.schema';
+import { SigninFormValues } from '@/features/auth/auth.types';
 import { useToastStore } from '@/stores/toastStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
@@ -14,7 +16,10 @@ import { FieldErrors, useForm } from 'react-hook-form';
 
 export default function SignInPage() {
   const router = useRouter();
+
   const [isLoading, setIsLoading] = useState(false);
+  const [autoSignin, setAutoSignin] = useState(false);
+
   const { addToast } = useToastStore();
   const searchParams = useSearchParams();
 
@@ -31,10 +36,10 @@ export default function SignInPage() {
     setIsLoading(true);
 
     try {
-      const response = await signinAction(data);
+      const response = await signinAction(data, autoSignin);
 
       if (response.status === 'success') {
-        const directPath = searchParams.get('redirect') || '/lectures/1/home'; // TODO: 기본 강의 홈으로 이동
+        const directPath = searchParams.get('redirect') || '/';
         router.push(directPath);
       } else {
         // TODO: 비밀번호 오류 카운트 처리
@@ -46,6 +51,10 @@ export default function SignInPage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleAuthSignin = (id: string, isChecked: boolean) => {
+    setAutoSignin((prev) => !prev);
   };
 
   const handleSignInError = (errors: FieldErrors<SigninFormValues>) => {
@@ -70,10 +79,10 @@ export default function SignInPage() {
           width={160}
           height={29.79}
         />
-        <h1 className='text-gray-70 text-heading2 font-semibold'>하나로 끝내는 수업 관리의 새로운 기준</h1>
+        <h1 className='text-gray-70 text-heading2 font-semibold'>강사의 시간을 절반으로, 통합 수업 관리 솔루션</h1>
       </div>
       <form onSubmit={handleSubmit(handleSignIn, handleSignInError)}>
-        <div className='flex flex-col justify-center items-center w-[400px] gap-[12px] mb-[50px]'>
+        <div className='flex flex-col justify-center items-center w-[400px] gap-[12px] mb-[16px]'>
           <Input
             name='id'
             control={control}
@@ -89,6 +98,15 @@ export default function SignInPage() {
             type='password'
             showPasswordToggle
           />
+        </div>
+        <div className='flex flex-row justify-start items-center gap-[8px] mb-[50px]'>
+          <Checkbox
+            id='autoSignin'
+            checked={autoSignin}
+            checkItemHandler={handleAuthSignin}
+            size='w-[20px] h-[20px]'
+          />
+          <span className='text-headline2 text-[#000] font-normal'>자동 로그인</span>
         </div>
         <div className='flex flex-col justify-center items-center gap-[30px]'>
           <Button
