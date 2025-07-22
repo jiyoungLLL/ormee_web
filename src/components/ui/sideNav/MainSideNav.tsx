@@ -20,7 +20,7 @@ export default function MainSideNav() {
   const [lectureData, setLectureData] = useState<ClassItems | undefined>(undefined);
 
   useEffect(() => {
-    const lectureData = lectureRawData?.openLectures.find((lecture) => lecture.id == lectureId);
+    const lectureData = lectureRawData?.openLectures.find((lecture) => lecture.id.toString() === lectureId);
     setLectureData(lectureData);
   }, [lectureRawData, lectureNum, lectureId]);
 
