@@ -51,6 +51,16 @@ export default function HomeSlide({ data }: { data: z.infer<typeof homeResponseS
     return title.replace(/<[^>]*>/g, '').trim();
   };
 
+  if (data.length === 0) {
+    return (
+      <div
+        className={`w-full h-[140px] rounded-[20px] px-[30px] py-[20px] flex flex-col gap-[10px] bg-white justify-center items-center`}
+      >
+        <div className='text-heading2 font-semibold text-[rgb(181_182_188)]'>진행 중인 과제가 없어요.</div>
+      </div>
+    );
+  }
+
   return (
     <div className='relative w-full group'>
       <div className='overflow-hidden'>
