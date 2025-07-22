@@ -8,7 +8,7 @@ type UseLoadApiProps = {
 
 export const useLoadApi = <T>({ type, lectureId }: UseLoadApiProps) => {
   return useApiQuery<T>({
-    queryKey: QUERY_KEYS.loadDetail(lectureId || ''),
+    queryKey: QUERY_KEYS.loadDetail(`${type}-${lectureId}`),
     fetchOptions: {
       endpoint:
         type === '숙제'
@@ -20,6 +20,7 @@ export const useLoadApi = <T>({ type, lectureId }: UseLoadApiProps) => {
     },
     queryOptions: {
       enabled: !!lectureId,
+      staleTime: 0,
     },
   });
 };

@@ -6,6 +6,7 @@ import { NoticeLoad } from '@/features/notice/notice.types';
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import Button from '../Button';
+import Modal from '../Modal';
 
 type QuizProps = {
   id: number;
@@ -26,13 +27,15 @@ type LoadModalProps = {
   onCancel: () => void;
   /** 모달 확인 버튼 클릭 시 실행될 콜백 함수 */
   onConfirm: () => void;
-  /** 불러오기 버튼 클릭 시 실행될 콜백 함수 */
-  onClick: () => void;
+  /** 불러오기 최종 확인 버튼 클릭 시 실행될 콜백 함수 (id 넘김) */
+  onClick: (id: number) => void;
 };
 
 export default function LoadModal({ type, isOpen, onCancel, onConfirm, onClick }: LoadModalProps) {
-  const { data: lectureData } = useGetLoadClass();
+  const [openConfirmModal, setOpenConfirmModal] = useState(false);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
 
+  const { data: lectureData } = useGetLoadClass();
   const [lectureId, setLectureId] = useState<number | undefined>(undefined);
 
   useEffect(() => {
@@ -53,6 +56,20 @@ export default function LoadModal({ type, isOpen, onCancel, onConfirm, onClick }
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) onCancel();
+  };
+
+  const handleOpenConfirm = (id: number) => {
+    setSelectedId(id);
+    setOpenConfirmModal(true);
+  };
+
+  const handleConfirm = () => {
+    if (selectedId !== null) {
+      onClick(selectedId);
+      setOpenConfirmModal(false);
+      setSelectedId(null);
+      onCancel();
+    }
   };
 
   return (
@@ -113,7 +130,7 @@ export default function LoadModal({ type, isOpen, onCancel, onConfirm, onClick }
                 return (
                   <div
                     key={item.id}
-                    className='flex gap-[40px] py-[8px]'
+                    className='flex gap-[40px] py-[8px] items-center'
                   >
                     <div className='flex gap-[40px] text-body-reading'>
                       <span className='w-[221px]'>{title}</span>
@@ -121,17 +138,31 @@ export default function LoadModal({ type, isOpen, onCancel, onConfirm, onClick }
                     </div>
                     <Button
                       type='BUTTON_BASE_TYPE'
-                      size='h-[40px]'
+                      size='h-[40px] leading-[15px]'
                       font='text-headline2 font-semibold'
                       title='불러오기'
                       isPurple={true}
                       isfilled={false}
-                      onClick={onClick}
+                      onClick={() => handleOpenConfirm(item.id)}
                       htmlType='button'
                     />
                   </div>
                 );
               })}
+              {openConfirmModal && (
+                <Modal
+                  isOpen={openConfirmModal}
+                  onCancel={() => {
+                    setOpenConfirmModal(false);
+                    setSelectedId(null);
+                  }}
+                  onConfirm={handleConfirm}
+                  title={`${type}를 불러올까요?`}
+                  iconSrc='/assets/icons/coloredFile.png'
+                  description='지금 작성 중인 내용은 사라져요.'
+                  confirmButtonType={{ isPurple: true }}
+                ></Modal>
+              )}
             </div>
           </div>
         </div>
