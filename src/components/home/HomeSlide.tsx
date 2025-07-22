@@ -22,11 +22,29 @@ export default function HomeSlide({ data }: { data: z.infer<typeof homeResponseS
   };
 
   const handleScrollRight = () => {
-    scrollRef.current?.scrollBy({ left: 342, behavior: 'smooth' });
+    const scrollElement = scrollRef.current;
+    if (!scrollElement) return;
+
+    const { scrollLeft, scrollWidth, clientWidth } = scrollElement;
+
+    if (scrollLeft + clientWidth >= scrollWidth - 5) {
+      scrollElement.scrollTo({ left: 0, behavior: 'smooth' });
+    } else {
+      scrollElement.scrollBy({ left: 342, behavior: 'smooth' });
+    }
   };
 
   const handleScrollLeft = () => {
-    scrollRef.current?.scrollBy({ left: -342, behavior: 'smooth' });
+    const scrollElement = scrollRef.current;
+    if (!scrollElement) return;
+
+    const { scrollLeft } = scrollElement;
+
+    if (scrollLeft <= 5) {
+      scrollElement.scrollTo({ left: scrollElement.scrollWidth, behavior: 'smooth' });
+    } else {
+      scrollElement.scrollBy({ left: -342, behavior: 'smooth' });
+    }
   };
 
   useEffect(() => {

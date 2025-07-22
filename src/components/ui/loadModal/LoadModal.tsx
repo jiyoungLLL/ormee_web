@@ -53,6 +53,7 @@ export default function LoadModal({ type, isOpen, onCancel, onConfirm, onClick }
   const { data: noticeData } = useLoadApi<NoticeLoad[]>({ type: '공지', lectureId: lectureId?.toString() });
 
   const detailData = type === '퀴즈' ? quizData : type === '숙제' ? homeworkData : noticeData;
+  console.log('load 데이터', detailData);
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) onCancel();
@@ -97,6 +98,7 @@ export default function LoadModal({ type, isOpen, onCancel, onConfirm, onClick }
             );
           })}
         </div>
+
         <div className='w-[532px] px-[30px] py-[20px] flex flex-col gap-[30px]'>
           <div className='flex'>
             <span className='flex-1 text-center text-heading1 font-semibold'>{type} 불러오기</span>
@@ -108,63 +110,72 @@ export default function LoadModal({ type, isOpen, onCancel, onConfirm, onClick }
               />
             </button>
           </div>
-          <div className='flex flex-col gap-[10px]'>
-            <div className='flex gap-[10px] py-[5px] text-gray-70 text-headline2 font-semibold'>
-              <span className='w-[221px]'>제목</span>
-              <span className='w-[140px]'>생성일</span>
+
+          {detailData?.length === 0 ? (
+            <div className='flex justify-center items-center h-full'>
+              <div className='text-heading2 text-[#B5B6BC] font-semibold text-center'>
+                최근 3개월간 작성한 {type}가 없어요.
+              </div>
             </div>
-            <div className='w-full h-[1px] bg-gray-30'></div>
-            <div className='flex flex-col'>
-              {detailData?.map((item) => {
-                const title =
-                  type === '퀴즈' ? (item as QuizProps).quizName : (item as HomeworkItems | NoticeLoad).title;
+          ) : (
+            <div className='flex flex-col gap-[10px]'>
+              <div className='flex gap-[10px] py-[5px] text-gray-70 text-headline2 font-semibold'>
+                <span className='w-[221px]'>제목</span>
+                <span className='w-[140px]'>생성일</span>
+              </div>
+              <div className='w-full h-[1px] bg-gray-30'></div>
+              <div className='flex flex-col'>
+                {detailData?.map((item) => {
+                  const title =
+                    type === '퀴즈' ? (item as QuizProps).quizName : (item as HomeworkItems | NoticeLoad).title;
 
-                const date =
-                  type === '퀴즈'
-                    ? (item as QuizProps).quizDate
-                    : type === '숙제'
-                      ? (item as HomeworkItems).openTime
-                      : (item as NoticeLoad).postDate;
+                  const date =
+                    type === '퀴즈'
+                      ? (item as QuizProps).quizDate
+                      : type === '숙제'
+                        ? (item as HomeworkItems).openTime
+                        : (item as NoticeLoad).postDate;
 
-                const formatDate = date && format(date, 'yy-MM-dd');
-                return (
-                  <div
-                    key={item.id}
-                    className='flex gap-[40px] py-[8px] items-center'
-                  >
-                    <div className='flex gap-[40px] text-body-reading'>
-                      <span className='w-[221px]'>{title}</span>
-                      <span className='w-[76px]'>{formatDate}</span>
+                  const formatDate = date && format(date, 'yy-MM-dd');
+                  return (
+                    <div
+                      key={item.id}
+                      className='flex gap-[40px] py-[8px] items-center'
+                    >
+                      <div className='flex gap-[40px] text-body-reading'>
+                        <span className='w-[221px]'>{title}</span>
+                        <span className='w-[76px]'>{formatDate}</span>
+                      </div>
+                      <Button
+                        type='BUTTON_BASE_TYPE'
+                        size='h-[40px] leading-[15px]'
+                        font='text-headline2 font-semibold'
+                        title='불러오기'
+                        isPurple={true}
+                        isfilled={false}
+                        onClick={() => handleOpenConfirm(item.id)}
+                        htmlType='button'
+                      />
                     </div>
-                    <Button
-                      type='BUTTON_BASE_TYPE'
-                      size='h-[40px] leading-[15px]'
-                      font='text-headline2 font-semibold'
-                      title='불러오기'
-                      isPurple={true}
-                      isfilled={false}
-                      onClick={() => handleOpenConfirm(item.id)}
-                      htmlType='button'
-                    />
-                  </div>
-                );
-              })}
-              {openConfirmModal && (
-                <Modal
-                  isOpen={openConfirmModal}
-                  onCancel={() => {
-                    setOpenConfirmModal(false);
-                    setSelectedId(null);
-                  }}
-                  onConfirm={handleConfirm}
-                  title={`${type}를 불러올까요?`}
-                  iconSrc='/assets/icons/coloredFile.png'
-                  description='지금 작성 중인 내용은 사라져요.'
-                  confirmButtonType={{ isPurple: true }}
-                ></Modal>
-              )}
+                  );
+                })}
+                {openConfirmModal && (
+                  <Modal
+                    isOpen={openConfirmModal}
+                    onCancel={() => {
+                      setOpenConfirmModal(false);
+                      setSelectedId(null);
+                    }}
+                    onConfirm={handleConfirm}
+                    title={`${type}를 불러올까요?`}
+                    iconSrc='/assets/icons/coloredFile.png'
+                    description='지금 작성 중인 내용은 사라져요.'
+                    confirmButtonType={{ isPurple: true }}
+                  ></Modal>
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
