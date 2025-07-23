@@ -13,12 +13,16 @@ export default function RenderContents({ category }: { category: string }) {
   const renderData = category === '질문' ? homeData?.questions : homeData?.notices;
 
   // 고정 데이터 중복 제기
-  const seen = new Set();
-  const filterData = renderData?.filter((item) => {
-    if (seen.has(item.id)) return false;
-    seen.add(item.id);
-    return true;
-  });
+  const getFilteredData = () => {
+    const seen = new Set();
+    return (
+      renderData?.filter((item) => {
+        if (seen.has(item.id)) return false;
+        seen.add(item.id);
+        return true;
+      }) ?? []
+    );
+  };
 
   const isEmpty = renderData?.length == 0;
   const emptyStyle = isEmpty ? 'justify-center items-center' : '';
@@ -53,7 +57,7 @@ export default function RenderContents({ category }: { category: string }) {
         {isEmpty ? (
           <div className='text-heading2 font-semibold text-[rgb(181_182_188)]'>{emptyComment}</div>
         ) : (
-          filterData?.map((item, index) => {
+          getFilteredData()?.map((item, index) => {
             const isPinned = item?.type === '고정';
             const redirectUrl = handleLinkUrl(category, item.id.toString(), isPinned);
 

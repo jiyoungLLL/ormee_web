@@ -16,22 +16,26 @@ const minidashList: string[][] = [
 ];
 
 const renderMiniDash = (lectureNum: string) => {
-  return minidashList.map(([dash, src, path], index) => (
-    <Link
-      href={`/lectures/${lectureNum}/${path}/create`}
-      key={`${dash}-${index}`}
-      className='w-[250px] h-[72.5px] bg-purple-15 rounded-[20px] flex justify-between items-center px-[22px] py-[15px] text-headline1 font-semibold'
-    >
-      {dash}
-      <Image
-        src={src}
-        width={24}
-        height={24}
-        className='w-[24px] h-[24px]'
-        alt={`${dash} 아이콘`}
-      />
-    </Link>
-  ));
+  return minidashList.map(([dash, src, path], index) => {
+    const endpoint =
+      dash === '쪽지 생성' ? `/lectures/${lectureNum}/${path}?create=true` : `/lectures/${lectureNum}/${path}/create`;
+    return (
+      <Link
+        href={endpoint}
+        key={`${dash}-${index}`}
+        className='w-[250px] h-[72.5px] bg-purple-15 rounded-[20px] flex justify-between items-center px-[22px] py-[15px] text-headline1 font-semibold'
+      >
+        {dash}
+        <Image
+          src={src}
+          width={24}
+          height={24}
+          className='w-[24px] h-[24px]'
+          alt={`${dash} 아이콘`}
+        />
+      </Link>
+    );
+  });
 };
 
 export default function HomeDashBoard() {

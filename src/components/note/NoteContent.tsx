@@ -6,7 +6,8 @@ import { useGetNotes, usePostNotes, usePutNotes } from '@/features/note/useNoteA
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { useToastStore } from '@/stores/toastStore';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
@@ -15,6 +16,9 @@ import ClosedNote from './ClosedNote';
 import OpenNote from './OpenNote';
 
 export default function NoteContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const lectureId = useLectureId();
   // GET
   const { data } = useGetNotes(lectureId);
@@ -36,6 +40,24 @@ export default function NoteContent() {
   });
   const [newNoteModal, setNewNoteModal] = useState(false);
   const [openClosedNoteId, setOpenClosedNoteId] = useState<number | null>(null);
+
+  // 홈 -> 경로 이동 시 모달 열리도록
+  useEffect(() => {
+    const isCreateParam = searchParams.get('create') === 'true';
+    setNewNoteModal(isCreateParam);
+  }, [searchParams]);
+
+  useEffect(() => {
+    const current = new URLSearchParams(searchParams.toString());
+
+    if (newNoteModal) {
+      current.set('create', 'true');
+    } else {
+      current.delete('create');
+    }
+
+    router.push(`?${current}`);
+  }, [newNoteModal]);
 
   const { addToast } = useToastStore();
 
@@ -157,6 +179,7 @@ export default function NoteContent() {
           title='쪽지 생성'
           containerStyle='w-[491px] bg-white rounded-[15px] px-[30px] py-[20px] flex flex-col'
           titleContainerStyle='flex flex-col w-full gap-[13px] mb-[10px]'
+          confirmButtonType={{ isPurple: true }}
         >
           <div className='flex flex-col gap-[10px] pt-[10px] pb-[35px]'>
             <div className='text-headline2 font-semibold'>쪽지 제목</div>
