@@ -1,5 +1,4 @@
 import QuestionContainer from '@/components/question/QuestionContainer';
-import QuestionFilterButton from '@/components/question/QuestionFilterButton';
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { QuestionSearchByType } from '@/features/question/hooks/useQuestionSearchParams';
 import { QuestionListFilterType } from '@/features/question/hooks/useQuestionSearchParams';
@@ -44,13 +43,6 @@ export default async function QuestionPage({
             className='w-[28px] h-[28px]'
           />
           <h1 className='text-title3 font-bold'>질문</h1>
-        </div>
-        <div className='flex justify-between items-center mb-[12px]'>
-          <div className='flex items-center gap-[10px]'>
-            <QuestionFilterButton type='전체' />
-            <QuestionFilterButton type='답변 미등록' />
-            <QuestionFilterButton type='답변 등록' />
-          </div>
         </div>
         <QuestionContainer
           lectureId={lectureId}
