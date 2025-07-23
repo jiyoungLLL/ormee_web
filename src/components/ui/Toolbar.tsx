@@ -1,9 +1,9 @@
 'use client';
 
-import { useRef } from 'react';
+import { AttachmentType, postAttachment } from '@/utils/api/postAttachment';
 import { Editor } from '@tiptap/react';
 import Image from 'next/image';
-import { AttachmentType, postAttachment } from '@/utils/api/postAttachment';
+import { useRef } from 'react';
 
 type ImmediateUploadConfig = {
   strategy: 'IMMEDIATE_UPLOAD';

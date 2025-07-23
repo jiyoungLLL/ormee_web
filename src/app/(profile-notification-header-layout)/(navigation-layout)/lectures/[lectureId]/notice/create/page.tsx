@@ -15,7 +15,7 @@ export default function NoticeWrite() {
   return (
     <div>
       <Create
-        type='notice'
+        type='NOTICE'
         params={lectureNum}
       />
     </div>

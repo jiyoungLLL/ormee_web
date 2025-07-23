@@ -5,7 +5,8 @@ import Input from '@/components/ui/Input';
 import EmailInput from '@/components/ui/inputs/EmailInput';
 import PhoneNumberInput from '@/components/ui/inputs/PhoneNumberInput';
 import { signupAction } from '@/features/auth/auth.action';
-import { SignupFormValues, signupSchema } from '@/features/auth/auth.schema';
+import { signupSchema } from '@/features/auth/auth.schema';
+import { SignupFormValues } from '@/features/auth/auth.types';
 import { useToastStore } from '@/stores/toastStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -27,7 +28,9 @@ export default function SignUpPage() {
       id: '',
       password: '',
       passwordConfirm: '',
-      phoneNumber: '',
+      phoneNumberPrefix: '',
+      phoneNumberMiddle: '',
+      phoneNumberLast: '',
       isVerifiedPhoneNumber: false,
       emailId: '',
       emailDomain: '',
@@ -142,7 +145,11 @@ export default function SignUpPage() {
               </div>
               <PhoneNumberInput
                 control={control}
-                name='phoneNumber'
+                name={{
+                  prefixName: 'phoneNumberPrefix',
+                  middleName: 'phoneNumberMiddle',
+                  lastName: 'phoneNumberLast',
+                }}
                 inputSize='w-full h-[50px]'
                 verificationName='isVerifiedPhoneNumber'
                 setValue={setValue}

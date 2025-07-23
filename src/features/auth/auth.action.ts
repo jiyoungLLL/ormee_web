@@ -1,9 +1,17 @@
 'use server';
 
-import { SigninFormValues, SignupFormValues } from '@/features/auth/auth.schema';
+import {
+  AccountRecoveryFormValues,
+  PasswordChangeFormValues,
+  PasswordCheckFormValues,
+  SigninFormValues,
+  SignupFormValues,
+} from '@/features/auth/auth.types';
 import { ApiResponse } from '@/types/response.types';
+import { fetcher } from '@/utils/api/api';
 import { cookies } from 'next/headers';
 
+// 회원가입
 export const signupAction = async (formData: SignupFormValues): Promise<ApiResponse> => {
   if (!process.env.API_BASE_URL) {
     return {
@@ -16,7 +24,7 @@ export const signupAction = async (formData: SignupFormValues): Promise<ApiRespo
   const submitData = {
     username: formData.id,
     password: formData.password,
-    phoneNumber: formData.phoneNumber,
+    phoneNumber: `${formData.phoneNumberPrefix}-${formData.phoneNumberMiddle}-${formData.phoneNumberLast}`,
     email: formData.emailId + '@' + formData.emailDomain,
     name: formData.name,
     nickname: formData.teacherName,
@@ -49,7 +57,8 @@ export const signupAction = async (formData: SignupFormValues): Promise<ApiRespo
   };
 };
 
-export const signinAction = async (formData: SigninFormValues): Promise<ApiResponse> => {
+// 로그인
+export const signinAction = async (formData: SigninFormValues, autoSignin: boolean): Promise<ApiResponse> => {
   if (!process.env.API_BASE_URL) {
     return {
       status: 'fail',
@@ -79,27 +88,53 @@ export const signinAction = async (formData: SigninFormValues): Promise<ApiRespo
 
     return {
       status: 'fail',
-      code: response.status,
+      code: json.code,
       data: json.data || '로그인에 실패했어요.',
     };
   }
 
   const { accessToken, refreshToken } = json.data;
 
-  cookies().set('accessToken', accessToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-    path: '/',
-    maxAge: 60 * 60 * 1,
-  });
+  if (autoSignin) {
+    cookies().set('accessToken', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+      maxAge: 60 * 60 * 1,
+    });
 
-  cookies().set('refreshToken', refreshToken, {
+    cookies().set('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 30,
+    });
+  } else {
+    cookies().set('accessToken', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+      maxAge: 60 * 60 * 1,
+    });
+
+    cookies().set('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+      maxAge: 60 * 60 * 24,
+    });
+  }
+
+  cookies().set('autoSignin', autoSignin.toString(), {
     httpOnly: true,
     secure: true,
     sameSite: 'none',
     path: '/',
-    maxAge: 60 * 60 * 24 * 7,
+    maxAge: 60 * 60 * 24 * 30,
   });
 
   // // NOTE: DB 초기화됐을 때 강의 생성용
@@ -111,12 +146,12 @@ export const signinAction = async (formData: SigninFormValues): Promise<ApiRespo
   //   },
   //   body: JSON.stringify({
   //     password: 'secureLecture0',
-  //     title: '영어 듣기',
+  //     title: '테스트 강의',
   //     lectureDays: ['월', '수'],
   //     startTime: '15:30:00',
   //     endTime: '17:00:00',
-  //     startDate: '2024-06-03T00:00:00',
-  //     dueDate: '2024-08-29T23:59:59',
+  //     startDate: '2025-07-19T00:00:00',
+  //     dueDate: '2025-08-29T23:59:59',
   //   }),
   // });
 
@@ -126,7 +161,104 @@ export const signinAction = async (formData: SigninFormValues): Promise<ApiRespo
   };
 };
 
+// 로그아웃
 export const signoutAction = () => {
   cookies().delete('accessToken');
   cookies().delete('refreshToken');
+};
+
+export const passwordCheckAction = async (formData: PasswordCheckFormValues): Promise<ApiResponse> => {
+  if (!process.env.API_BASE_URL) {
+    return {
+      status: 'fail',
+      code: 404,
+      data: '잘못된 API 접근입니다.',
+    };
+  }
+
+  const response = await fetcher<string>({
+    method: 'POST',
+    endpoint: '/teachers/password',
+    body: formData,
+    errorMessage: '비밀번호 확인에 실패했어요.',
+    authorization: true,
+    contentType: 'application/json',
+  });
+
+  const { status, code, data } = response;
+
+  return {
+    status,
+    code,
+    data,
+  };
+};
+
+export const passwordChangeAction = async (formData: PasswordChangeFormValues): Promise<ApiResponse> => {
+  if (!process.env.API_BASE_URL) {
+    return {
+      status: 'fail',
+      code: 404,
+      data: '잘못된 API 접근입니다.',
+    };
+  }
+
+  const submitData = {
+    password: formData.password,
+    newPassword: formData.newPassword,
+  };
+
+  const response = await fetcher<string>({
+    method: 'PUT',
+    endpoint: '/teachers/password',
+    body: submitData,
+    errorMessage: '비밀번호 변경에 실패했어요.',
+    authorization: true,
+    contentType: 'application/json',
+  });
+
+  const { status, code, data } = response;
+
+  return {
+    status,
+    code,
+    data,
+  };
+};
+
+// 아이디 찾기
+export const recoveryIdAction = async (formData: AccountRecoveryFormValues): Promise<ApiResponse<string>> => {
+  if (!process.env.API_BASE_URL) {
+    return {
+      status: 'fail',
+      code: 404,
+      data: '잘못된 API 접근입니다.',
+    };
+  }
+
+  const response = await fetch(`${process.env.API_BASE_URL}/members/username`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(formData),
+  });
+
+  const json = await response.json();
+
+  if (!response.ok) {
+    if (process.env.NODE_ENV === 'development') console.error('아이디 찾기 실패: ', json);
+
+    return {
+      status: 'fail',
+      code: json.code,
+      data: json.data || '아이디 찾기에 실패했어요.',
+    };
+  }
+
+  return {
+    status: 'success',
+    code: json.code,
+    data: json.data,
+  };
 };

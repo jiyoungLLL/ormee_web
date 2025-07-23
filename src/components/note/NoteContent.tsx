@@ -1,6 +1,11 @@
 'use client';
 
-import { MOCK_CLOSEDNOTE, MOCK_OPENNOTE } from '@/mock/note';
+import { noteSchema } from '@/features/note/note.schema';
+import { PostNote } from '@/features/note/note.types';
+import { useGetNotes, usePostNotes, usePutNotes } from '@/features/note/useNoteApi';
+import { useLectureId } from '@/hooks/queries/useLectureId';
+import { useToastStore } from '@/stores/toastStore';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Button from '../ui/Button';
@@ -9,20 +14,30 @@ import Modal from '../ui/Modal';
 import ClosedNote from './ClosedNote';
 import OpenNote from './OpenNote';
 
-type NoteData = {
-  noteKey: string;
-  title: string;
-  date: string;
-  students?: number;
-  data?: (string | number)[][];
-};
-
 export default function NoteContent() {
-  const { control, getValues, reset } = useForm();
+  const lectureId = useLectureId();
+  // GET
+  const { data } = useGetNotes(lectureId);
+  const openNotes = data?.openMemos ?? [];
+  const closedNotes = data?.closeMemos ?? [];
+  // POST
+  const { mutate: postNote } = usePostNotes(lectureId);
+  // PUT
+  const { mutate: putNote } = usePutNotes(lectureId);
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<PostNote>({
+    resolver: zodResolver(noteSchema),
+    mode: 'onSubmit',
+  });
   const [newNoteModal, setNewNoteModal] = useState(false);
-  const [openNotes, setOpenNotes] = useState<Record<string, NoteData>>(MOCK_OPENNOTE);
-  const [closedNotes, setClosedNotes] = useState<NoteData[]>(Object.values(MOCK_CLOSEDNOTE));
-  const [isEmpty, setIsEmpty] = useState<boolean | null>(null);
+  const [openClosedNoteId, setOpenClosedNoteId] = useState<number | null>(null);
+
+  const { addToast } = useToastStore();
 
   const commonStyle = 'flex flex-col gap-[20px] text-heading2 font-semibold';
 
@@ -38,43 +53,37 @@ export default function NoteContent() {
   };
 
   const handleNewNote = () => {
+    if (openNotes.length === 1) {
+      addToast({ message: '쪽지는 최대 1개까지 생성 가능해요.', type: 'error', duration: 2500 });
+      return;
+    }
     setNewNoteModal(true);
     reset();
   };
 
-  const onConfirm = () => {
-    const noteTitle = getValues('noteTitle');
+  const onConfirm = handleSubmit(
+    (data) => {
+      postNote(
+        { title: data.title },
+        {
+          onSuccess: () => {
+            setNewNoteModal(false);
+            reset();
+          },
+        },
+      );
+    },
+    (errors) => {
+      if (errors.title) addToast({ message: errors.title.message || '', type: 'error', duration: 2500 });
+    },
+  );
 
-    const newNote: NoteData = {
-      noteKey: `${Date.now()}`,
-      title: noteTitle,
-      date: formatDate(new Date()),
-    };
-
-    setOpenNotes((prev) => ({
-      ...prev,
-      [newNote.noteKey]: newNote,
-    }));
-
-    setNewNoteModal(false);
-    reset();
-  };
-
-  const handleClosingNote = (noteKey: string) => {
-    const closingNote = openNotes[noteKey];
-
-    // 제출 인원, 데이터 받아와서 표시 -> 서버 연결 후 수정 필요
-    setClosedNotes((prev) => [closingNote, ...prev]);
-    const { [noteKey]: _, ...restOpenNotes } = openNotes;
-    setOpenNotes(restOpenNotes);
-
-    if (Object.entries(openNotes).length === 0) {
-      setIsEmpty(true);
-    }
+  const handleClosingNote = (noteId: number) => {
+    putNote(noteId.toString());
   };
 
   return (
-    <div className='absolute top-[125px] w-[1018px] bg-white rounded-[20px] px-[30px] py-[20px] flex flex-col'>
+    <div className='absolute top-[125px] w-[1018px] h-[730px] bg-white rounded-[20px] px-[30px] py-[20px] flex flex-col'>
       <div className='w-full flex justify-end'>
         <Button
           type='BUTTON_CREATE_TYPE'
@@ -86,65 +95,80 @@ export default function NoteContent() {
           htmlType='button'
         />
       </div>
-      <div className='flex flex-col gap-[45px]'>
-        <div className={commonStyle}>
-          <div>진행 쪽지</div>
-          {Object.keys(openNotes).length > 0 ? (
-            Object.entries(openNotes).map(([key, note]) => (
-              <OpenNote
-                key={key}
-                noteKey={note.noteKey}
-                title={note.title}
-                date={note.date}
-                onClick={() => handleClosingNote(key)}
-              />
-            ))
-          ) : (
-            <div className='w-full rounded-[15px] flex justify-center px-[10px] py-[20px]'>
-              <div className='text-heading2 font-semibold text-label-assistive'>현재 진행 중인 쪽지가 없어요</div>
+      {openNotes.length === 0 && closedNotes.length === 0 ? (
+        <div className='h-[621px] flex justify-center items-center text-heading2 font-semibold text-[#B5B6BC]'>
+          <span>생성한 쪽지가 없어요.</span>
+        </div>
+      ) : (
+        <div className='flex flex-col gap-[45px]'>
+          <div className={commonStyle}>
+            <div>진행 쪽지</div>
+            {openNotes.length > 0 ? (
+              openNotes.map((note, key) => (
+                <OpenNote
+                  key={key}
+                  title={note.title}
+                  date={formatDate(new Date(note.dueTime))}
+                  totalCount={note.totalCount}
+                  submitCount={note.submitCount}
+                  onClick={() => handleClosingNote(note.id)}
+                />
+              ))
+            ) : (
+              <div className='w-full rounded-[15px] flex justify-center px-[10px] py-[20px]'>
+                <div className='text-heading2 font-semibold text-label-assistive'>진행 중인 쪽지가 없어요</div>
+              </div>
+            )}
+          </div>
+          {closedNotes.length > 0 && (
+            <div className={commonStyle}>
+              <div>마감 쪽지</div>
+              <div className='flex flex-col gap-[5px]'>
+                {closedNotes.map((note, index) => {
+                  const isLast = index === closedNotes.length - 1;
+                  const isOpen = openClosedNoteId === note.id;
+
+                  return (
+                    <div key={`${note.id}-${index}`}>
+                      <ClosedNote
+                        noteId={note.id}
+                        title={note.title}
+                        date={formatDate(new Date(note.dueTime))}
+                        totalCount={note.totalCount}
+                        submitCount={note.submitCount}
+                        isOpen={isOpen}
+                        onClick={() => setOpenClosedNoteId((prev) => (prev === note.id ? null : note.id))}
+                      />
+                      {!isLast && <div className='h-[1px] bg-gray-30 w-full'></div>}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
+      )}
 
-        <div className={commonStyle}>
-          <div>마감 쪽지</div>
-          <div className='flex flex-col gap-[5px]'>
-            {closedNotes.map((note, index) => {
-              const lastNote = closedNotes.length - 1;
-
-              return (
-                <div key={`${note.noteKey}-${index}`}>
-                  <ClosedNote
-                    noteKey={note.noteKey}
-                    title={note.title}
-                    date={note.date}
-                    students={note.students}
-                    data={note.data}
-                  />
-                  {index !== lastNote && <div className='h-[1px] bg-gray-30 w-full'></div>}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
       {newNoteModal && (
         <Modal
           isOpen={newNoteModal}
           onCancel={() => setNewNoteModal(false)}
           onConfirm={onConfirm}
           title='쪽지 생성'
-          containerStyle='w-[491px]'
+          containerStyle='w-[491px] bg-white rounded-[15px] px-[30px] py-[20px] flex flex-col'
+          titleContainerStyle='flex flex-col w-full gap-[13px] mb-[10px]'
         >
           <div className='flex flex-col gap-[10px] pt-[10px] pb-[35px]'>
             <div className='text-headline2 font-semibold'>쪽지 제목</div>
             <Input
-              name='noteTitle'
+              name='title'
               control={control}
-              size='w-full h-[55px]'
-              placeholder='제목을 입력하세요'
+              size='w-full h-[50px]'
+              placeholder='제목을 입력해 주세요'
               maxLength={20}
               showCharacterCount={true}
+              textStyle='text-headline1 font-semibold'
+              inputStyle='rounded-[10px] border border-gray-20 px-[20px] py-[15px] focus:border-[1px] focus:border-purple-50 focus:outline-none'
             />
           </div>
         </Modal>

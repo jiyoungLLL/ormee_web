@@ -1,30 +1,23 @@
 'use client';
 
+import { useGetHomeworks } from '@/features/homework/hooks/queries/useHomeworkApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
-import { MOCK_HOMEWORK } from '@/mock/homework';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import Button from '../ui/Button';
 import Dropdown from '../ui/dropdown/Dropdown';
+import TeacherLabel from '../ui/label/TeacherLabel';
 import HomeworkDetail from './HomeworkDetail';
 
 type HomeworkProps = {
   type: '전체' | '진행중' | '마감';
 };
 
-const HOMEWORK = MOCK_HOMEWORK.data;
-
 export default function HomeworkTap({ type }: HomeworkProps) {
   const lectureNum = useLectureId();
-
-  // const { data, isLoading, error } = useApiQuery<AssignmentsResponse>(
-  //   ['assignments', lectureNum.toString()],
-  //   `/teachers/${lectureNum}/assignments`,
-  // );
-
-  // const validData = data?.data;
+  const { data } = useGetHomeworks(lectureNum);
 
   const [isOpen, setIsOpen] = useState<{ [key in '진행중' | '마감']?: number[] }>({});
   const [selected, setSelected] = useState<Record<number, '전체' | '미제출' | '미확인'>>({});
@@ -56,9 +49,8 @@ export default function HomeworkTap({ type }: HomeworkProps) {
   };
 
   const renderTap = (name: '진행중' | '마감') => {
-    const badgeStyle = name === '진행중' ? 'bg-purple-15 text-purple-50' : 'border border-gray-30';
     const openIds = isOpen[name] || [];
-    const validData = name === '진행중' ? HOMEWORK?.openedAssignments : HOMEWORK?.closedAssignments;
+    const validData = name === '진행중' ? data?.openedHomeworks : data?.closedHomeworks;
 
     return (
       <div
@@ -67,6 +59,11 @@ export default function HomeworkTap({ type }: HomeworkProps) {
       >
         <div className='text-heading2 font-semibold'>{name === '마감' ? name : '진행'} 숙제</div>
         <div>
+          {validData?.length === 0 && (
+            <div className='text-center text-heading2 font-semibold text-[#B5B6BC]'>
+              {name === '마감' ? `아직 ${name}된` : '진행'} 숙제가 없어요.
+            </div>
+          )}
           {validData?.map((data, index) => (
             <div key={`${data.id}-${data.title}`}>
               <div className='flex justify-between items-center px-[10px] py-[20px]'>
@@ -88,21 +85,26 @@ export default function HomeworkTap({ type }: HomeworkProps) {
                     <div className={`text-headline1 font-semibold ${name === '마감' && 'text-gray-60'}`}>
                       {data.title}
                     </div>
-                    <div className='text-label text-gray-50'>
-                      {data.openTime && data.dueTime
-                        ? `${format(data.openTime, 'yyyy.MM.dd')} - ${format(data.dueTime, 'yyyy.MM.dd')}`
-                        : ''}
+                    <div className='flex gap-[10px]'>
+                      <TeacherLabel
+                        name={data.author}
+                        role='Owner'
+                      />
+                      <span className='text-label text-gray-50'>
+                        {data.openTime && data.dueTime
+                          ? `${format(data.openTime, 'yyyy.MM.dd')} - ${format(data.dueTime, 'yyyy.MM.dd')}`
+                          : ''}
+                      </span>
                     </div>
                   </Link>
                 </div>
                 <div className='flex gap-[30px] items-center'>
                   <Link
                     href={`/lectures/${lectureNum}/homework/feedback?id=${data.id}&title=${data.title}`}
-                    className={`h-[40px] rounded-[10px] px-[20px] py-[12px] text-headline2 flex items-center ${badgeStyle}`}
+                    className={`h-[40px] rounded-[10px] px-[20px] py-[12px] text-headline2 flex items-center ${data.feedbackCompleted ? 'bg-purple-15 text-purple-50' : 'border border-gray-30'}`}
                   >
-                    {/* 피드백 완료/미완료 get 수정 필요 */}
                     <span className='font-semibold'>피드백&nbsp;</span>
-                    <span> {name === '진행중' ? ' (미완료)' : ' (완료)'}</span>
+                    <span> {data.feedbackCompleted ? ' (완료)' : ' (미완료)'}</span>
                   </Link>
                   <Image
                     src='/assets/icons/sidenav/dropdown.png'
@@ -149,10 +151,16 @@ export default function HomeworkTap({ type }: HomeworkProps) {
   return (
     <div className='flex flex-col gap-[40px]'>
       {type === '전체' ? (
-        <>
-          {renderTap('진행중')}
-          {renderTap('마감')}
-        </>
+        data?.openedHomeworks?.length === 0 && data?.closedHomeworks?.length === 0 ? (
+          <div className='text-center text-heading2 font-semibold text-[#B5B6BC] h-[621px] flex justify-center items-center'>
+            생성한 숙제가 없어요.
+          </div>
+        ) : (
+          <>
+            {renderTap('진행중')}
+            {renderTap('마감')}
+          </>
+        )
       ) : (
         renderTap(type)
       )}

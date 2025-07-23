@@ -1,8 +1,8 @@
-import useMounted from '@/hooks/useMounted';
-import { createPortal } from 'react-dom';
-import Button, { ButtonType } from '@/components/ui/Button';
-import Image from 'next/image';
 import XIcon from '@/components/icon/XIcon';
+import Button, { ButtonType } from '@/components/ui/Button';
+import useMounted from '@/hooks/useMounted';
+import Image from 'next/image';
+import { createPortal } from 'react-dom';
 
 type ModalProps = {
   /** 모달 내부에 표시될 컨텐츠 */
@@ -55,9 +55,11 @@ type ModalProps = {
   enableConfirmButton?: boolean;
   /** x버튼 사용 여부 */
   enableXButton?: boolean;
+  /** x버튼, 아이콘 표시영역 스타일 */
+  iconContainerStyle?: string;
 };
 
-const BASIC_CONTAINER_STYLE = 'bg-white rounded-[15px] px-[30px] py-[20px] select-none';
+const BASIC_CONTAINER_STYLE = 'relative bg-white rounded-[15px] px-[30px] py-[20px] select-none';
 const BASIC_TITLE_STYLE = 'flex flex-col w-full gap-[13px] mb-[35px]';
 const BASIC_TITLE_TEXT_STYLE = 'text-heading1 font-semibold text-gray-90 text-center';
 const BASIC_DESCRIPTION_TEXT_STYLE = 'text-headline2 font-normal text-gray-90 text-center';
@@ -84,6 +86,7 @@ export default function Modal({
   enableCancelButton = true,
   enableConfirmButton = true,
   enableXButton = false,
+  iconContainerStyle,
 }: ModalProps) {
   const isMounted = useMounted();
 
@@ -103,29 +106,31 @@ export default function Modal({
       onClick={handleBackdropClick}
     >
       <div className={`${containerStyle || BASIC_CONTAINER_STYLE}`}>
-        {enableXButton && (
-          <div className='flex justify-end w-full mb-[10px]'>
-            <button
-              type='button'
-              onClick={onCancel}
-            >
-              <XIcon
-                size={18}
-                color='bg-gray-40'
-                useTailwind
-              />
-            </button>
-          </div>
-        )}
-        {iconSrc && (
-          <Image
-            src={iconSrc}
-            alt='modal-icon'
-            width={28}
-            height={28}
-            className='mx-auto mb-[15px]'
-          />
-        )}
+        <div className={`${iconContainerStyle || ''}`}>
+          {enableXButton && (
+            <div className='flex justify-end w-full mb-[10px]'>
+              <button
+                type='button'
+                onClick={onCancel}
+              >
+                <XIcon
+                  size={18}
+                  color='bg-gray-40'
+                  useTailwind
+                />
+              </button>
+            </div>
+          )}
+          {iconSrc && (
+            <Image
+              src={iconSrc}
+              alt='modal-icon'
+              width={28}
+              height={28}
+              className='mx-auto mb-[15px]'
+            />
+          )}
+        </div>
         {isTitleEnabled && (
           <div className={`${titleContainerStyle || BASIC_TITLE_STYLE}`}>
             {title && <h2 className={`${titleTextStyle || BASIC_TITLE_TEXT_STYLE}`}>{title}</h2>}

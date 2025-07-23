@@ -3,6 +3,7 @@ import { QuestionListFilterType, QuestionSearchByType } from '../../features/que
 
 export const QUERY_KEYS = {
   profile: () => ['profile'],
+  personalInfo: () => ['personalInfo'],
   notification: (lectureId: string, filter: NotificationFilterType) => ['notification', lectureId, filter],
   quizDetail: (quizId: string) => ['quizDetail', quizId],
   quizList: (lectureId: string) => ['quizList', lectureId],
@@ -25,7 +26,20 @@ export const QUERY_KEYS = {
   questionDetail: (questionId: string) => ['questionDetail', questionId],
   answer: (questionId: string) => ['answer', questionId],
   homeworkList: (lectureId: string) => ['homeworkList', lectureId],
+  homeworkDraft: (lectureId: string) => ['homeworkDraft', lectureId],
   homeworkDetail: (homeworkId: string) => ['homeworkDetail', homeworkId],
   classList: () => ['classList'],
+  noteList: (lectureId: string) => ['noteList', lectureId],
+  noteStats: (noteId: string) => ['noteStats', noteId],
+  noticeList: ({ lectureId, page, keyword }: { lectureId: string; page?: number; keyword?: string }) => [
+    'noticeList',
+    lectureId,
+    page ?? 1,
+    keyword ?? '',
+  ],
+  noticeDraft: (lectureId: string) => ['noticeDraft', lectureId],
+  noticeDetail: (noticeId: string) => ['noticeDetail', noticeId],
+  noticePinned: (lectureId: string) => ['noticePinned', lectureId],
+  noticeLoad: (lectureId: string) => ['noticeLoad', lectureId],
   home: (lectureId: string) => ['home', lectureId],
 } as const;

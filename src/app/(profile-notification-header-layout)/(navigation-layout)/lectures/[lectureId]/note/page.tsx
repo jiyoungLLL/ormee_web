@@ -15,9 +15,7 @@ export default function Note() {
           />
           <div>쪽지</div>
         </div>
-        <div className='text-label2-normal text-gray-60'>
-          어려웠거나 해설이 필요한 문장을 쪽지로 전달받을 수 있어요.
-        </div>
+        <div className='text-label2-normal text-gray-60'>해설을 요청한 문항을 확인할 수 있어요.</div>
       </div>
       <NoteContent />
     </>
