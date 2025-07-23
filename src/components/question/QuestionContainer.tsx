@@ -2,7 +2,7 @@
 
 import QuestionSearch from '@/components/question/QuestionSearch';
 import { useGetQuestionList } from '@/features/question/hooks/queries/useGetQuestionList';
-import { QuestionListFilterType, QuestionSearchByType } from '@/features/question/hooks/useQuestionSearchParams';
+import { QuestionSearchByType } from '@/features/question/hooks/useQuestionSearchParams';
 import QuestionList from '@/components/question/QuestionList';
 
 type QuestionContainerProps = {
@@ -10,7 +10,6 @@ type QuestionContainerProps = {
   searchParams: {
     keyword: string;
     searchBy: QuestionSearchByType;
-    filter: QuestionListFilterType;
     page: number;
   };
 };
@@ -20,7 +19,6 @@ export default function QuestionContainer({ lectureId, searchParams }: QuestionC
     lectureId,
     keyword: searchParams.keyword,
     searchBy: searchParams.searchBy,
-    filter: searchParams.filter,
     page: searchParams.page,
   });
 

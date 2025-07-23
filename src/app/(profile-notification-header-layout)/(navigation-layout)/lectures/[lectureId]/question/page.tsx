@@ -29,8 +29,8 @@ export default async function QuestionPage({
   });
 
   await queryClient.prefetchQuery({
-    queryKey: QUERY_KEYS.questionList({ lectureId, filter, page, searchBy, keyword }),
-    queryFn: () => getQuestionListOnServer({ lectureId, filter, page, searchBy, keyword }),
+    queryKey: QUERY_KEYS.questionList({ lectureId, page, searchBy, keyword }),
+    queryFn: () => getQuestionListOnServer({ lectureId, page, searchBy, keyword }),
   });
 
   return (
@@ -46,11 +46,11 @@ export default async function QuestionPage({
         </div>
         <QuestionContainer
           lectureId={lectureId}
-          searchParams={{ filter, page, searchBy, keyword }}
+          searchParams={{ page, searchBy, keyword }}
         />
         <QuestionPageButton
           lectureId={lectureId}
-          searchParams={{ filter, page, searchBy, keyword }}
+          searchParams={{ page, searchBy, keyword }}
         />
       </HydrationBoundary>
     </div>

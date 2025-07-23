@@ -1,18 +1,13 @@
 'use client';
 
 import { useGetQuestionList } from '@/features/question/hooks/queries/useGetQuestionList';
-import {
-  QuestionListFilterType,
-  QuestionSearchByType,
-  useQuestionSearchParams,
-} from '@/features/question/hooks/useQuestionSearchParams';
+import { QuestionSearchByType, useQuestionSearchParams } from '@/features/question/hooks/useQuestionSearchParams';
 
 type QuestionPageButtonProps = {
   lectureId: string;
   searchParams: {
     keyword: string;
     searchBy: QuestionSearchByType;
-    filter: QuestionListFilterType;
     page: number;
   };
 };
@@ -22,7 +17,6 @@ export default function QuestionPageButton({ lectureId, searchParams }: Question
     lectureId,
     keyword: searchParams.keyword,
     searchBy: searchParams.searchBy,
-    filter: searchParams.filter,
     page: searchParams.page,
   });
 

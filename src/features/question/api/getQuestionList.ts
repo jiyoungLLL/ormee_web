@@ -1,33 +1,43 @@
 'use client';
 
-import { QuestionListFilterType } from '@/features/question/hooks/useQuestionSearchParams';
 import { QuestionSearchByType } from '@/features/question/hooks/useQuestionSearchParams';
 import { fetcher } from '@/utils/api/api';
 import { PaginatedQuestionData } from '@/features/question/types/question.types';
 
+export const QUESTION_FILTER_MAP: Record<QuestionSearchByType, string> = {
+  title: '제목',
+  content: '내용',
+  author: '작성자',
+  all: '전체',
+};
+
 export const getQuestionList = async ({
   lectureId,
-  filter,
   page,
   searchBy,
   keyword,
 }: {
   lectureId: string;
-  filter?: QuestionListFilterType;
   page?: number;
   searchBy?: QuestionSearchByType;
   keyword?: string;
 }) => {
   const params = new URLSearchParams();
+  let baseEndpoint = `/teachers/${lectureId}/questions`;
 
-  if (filter) params.append('filter', filter);
+  if (searchBy && keyword) {
+    baseEndpoint = `/teachers/${lectureId}/questions/search`;
+    if (searchBy) params.append('filter', QUESTION_FILTER_MAP[searchBy]);
+    if (keyword) params.append('keyword', keyword);
+  }
+
   if (page) params.append('page', String(page));
-  if (searchBy) params.append('searchBy', searchBy);
-  if (keyword) params.append('keyword', keyword);
+
+  const endpoint = `${baseEndpoint}?${params.toString()}`;
 
   const response = await fetcher<PaginatedQuestionData>({
     method: 'GET',
-    endpoint: `/teachers/${lectureId}/questions?${params.toString()}`,
+    endpoint,
   });
 
   if (response.status === 'fail') {
