@@ -9,55 +9,31 @@ import ScrollButton from './ScrollButton';
 
 export default function HomeSlide({ data }: { data: z.infer<typeof homeResponseSchema>['assignments'] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [showLeft, setShowLeft] = useState(false);
   const [showRight, setShowRight] = useState(true);
 
-  const handleScroll = () => {
-    const scrollElement = scrollRef.current;
-    if (!scrollElement) return;
-
-    const { scrollLeft, scrollWidth, clientWidth } = scrollElement;
-    setShowLeft(scrollLeft > 0);
-    setShowRight(scrollLeft + clientWidth < scrollWidth - 5);
-  };
-
   const handleScrollRight = () => {
-    const scrollElement = scrollRef.current;
-    if (!scrollElement) return;
-
-    const { scrollLeft, scrollWidth, clientWidth } = scrollElement;
-
-    if (scrollLeft + clientWidth >= scrollWidth - 5) {
-      scrollElement.scrollTo({ left: 0, behavior: 'smooth' });
-    } else {
-      scrollElement.scrollBy({ left: 342, behavior: 'smooth' });
-    }
+    scrollRef.current?.scrollBy({ left: 340, behavior: 'smooth' });
   };
 
-  const handleScrollLeft = () => {
-    const scrollElement = scrollRef.current;
-    if (!scrollElement) return;
-
-    const { scrollLeft } = scrollElement;
-
-    if (scrollLeft <= 5) {
-      scrollElement.scrollTo({ left: scrollElement.scrollWidth, behavior: 'smooth' });
-    } else {
-      scrollElement.scrollBy({ left: -342, behavior: 'smooth' });
-    }
-  };
+  const clonedData = [...data.slice(-2), ...data, ...data.slice(0, 2)];
 
   useEffect(() => {
-    const scrollElement = scrollRef.current;
-    if (!scrollElement) return;
+    const scrollEl = scrollRef.current;
+    if (!scrollEl) return;
 
-    scrollElement.addEventListener('scroll', handleScroll);
-    handleScroll();
+    const itemWidth = 334;
 
-    return () => {
-      scrollElement.removeEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      const maxScrollLeft = scrollEl.scrollWidth - scrollEl.clientWidth;
+
+      if (scrollEl.scrollLeft >= maxScrollLeft - itemWidth) {
+        scrollEl.scrollTo({ left: 0, behavior: 'auto' });
+      }
     };
-  }, []);
+
+    scrollEl.addEventListener('scroll', handleScroll);
+    return () => scrollEl.removeEventListener('scroll', handleScroll);
+  }, [data]);
 
   const handleTimeFormat = (time: string | undefined) => {
     if (!time) return;
@@ -86,7 +62,7 @@ export default function HomeSlide({ data }: { data: z.infer<typeof homeResponseS
           ref={scrollRef}
           className='h-[131px] flex gap-[8px] overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-hide'
         >
-          {data?.map((item, index) => {
+          {clonedData?.map((item, index) => {
             const boxStyle =
               item.type === '퀴즈'
                 ? 'bg-accent-redOrange-5 text-accent-redOrange-20'
@@ -132,12 +108,6 @@ export default function HomeSlide({ data }: { data: z.infer<typeof homeResponseS
         </div>
       </div>
       <ScrollButton
-        direction='left'
-        onClick={handleScrollLeft}
-        visible={showLeft}
-      />
-      <ScrollButton
-        direction='right'
         onClick={handleScrollRight}
         visible={showRight}
       />
