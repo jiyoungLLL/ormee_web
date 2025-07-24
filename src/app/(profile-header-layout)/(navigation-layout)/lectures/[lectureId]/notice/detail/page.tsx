@@ -109,7 +109,7 @@ export default function NoticeDetail() {
                     alt='파일 아이콘'
                   />
                   <span>
-                    {/* {detailNoticeData?.fileNames?.[index].replace(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+/, '')} */}
+                    {detailNoticeData?.fileNames?.[index].replace(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+/, '')}
                   </span>
                 </a>
               ))}

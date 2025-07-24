@@ -17,7 +17,7 @@ export const homeAssignmentsListResponseSchema = z.array(
     submitStudents: z.number(),
     totalStudents: z.number(),
     openTime: z.string(),
-    duetTime: z.string(),
+    dueTime: z.string(),
   }),
 );
 

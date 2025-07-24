@@ -50,7 +50,6 @@ export const useGetNotices = (lectureId: string, page?: number) => {
       endpoint: `/teachers/${lectureId}/notices?page=${page}`,
       authorization: true,
     },
-
     queryOptions: {
       enabled: !!lectureId,
     },
@@ -214,6 +213,10 @@ export const useDeleteNotice = (lectureId: string, successMessage: string) => {
         type: 'error',
       });
     },
-    invalidateKey: [QUERY_KEYS.noticeList({ lectureId }), QUERY_KEYS.noticeDraft(lectureId)],
+    invalidateKey: [
+      QUERY_KEYS.noticeList({ lectureId }),
+      QUERY_KEYS.noticeDraft(lectureId),
+      QUERY_KEYS.noticePinned(lectureId),
+    ],
   });
 };

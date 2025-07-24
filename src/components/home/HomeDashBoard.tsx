@@ -1,6 +1,8 @@
 'use client';
 
+import { useGetHome } from '@/features/home/hooks/useGetHome';
 import { useLectureId } from '@/hooks/queries/useLectureId';
+import { format } from 'date-fns';
 import Image from 'next/image';
 import Link from 'next/link';
 import HomeWorkIng from './HomeWorkIng';
@@ -34,7 +36,13 @@ const renderMiniDash = (lectureNum: string) => {
 
 export default function HomeDashBoard() {
   const lectureNum = useLectureId();
+  const { data } = useGetHome();
+  const lectureData = data?.lecture;
+  const assignmentData = data?.assignments;
+  const questionData = data?.questions;
+  const noticeData = data?.notices;
 
+  // copy 말고 QR 모달로 변경
   const handleCopy = () => {
     // 강의코드 데이터 변경 필요
     const text = '강의코드';
@@ -44,6 +52,12 @@ export default function HomeDashBoard() {
         alert('복사 성공!');
       });
     }
+  };
+
+  const handleTimeFormat = (time: string | undefined) => {
+    if (!time) return;
+
+    return format(new Date(time), 'yyyy.MM.dd');
   };
 
   return (
@@ -62,8 +76,8 @@ export default function HomeDashBoard() {
         <div className='w-[500px] h-[153px] rounded-[20px] px-[30px] py-[20px] flex flex-col gap-[18px] bg-purple-50'>
           <div className='h-[56px] flex gap-[18px] justify-between '>
             <div className='px-[5px] flex flex-col gap-[5px]'>
-              <div className='text-title3 font-bold text-white'>오르미 토익</div>
-              <div className='text-label2-normal text-[rgb(236_233_255)]'>2025. 01. 03 - 2025. 03. 02</div>
+              <div className='text-title3 font-bold text-white'>{lectureData?.title}</div>
+              <div className='text-label2-normal text-[rgb(236_233_255)]'>{`${handleTimeFormat(lectureData?.openTime)} - ${handleTimeFormat(lectureData?.closeTime)}`}</div>
             </div>
             <button
               onClick={handleCopy}
@@ -71,7 +85,7 @@ export default function HomeDashBoard() {
               type='button'
             >
               <Image
-                src={'/assets/icons/copy.png'}
+                src={'/assets/icons/share.png'}
                 width={24}
                 height={24}
                 className='w-[24px] h-[24px]'
@@ -85,8 +99,8 @@ export default function HomeDashBoard() {
               width={24}
               height={24}
               alt='코멘트'
-            />{' '}
-            늦었다고 생각할 때는 이미 늦었다
+            />
+            {lectureData?.description}
           </div>
         </div>
         <div className='flex flex-wrap w-[509px] gap-[9px]'>{renderMiniDash(lectureNum)}</div>

@@ -15,25 +15,28 @@ export default function NoticeList() {
   const keyword = searchParams.get('search') ?? '';
 
   const lectureId = useLectureId();
+
   const searchNoticeData = useSearchNotice(lectureId, keyword, page);
   const getNoticesData = useGetNotices(lectureId, page);
   const totalData = keyword ? searchNoticeData.data : getNoticesData.data;
-  const { data: originalPinnedData, isLoading } = useGetPinnedNotices(lectureId);
 
-  const pinnedIds = originalPinnedData?.map((notice) => notice.id) ?? [];
-
+  const { data: originalPinnedData, refetch: refetchPinnedData } = useGetPinnedNotices(lectureId);
   const searchPinnedData = totalData?.content?.filter((notice) => notice.isPinned === true) ?? [];
 
   const pinnedData = keyword ? searchPinnedData : originalPinnedData;
 
+  // 고정 공지 제외 인덱싱
   const totalUnpinnedCount = (totalData?.totalElements ?? 0) - (pinnedData?.length ?? 0);
   const pageSize = 15;
   const startNo = totalUnpinnedCount - (page - 1) * pageSize;
 
+  // 검색인지 아닌지
   const isSearchMode = !!keyword;
   const hasPinnedInSearch = isSearchMode && (pinnedData?.length ?? 0) > 0;
   const showPinned = (!isSearchMode && page === 1) || hasPinnedInSearch;
 
+  // 고정 공지 데이터 제외
+  const pinnedIds = pinnedData?.map((notice) => notice.id) ?? [];
   const unpinnedData = totalData?.content?.filter((notice) => !pinnedIds.includes(notice.id)) ?? [];
 
   useEffect(() => {
@@ -45,7 +48,11 @@ export default function NoticeList() {
     }
   }, [searchParams, router]);
 
-  if (!totalData || isLoading) return;
+  useEffect(() => {
+    if (lectureId) {
+      refetchPinnedData();
+    }
+  }, [refetchPinnedData, searchParams, lectureId, router]);
 
   // list title
   const titleList: [string, string][] = [
@@ -55,6 +62,18 @@ export default function NoticeList() {
     ['등록일', 'w-[82px]'],
     ['조회수', 'w-[45px]'],
   ];
+
+  const isTotalDataEmpty = totalData?.content?.length === 0;
+
+  if (isTotalDataEmpty) {
+    return (
+      <div className='relative top-[35px] w-[1018px] min-h-[730px] rounded-[10px] px-[30px] py-[20px] flex flex-col bg-white justify-center items-center'>
+        <div className='text-heading2 font-semibold text-[#B5B6BC] h-[621px] flex items-center jusity-center'>
+          작성한 공지가 없어요.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='relative top-[35px] w-[1018px] min-h-[730px] rounded-[10px] px-[30px] py-[20px] flex flex-col bg-white'>

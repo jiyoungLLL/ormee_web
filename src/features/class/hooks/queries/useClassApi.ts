@@ -4,7 +4,7 @@ import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { useApiMutation, useApiQuery } from '@/hooks/useApi';
 import { useToastStore } from '@/stores/toastStore';
 import { ClassModalValues } from '../../class.schema';
-import { GetClassResponse } from '../../class.types';
+import { ClassItems, GetClassResponse } from '../../class.types';
 
 export const useGetClass = () => {
   return useApiQuery<GetClassResponse>({
@@ -93,6 +93,16 @@ export const useDeleteClass = () => {
         type: 'error',
         duration: 2500,
       });
+    },
+  });
+};
+
+export const useGetLoadClass = () => {
+  return useApiQuery<ClassItems[]>({
+    queryKey: [QUERY_KEYS.classList(), QUERY_KEYS.classLoadList()],
+    fetchOptions: {
+      endpoint: '/teachers/lectures/load',
+      authorization: true,
     },
   });
 };

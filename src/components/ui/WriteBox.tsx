@@ -18,7 +18,7 @@ export default function WriteBox({ type }: WriteBoxProps) {
   const { data: noticeData } = useGetNoticeDetails(id);
   const data = type === '숙제' ? homeworkData : noticeData;
 
-  const { watch, setValue } = useFormContext();
+  const { setValue } = useFormContext();
 
   const selectedFiles = useRef<HTMLInputElement>(null);
   const [fileList, setFileList] = useState<File[]>([]);
