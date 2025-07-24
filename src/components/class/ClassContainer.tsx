@@ -47,18 +47,19 @@ export default function ClassContainer() {
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
 
-    params.set('filter', tab);
-
     if (openMenu !== null) {
       params.set('id', openMenu.toString());
     } else if (!isOpen) {
       params.delete('id');
     }
 
-    router.push(`?${params.toString()}`);
-  }, [tab, openMenu]);
+    router.replace(`?${params.toString()}`);
+  }, [openMenu]);
 
   useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('id');
+
     const handleClickOutside = (e: MouseEvent) => {
       const openCard = document.getElementById(`menu-${openMenu}`);
       const moreButton = document.getElementById(`more-btn-${openMenu}`);
@@ -75,10 +76,10 @@ export default function ClassContainer() {
     };
   }, [openMenu]);
 
-  const handleDeleteClass = async (lectureId: string) => {
+  const handleDeleteClass = async (lectureId: number) => {
     setOpenMenu(null);
     try {
-      await deleteClass(lectureId);
+      await deleteClass(lectureId.toString());
       await refetch();
     } catch (error) {
       if (process.env.NODE_ENV === 'development') console.error(error);
@@ -161,7 +162,7 @@ export default function ClassContainer() {
                   </button> */}
                 </div>
               )}
-              {openMenu?.toString() === data.id && (
+              {openMenu === Number(data.id) && (
                 <div
                   id={`menu-${openMenu}`}
                   ref={menuRef}

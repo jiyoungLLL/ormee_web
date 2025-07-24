@@ -86,7 +86,6 @@ export const useDeleteClass = () => {
         duration: 2500,
       });
     },
-    invalidateKey: [QUERY_KEYS.classList()],
     onError: (err) => {
       addToast({
         message: err.message,
@@ -94,5 +93,6 @@ export const useDeleteClass = () => {
         duration: 2500,
       });
     },
+    invalidateKey: [QUERY_KEYS.classList()],
   });
 };

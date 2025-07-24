@@ -1,8 +1,8 @@
-import { z } from 'zod';
 import { classListResponseSchema } from '@/features/class/class.schema';
+import { z } from 'zod';
 
 export type ClassItems = {
-  id: string;
+  id: number;
   code?: number;
   password: 'defaultPassword';
   profileImage: string;

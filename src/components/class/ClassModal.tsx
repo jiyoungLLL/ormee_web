@@ -42,15 +42,7 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
 
   const { data: classList } = useGetClass();
   const [data, setData] = useState<ClassItems>();
-
-  useEffect(() => {
-    if (filter && lectureId) {
-      const lectureData = classList?.[filter]?.find((item) => item.id === lectureId);
-      if (lectureData) {
-        setData(lectureData);
-      }
-    }
-  }, [filter, lectureId]);
+  const preData = classList?.openLectures.find((item) => item.id === Number(lectureId));
 
   const title = type === 'ongoing' ? '강의 설정' : '신규 강의 개설';
 
@@ -68,16 +60,16 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
   } = methods;
 
   useEffect(() => {
-    const koreanDays = data?.lectureDays?.map((eng) => dayMapEngToKor[eng]) || [];
+    const koreanDays = preData?.lectureDays?.map((eng) => dayMapEngToKor[eng]) || [];
 
-    if (data) {
+    if (preData) {
       methods.reset({
-        title: data.title || '',
-        description: data.description || '',
-        startTime: data.startTime || '',
-        endTime: data.endTime || '',
-        startDate: data.startDate || '',
-        dueDate: data.dueDate || '',
+        title: preData.title || '',
+        description: preData.description || '',
+        startTime: preData.startTime || '',
+        endTime: preData.endTime || '',
+        startDate: preData.startDate || '',
+        dueDate: preData.dueDate || '',
         lectureDays: koreanDays || [],
         password: 'defaultPassword',
       });
@@ -147,6 +139,7 @@ export default function ClassModal({ type, isOpen, closeModal }: ClassModalProps
           onConfirm={handleSubmit(onSubmit, onInvalid)}
           title={title}
           containerStyle='flex flex-col gap-[30px] bg-white rounded-[15px] px-[30px] py-[20px] select-none'
+          confirmButtonType={{ isPurple: true }}
         >
           <div className='w-full h-fit flex flex-col gap-[20px]'>
             {renderModalContents({ inputTitle: '강의명', name: 'title' })}
