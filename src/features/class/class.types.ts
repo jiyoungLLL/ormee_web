@@ -4,7 +4,6 @@ import { z } from 'zod';
 export type ClassItems = {
   id: number;
   code?: number;
-  password: 'defaultPassword';
   profileImage: string;
   name: string;
   title: string;

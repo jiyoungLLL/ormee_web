@@ -8,10 +8,11 @@ import { useGetDraftNotice, useGetNoticeDetails } from '@/features/notice/useNot
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { HomeworkFormValues, homeworkSchema, NoticeFormValues, noticeSchema } from '@/schemas/writeBox.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import Draft from '../draftModal/Draft';
+import LoadModal from '../loadModal/LoadModal';
 
 type CreateProps = {
   type: 'HOMEWORK' | 'NOTICE';
@@ -21,6 +22,7 @@ type CreateProps = {
 type ModalType = 'LOAD' | 'DRAFT' | null;
 
 export default function Create({ type, params }: CreateProps) {
+  const router = useRouter();
   const schema = type === 'HOMEWORK' ? homeworkSchema : noticeSchema;
   const lectureId = useLectureId() ?? '';
   const searchParams = useSearchParams();
@@ -79,6 +81,10 @@ export default function Create({ type, params }: CreateProps) {
     }
   }, [preData, noticeData, setValue, type]);
 
+  const handleLoad = (id: number) => {
+    router.push(`/lectures/${lectureId}/${type.toLowerCase()}/create?id=${id}`);
+  };
+
   // 임시저장 개수 (숙제/공지 각각 다르게)
   const { data: draftHomework } = useGetDraftHomeworks(lectureId);
   const { data: draftNotice } = useGetDraftNotice(lectureId);
@@ -103,6 +109,15 @@ export default function Create({ type, params }: CreateProps) {
         />
         <CreateContents type={type === 'HOMEWORK' ? '숙제' : '공지'} />
       </form>
+      {modalType === 'LOAD' && (
+        <LoadModal
+          type={type === 'HOMEWORK' ? '숙제' : '공지'}
+          isOpen={true}
+          onCancel={closeModal}
+          onConfirm={closeModal}
+          onClick={handleLoad}
+        />
+      )}
       {modalType === 'DRAFT' && (
         <Draft
           type={type}

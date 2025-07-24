@@ -40,3 +40,11 @@ export type NoticeDraft = {
   postDate: string;
   isPinned: boolean;
 };
+
+export type NoticeLoad = {
+  id: number;
+  title: string;
+  postDate: string;
+  isPinned: boolean;
+  likes: number;
+};

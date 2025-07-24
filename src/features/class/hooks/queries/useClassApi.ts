@@ -4,7 +4,7 @@ import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { useApiMutation, useApiQuery } from '@/hooks/useApi';
 import { useToastStore } from '@/stores/toastStore';
 import { ClassModalValues } from '../../class.schema';
-import { GetClassResponse } from '../../class.types';
+import { ClassItems, GetClassResponse } from '../../class.types';
 
 export const useGetClass = () => {
   return useApiQuery<GetClassResponse>({
@@ -39,7 +39,7 @@ export const useCreateClass = () => {
         duration: 2500,
       });
     },
-    invalidateKey: [QUERY_KEYS.classList()],
+    invalidateKey: QUERY_KEYS.classList(),
   });
 };
 
@@ -66,7 +66,7 @@ export const useUpdateClass = (lectureId: string) => {
         duration: 2500,
       });
     },
-    invalidateKey: [QUERY_KEYS.classList()],
+    invalidateKey: QUERY_KEYS.classList(),
   });
 };
 
@@ -86,6 +86,10 @@ export const useDeleteClass = () => {
         duration: 2500,
       });
     },
+<<<<<<< HEAD
+=======
+    invalidateKey: QUERY_KEYS.classList(),
+>>>>>>> 52e70b8d71c5b9f6503a7ed0945047af085e79e2
     onError: (err) => {
       addToast({
         message: err.message,
@@ -94,5 +98,15 @@ export const useDeleteClass = () => {
       });
     },
     invalidateKey: [QUERY_KEYS.classList()],
+  });
+};
+
+export const useGetLoadClass = () => {
+  return useApiQuery<ClassItems[]>({
+    queryKey: [QUERY_KEYS.classList(), QUERY_KEYS.classLoadList()],
+    fetchOptions: {
+      endpoint: '/teachers/lectures/load',
+      authorization: true,
+    },
   });
 };

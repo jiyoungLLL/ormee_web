@@ -10,6 +10,7 @@ import {
   phoneNumberPrefixSchema,
   phoneNumberMiddleSchema,
   phoneNumberLastSchema,
+  phoneNumberSchema,
 } from '@/features/user/schemas/user.schema';
 
 export const signinSchema = z.object({
@@ -52,3 +53,7 @@ export const passwordChangeFormSchema = z
     message: USER_ERROR_MESSAGES.NOT_MATCH_PASSWORD,
     path: ['newPasswordConfirm'],
   });
+export const accountRecoverySchema = z.object({
+  name: z.string().min(1, { message: USER_ERROR_MESSAGES.EMPTY_NAME }),
+  phoneNumber: phoneNumberSchema,
+});

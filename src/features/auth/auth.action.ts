@@ -1,6 +1,7 @@
 'use server';
 
 import {
+  AccountRecoveryFormValues,
   PasswordChangeFormValues,
   PasswordCheckFormValues,
   SigninFormValues,
@@ -10,6 +11,7 @@ import { ApiResponse } from '@/types/response.types';
 import { fetcher } from '@/utils/api/api';
 import { cookies } from 'next/headers';
 
+// 회원가입
 export const signupAction = async (formData: SignupFormValues): Promise<ApiResponse> => {
   if (!process.env.API_BASE_URL) {
     return {
@@ -55,6 +57,7 @@ export const signupAction = async (formData: SignupFormValues): Promise<ApiRespo
   };
 };
 
+// 로그인
 export const signinAction = async (formData: SigninFormValues, autoSignin: boolean): Promise<ApiResponse> => {
   if (!process.env.API_BASE_URL) {
     return {
@@ -85,7 +88,7 @@ export const signinAction = async (formData: SigninFormValues, autoSignin: boole
 
     return {
       status: 'fail',
-      code: response.status,
+      code: json.code,
       data: json.data || '로그인에 실패했어요.',
     };
   }
@@ -143,12 +146,12 @@ export const signinAction = async (formData: SigninFormValues, autoSignin: boole
   //   },
   //   body: JSON.stringify({
   //     password: 'secureLecture0',
-  //     title: '영어 듣기',
+  //     title: '테스트 강의',
   //     lectureDays: ['월', '수'],
   //     startTime: '15:30:00',
   //     endTime: '17:00:00',
-  //     startDate: '2024-06-03T00:00:00',
-  //     dueDate: '2024-08-29T23:59:59',
+  //     startDate: '2025-07-19T00:00:00',
+  //     dueDate: '2025-08-29T23:59:59',
   //   }),
   // });
 
@@ -158,6 +161,7 @@ export const signinAction = async (formData: SigninFormValues, autoSignin: boole
   };
 };
 
+// 로그아웃
 export const signoutAction = () => {
   cookies().delete('accessToken');
   cookies().delete('refreshToken');
@@ -219,5 +223,42 @@ export const passwordChangeAction = async (formData: PasswordChangeFormValues): 
     status,
     code,
     data,
+  };
+};
+
+// 아이디 찾기
+export const recoveryIdAction = async (formData: AccountRecoveryFormValues): Promise<ApiResponse<string>> => {
+  if (!process.env.API_BASE_URL) {
+    return {
+      status: 'fail',
+      code: 404,
+      data: '잘못된 API 접근입니다.',
+    };
+  }
+
+  const response = await fetch(`${process.env.API_BASE_URL}/members/username`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(formData),
+  });
+
+  const json = await response.json();
+
+  if (!response.ok) {
+    if (process.env.NODE_ENV === 'development') console.error('아이디 찾기 실패: ', json);
+
+    return {
+      status: 'fail',
+      code: json.code,
+      data: json.data || '아이디 찾기에 실패했어요.',
+    };
+  }
+
+  return {
+    status: 'success',
+    code: json.code,
+    data: json.data,
   };
 };
