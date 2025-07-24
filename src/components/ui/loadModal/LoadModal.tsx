@@ -53,7 +53,6 @@ export default function LoadModal({ type, isOpen, onCancel, onConfirm, onClick }
   const { data: noticeData } = useLoadApi<NoticeLoad[]>({ type: '공지', lectureId: lectureId?.toString() });
 
   const detailData = type === '퀴즈' ? quizData : type === '숙제' ? homeworkData : noticeData;
-  console.log('load 데이터', detailData);
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) onCancel();
