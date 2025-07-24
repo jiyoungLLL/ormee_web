@@ -121,7 +121,7 @@ export default function MainSideNav() {
               <div>
                 <div className='flex flex-col gap-[5px]'>
                   <div className='text-label2-normal text-gray-60'>수업 일시</div>
-                  <div className='flex flex-wrap gap-[10px]'>
+                  <div className='flex flex-wrap gap-[5px]'>
                     {lectureData?.lectureDays.map((day, index) => (
                       <div
                         key={`${day}-${index}`}

@@ -19,9 +19,9 @@ export const usePostNotice = (lectureId: string, successMessage: string) => {
         type: 'success',
       });
     },
-    onError: () => {
+    onError: (err) => {
       addToast({
-        message: '공지 생성에 실패했어요. 다시 시도해주세요.',
+        message: err.message,
         type: 'error',
       });
     },
@@ -29,6 +29,7 @@ export const usePostNotice = (lectureId: string, successMessage: string) => {
       QUERY_KEYS.noticeList({ lectureId }),
       QUERY_KEYS.noticeDraft(lectureId),
       QUERY_KEYS.noticePinned(lectureId),
+      QUERY_KEYS.home(lectureId),
     ],
   });
 };
@@ -123,7 +124,11 @@ export const usePutNotice = (lectureId: string, noticeId: string) => {
         type: 'error',
       });
     },
-    invalidateKey: [QUERY_KEYS.noticeDetail(noticeId), QUERY_KEYS.noticeList({ lectureId })],
+    invalidateKey: [
+      QUERY_KEYS.noticeDetail(noticeId),
+      QUERY_KEYS.noticeList({ lectureId }),
+      QUERY_KEYS.home(lectureId),
+    ],
   });
 };
 
@@ -158,6 +163,7 @@ export const usePinNotice = (lectureId: string, page: number, noticeId: string) 
       QUERY_KEYS.noticeDetail(noticeId),
       QUERY_KEYS.noticeList({ lectureId, page }),
       QUERY_KEYS.noticePinned(lectureId),
+      QUERY_KEYS.home(lectureId),
     ],
   });
 };
@@ -188,11 +194,12 @@ export const useUnpinNotice = (lectureId: string, page: number, noticeId: string
       QUERY_KEYS.noticeDetail(noticeId),
       QUERY_KEYS.noticeList({ lectureId, page }),
       QUERY_KEYS.noticePinned(lectureId),
+      QUERY_KEYS.home(lectureId),
     ],
   });
 };
 
-export const useDeleteNotice = (lectureId: string, successMessage: string) => {
+export const useDeleteNotice = (lectureId: string, successMessage: string, page?: number) => {
   const { addToast } = useToastStore();
 
   return useApiMutation<void, string>({
@@ -214,9 +221,10 @@ export const useDeleteNotice = (lectureId: string, successMessage: string) => {
       });
     },
     invalidateKey: [
-      QUERY_KEYS.noticeList({ lectureId }),
+      QUERY_KEYS.noticeList({ lectureId, page: page ?? 1 }),
       QUERY_KEYS.noticeDraft(lectureId),
       QUERY_KEYS.noticePinned(lectureId),
+      QUERY_KEYS.home(lectureId),
     ],
   });
 };

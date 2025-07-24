@@ -39,7 +39,7 @@ export const useCreateClass = () => {
         duration: 2500,
       });
     },
-    invalidateKey: [QUERY_KEYS.classList()],
+    invalidateKey: QUERY_KEYS.classList(),
   });
 };
 
@@ -66,7 +66,7 @@ export const useUpdateClass = (lectureId: string) => {
         duration: 2500,
       });
     },
-    invalidateKey: [QUERY_KEYS.classList()],
+    invalidateKey: QUERY_KEYS.classList(),
   });
 };
 
@@ -86,7 +86,7 @@ export const useDeleteClass = () => {
         duration: 2500,
       });
     },
-    invalidateKey: [QUERY_KEYS.classList()],
+    invalidateKey: QUERY_KEYS.classList(),
     onError: (err) => {
       addToast({
         message: err.message,
