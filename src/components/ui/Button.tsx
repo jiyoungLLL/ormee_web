@@ -35,6 +35,8 @@ type ButtonProps = {
   isPinned?: boolean;
   /** 고정버튼 아이콘 */
   pinImg?: string;
+  /** 추가 아이콘 (QR)*/
+  addImg?: string;
 };
 
 const whatBaseType = {
@@ -59,6 +61,7 @@ export default function Button({
   disabled,
   isPinned = false,
   pinImg,
+  addImg,
 }: ButtonProps) {
   const baseStyle = whatBaseType[type] ?? '';
 
@@ -92,9 +95,17 @@ export default function Button({
     <button
       type={htmlType}
       onClick={onClick}
-      className={`whitespace-nowrap ${size} ${baseStyle} ${disabled ? 'text-label-assistive text-headline1 font-bold' : font} ${isPinned && 'flex gap-[4px]'} ${backgroundStyle} ${borderStyle} ${shadowstyle}`}
+      className={`whitespace-nowrap ${size} ${baseStyle} ${disabled ? 'text-label-assistive text-headline1 font-bold' : font} ${(isPinned || addImg) && 'flex gap-[4px]'} ${backgroundStyle} ${borderStyle} ${shadowstyle}`}
       title={description}
     >
+      {addImg && (
+        <Image
+          src={`/assets/icons/QR/${addImg}.png`}
+          alt='QR 아이콘'
+          width={24}
+          height={24}
+        />
+      )}
       {isPinned && (
         <Image
           src={`/assets/icons/${pinImg}.png`}

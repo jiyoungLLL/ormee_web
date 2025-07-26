@@ -33,6 +33,9 @@ export const useCreateClass = (success: () => void) => {
         duration: 2500,
       });
     },
+    // onSuccess: (data) => {
+    //   handleSuccess(data.lectureId);
+    // },
     onError: (err) => {
       addToast({
         message: err.message,

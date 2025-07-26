@@ -34,13 +34,6 @@ export default function ClassContainer() {
     params.delete('id');
   };
 
-  // QR로 변경됨
-  // const handleCopy = (code: number) => {
-  //   navigator.clipboard
-  //     .writeText(code.toString())
-  //     .then(() => addToast({ message: `강의코드를 복사했어요. (코드: ${code}) `, type: 'success', duration: 2500 }));
-  // };
-
   const toggleMenu = (index: number) => {
     setOpenMenu((prev) => (prev === index ? null : index));
   };
@@ -98,6 +91,10 @@ export default function ClassContainer() {
     } catch (error) {
       if (process.env.NODE_ENV === 'development') console.error(error);
     }
+  };
+
+  const handleCloseModal = () => {
+    closeModal();
   };
 
   const renderClass = (classState: 'openLectures' | 'closedLectures') => {
@@ -162,18 +159,6 @@ export default function ClassContainer() {
                       alt='더보기'
                     />
                   </button>
-                  {/* TODO: 디자인 및 기능 변경 후 반영 필요 */}
-                  {/* <button
-                    type='button'
-                    onClick={() => handleCopy(data?.password)}
-                  >
-                    <Image
-                      src={'/assets/icons/dark-copy.png'}
-                      width={24}
-                      height={24}
-                      alt='복사하기'
-                    />
-                  </button> */}
                 </div>
               )}
               {openMenu === Number(data.id) && (
@@ -292,7 +277,7 @@ export default function ClassContainer() {
             ref={modalRef}
             onClick={(e) => e.stopPropagation()}
           >
-            <CreateClass closeModal={closeModal} />
+            <CreateClass closeModal={handleCloseModal} />
           </div>
         )}
 

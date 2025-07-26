@@ -9,15 +9,24 @@ import DateTimePicker from '../ui/DateTimePicker';
 import Input from '../ui/Input';
 import Modal from '../ui/Modal';
 
-export default function CreateClass({ closeModal }: { closeModal: () => void }) {
-  const createMutation = useCreateClass(closeModal);
+// // 깅의 생성 후 큐알 모달
+// const { isOpen: QROpen, openModal: openQRModal, closeModal: closeQRModal } = useModal({ defaultOpen: false });
+// // 강의제목, 아이디 가져오기
+// const title = '오르미 토익';
+// const lectureId = 1;
 
+export default function CreateClass({ closeModal }: { closeModal: () => void }) {
   const methods = useForm<ClassModalValues>({
     resolver: zodResolver(classSchema),
     mode: 'onSubmit',
   });
-
   const { control, watch, setValue, handleSubmit } = methods;
+
+  const handleSuccess = () => {
+    closeModal();
+  };
+
+  const createMutation = useCreateClass(handleSuccess);
 
   const onSubmit = (data: ClassModalValues) => {
     createMutation.mutate(data);
@@ -33,8 +42,6 @@ export default function CreateClass({ closeModal }: { closeModal: () => void }) 
       : [...selectedDays, day];
     setValue('lectureDays', updatedDays);
   };
-
-  const handleTimeFormat = (time: string) => time?.split(':').slice(0, 2).join(':');
 
   return (
     <FormProvider {...methods}>
