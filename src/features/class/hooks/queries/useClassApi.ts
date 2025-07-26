@@ -16,7 +16,7 @@ export const useGetClass = () => {
   });
 };
 
-export const useCreateClass = () => {
+export const useCreateClass = (success: () => void) => {
   const { addToast } = useToastStore();
 
   return useApiMutation<void, ClassModalValues>({
@@ -26,6 +26,7 @@ export const useCreateClass = () => {
       authorization: true,
     },
     onSuccess: () => {
+      success();
       addToast({
         message: '강의가 생성되었어요.',
         type: 'success',
@@ -34,7 +35,7 @@ export const useCreateClass = () => {
     },
     onError: (err) => {
       addToast({
-        message: '강의 생성에 실패했어요. 다시 시도해주세요.',
+        message: err.message,
         type: 'error',
         duration: 2500,
       });
@@ -61,7 +62,7 @@ export const useUpdateClass = (lectureId: string) => {
     },
     onError: (err) => {
       addToast({
-        message: '강의 수정에 실패했어요. 다시 시도해주세요.',
+        message: err.message,
         type: 'error',
         duration: 2500,
       });
@@ -103,6 +104,60 @@ export const useGetLoadClass = () => {
     fetchOptions: {
       endpoint: '/teachers/lectures/load',
       authorization: true,
+    },
+  });
+};
+
+export const usePostCoworker = (lectureId: string, username: string, success: () => void) => {
+  const { addToast } = useToastStore();
+
+  return useApiMutation<void, string>({
+    method: 'POST',
+    endpoint: `/teachers/lectures/${lectureId}/collaborators?username=${username}`,
+    fetchOptions: {
+      authorization: true,
+    },
+    onSuccess: () => {
+      success();
+      addToast({
+        message: '공동작업자가 추가되었어요.',
+        type: 'success',
+        duration: 2500,
+      });
+    },
+    onError: (err) => {
+      addToast({
+        message: err.message,
+        type: 'error',
+        duration: 2500,
+      });
+    },
+  });
+};
+
+export const useDeleteCoworker = (lectureId: string, username: string, success: () => void) => {
+  const { addToast } = useToastStore();
+
+  return useApiMutation<void, string>({
+    method: 'DELETE',
+    endpoint: `/teachers/lectures/${lectureId}/collaborators?username=${username}`,
+    fetchOptions: {
+      authorization: true,
+    },
+    onSuccess: () => {
+      success();
+      addToast({
+        message: '공동작업자가 삭제되었어요.',
+        type: 'success',
+        duration: 2500,
+      });
+    },
+    onError: (err) => {
+      addToast({
+        message: err.message,
+        type: 'error',
+        duration: 2500,
+      });
     },
   });
 };
