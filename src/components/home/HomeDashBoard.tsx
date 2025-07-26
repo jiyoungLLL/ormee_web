@@ -42,9 +42,6 @@ export default function HomeDashBoard() {
   const lectureNum = useLectureId();
   const { data } = useGetHome();
   const lectureData = data?.lecture;
-  const assignmentData = data?.assignments;
-  const questionData = data?.questions;
-  const noticeData = data?.notices;
 
   // copy 말고 QR 모달로 변경
   const handleCopy = () => {

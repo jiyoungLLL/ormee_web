@@ -13,7 +13,6 @@ export const classSchema = z.object({
     .string()
     .min(1, { message: CLASS_ERROR_MESSAGES.EMPTY_TITLE })
     .max(20, { message: '강의명은 최대 20자까지 입력 가능해요.' }),
-  password: z.string().optional(),
   description: z
     .string()
     .min(1, { message: CLASS_ERROR_MESSAGES.EMPTY_DESCRIPTION })

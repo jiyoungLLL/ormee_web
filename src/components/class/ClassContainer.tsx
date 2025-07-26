@@ -1,39 +1,45 @@
 'use client';
 
-import ClassModal from '@/components/class/ClassModal';
 import Button from '@/components/ui/Button';
 import { useDeleteClass, useGetClass } from '@/features/class/hooks/queries/useClassApi';
-import { useToastStore } from '@/stores/toastStore';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import CreateClass from './CreateClass';
+import UpdateClass from './UpdateClass';
 
 export default function ClassContainer() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams.toString());
   // 데이터 받아오기
   const { data, refetch } = useGetClass();
 
   const { mutateAsync: deleteClass } = useDeleteClass();
 
-  const { addToast } = useToastStore();
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
   const [tab, setTab] = useState<'openLectures' | 'closedLectures'>('openLectures');
   const [openMenu, setOpenMenu] = useState<number | null>(null);
-  const menuRef = useRef<HTMLDivElement | null>(null);
   const [modalType, setModalType] = useState<'new' | 'ongoing' | null>(null);
   const isOpen = modalType !== null;
   const basicStyle = 'w-full rounded-tr-[25px] rounded-b-[25px] bg-white';
 
   const openModal = (type: 'new' | 'ongoing') => setModalType(type);
-  const closeModal = () => setModalType(null);
+  const closeModal = () => {
+    setModalType(null);
+    setOpenMenu(null);
+    params.delete('id');
+  };
 
   // QR로 변경됨
-  const handleCopy = (code: number) => {
-    navigator.clipboard
-      .writeText(code.toString())
-      .then(() => addToast({ message: `강의코드를 복사했어요. (코드: ${code}) `, type: 'success', duration: 2500 }));
-  };
+  // const handleCopy = (code: number) => {
+  //   navigator.clipboard
+  //     .writeText(code.toString())
+  //     .then(() => addToast({ message: `강의코드를 복사했어요. (코드: ${code}) `, type: 'success', duration: 2500 }));
+  // };
 
   const toggleMenu = (index: number) => {
     setOpenMenu((prev) => (prev === index ? null : index));
@@ -49,23 +55,31 @@ export default function ClassContainer() {
 
     if (openMenu !== null) {
       params.set('id', openMenu.toString());
-    } else if (!isOpen) {
+    } else if (modalType === null) {
       params.delete('id');
     }
 
     router.replace(`?${params.toString()}`);
-  }, [openMenu]);
+  }, [openMenu, modalType]);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
-    params.delete('id');
 
     const handleClickOutside = (e: MouseEvent) => {
       const openCard = document.getElementById(`menu-${openMenu}`);
       const moreButton = document.getElementById(`more-btn-${openMenu}`);
+      params.delete('id');
+
       const target = e.target as Node;
 
-      if (openMenu !== null && !openCard?.contains(target) && !moreButton?.contains(target)) {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(target) &&
+        openCard &&
+        !openCard.contains(target) &&
+        moreButton &&
+        !moreButton.contains(target)
+      ) {
         setOpenMenu(null);
       }
     };
@@ -273,12 +287,25 @@ export default function ClassContainer() {
           />
         </div>
 
-        {isOpen && (
-          <ClassModal
-            type={modalType}
-            isOpen={isOpen}
-            closeModal={closeModal}
-          />
+        {isOpen && modalType === 'new' && (
+          <div
+            ref={modalRef}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <CreateClass closeModal={closeModal} />
+          </div>
+        )}
+
+        {isOpen && modalType === 'ongoing' && openMenu !== null && (
+          <div
+            ref={modalRef}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <UpdateClass
+              closeModal={closeModal}
+              lectureId={openMenu.toString()}
+            />
+          </div>
         )}
 
         <div>{renderClass(tab)}</div>
