@@ -219,7 +219,7 @@ export default function DateTimePicker({
         onClick={handlePick}
       >
         <Image
-          src={`/assets/icons/${imageSrc}`}
+          src={`/assets/icons/${disabled && type === 'CALENDAR' ? 'homeSlide_calendar.png' : disabled && type === 'TIME' ? 'disabled_time.png' : imageSrc}`}
           width={20}
           height={20}
           alt={`${type} 아이콘`}
