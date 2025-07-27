@@ -114,7 +114,7 @@ export const QuizListResponseSchema = z.object({
 });
 
 export const DraftQuizResponseSchema = z.object({
-  id: z.string().min(1),
+  id: z.number(),
   author: z.string(),
   quizName: z.string(),
   quizDate: z.union([z.string(), z.null()]),

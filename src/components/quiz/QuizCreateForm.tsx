@@ -61,10 +61,19 @@ export default function QuizCreateForm() {
   const { addToast } = useToastStore();
   const searchParams = useSearchParams();
   const loadQuizId = searchParams.get('loadQuizId');
+  const draftId = searchParams.get('id');
+  const isDraft = searchParams.get('isdraft') === 'true';
 
+  // 기존 퀴즈 불러오기
   const { data: loadedQuizData } = useGetQuizDetail({
     quizId: loadQuizId || '',
     enabled: !!loadQuizId,
+  });
+
+  // 임시저장 퀴즈 불러오기
+  const { data: draftQuizData } = useGetQuizDetail({
+    quizId: draftId || '',
+    enabled: !!draftId && isDraft,
   });
 
   const methods = useForm<QuizFormValues>({
@@ -96,7 +105,13 @@ export default function QuizCreateForm() {
       methods.reset(formValues);
       replace(formValues.problems);
     }
-  }, [isEditMode, quizDetail, loadQuizId, loadedQuizData, methods.reset, replace]);
+    // 임시저장 불러오기로 접근했을 때
+    else if (draftId && isDraft && draftQuizData) {
+      const formValues = convertQuizDataToFormValues(draftQuizData);
+      methods.reset(formValues);
+      replace(formValues.problems);
+    }
+  }, [isEditMode, quizDetail, loadQuizId, loadedQuizData, draftId, isDraft, draftQuizData, methods.reset, replace]);
 
   const [editor, setEditor] = useState<Editor | null>(null);
   const [currentFileName, setCurrentFileName] = useState<Path<QuizFormValues> | null>(null);

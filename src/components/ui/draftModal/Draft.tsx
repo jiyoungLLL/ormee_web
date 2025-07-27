@@ -1,11 +1,14 @@
 import { useDeleteHomework, useGetDraftHomeworks } from '@/features/homework/hooks/queries/useHomeworkApi';
 import { useDeleteNotice, useGetDraftNotice } from '@/features/notice/useNoticeApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
-import { format } from 'date-fns';
+import { format, isValid, parseISO } from 'date-fns';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Button from '../Button';
 import Modal from '../Modal';
+import { useGetTemporaryQuizList } from '@/features/quiz/hooks/useGetTemporaryQuizList';
+import { useDeleteQuiz } from '@/features/quiz/hooks/usePutQuizState';
+import { useState } from 'react';
 
 type DraftType = 'HOMEWORK' | 'NOTICE' | 'QUIZ';
 
@@ -21,28 +24,46 @@ export default function Draft({ type, isOpen, closeModal, onSaveDraft }: DraftPr
   const router = useRouter();
   const lectureId = useLectureId();
 
-  // 쪽지 작성 url 수정해주세요!!!
   const redirectUrl =
     type === 'HOMEWORK'
       ? `/lectures/${lectureId}/homework/create?`
       : type === 'NOTICE'
         ? `/lectures/${lectureId}/notice/create?`
-        : '';
+        : `/lectures/${lectureId}/quiz/create?`;
 
   const { data: homeworkDraftData } = useGetDraftHomeworks(lectureId);
   const { data: noticeDraftData } = useGetDraftNotice(lectureId);
-  const data = type === 'HOMEWORK' ? homeworkDraftData : noticeDraftData;
+  const { data: quizDraftData } = useGetTemporaryQuizList(lectureId);
+
+  const data = type === 'HOMEWORK' ? homeworkDraftData : type === 'NOTICE' ? noticeDraftData : quizDraftData;
 
   const category = type === 'HOMEWORK' ? '숙제' : type === 'NOTICE' ? '공지' : '퀴즈';
   const modalDescription = `임시저장된 ${category}는 30일간 보관돼요.`;
 
-  // 삭제 (퀴즈 추가 필요)
+  // 삭제
   const deleteHomeworkMutation = useDeleteHomework(lectureId, '임시저장된 숙제가 삭제되었어요.');
   const deleteNoticeMutation = useDeleteNotice(lectureId, '임시저장된 공지가 삭제되었어요.');
   const deleteMutation = type === 'HOMEWORK' ? deleteHomeworkMutation : deleteNoticeMutation;
 
+  // 퀴즈 삭제를 위한 상태
+  const [quizIdToDelete, setQuizIdToDelete] = useState<string>('');
+  const { mutate: deleteQuiz } = useDeleteQuiz({
+    lectureId,
+    quizId: quizIdToDelete,
+  });
+
   const deleteDraft = (id: number) => {
-    deleteMutation.mutate(id.toString());
+    if (type === 'QUIZ') {
+      setQuizIdToDelete(id.toString());
+      deleteQuiz(undefined, {
+        onSuccess: () => {
+          closeModal();
+          setQuizIdToDelete('');
+        },
+      });
+    } else {
+      deleteMutation.mutate(id.toString());
+    }
   };
 
   const handleConfirm = () => {
@@ -83,9 +104,21 @@ export default function Draft({ type, isOpen, closeModal, onSaveDraft }: DraftPr
                   ? item.openTime
                   : type === 'NOTICE' && 'postDate' in item
                     ? item.postDate
-                    : type === 'QUIZ' && 'quizDate' in item
-                      ? item.quizDate
+                    : type === 'QUIZ' && 'dueTime' in item
+                      ? item.dueTime
                       : '';
+
+              const formattedDate =
+                time && typeof time === 'string'
+                  ? (() => {
+                      try {
+                        const date = parseISO(time);
+                        return isValid(date) ? format(date, 'yy-MM-dd') : '';
+                      } catch {
+                        return '';
+                      }
+                    })()
+                  : '';
 
               return (
                 <div
@@ -97,9 +130,7 @@ export default function Draft({ type, isOpen, closeModal, onSaveDraft }: DraftPr
                     onClick={() => handleWriteDraft(item.id.toString())}
                   >
                     <div className='flex-1'>{title}</div>
-                    <div className='w-[76px] whitespace-nowrap'>
-                      {typeof time == 'string' && format(time, 'yy-MM-dd')}
-                    </div>
+                    <div className='w-[76px] whitespace-nowrap'>{formattedDate}</div>
                   </div>
                   <Image
                     src='/assets/icons/trash.png'
@@ -107,7 +138,7 @@ export default function Draft({ type, isOpen, closeModal, onSaveDraft }: DraftPr
                     height={24}
                     alt='지우기 아이콘'
                     className='cursor-pointer'
-                    onClick={() => deleteDraft(item.id)}
+                    onClick={() => deleteDraft(Number(item.id))}
                   />
                 </div>
               );
