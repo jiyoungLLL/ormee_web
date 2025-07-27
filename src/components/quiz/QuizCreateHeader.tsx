@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import { useConfirmModal } from '@/hooks/ui/useConfirmModal';
 import Modal from '@/components/ui/Modal';
 import { useQuizEditMode } from '@/features/quiz/hooks/useQuizEditMode';
+import { useModal } from '@/hooks/ui/useModal';
+import LoadModal from '../ui/loadModal/LoadModal';
 
 type QuizCreateHeaderProps = {
   onTemporarySave: () => void;
@@ -33,6 +35,16 @@ export default function QuizCreateHeader({ onTemporarySave, onRegister }: QuizCr
     }
   };
 
+  const {
+    isOpen: isLoadModalOpen,
+    openModal: openLoadModal,
+    closeModal: closeLoadModal,
+  } = useModal({ defaultOpen: false });
+
+  const handleLoadQuiz = (quizId: number) => {
+    router.push(`/lectures/${lectureId}/quiz/create?loadQuizId=${quizId}`);
+  };
+
   return (
     <>
       <div className='flex justify-between items-center w-[1320px] h-[50px] mb-[22px]'>
@@ -49,6 +61,14 @@ export default function QuizCreateHeader({ onTemporarySave, onRegister }: QuizCr
           퀴즈 생성
         </button>
         <div className='flex gap-[10px]'>
+          <Button
+            type='BUTTON_BASE_TYPE'
+            size='w-fit h-[50px]'
+            isPurple={false}
+            font='text-headline1 font-semibold text-label-normal'
+            title='불러오기'
+            onClick={openLoadModal}
+          />
           <Button
             type='BUTTON_BASE_TYPE'
             size='w-fit h-[50px]'
@@ -78,6 +98,15 @@ export default function QuizCreateHeader({ onTemporarySave, onRegister }: QuizCr
         enableCancelButton={true}
         enableConfirmButton={true}
       />
+      {isLoadModalOpen && (
+        <LoadModal
+          type='퀴즈'
+          isOpen={true}
+          onCancel={closeLoadModal}
+          onConfirm={closeLoadModal}
+          onClick={handleLoadQuiz}
+        />
+      )}
     </>
   );
 }
