@@ -12,6 +12,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import Button from '../../ui/Button';
 import Input from '../../ui/Input';
+import RenderFeedback from './RenderFeedback';
 
 const MOCK_FEEDBACK = {
   status: 'success',
@@ -55,7 +56,8 @@ const MOCK_SUBMIT = {
   },
 };
 
-const STICKER = ['EXCELLENT', 'GOOD', 'OK', 'FIGHTING', 'IMPROVE'];
+const STICKER = ['EXCELLENT', 'GOOD', 'OK', 'FIGHTING', 'IMPROVE'] as const;
+type StickerType = (typeof STICKER)[number];
 
 export default function Submissions() {
   const { addToast } = useToastStore();
@@ -64,7 +66,7 @@ export default function Submissions() {
     MOCK_FEEDBACK.data[0].homeworkSubmitId,
   );
   const [emoji, setEmoji] = useState<boolean>(false);
-  const [selectedSticker, setSelectedSticker] = useState<string | null>(null);
+  const [selectedSticker, setSelectedSticker] = useState<StickerType | null>(null);
 
   const lectureNum = useLectureId();
   const searchParams = useSearchParams();
@@ -76,17 +78,36 @@ export default function Submissions() {
     mode: 'onSubmit',
     defaultValues: {
       content: '',
+      stamp: undefined,
     },
   });
 
-  const { setValue, handleSubmit, control } = methods;
+  const {
+    setValue,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = methods;
 
   const createFeedback = usePostFeedback(selectedHomeworkSubmitId);
   const onSubmit = (data: Feedback) => {
     createFeedback.mutate(data);
   };
+  const onError = (errors: any) => {
+    if (errors.content) {
+      addToast({ message: errors.content.message, type: 'error' });
+    }
+  };
 
   // 스티커
+  useEffect(() => {
+    if (selectedSticker) {
+      setValue('stamp', selectedSticker);
+    } else {
+      setValue('stamp', undefined);
+    }
+  }, [selectedSticker, setValue]);
+
   const stickerRef = useRef<HTMLDivElement | null>(null);
   const toggleBtnRef = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
@@ -181,13 +202,13 @@ export default function Submissions() {
               </div>
             </div>
             <div className='text-body1-reading'>{MOCK_SUBMIT.data.content}</div>
-            <div className='flex justify-center'>
+            <div className='flex justify-center w-full'>
               <Image
                 src='https://static.cdn.soomgo.com/upload/portfolio/3fb583d6-6e4b-4495-893b-af8224ababbd.jpg?webp=1'
-                width={655}
+                width={500}
                 height={497}
                 alt='과제 이미지'
-                className='rounded-[8px]'
+                className='rounded-[8px] w-full h-auto'
               />
             </div>
           </div>
@@ -251,7 +272,7 @@ export default function Submissions() {
             <FormProvider {...methods}>
               <form
                 className=' flex gap-[8px] items-center'
-                onSubmit={handleSubmit(onSubmit)}
+                onSubmit={handleSubmit(onSubmit, onError)}
               >
                 <div className='flex flex-col gap-[5px] flex-1'>
                   <Input
@@ -292,6 +313,7 @@ export default function Submissions() {
             </FormProvider>
           </div>
         </div>
+        <RenderFeedback selectedHomeworkSubmitId={selectedHomeworkSubmitId} />
       </div>
     </div>
   );
