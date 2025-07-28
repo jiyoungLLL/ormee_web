@@ -1,4 +1,4 @@
-import { useGetHomeworksDetail } from '@/features/homework/hooks/queries/useHomeworkApi';
+import { useGetHomeworksDetail } from '@/features/homework/hooks/useHomeworkApi';
 import { useGetNoticeDetails } from '@/features/notice/useNoticeApi';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';

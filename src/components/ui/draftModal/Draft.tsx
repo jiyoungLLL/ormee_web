@@ -1,4 +1,4 @@
-import { useDeleteHomework, useGetDraftHomeworks } from '@/features/homework/hooks/queries/useHomeworkApi';
+import { useDeleteHomework, useGetDraftHomeworks } from '@/features/homework/hooks/useHomeworkApi';
 import { useDeleteNotice, useGetDraftNotice } from '@/features/notice/useNoticeApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { format } from 'date-fns';

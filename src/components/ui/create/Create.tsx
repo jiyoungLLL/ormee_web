@@ -3,7 +3,7 @@
 import CreateContents from '@/components/ui/create/CreateContents';
 import CreateHeader from '@/components/ui/create/CreateHeader';
 import { useCreateLogic } from '@/components/ui/create/useCreateLogic';
-import { useGetDraftHomeworks, useGetHomeworksDetail } from '@/features/homework/hooks/queries/useHomeworkApi';
+import { useGetDraftHomeworks, useGetHomeworksDetail } from '@/features/homework/hooks/useHomeworkApi';
 import { useGetDraftNotice, useGetNoticeDetails } from '@/features/notice/useNoticeApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { HomeworkFormValues, homeworkSchema, NoticeFormValues, noticeSchema } from '@/schemas/writeBox.schema';

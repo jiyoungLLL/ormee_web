@@ -1,6 +1,6 @@
 import XIcon from '@/components/icon/XIcon';
 import { useGetLoadClass } from '@/features/class/hooks/queries/useClassApi';
-import { HomeworkItems } from '@/features/homework/homework.types';
+import { HomeworkItems } from '@/features/homework/types/homework.types';
 import { useLoadApi } from '@/features/load/useLoadApi';
 import { NoticeLoad } from '@/features/notice/notice.types';
 import { format } from 'date-fns';

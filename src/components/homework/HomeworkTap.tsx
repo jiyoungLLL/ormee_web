@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetHomeworks } from '@/features/homework/hooks/queries/useHomeworkApi';
+import { useGetHomeworks } from '@/features/homework/hooks/useHomeworkApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { format } from 'date-fns';
 import Image from 'next/image';

@@ -1,5 +1,5 @@
-import { PostHomeWork } from '@/features/homework/homework.types';
-import { useCreateHomework, useUpdateHomework } from '@/features/homework/hooks/queries/useHomeworkApi';
+import { useCreateHomework, useUpdateHomework } from '@/features/homework/hooks/useHomeworkApi';
+import { PostHomeWork } from '@/features/homework/types/homework.types';
 import { PostNotice } from '@/features/notice/notice.types';
 import { usePostNotice, usePutNotice } from '@/features/notice/useNoticeApi';
 import { HomeworkFormValues, homeworkSchema, NoticeFormValues, noticeSchema } from '@/schemas/writeBox.schema';
