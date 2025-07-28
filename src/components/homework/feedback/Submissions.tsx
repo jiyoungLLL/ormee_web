@@ -286,7 +286,7 @@ export default function Submissions() {
                       onClick={() => {
                         selectedSticker === null
                           ? setEmoji((prev) => !prev)
-                          : addToast({ message: '도장은 최대 1개까지 선택 가능해요.', type: 'error' });
+                          : addToast({ message: '피드백 1개당 도장은 최대 1개까지 선택 가능해요.', type: 'error' });
                       }}
                       type='button'
                     >
