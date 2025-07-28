@@ -1,7 +1,7 @@
 import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { useApiMutation, useApiQuery } from '@/hooks/useApi';
 import { useToastStore } from '@/stores/toastStore';
-import { Feedback } from '../types/feedback.types';
+import { Feedback } from '../feedback.schema';
 
 export const useGetHomeworkSubmissions = (homeworkId: number) => {
   return useApiQuery({
@@ -26,7 +26,7 @@ export const useGetHomeworSubmissionDetail = (homeworkSubmitId: number) => {
 export const usePostFeedback = (homeworkSubmitId: number) => {
   const { addToast } = useToastStore();
 
-  return useApiMutation<Feedback>({
+  return useApiMutation<void, Feedback>({
     method: 'POST',
     endpoint: `/techers/homeworks/submissions/${homeworkSubmitId}`,
     fetchOptions: {

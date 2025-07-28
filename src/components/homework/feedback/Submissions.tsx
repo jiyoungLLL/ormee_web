@@ -1,13 +1,17 @@
+import XIcon from '@/components/icon/XIcon';
+import { Feedback, feedbackSchema } from '@/features/homework/feedback.schema';
+import { usePostFeedback } from '@/features/homework/hooks/useFeedback';
 import { useLectureId } from '@/hooks/queries/useLectureId';
+import { useToastStore } from '@/stores/toastStore';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useEffect, useRef, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import Button from '../../ui/Button';
 import Input from '../../ui/Input';
-import SearchInput from '../../ui/SearchInput';
 
 const MOCK_FEEDBACK = {
   status: 'success',
@@ -40,34 +44,78 @@ const MOCK_FEEDBACK = {
   ],
 };
 
-export default function Feedback() {
-  const [selectedStudent, setSelectedStudent] = useState<(typeof MOCK_FEEDBACK.data)[0] | null>(MOCK_FEEDBACK.data[0]);
+const MOCK_SUBMIT = {
+  status: 'success',
+  code: 200,
+  data: {
+    name: '김학생',
+    content: '과제 제출합니다.',
+    filePaths: [],
+    createdAt: '2025-06-12T14:16:36.094638',
+  },
+};
 
-  const { control, handleSubmit } = useForm({
-    defaultValues: {
-      searchStudent: '',
-      feedback: '',
-    },
-  });
+const STICKER = ['EXCELLENT', 'GOOD', 'OK', 'FIGHTING', 'IMPROVE'];
 
-  const onSubmit = (data: { searchStudent: string }) => {
-    // 검색 로직 실행
-  };
+export default function Submissions() {
+  const { addToast } = useToastStore();
+
+  const [selectedHomeworkSubmitId, setSelectedHomeworkSubmitId] = useState<number>(
+    MOCK_FEEDBACK.data[0].homeworkSubmitId,
+  );
+  const [emoji, setEmoji] = useState<boolean>(false);
+  const [selectedSticker, setSelectedSticker] = useState<string | null>(null);
 
   const lectureNum = useLectureId();
   const searchParams = useSearchParams();
   const assingmnetId = searchParams.get('id');
   const title = searchParams.get('title');
 
-  const [selected, setSelected] = useState('');
+  const methods = useForm<Feedback>({
+    resolver: zodResolver(feedbackSchema),
+    mode: 'onSubmit',
+    defaultValues: {
+      content: '',
+    },
+  });
 
+  const { setValue, handleSubmit, control } = methods;
+
+  const createFeedback = usePostFeedback(selectedHomeworkSubmitId);
+  const onSubmit = (data: Feedback) => {
+    createFeedback.mutate(data);
+  };
+
+  // 스티커
+  const stickerRef = useRef<HTMLDivElement | null>(null);
+  const toggleBtnRef = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('filter', selected);
-  }, [selected]);
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as Node;
 
-  const handleStudentClick = (student: (typeof MOCK_FEEDBACK.data)[0]) => {
-    setSelectedStudent(student);
+      if (
+        stickerRef.current &&
+        !stickerRef.current.contains(target) &&
+        toggleBtnRef.current &&
+        !toggleBtnRef.current.contains(target)
+      ) {
+        setEmoji(false);
+      }
+    };
+
+    if (emoji) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [emoji]);
+
+  const handleStudentClick = (homeworkSubmitId: number) => {
+    setSelectedHomeworkSubmitId(homeworkSubmitId);
   };
 
   return (
@@ -91,15 +139,14 @@ export default function Feedback() {
       <div className='absolute top-[129px] rounded-[20px] p-[20px] flex gap-[20px] bg-white'>
         {/* 좌측: 학생명 */}
         <div className='w-[180px] h-[726px] rounded-[20px] flex flex-col gap-[21px]'>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <SearchInput
+          <div>
+            {/* <SearchInput
               name='searchStudent'
               control={control}
               size='w-fill h-[43px]'
-              placeholder='학생 이름 검색'
               iconPosition='right'
-            />
-          </form>
+            /> */}
+          </div>
           <div className='flex flex-col'>
             {MOCK_FEEDBACK.data.map((student) => {
               if (student.studentName === '') return;
@@ -108,11 +155,11 @@ export default function Feedback() {
                 <button
                   key={`${student.studentName}-${student.createdAt}`}
                   className={`flex gap-[8px] items-center text-start text-headline1 px-[12px] py-[10px] rounded-[10px] ${
-                    student.homeworkSubmitId === selectedStudent?.homeworkSubmitId
+                    student.homeworkSubmitId === selectedHomeworkSubmitId
                       ? 'bg-gray-10 text-purple-50 font-semibold'
                       : 'bg-white'
                   }`}
-                  onClick={() => handleStudentClick(student)}
+                  onClick={() => handleStudentClick(student.homeworkSubmitId)}
                 >
                   {student.studentName}
                   {!student.isFeedback && (
@@ -127,13 +174,13 @@ export default function Feedback() {
         <div className='w-[715px] h-[726px] rounded-[10px] pt-[30px] pb-[20px] px-[30px] bg-gray-10 flex flex-col gap-[20px]'>
           <div className='flex flex-col gap-[17px] w-fill overflow-y-auto '>
             <div className='flex gap-[17px] items-center'>
-              <span className='text-headline1 font-semibold'>{selectedStudent?.studentName}</span>
+              <span className='text-headline1 font-semibold'>{MOCK_SUBMIT.data?.name}</span>
               <div className='flex gap-[5px] text-body2-normal text-gray-70'>
-                <span>{selectedStudent?.createdAt && format(selectedStudent?.createdAt, 'yyyy.MM.dd')}</span>
-                <span>{selectedStudent?.createdAt && format(selectedStudent?.createdAt, 'a h:mm')}</span>
+                <span>{MOCK_SUBMIT.data?.createdAt && format(MOCK_SUBMIT.data?.createdAt, 'yyyy.MM.dd')}</span>
+                <span>{MOCK_SUBMIT.data?.createdAt && format(MOCK_SUBMIT.data?.createdAt, 'a h:mm')}</span>
               </div>
             </div>
-            <div className='text-body1-reading'>content 자리</div>
+            <div className='text-body1-reading'>{MOCK_SUBMIT.data.content}</div>
             <div className='flex justify-center'>
               <Image
                 src='https://static.cdn.soomgo.com/upload/portfolio/3fb583d6-6e4b-4495-893b-af8224ababbd.jpg?webp=1'
@@ -144,28 +191,105 @@ export default function Feedback() {
               />
             </div>
           </div>
-          <div className='flex gap-[8px]'>
-            <Input
-              name='feedback'
-              control={control}
-              size='h-[50px] flex-1'
-              placeholder='피드백을 입력해주세요'
-            >
-              <Image
-                src='/assets/icons/emoji.png'
-                width={24}
-                height={24}
-                alt='이모티콘 아이콘'
-              />
-            </Input>
-            <Button
-              type='BUTTON_BASE_TYPE'
-              title='피드백 남기기'
-              size='h-[50px]'
-              font='text-headline1 font-bold'
-              isPurple={true}
-              isfilled={true}
-            />
+          <div className='relative'>
+            {selectedSticker === null && emoji && (
+              <div
+                ref={stickerRef}
+                className='absolute bottom-[55px] z-10 w-[511px] h-[214px] py-[18px] rounded-[10px] border border-white bg-white flex items-center justify-center'
+              >
+                <div className='w-[471px] max-h-full overflow-y-auto'>
+                  <div className='grid grid-cols-3 gap-x-[15px]'>
+                    {STICKER.map((sticker, idx) => (
+                      <button
+                        key={`${idx}-${sticker}`}
+                        className='w-[129px] h-[129px] flex-shrink-0'
+                        onClick={() => {
+                          setSelectedSticker(sticker);
+                          setEmoji(false);
+                        }}
+                      >
+                        <Image
+                          src={`/assets/icons/feedback/${sticker}.png`}
+                          width={129}
+                          height={129}
+                          alt={`${sticker} 스티커`}
+                          className='w-full h-full object-contain'
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+            {selectedSticker && (
+              <div
+                ref={stickerRef}
+                className='absolute bottom-[50px] z-10 w-[511px] h-[214px] py-[20px] px-[30px] rounded-[10px] border bg-black/70 flex items-center'
+              >
+                <div className='flex flex-col'>
+                  <button
+                    className='flex justify-end'
+                    onClick={() => setSelectedSticker(null)}
+                  >
+                    <XIcon
+                      size={18}
+                      thickness={2}
+                      color='bg-gray-10'
+                      useTailwind={true}
+                    />
+                  </button>
+                  <Image
+                    src={`/assets/icons/feedback/${selectedSticker}.png`}
+                    width={140}
+                    height={140}
+                    alt={`${selectedSticker} 스티커`}
+                    className='object-contain'
+                  />
+                </div>
+              </div>
+            )}
+            <FormProvider {...methods}>
+              <form
+                className=' flex gap-[8px] items-center'
+                onSubmit={handleSubmit(onSubmit)}
+              >
+                <div className='flex flex-col gap-[5px] flex-1'>
+                  <Input
+                    name='content'
+                    control={control}
+                    size='h-[50px]'
+                  >
+                    <button
+                      ref={toggleBtnRef}
+                      className='relative z-5 -right-[471px] top-[15px]'
+                      onClick={() => {
+                        selectedSticker === null
+                          ? setEmoji((prev) => !prev)
+                          : addToast({ message: '도장은 최대 1개까지 선택 가능해요.', type: 'error' });
+                      }}
+                      type='button'
+                    >
+                      <Image
+                        src='/assets/icons/emoji.png'
+                        width={24}
+                        height={24}
+                        alt='이모티콘 아이콘'
+                      />
+                    </button>
+                  </Input>
+                  <div className='text-label font-regular text-label-neutral'>특수문자 및 숫자 입력 불가</div>
+                </div>
+
+                <Button
+                  type='BUTTON_BASE_TYPE'
+                  title='피드백 남기기'
+                  size='h-[50px]'
+                  font='text-headline1 font-bold'
+                  isPurple={true}
+                  isfilled={true}
+                />
+              </form>
+            </FormProvider>
           </div>
         </div>
       </div>
