@@ -7,6 +7,10 @@ import { useRouter } from 'next/navigation';
 import { useConfirmModal } from '@/hooks/ui/useConfirmModal';
 import Modal from '@/components/ui/Modal';
 import { useQuizEditMode } from '@/features/quiz/hooks/useQuizEditMode';
+import { useModal } from '@/hooks/ui/useModal';
+import LoadModal from '@/components/ui/loadModal/LoadModal';
+import Draft from '@/components/ui/draftModal/Draft';
+import { useGetTemporaryQuizList } from '@/features/quiz/hooks/useGetTemporaryQuizList';
 
 type QuizCreateHeaderProps = {
   onTemporarySave: () => void;
@@ -17,6 +21,10 @@ export default function QuizCreateHeader({ onTemporarySave, onRegister }: QuizCr
   const router = useRouter();
   const lectureId = useLectureId();
   const { isEditMode } = useQuizEditMode();
+
+  // 임시저장된 퀴즈 목록 가져오기
+  const { data: temporaryQuizList } = useGetTemporaryQuizList(lectureId);
+  const draftCount = temporaryQuizList?.length || 0;
 
   const {
     isOpen: isRouteModalOpen,
@@ -31,6 +39,22 @@ export default function QuizCreateHeader({ onTemporarySave, onRegister }: QuizCr
     if (confirmed) {
       router.push(`/lectures/${lectureId}/quiz`);
     }
+  };
+
+  const {
+    isOpen: isLoadModalOpen,
+    openModal: openLoadModal,
+    closeModal: closeLoadModal,
+  } = useModal({ defaultOpen: false });
+
+  const {
+    isOpen: isDraftModalOpen,
+    openModal: openDraftModal,
+    closeModal: closeDraftModal,
+  } = useModal({ defaultOpen: false });
+
+  const handleLoadQuiz = (quizId: number) => {
+    router.push(`/lectures/${lectureId}/quiz/create?loadQuizId=${quizId}`);
   };
 
   return (
@@ -54,8 +78,17 @@ export default function QuizCreateHeader({ onTemporarySave, onRegister }: QuizCr
             size='w-fit h-[50px]'
             isPurple={false}
             font='text-headline1 font-semibold text-label-normal'
+            title='불러오기'
+            onClick={openLoadModal}
+          />
+          <Button
+            type='BUTTON_BASE_TYPE'
+            size='w-fit h-[50px]'
+            isPurple={false}
+            font='text-headline1 font-semibold text-label-normal'
             title='임시저장'
-            onClick={onTemporarySave}
+            onClick={openDraftModal}
+            added={draftCount > 0 ? ` ${draftCount}` : ''}
           />
           <Button
             type='BUTTON_BASE_TYPE'
@@ -78,6 +111,23 @@ export default function QuizCreateHeader({ onTemporarySave, onRegister }: QuizCr
         enableCancelButton={true}
         enableConfirmButton={true}
       />
+      {isLoadModalOpen && (
+        <LoadModal
+          type='퀴즈'
+          isOpen={true}
+          onCancel={closeLoadModal}
+          onConfirm={closeLoadModal}
+          onClick={handleLoadQuiz}
+        />
+      )}
+      {isDraftModalOpen && (
+        <Draft
+          type='QUIZ'
+          isOpen={true}
+          closeModal={closeDraftModal}
+          onSaveDraft={onTemporarySave}
+        />
+      )}
     </>
   );
 }
