@@ -77,7 +77,7 @@ export default function Submissions() {
     resolver: zodResolver(feedbackSchema),
     mode: 'onSubmit',
     defaultValues: {
-      content: '',
+      content: undefined,
       stamp: undefined,
     },
   });
