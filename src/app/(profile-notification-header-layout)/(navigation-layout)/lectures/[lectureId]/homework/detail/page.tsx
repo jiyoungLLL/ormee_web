@@ -3,7 +3,7 @@
 import RenderingDetails from '@/components/homework/RenderingDetails';
 import Button from '@/components/ui/Button';
 import DateTimePicker from '@/components/ui/DateTimePicker';
-import { useDeleteHomework, useGetHomeworksDetail } from '@/features/homework/hooks/queries/useHomeworkApi';
+import { useDeleteHomework, useGetHomeworksDetail } from '@/features/homework/hooks/useHomeworkApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { useBackRedirect } from '@/hooks/useBackRedirect';
 import { format } from 'date-fns';
