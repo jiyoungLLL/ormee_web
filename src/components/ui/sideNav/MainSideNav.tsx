@@ -1,11 +1,10 @@
 'use client';
 
-import { ClassItems } from '@/features/class/class.types';
 import { useGetClass } from '@/features/class/hooks/queries/useClassApi';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import SideNavIcon from './SideNavIcon';
 
 export default function MainSideNav() {
@@ -17,12 +16,10 @@ export default function MainSideNav() {
 
   const [isOpen, setIsOpen] = useState(false);
   const { data: lectureRawData } = useGetClass();
-  const [lectureData, setLectureData] = useState<ClassItems | undefined>(undefined);
 
-  useEffect(() => {
-    const lectureData = lectureRawData?.openLectures.find((lecture) => lecture.id.toString() === lectureId);
-    setLectureData(lectureData);
-  }, [lectureRawData, lectureNum, lectureId]);
+  const lectureData = useMemo(() => {
+    return lectureRawData?.openLectures.find((lecture) => lecture.id.toString() === lectureId);
+  }, [lectureRawData, lectureId]);
 
   const categoryListGroup1 = { 강의홈: 'home' };
   const categoryListGroup2 = {
@@ -57,8 +54,6 @@ export default function MainSideNav() {
   const categoryGroup1Memo = useMemo(() => renderCategoryGroup(categoryListGroup1), [mainCategory]);
   const categoryGroup2Memo = useMemo(() => renderCategoryGroup(categoryListGroup2), [mainCategory]);
   const categoryGroup3Memo = useMemo(() => renderCategoryGroup(categoryListGroup3), [mainCategory]);
-
-  if (!lectureData) return null;
 
   const handleDayFormat = (day: string) => {
     switch (day) {
