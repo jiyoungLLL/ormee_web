@@ -15,7 +15,7 @@ export default function HomeSlide({ data }: { data: z.infer<typeof homeResponseS
     scrollRef.current?.scrollBy({ left: 340, behavior: 'smooth' });
   };
 
-  const clonedData = [...data.slice(-2), ...data, ...data.slice(0, 2)];
+  const clonedData = data.length >= 4 ? [...data.slice(-2), ...data, ...data.slice(0, 2)] : data;
 
   useEffect(() => {
     const scrollEl = scrollRef.current;
