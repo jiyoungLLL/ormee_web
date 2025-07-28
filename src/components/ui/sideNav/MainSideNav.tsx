@@ -24,7 +24,6 @@ export default function MainSideNav() {
     setLectureData(lectureData);
   }, [lectureRawData, lectureNum, lectureId]);
 
-  /** 고정된 categoryList들 (항상 정의됨) */
   const categoryListGroup1 = { 강의홈: 'home' };
   const categoryListGroup2 = {
     퀴즈: 'quiz',
@@ -58,6 +57,8 @@ export default function MainSideNav() {
   const categoryGroup1Memo = useMemo(() => renderCategoryGroup(categoryListGroup1), [mainCategory]);
   const categoryGroup2Memo = useMemo(() => renderCategoryGroup(categoryListGroup2), [mainCategory]);
   const categoryGroup3Memo = useMemo(() => renderCategoryGroup(categoryListGroup3), [mainCategory]);
+
+  if (!lectureData) return null;
 
   const handleDayFormat = (day: string) => {
     switch (day) {
