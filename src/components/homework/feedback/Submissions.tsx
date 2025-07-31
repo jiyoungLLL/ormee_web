@@ -1,77 +1,49 @@
 import XIcon from '@/components/icon/XIcon';
 import { Feedback, feedbackSchema } from '@/features/homework/feedback.schema';
-import { usePostFeedback } from '@/features/homework/hooks/useFeedback';
+import {
+  useGetFeedback,
+  useGetHomeworkSubmissionDetail,
+  useGetHomeworkSubmissions,
+  usePostFeedback,
+  usePutFeedback,
+} from '@/features/homework/hooks/useFeedback';
 import { useLectureId } from '@/hooks/queries/useLectureId';
 import { useToastStore } from '@/stores/toastStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import Button from '../../ui/Button';
 import Input from '../../ui/Input';
 import RenderFeedback from './RenderFeedback';
 
-const MOCK_FEEDBACK = {
-  status: 'success',
-  code: 200,
-  data: [
-    {
-      homeworkSubmitId: 1,
-      studentName: '김학생',
-      isSubmitted: null,
-      isChecked: false,
-      isFeedback: false,
-      createdAt: '2025-06-12T14:16:36.094638',
-    },
-    {
-      homeworkSubmitId: 2,
-      studentName: '이학생',
-      isSubmitted: null,
-      isChecked: true,
-      isFeedback: true,
-      createdAt: '2025-06-16T14:16:36.094638',
-    },
-    {
-      homeworkSubmitId: 3,
-      studentName: '박학생',
-      isSubmitted: null,
-      isChecked: false,
-      isFeedback: false,
-      createdAt: '2025-06-20T14:16:36.094638',
-    },
-  ],
-};
-
-const MOCK_SUBMIT = {
-  status: 'success',
-  code: 200,
-  data: {
-    name: '김학생',
-    content: '과제 제출합니다.',
-    filePaths: [],
-    createdAt: '2025-06-12T14:16:36.094638',
-  },
-};
-
 const STICKER = ['EXCELLENT', 'GOOD', 'OK', 'FIGHTING', 'IMPROVE'] as const;
 type StickerType = (typeof STICKER)[number];
 
 export default function Submissions() {
-  const { addToast } = useToastStore();
+  const lectureNum = useLectureId();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams.toString());
 
-  const [selectedHomeworkSubmitId, setSelectedHomeworkSubmitId] = useState<number>(
-    MOCK_FEEDBACK.data[0].homeworkSubmitId,
-  );
+  const homeworkId = Number(searchParams.get('id'));
+  const title = searchParams.get('title');
+  const feedbackId = Number(searchParams.get('feedbackId'));
+
   const [emoji, setEmoji] = useState<boolean>(false);
   const [selectedSticker, setSelectedSticker] = useState<StickerType | null>(null);
 
-  const lectureNum = useLectureId();
-  const searchParams = useSearchParams();
-  const assingmnetId = searchParams.get('id');
-  const title = searchParams.get('title');
+  const { addToast } = useToastStore();
+
+  const { data: submitStudentList } = useGetHomeworkSubmissions(homeworkId);
+
+  const [selectedHomeworkSubmitId, setSelectedHomeworkSubmitId] = useState<number>(
+    submitStudentList?.[0]?.homeworkSubmitId ?? 0,
+  );
+  const { data: submitDetail } = useGetHomeworkSubmissionDetail(selectedHomeworkSubmitId);
 
   const methods = useForm<Feedback>({
     resolver: zodResolver(feedbackSchema),
@@ -87,12 +59,52 @@ export default function Submissions() {
     handleSubmit,
     control,
     formState: { errors },
+    reset,
   } = methods;
 
-  const createFeedback = usePostFeedback(selectedHomeworkSubmitId);
-  const onSubmit = (data: Feedback) => {
-    createFeedback.mutate(data);
+  // feedback 수정 아닐 때
+  useEffect(() => {
+    if (!feedbackId) {
+      reset({ content: '', stamp: undefined });
+      setSelectedSticker(null);
+    }
+  }, [feedbackId]);
+  // 수정버튼 클릭 후
+  const { data: feedbackData } = useGetFeedback(selectedHomeworkSubmitId);
+  const feedback = feedbackData?.find((feedback) => feedback.id === feedbackId);
+  console.log(feedbackId, feedbackData, feedback);
+  useEffect(() => {
+    if (feedback) {
+      reset({
+        content: feedback.content ?? '',
+        stamp: feedback.stamp ?? undefined,
+      });
+      if (feedback.stamp) {
+        setSelectedSticker(feedback.stamp);
+      }
+    }
+  }, [feedback, reset]);
+
+  const onSuccess = () => {
+    reset({ content: '', stamp: undefined });
+    setSelectedSticker(null);
+    setEmoji(false);
+    if (feedbackId) {
+      params.delete('feedbackId');
+      router.replace(`?${params.toString()}`);
+    }
   };
+
+  const createFeedback = usePostFeedback(selectedHomeworkSubmitId, homeworkId, onSuccess);
+  const updateFeedback = usePutFeedback(selectedHomeworkSubmitId, feedbackId, onSuccess);
+  const onSubmit = (data: Feedback) => {
+    if (feedbackId) {
+      updateFeedback.mutate(data);
+    } else {
+      createFeedback.mutate(data);
+    }
+  };
+
   const onError = (errors: any) => {
     if (errors.content) {
       addToast({ message: errors.content.message, type: 'error' });
@@ -121,6 +133,9 @@ export default function Submissions() {
         !toggleBtnRef.current.contains(target)
       ) {
         setEmoji(false);
+
+        params.delete('feedbackId');
+        router.replace(`?${params.toString()}`);
       }
     };
 
@@ -169,7 +184,7 @@ export default function Submissions() {
             /> */}
           </div>
           <div className='flex flex-col'>
-            {MOCK_FEEDBACK.data.map((student) => {
+            {submitStudentList?.map((student) => {
               if (student.studentName === '') return;
 
               return (
@@ -193,30 +208,36 @@ export default function Submissions() {
         </div>
         {/* 우측: 제출 상세 */}
         <div className='w-[715px] h-[726px] rounded-[10px] pt-[30px] pb-[20px] px-[30px] bg-gray-10 flex flex-col gap-[20px]'>
-          <div className='flex flex-col gap-[17px] w-fill overflow-y-auto '>
+          <div className='flex flex-col gap-[17px] w-fill overflow-y-auto h-[655px]'>
             <div className='flex gap-[17px] items-center'>
-              <span className='text-headline1 font-semibold'>{MOCK_SUBMIT.data?.name}</span>
+              <span className='text-headline1 font-semibold'>{submitDetail?.name}</span>
               <div className='flex gap-[5px] text-body2-normal text-gray-70'>
-                <span>{MOCK_SUBMIT.data?.createdAt && format(MOCK_SUBMIT.data?.createdAt, 'yyyy.MM.dd')}</span>
-                <span>{MOCK_SUBMIT.data?.createdAt && format(MOCK_SUBMIT.data?.createdAt, 'a h:mm')}</span>
+                <span>{submitDetail?.createdAt && format(submitDetail.createdAt, 'yyyy.MM.dd')}</span>
+                <span>{submitDetail?.createdAt && format(submitDetail.createdAt, 'a h:mm')}</span>
               </div>
             </div>
-            <div className='text-body1-reading'>{MOCK_SUBMIT.data.content}</div>
-            <div className='flex justify-center w-full'>
-              <Image
-                src='https://static.cdn.soomgo.com/upload/portfolio/3fb583d6-6e4b-4495-893b-af8224ababbd.jpg?webp=1'
-                width={500}
-                height={497}
-                alt='과제 이미지'
-                className='rounded-[8px] w-full h-auto'
-              />
-            </div>
+            <div className='text-body1-reading'>{submitDetail?.content}</div>
+            {submitDetail?.filePaths &&
+              submitDetail.filePaths.map((files, index) => (
+                <div
+                  key={`${index}-${files}`}
+                  className='flex justify-center w-full'
+                >
+                  <Image
+                    src={files}
+                    width={500}
+                    height={497}
+                    alt='과제 이미지'
+                    className='rounded-[8px] w-full h-auto'
+                  />
+                </div>
+              ))}
           </div>
           <div className='relative'>
             {selectedSticker === null && emoji && (
               <div
                 ref={stickerRef}
-                className='absolute bottom-[55px] z-10 w-[511px] h-[214px] py-[18px] rounded-[10px] border border-white bg-white flex items-center justify-center'
+                className='absolute bottom-[70px] z-10 w-[511px] h-[214px] py-[18px] rounded-[10px] border border-white bg-white flex items-center justify-center'
               >
                 <div className='w-[471px] max-h-full overflow-y-auto'>
                   <div className='grid grid-cols-3 gap-x-[15px]'>
@@ -245,7 +266,7 @@ export default function Submissions() {
             {selectedSticker && (
               <div
                 ref={stickerRef}
-                className='absolute bottom-[50px] z-10 w-[511px] h-[214px] py-[20px] px-[30px] rounded-[10px] border bg-black/70 flex items-center'
+                className='absolute bottom-[70px] z-10 w-[511px] h-[214px] py-[20px] px-[30px] rounded-[10px] border bg-black/70 flex items-center'
               >
                 <div className='flex flex-col'>
                   <button

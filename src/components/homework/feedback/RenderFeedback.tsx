@@ -1,34 +1,34 @@
 import Badge from '@/components/ui/Badge';
+import { useDeleteFeedback, useGetFeedback } from '@/features/homework/hooks/useFeedback';
 import { format } from 'date-fns';
 import Image from 'next/image';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-
-const MOCK_FEEDBACKGET = {
-  status: 'success',
-  code: 200,
-  data: [
-    {
-      id: 2,
-      stamp: 'GOOD',
-      content: '잘했어요',
-      createdAt: '2025-06-19T01:34:52.149867',
-    },
-    {
-      id: 3,
-      stamp: 'IMPROVE',
-      content: '좀 더 꼼꼼하게 해보아요',
-      createdAt: '2025-06-23T01:34:52.149867',
-    },
-  ],
-};
 
 type FeedbackProps = {
   selectedHomeworkSubmitId: number;
 };
 
 export default function RenderFeedback({ selectedHomeworkSubmitId }: FeedbackProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const menuRef = useRef<(HTMLDivElement | null)[]>([]);
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
+
+  const { data: feedbackData } = useGetFeedback(selectedHomeworkSubmitId);
+
+  const handlePutFeedbackId = (feedbackId: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('feedbackId', feedbackId.toString());
+
+    router.replace(`?${params.toString()}`);
+  };
+
+  const deleteFeedback = useDeleteFeedback(selectedHomeworkSubmitId);
+  const handleDelete = (feedbackId: number) => {
+    deleteFeedback.mutate(feedbackId);
+  };
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -48,11 +48,11 @@ export default function RenderFeedback({ selectedHomeworkSubmitId }: FeedbackPro
     };
   }, [openMenuIndex]);
 
-  if (!MOCK_FEEDBACKGET) return null;
+  if (!feedbackData || feedbackData.length === 0) return null;
 
   return (
     <div className='flex flex-col gap-[20px] w-[357px]'>
-      {MOCK_FEEDBACKGET.data.map((feedback, index) => (
+      {feedbackData?.map((feedback, index) => (
         <div
           key={feedback.id}
           className='flex flex-col gap-[15px] rounded-[20px] px-[15px] py-[20px]'
@@ -92,13 +92,19 @@ export default function RenderFeedback({ selectedHomeworkSubmitId }: FeedbackPro
                 <div className='absolute z-5 -right-[130px] top-[10px] w-[119px] flex flex-col items-start bg-white gap-[5px] px-[4px] py-[6px] rounded-[5px] shadow-[0px_0px_7px_0px_rgba(70,_72,_84,_0.1)] text-headline2'>
                   <button
                     className='h-[40px] px-[10px] py-[5px]'
-                    onClick={() => setOpenMenuIndex(null)}
+                    onClick={() => {
+                      setOpenMenuIndex(null);
+                      handlePutFeedbackId(feedback.id);
+                    }}
                   >
                     수정하기
                   </button>
                   <button
                     className='h-[40px] px-[10px] py-[5px]'
-                    onClick={() => setOpenMenuIndex(null)}
+                    onClick={() => {
+                      setOpenMenuIndex(null);
+                      handleDelete(feedback.id);
+                    }}
                   >
                     삭제하기
                   </button>
@@ -107,13 +113,15 @@ export default function RenderFeedback({ selectedHomeworkSubmitId }: FeedbackPro
             </div>
           </div>
           <div className='flex flex-col gap-[10px]'>
-            <div className='h-[25px] text-body-reading'>{feedback.content}</div>
-            <Image
-              src={`/assets/icons/feedback/${feedback.stamp}.png`}
-              width={140}
-              height={140}
-              alt='스탬프'
-            />
+            {feedback.content && <div className='h-[25px] text-body-reading'>{feedback.content}</div>}
+            {feedback.stamp && (
+              <Image
+                src={`/assets/icons/feedback/${feedback.stamp}.png`}
+                width={140}
+                height={140}
+                alt='스탬프'
+              />
+            )}
           </div>
         </div>
       ))}
