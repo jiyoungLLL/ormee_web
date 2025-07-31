@@ -41,3 +41,12 @@ export type AssignmentsResponse = {
   code: number;
   data: HomeworkData;
 };
+
+export type StudentHomework = {
+  homeworkSubmitId: number;
+  studentName: string;
+  isSubmitted: boolean;
+  isChecked: boolean;
+  isFeedback: boolean;
+  createdAt: string;
+};

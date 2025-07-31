@@ -2,7 +2,7 @@ import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { useApiMutation, useApiQuery } from '@/hooks/useApi';
 import { useToastStore } from '@/stores/toastStore';
 import { useRouter } from 'next/navigation';
-import { HomeworkData, HomeworkItems, PostHomeWork } from '../types/homework.types';
+import { HomeworkData, HomeworkItems, PostHomeWork, StudentHomework } from '../types/homework.types';
 
 export const useGetHomeworks = (lectureId: string) => {
   return useApiQuery<HomeworkData>({
@@ -21,6 +21,16 @@ export const useGetHomeworksDetail = (homeworkId: string) => {
     queryKey: QUERY_KEYS.homeworkDetail(homeworkId),
     fetchOptions: {
       endpoint: `/teachers/homeworks/${endHomeworkId}`,
+      authorization: true,
+    },
+  });
+};
+
+export const useGetStudentHomework = (homeworkId: number, filter: string) => {
+  return useApiQuery<StudentHomework[]>({
+    queryKey: QUERY_KEYS.studentHomework(homeworkId.toString()),
+    fetchOptions: {
+      endpoint: `/teachers/homeworks/${homeworkId}/students?filter=${filter}`,
       authorization: true,
     },
   });
