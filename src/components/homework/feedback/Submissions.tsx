@@ -33,15 +33,17 @@ export default function Submissions() {
   const title = searchParams.get('title');
   const feedbackId = Number(searchParams.get('feedbackId'));
 
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [emoji, setEmoji] = useState<boolean>(false);
   const [selectedSticker, setSelectedSticker] = useState<StickerType | null>(null);
 
   const { addToast } = useToastStore();
 
   const { data: submitStudentList } = useGetHomeworkSubmissions(homeworkId);
+  const filteredStudentList = submitStudentList?.filter((student) => student.studentName.includes(searchKeyword));
 
   const [selectedHomeworkSubmitId, setSelectedHomeworkSubmitId] = useState<number>(
-    submitStudentList?.[0]?.homeworkSubmitId ?? 0,
+    filteredStudentList?.[0]?.homeworkSubmitId ?? 0,
   );
   const { data: submitDetail } = useGetHomeworkSubmissionDetail(selectedHomeworkSubmitId);
 
@@ -175,16 +177,23 @@ export default function Submissions() {
       <div className='absolute top-[129px] rounded-[20px] p-[20px] flex gap-[20px] bg-white'>
         {/* 좌측: 학생명 */}
         <div className='w-[180px] h-[726px] rounded-[20px] flex flex-col gap-[21px]'>
-          <div>
-            {/* <SearchInput
-              name='searchStudent'
-              control={control}
-              size='w-fill h-[43px]'
-              iconPosition='right'
-            /> */}
+          <div className='relative w-full flex'>
+            <input
+              type='text'
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              className='w-full px-[15px] py-[9px] border border-gray-30 rounded-[10px] focus:outline-none focus:border-purple-50'
+            />
+            <Image
+              src='/assets/icons/search.png'
+              width={24}
+              height={24}
+              alt='검색 아이콘'
+              className='absolute z-10 right-[13px] top-[9px]'
+            />
           </div>
           <div className='flex flex-col'>
-            {submitStudentList?.map((student) => {
+            {filteredStudentList?.map((student) => {
               if (student.studentName === '') return;
 
               return (
