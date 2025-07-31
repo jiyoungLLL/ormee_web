@@ -44,6 +44,7 @@ export const QUERY_KEYS = {
   noticePinned: (lectureId: string) => ['noticePinned', lectureId],
   noticeLoad: (lectureId: string) => ['noticeLoad', lectureId],
   home: (lectureId: string) => ['home', lectureId],
+  studentHomework: (homeworkId: string) => ['studentHomework', homeworkId],
   homeworkSubmissions: (homeworkId: number) => ['homeworkSubmissions', homeworkId],
   homeworkSubmissionDetail: (homeworkSubmitId: number) => ['homeworkSubmissionDetail', homeworkSubmitId],
   feedback: (homeworkdSubmitId: number) => ['feedback', homeworkdSubmitId],
