@@ -5,9 +5,8 @@ import { useLectureId } from '@/hooks/queries/useLectureId';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
-import Button from '../ui/Button';
-import Dropdown from '../ui/dropdown/Dropdown';
 import TeacherLabel from '../ui/label/TeacherLabel';
 import HomeworkDetail from './HomeworkDetail';
 
@@ -18,38 +17,39 @@ type HomeworkProps = {
 export default function HomeworkTap({ type }: HomeworkProps) {
   const lectureNum = useLectureId();
   const { data } = useGetHomeworks(lectureNum);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const [isOpen, setIsOpen] = useState<{ [key in '진행중' | '마감']?: number[] }>({});
-  const [selected, setSelected] = useState<Record<number, '전체' | '미제출' | '미확인'>>({});
-  const [selectedStudentIds, setSelectedStudentIds] = useState<string[]>([]);
-
-  const menuList = (id: number) => [
-    { id: 'hw-all', label: '전체', onClick: () => setSelected((prev) => ({ ...prev, [id]: '전체' })) },
-    { id: 'hw-submit', label: '미제출', onClick: () => setSelected((prev) => ({ ...prev, [id]: '미제출' })) },
-    { id: 'hw-check', label: '미확인', onClick: () => setSelected((prev) => ({ ...prev, [id]: '미확인' })) },
-  ];
-
-  const handleCheckedStudents = (ids: string[]) => {
-    setSelectedStudentIds(ids);
-  };
-
-  const handleHomeworkAlarm = () => {
-    alert(selectedStudentIds);
-  };
+  const [isOpen, setIsOpen] = useState<{
+    진행중: number | null;
+    마감: number | null;
+  }>({
+    진행중: null,
+    마감: null,
+  });
 
   const toggleOpen = (name: '진행중' | '마감', id: number) => {
-    setIsOpen((prev) => {
-      const currentList = prev[name] || [];
-      const isAlreadyOpen = currentList.includes(id);
-      return {
-        ...prev,
-        [name]: isAlreadyOpen ? currentList.filter((openId) => openId !== id) : [...currentList, id],
-      };
-    });
+    const isAlreadyOpen = isOpen[name] === id;
+    const newOpenId = isAlreadyOpen ? null : id;
+
+    setIsOpen((prev) => ({
+      ...prev,
+      [name]: newOpenId,
+    }));
+
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (!isAlreadyOpen) {
+      params.set('id', id.toString());
+    } else {
+      params.delete('id');
+    }
+
+    router.replace(`?${params.toString()}`);
   };
 
   const renderTap = (name: '진행중' | '마감') => {
-    const openIds = isOpen[name] || [];
+    const openIds = isOpen[name];
     const validData = name === '진행중' ? data?.openedHomeworks : data?.closedHomeworks;
 
     return (
@@ -57,12 +57,14 @@ export default function HomeworkTap({ type }: HomeworkProps) {
         key={name}
         className='flex flex-col gap-[20px]'
       >
-        <div className='text-heading2 font-semibold'>{name === '마감' ? name : '진행'} 숙제</div>
+        {validData?.length === 0 && name === '마감' ? (
+          ''
+        ) : (
+          <div className='text-heading2 font-semibold'>{name === '마감' ? name : '진행'} 숙제</div>
+        )}
         <div>
-          {validData?.length === 0 && (
-            <div className='text-center text-heading2 font-semibold text-[#B5B6BC]'>
-              {name === '마감' ? `아직 ${name}된` : '진행'} 숙제가 없어요.
-            </div>
+          {validData?.length === 0 && name === '진행중' && (
+            <div className='text-center text-heading2 font-semibold text-[#B5B6BC]'>진행 중인 숙제가 없어요.</div>
           )}
           {validData?.map((data, index) => (
             <div key={`${data.id}-${data.title}`}>
@@ -111,35 +113,12 @@ export default function HomeworkTap({ type }: HomeworkProps) {
                     width={24}
                     height={24}
                     alt='드롭다운 아이콘'
-                    className={`w-[24px] h-[24px] cursor-pointer transition-transform ${openIds.includes(data.id) ? 'rotate-180' : ''}`}
+                    className={`w-[24px] h-[24px] cursor-pointer transition-transform ${openIds === data.id ? 'rotate-180' : ''}`}
                     onClick={() => toggleOpen(name, data.id)}
                   />
                 </div>
               </div>
-              {openIds.includes(data.id) && (
-                <div className='px-[30px] py-[20px] mb-[20px] bg-gray-10 rounded-[15px] flex flex-col items-end'>
-                  <div className='w-[227px] flex justify-between'>
-                    <Dropdown
-                      showTrigger={true}
-                      menuList={menuList(data.id)}
-                      selectedItem={selected[data.id] || '전체'}
-                      triggerAreaOnOpenStyle='bg-gray-10'
-                      triggerAreaOnCloseStyle='bg-gray-10'
-                    />
-                    <Button
-                      type='BUTTON_BASE_TYPE'
-                      size='h-[40px]'
-                      font='text-headline2 font-semibold leading-[4px]'
-                      title='과제 알림'
-                      isPurple={true}
-                      onClick={handleHomeworkAlarm}
-                    />
-                  </div>
-                  <div className='w-full px-[10px] flex flex-col gap-[16px]'>
-                    <HomeworkDetail onCheckedStudentsChange={handleCheckedStudents} />
-                  </div>
-                </div>
-              )}
+              {openIds === data.id && <HomeworkDetail homeworkId={data.id} />}
               {index !== validData.length - 1 ? <div className='bg-gray-30 h-[1px] w-full'></div> : ''}
             </div>
           ))}
