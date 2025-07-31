@@ -4,10 +4,12 @@ import { ClassModalValues, classSchema } from '@/features/class/class.schema';
 import { useCreateClass } from '@/features/class/hooks/queries/useClassApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { parse } from 'date-fns';
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import DateTimePicker from '../ui/DateTimePicker';
 import Input from '../ui/Input';
 import Modal from '../ui/Modal';
+import Coworker from './Coworker';
 
 // // 깅의 생성 후 큐알 모달
 // const { isOpen: QROpen, openModal: openQRModal, closeModal: closeQRModal } = useModal({ defaultOpen: false });
@@ -16,13 +18,16 @@ import Modal from '../ui/Modal';
 // const lectureId = 1;
 
 export default function CreateClass({ closeModal }: { closeModal: () => void }) {
+  const [lectureId, setLectureId] = useState<string>('0');
+
   const methods = useForm<ClassModalValues>({
     resolver: zodResolver(classSchema),
     mode: 'onSubmit',
   });
   const { control, watch, setValue, handleSubmit } = methods;
 
-  const handleSuccess = () => {
+  const handleSuccess = (data: { id: number; title: string }) => {
+    setLectureId(data.id.toString());
     closeModal();
   };
 
@@ -129,10 +134,10 @@ export default function CreateClass({ closeModal }: { closeModal: () => void }) 
               type='text'
             />
           </div>
-          {/* <Coworker
-          lectureId={lectureId}
-          post={true}
-        /> */}
+          <Coworker
+            lectureId={lectureId}
+            post={true}
+          />
         </Modal>
       </form>
     </FormProvider>

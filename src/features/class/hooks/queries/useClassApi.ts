@@ -4,7 +4,7 @@ import { QUERY_KEYS } from '@/hooks/queries/queryKeys';
 import { useApiMutation, useApiQuery } from '@/hooks/useApi';
 import { useToastStore } from '@/stores/toastStore';
 import { ClassModalValues } from '../../class.schema';
-import { ClassItems, GetClassResponse } from '../../class.types';
+import { ClassItems, GetClassResponse, ResponseCreateClass } from '../../class.types';
 
 export const useGetClass = () => {
   return useApiQuery<GetClassResponse>({
@@ -16,26 +16,24 @@ export const useGetClass = () => {
   });
 };
 
-export const useCreateClass = (success: () => void) => {
+export const useCreateClass = (success: (data: ResponseCreateClass) => void) => {
   const { addToast } = useToastStore();
 
-  return useApiMutation<void, ClassModalValues>({
+  return useApiMutation<ResponseCreateClass, ClassModalValues>({
     method: 'POST',
     endpoint: '/teachers/lectures',
     fetchOptions: {
       authorization: true,
     },
-    onSuccess: () => {
-      success();
+    onSuccess: (data) => {
+      if (!data) return;
+      success(data);
       addToast({
         message: '강의가 생성되었어요.',
         type: 'success',
         duration: 2500,
       });
     },
-    // onSuccess: (data) => {
-    //   handleSuccess(data.lectureId);
-    // },
     onError: (err) => {
       addToast({
         message: err.message,

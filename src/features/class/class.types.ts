@@ -1,6 +1,8 @@
 import { classListResponseSchema } from '@/features/class/class.schema';
 import { z } from 'zod';
 
+export type ResponseCreateClass = { id: number; title: string };
+
 export type ClassItems = {
   id: number;
   code?: number;

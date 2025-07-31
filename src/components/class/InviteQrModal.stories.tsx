@@ -27,6 +27,7 @@ export const Default: Story = {
           모달 열기
         </button>
         <InviteQrModal
+          closeModal={closeModal}
           title='오르미 토익'
           lectureId={1}
           isOpen={isOpen}
