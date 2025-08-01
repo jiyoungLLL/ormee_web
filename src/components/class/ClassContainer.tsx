@@ -1,13 +1,18 @@
 'use client';
 
 import Button from '@/components/ui/Button';
+import { ResponseCreateClass } from '@/features/class/class.types';
 import { useDeleteClass, useGetClass } from '@/features/class/hooks/queries/useClassApi';
+import { useModal } from '@/hooks/ui/useModal';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import CreateClass from './CreateClass';
+import InviteQrModal from './InviteQrModal';
 import UpdateClass from './UpdateClass';
+
+type CreatedLecture = { id: number; title: string };
 
 export default function ClassContainer() {
   const router = useRouter();
@@ -26,6 +31,10 @@ export default function ClassContainer() {
   const [modalType, setModalType] = useState<'new' | 'ongoing' | null>(null);
   const isOpen = modalType !== null;
   const basicStyle = 'w-full rounded-tr-[25px] rounded-b-[25px] bg-white';
+
+  const [createdLecture, setCreatedLecture] = useState<CreatedLecture | undefined>(undefined);
+  // 깅의 생성 후 큐알 모달
+  const { isOpen: QROpen, openModal: openQRModal, closeModal: closeQRModal } = useModal({ defaultOpen: false });
 
   const openModal = (type: 'new' | 'ongoing') => setModalType(type);
   const closeModal = () => {
@@ -93,8 +102,11 @@ export default function ClassContainer() {
     }
   };
 
-  const handleCloseModal = () => {
+  // 강의 생성 후 큐알 모달
+  const handleCloseModal = (data: ResponseCreateClass) => {
     closeModal();
+    setCreatedLecture({ id: data.id, title: data.title });
+    openQRModal();
   };
 
   const renderClass = (classState: 'openLectures' | 'closedLectures') => {
@@ -277,7 +289,10 @@ export default function ClassContainer() {
             ref={modalRef}
             onClick={(e) => e.stopPropagation()}
           >
-            <CreateClass closeModal={handleCloseModal} />
+            <CreateClass
+              closeModal={closeModal}
+              handleAfterCloseModal={handleCloseModal}
+            />
           </div>
         )}
 
@@ -295,6 +310,15 @@ export default function ClassContainer() {
 
         <div>{renderClass(tab)}</div>
       </div>
+
+      {createdLecture && (
+        <InviteQrModal
+          title={createdLecture.title}
+          lectureId={createdLecture.id}
+          isOpen={QROpen}
+          closeModal={closeQRModal}
+        />
+      )}
     </div>
   );
 }

@@ -55,7 +55,7 @@ export default function InviteQrModal({
           />
         </div>
         <div className='flex flex-col py-[4px] gap-[20px] w-[164px]'>
-          <div className='text-headline1 font-semibold h-[50px]'>오르미 토익</div>
+          <div className='text-headline1 font-semibold h-[50px]'>{title}</div>
           <div className='flex flex-col gap-[10px]'>
             <Button
               type='BUTTON_BASE_TYPE'

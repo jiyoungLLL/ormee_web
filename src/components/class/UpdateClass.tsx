@@ -40,7 +40,7 @@ export default function UpdateClass({ closeModal, lectureId }: { closeModal: () 
   const updateMutation = useUpdateClass(lectureId);
 
   const { data: prevClassData } = useGetClassDetail(lectureId);
-
+  console.log(lectureId, prevClassData);
   useEffect(() => {
     if (!prevClassData) return;
 

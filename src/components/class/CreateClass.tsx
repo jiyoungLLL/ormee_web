@@ -3,23 +3,20 @@
 import { ClassModalValues, classSchema } from '@/features/class/class.schema';
 import { ResponseCreateClass } from '@/features/class/class.types';
 import { useCreateClass } from '@/features/class/hooks/queries/useClassApi';
-import { useModal } from '@/hooks/ui/useModal';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { parse } from 'date-fns';
-import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import DateTimePicker from '../ui/DateTimePicker';
 import Input from '../ui/Input';
 import Modal from '../ui/Modal';
-import InviteQrModal from './InviteQrModal';
 
-type CreatedLecture = { id: number; title: string };
-
-export default function CreateClass({ closeModal }: { closeModal: () => void }) {
-  const [createdLecture, setCreatedLecture] = useState<CreatedLecture | undefined>(undefined);
-  // 깅의 생성 후 큐알 모달
-  const { isOpen: QROpen, openModal: openQRModal, closeModal: closeQRModal } = useModal({ defaultOpen: false });
-
+export default function CreateClass({
+  closeModal,
+  handleAfterCloseModal,
+}: {
+  closeModal: () => void;
+  handleAfterCloseModal: (data: ResponseCreateClass) => void;
+}) {
   const methods = useForm<ClassModalValues>({
     resolver: zodResolver(classSchema),
     mode: 'onSubmit',
@@ -28,13 +25,7 @@ export default function CreateClass({ closeModal }: { closeModal: () => void }) 
 
   const handleSuccess = (data: ResponseCreateClass) => {
     closeModal();
-    setCreatedLecture({ id: data.id, title: data.title });
-    openQRModal();
-  };
-
-  const handleCloseQRModal = () => {
-    closeQRModal();
-    setCreatedLecture(undefined);
+    handleAfterCloseModal(data);
   };
 
   const createMutation = useCreateClass(handleSuccess);
@@ -148,14 +139,6 @@ export default function CreateClass({ closeModal }: { closeModal: () => void }) 
           </Modal>
         </form>
       </FormProvider>
-      {createdLecture && (
-        <InviteQrModal
-          title={createdLecture.title}
-          lectureId={createdLecture.id}
-          isOpen={QROpen}
-          closeModal={handleCloseQRModal}
-        />
-      )}
     </>
   );
 }
