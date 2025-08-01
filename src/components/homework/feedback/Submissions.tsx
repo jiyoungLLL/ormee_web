@@ -85,7 +85,9 @@ export default function Submissions() {
         setSelectedSticker(feedback.stamp);
       }
     }
-  }, [feedback, reset]);
+
+    if (filteredStudentList) setSelectedHomeworkSubmitId(filteredStudentList?.[0]?.homeworkSubmitId);
+  }, [feedback, reset, submitStudentList]);
 
   const onSuccess = () => {
     reset({ content: '', stamp: undefined });
