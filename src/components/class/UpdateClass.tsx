@@ -1,7 +1,7 @@
 'use client';
 
 import { ClassModalValues, classSchema } from '@/features/class/class.schema';
-import { useGetClass, useUpdateClass } from '@/features/class/hooks/queries/useClassApi';
+import { useGetClassDetail, useUpdateClass } from '@/features/class/hooks/queries/useClassApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format, parse } from 'date-fns';
 import { useEffect, useState } from 'react';
@@ -39,8 +39,7 @@ export default function UpdateClass({ closeModal, lectureId }: { closeModal: () 
 
   const updateMutation = useUpdateClass(lectureId);
 
-  const { data } = useGetClass();
-  const prevClassData = data?.openLectures.find((item) => item.id === Number(lectureId));
+  const { data: prevClassData } = useGetClassDetail(lectureId);
 
   useEffect(() => {
     if (!prevClassData) return;
@@ -55,6 +54,7 @@ export default function UpdateClass({ closeModal, lectureId }: { closeModal: () 
       endTime: prevClassData.endTime,
     });
 
+    if (!prevClassData.owner) setDisabled(true);
     if (new Date(prevClassData.startDate) < new Date()) setDisabled(true);
   }, [prevClassData, reset]);
 

@@ -15,7 +15,7 @@ export default function Coworker({ lectureId, post }: CoworkerProps) {
   const [isPost, setIsPost] = useState<boolean>(post);
 
   const [confirmModal, setConfirmModal] = useState<boolean>(false);
-  const { isOpen, closeModal } = useModal({ defaultOpen: false });
+  const { isOpen, openModal, closeModal } = useModal({ defaultOpen: false });
 
   const methods = useForm({
     mode: 'onSubmit',
@@ -65,6 +65,7 @@ export default function Coworker({ lectureId, post }: CoworkerProps) {
             if (isPost) {
               onSubmit();
             } else {
+              openModal();
               setConfirmModal(true);
             }
           }}
