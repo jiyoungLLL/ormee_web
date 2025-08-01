@@ -1,6 +1,6 @@
 import { useDeleteCoworker, usePostCoworker } from '@/features/class/hooks/queries/useClassApi';
 import { useModal } from '@/hooks/ui/useModal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
@@ -8,11 +8,11 @@ import Modal from '../ui/Modal';
 
 type CoworkerProps = {
   lectureId: string;
-  post: boolean;
+  coTeacher: string | undefined;
 };
 
-export default function Coworker({ lectureId, post }: CoworkerProps) {
-  const [isPost, setIsPost] = useState<boolean>(post);
+export default function Coworker({ lectureId, coTeacher }: CoworkerProps) {
+  const [isPost, setIsPost] = useState<boolean>(true);
 
   const [confirmModal, setConfirmModal] = useState<boolean>(false);
   const { isOpen, openModal, closeModal } = useModal({ defaultOpen: false });
@@ -23,17 +23,28 @@ export default function Coworker({ lectureId, post }: CoworkerProps) {
 
   const { control, watch, handleSubmit, reset } = methods;
 
+  useEffect(() => {
+    const shouldPost = !(coTeacher !== undefined && coTeacher);
+    setIsPost(shouldPost);
+
+    if (!shouldPost) {
+      reset({ coworker: coTeacher });
+    }
+  }, [coTeacher]);
+
   const username = watch('coworker');
 
   const postCoworker = usePostCoworker(lectureId, username, () => setIsPost(false));
-  const deleteCoworker = useDeleteCoworker(lectureId, username, () => setIsPost(true));
+  const deleteCoworker = useDeleteCoworker(lectureId, username, () => {
+    setIsPost(true);
+    reset({ coworker: '' });
+  });
 
   const onSubmit = () => {
     if (isPost) {
       postCoworker.mutate(lectureId, username);
     } else {
       deleteCoworker.mutate(lectureId, username);
-      reset({ coworker: '' });
     }
     closeModal();
   };

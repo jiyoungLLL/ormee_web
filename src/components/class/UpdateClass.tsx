@@ -41,6 +41,7 @@ export default function UpdateClass({ closeModal, lectureId }: { closeModal: () 
 
   const { data: prevClassData } = useGetClassDetail(lectureId);
   console.log(lectureId, prevClassData);
+
   useEffect(() => {
     if (!prevClassData) return;
 
@@ -59,11 +60,18 @@ export default function UpdateClass({ closeModal, lectureId }: { closeModal: () 
   }, [prevClassData, reset]);
 
   const onSubmit = (data: ClassModalValues) => {
+    if (!prevClassData) return null;
+
     const payload = {
       ...data,
       lectureDays: data.lectureDays.map((day) => korToEngDay[day]),
     };
-    updateMutation.mutate(payload);
+
+    if (new Date(prevClassData.startDate) < new Date()) {
+      closeModal();
+    } else {
+      updateMutation.mutate(payload);
+    }
   };
 
   const selectedDays = watch('lectureDays') || [];
@@ -186,7 +194,7 @@ export default function UpdateClass({ closeModal, lectureId }: { closeModal: () 
           </div>
           <Coworker
             lectureId={lectureId}
-            post={true}
+            coTeacher={prevClassData && prevClassData.coTeacher}
           />
         </Modal>
       </form>

@@ -23,6 +23,9 @@ export const useGetClassDetail = (lectureId: string) => {
       endpoint: `/teachers/lectures/${lectureId}`,
       authorization: true,
     },
+    queryOptions: {
+      enabled: !!lectureId,
+    },
   });
 };
 
@@ -104,7 +107,7 @@ export const useDeleteClass = () => {
         duration: 2500,
       });
     },
-    invalidateKey: [QUERY_KEYS.classList()],
+    invalidateKey: QUERY_KEYS.classList(),
   });
 };
 
@@ -169,5 +172,6 @@ export const useDeleteCoworker = (lectureId: string, username: string, success: 
         duration: 2500,
       });
     },
+    invalidateKey: QUERY_KEYS.classDetail(lectureId),
   });
 };
