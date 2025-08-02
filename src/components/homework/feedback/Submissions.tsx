@@ -172,7 +172,7 @@ export default function Submissions() {
             alt='뒤로가기 아이콘'
             className='w-[24px] h-[24px]'
           />
-          <span className='text-title3 font-bold'>과제 피드백</span>
+          <span className='text-title3 font-bold'>숙제 피드백</span>
         </Link>
         <span className='text-headline1 font-semibold text-gray-70'>{title}</span>
       </div>
